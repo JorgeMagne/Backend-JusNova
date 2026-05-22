@@ -100,6 +100,59 @@
     }
   },
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source_ref": {
+            "pattern": "^D[0-9]+$"
+          }
+        },
+        "required": [
+          "source_ref"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_type": {
+            "const": "documento_usuario"
+          },
+          "tier": {
+            "const": "USER_DOCUMENT"
+          },
+          "validity_status": {
+            "const": "NO_APLICA"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_ref": {
+            "pattern": "^F[0-9]+$"
+          }
+        },
+        "required": [
+          "source_ref"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_type": {
+            "not": {
+              "const": "documento_usuario"
+            }
+          },
+          "tier": {
+            "not": {
+              "const": "USER_DOCUMENT"
+            }
+          }
+        }
+      }
+    }
+  ],
   "examples": [
     {
       "source_ref": "F1",
@@ -128,6 +181,20 @@
       "title": "Codigo Procesal Civil",
       "retrieved_at": "2026-05-22T00:00:00Z",
       "validity_status": "VIGENCIA_NO_CONFIRMADA",
+      "warnings": [],
+      "metadata": {}
+    },
+    {
+      "source_ref": "D1",
+      "source_type": "norma",
+      "tier": "TIER1_CANONICO",
+      "title": "Contrato presentado por el usuario",
+      "issuer": null,
+      "url": null,
+      "snapshot_id": null,
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": null,
+      "validity_status": "VIGENCIA_CONFIRMADA",
       "warnings": [],
       "metadata": {}
     }

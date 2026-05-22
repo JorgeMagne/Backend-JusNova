@@ -121,6 +121,78 @@
     }
   },
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "quality": {
+            "properties": {
+              "overall": {
+                "enum": [
+                  "HIGH",
+                  "MEDIUM",
+                  "LOW"
+                ]
+              }
+            },
+            "required": [
+              "overall"
+            ]
+          }
+        },
+        "required": [
+          "quality"
+        ]
+      },
+      "then": {
+        "properties": {
+          "sources": {
+            "minItems": 1
+          },
+          "passages": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "anyOf": [
+          {
+            "properties": {
+              "sources": {
+                "maxItems": 0
+              }
+            },
+            "required": [
+              "sources"
+            ]
+          },
+          {
+            "properties": {
+              "passages": {
+                "maxItems": 0
+              }
+            },
+            "required": [
+              "passages"
+            ]
+          }
+        ]
+      },
+      "then": {
+        "properties": {
+          "quality": {
+            "properties": {
+              "overall": {
+                "const": "NONE"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "examples": [
     {
       "evidence_pack_id": "ep_001",
@@ -183,7 +255,11 @@
     {
       "evidence_pack_id": "ep_002",
       "query_id": "q_002",
+      "retrieval_run_id": "rr_002",
       "jurisdiction": "BO",
+      "legal_area": [
+        "PROCESAL_CIVIL"
+      ],
       "sources": [],
       "passages": [],
       "quality": {

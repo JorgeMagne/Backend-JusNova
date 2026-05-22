@@ -27,14 +27,15 @@ Aplica a `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Claim`, `Citation
 2. Toda `Citation.passage_ref` debe existir en `EvidencePack.passages`.
 3. Toda `Citation.source_ref` debe existir en `EvidencePack.sources`.
 4. `Citation.passage_ref` debe apuntar a un `EvidencePassage.source_ref` igual a `Citation.source_ref`.
-5. Todo `Claim.citations[]` debe apuntar a una `Citation.citation_ref` existente.
-6. Todo claim critico con `criticality = high` y `claim_type` juridico debe tener al menos una cita `valid`.
-7. Una fuente final en `sources_used` debe aparecer en al menos una `Citation.source_ref`.
-8. Las fuentes externas se citan como `[F#:P#]`.
-9. Los documentos del usuario se citan como `[D#:P#]`.
-10. Una fuente `TIER2_CONFIABLE` o `TIER3_SECUNDARIO` usada en respuesta visible debe generar advertencia.
-11. Una fuente `TIER3_SECUNDARIO` no puede ser unico soporte de un claim normativo critico.
-12. No se permite listar fuentes no citadas como bibliografia.
+5. El identificador antes de `:P#` en `EvidencePassage.passage_ref` debe ser exactamente igual a `EvidencePassage.source_ref`.
+6. Todo `Claim.citations[]` debe apuntar a una `Citation.citation_ref` existente.
+7. Todo claim critico con `criticality = high` y `claim_type` juridico debe tener al menos una cita `valid`.
+8. Una fuente final en `sources_used` debe aparecer en al menos una `Citation.source_ref`.
+9. Las fuentes externas se citan como `[F#:P#]`.
+10. Los documentos del usuario se citan como `[D#:P#]`.
+11. Una fuente `TIER2_CONFIABLE` o `TIER3_SECUNDARIO` usada en respuesta visible debe generar advertencia.
+12. Una fuente `TIER3_SECUNDARIO` no puede ser unico soporte de un claim normativo critico.
+13. No se permite listar fuentes no citadas como bibliografia.
 
 ## Reglas deterministicas
 
@@ -46,9 +47,10 @@ Estas reglas deben implementarse en validadores, tests o auditoria de citas; no 
 4. Rechazar cita cuyo `passage_ref` no exista.
 5. Rechazar cita cuyo `source_ref` no exista.
 6. Rechazar cita cuyo source no coincida con el source del pasaje.
-7. Rechazar claim critico sin cita valida.
-8. Rechazar `sources_used` que contenga source no citado.
-9. Rechazar fuente TIER3 como unico soporte normativo critico.
+7. Rechazar pasaje cuyo identificador de fuente en `passage_ref` no coincida exactamente con `source_ref`.
+8. Rechazar claim critico sin cita valida.
+9. Rechazar `sources_used` que contenga source no citado.
+10. Rechazar fuente TIER3 como unico soporte normativo critico.
 
 ## Reglas asistidas por IA
 

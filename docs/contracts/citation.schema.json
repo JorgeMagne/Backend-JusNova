@@ -78,5 +78,19 @@
       ],
       "auditor_notes": []
     }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "citation_ref": "C2",
+      "passage_ref": "F1:P999",
+      "source_ref": "F1",
+      "status": "valid",
+      "supports_claim_ids": [
+        "cl_001"
+      ],
+      "auditor_notes": [
+        "Estructuralmente valida, pero el pasaje no existe en el EvidencePack."
+      ]
+    }
   ]
 }

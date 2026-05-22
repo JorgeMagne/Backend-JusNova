@@ -40,46 +40,45 @@
       "const": "BO"
     },
     "sections": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": [
-          "section_id",
-          "title",
-          "content"
-        ],
-        "properties": {
-          "section_id": {
-            "enum": [
-              "conclusion_operativa",
-              "hechos_considerados",
-              "fundamento_normativo",
-              "jurisprudencia_relevante",
-              "analisis_aplicado",
-              "incertidumbres_vigencia_conflictos",
-              "recomendacion_profesional",
-              "fuentes_utilizadas"
-            ]
-          },
-          "title": {
-            "enum": [
-              "Conclusion operativa",
-              "Hechos considerados",
-              "Fundamento normativo",
-              "Jurisprudencia relevante",
-              "Analisis aplicado",
-              "Incertidumbres, vigencia y conflictos",
-              "Recomendacion profesional",
-              "Fuentes utilizadas"
-            ]
-          },
-          "content": {
-            "type": "string"
-          }
+      "type": "object",
+      "description": "Estructura visible estandar de respuesta juridica compleja. Cada clave canonica fija su titulo para impedir pares section_id/title incoherentes.",
+      "required": [
+        "conclusion_operativa",
+        "hechos_considerados",
+        "fundamento_normativo",
+        "jurisprudencia_relevante",
+        "analisis_aplicado",
+        "incertidumbres_vigencia_conflictos",
+        "recomendacion_profesional",
+        "fuentes_utilizadas"
+      ],
+      "properties": {
+        "conclusion_operativa": {
+          "$ref": "#/$defs/section_conclusion_operativa"
         },
-        "additionalProperties": false
-      }
+        "hechos_considerados": {
+          "$ref": "#/$defs/section_hechos_considerados"
+        },
+        "fundamento_normativo": {
+          "$ref": "#/$defs/section_fundamento_normativo"
+        },
+        "jurisprudencia_relevante": {
+          "$ref": "#/$defs/section_jurisprudencia_relevante"
+        },
+        "analisis_aplicado": {
+          "$ref": "#/$defs/section_analisis_aplicado"
+        },
+        "incertidumbres_vigencia_conflictos": {
+          "$ref": "#/$defs/section_incertidumbres_vigencia_conflictos"
+        },
+        "recomendacion_profesional": {
+          "$ref": "#/$defs/section_recomendacion_profesional"
+        },
+        "fuentes_utilizadas": {
+          "$ref": "#/$defs/section_fuentes_utilizadas"
+        }
+      },
+      "additionalProperties": false
     },
     "claims": {
       "type": "array",
@@ -112,6 +111,88 @@
       "format": "date-time"
     }
   },
+  "$defs": {
+    "section_conclusion_operativa": {
+      "$ref": "#/$defs/section_base",
+      "properties": {
+        "title": {
+          "const": "Conclusion operativa"
+        }
+      }
+    },
+    "section_hechos_considerados": {
+      "$ref": "#/$defs/section_base",
+      "properties": {
+        "title": {
+          "const": "Hechos considerados"
+        }
+      }
+    },
+    "section_fundamento_normativo": {
+      "$ref": "#/$defs/section_base",
+      "properties": {
+        "title": {
+          "const": "Fundamento normativo"
+        }
+      }
+    },
+    "section_jurisprudencia_relevante": {
+      "$ref": "#/$defs/section_base",
+      "properties": {
+        "title": {
+          "const": "Jurisprudencia relevante"
+        }
+      }
+    },
+    "section_analisis_aplicado": {
+      "$ref": "#/$defs/section_base",
+      "properties": {
+        "title": {
+          "const": "Analisis aplicado"
+        }
+      }
+    },
+    "section_incertidumbres_vigencia_conflictos": {
+      "$ref": "#/$defs/section_base",
+      "properties": {
+        "title": {
+          "const": "Incertidumbres, vigencia y conflictos"
+        }
+      }
+    },
+    "section_recomendacion_profesional": {
+      "$ref": "#/$defs/section_base",
+      "properties": {
+        "title": {
+          "const": "Recomendacion profesional"
+        }
+      }
+    },
+    "section_fuentes_utilizadas": {
+      "$ref": "#/$defs/section_base",
+      "properties": {
+        "title": {
+          "const": "Fuentes utilizadas"
+        }
+      }
+    },
+    "section_base": {
+      "type": "object",
+      "required": [
+        "title",
+        "content"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
   "additionalProperties": false,
   "examples": [
     {
@@ -119,18 +200,40 @@
       "answer_version": 1,
       "evidence_pack_id": "ep_001",
       "jurisdiction": "BO",
-      "sections": [
-        {
-          "section_id": "conclusion_operativa",
+      "sections": {
+        "conclusion_operativa": {
           "title": "Conclusion operativa",
           "content": "Con la evidencia recuperada, el requisito formal debe verificarse contra la norma citada [F1:P1]."
         },
-        {
-          "section_id": "fuentes_utilizadas",
+        "hechos_considerados": {
+          "title": "Hechos considerados",
+          "content": "No se aportaron hechos adicionales del caso."
+        },
+        "fundamento_normativo": {
+          "title": "Fundamento normativo",
+          "content": "La respuesta se apoya en el pasaje normativo citado [F1:P1]."
+        },
+        "jurisprudencia_relevante": {
+          "title": "Jurisprudencia relevante",
+          "content": "No se recupero jurisprudencia relevante dentro del EvidencePack."
+        },
+        "analisis_aplicado": {
+          "title": "Analisis aplicado",
+          "content": "La aplicacion al caso requiere contrastar los hechos con el expediente."
+        },
+        "incertidumbres_vigencia_conflictos": {
+          "title": "Incertidumbres, vigencia y conflictos",
+          "content": "La vigencia no fue confirmada."
+        },
+        "recomendacion_profesional": {
+          "title": "Recomendacion profesional",
+          "content": "Verificar texto vigente y antecedentes antes de presentar el recurso."
+        },
+        "fuentes_utilizadas": {
           "title": "Fuentes utilizadas",
           "content": "F1 - Codigo Procesal Civil."
         }
-      ],
+      },
       "claims": [
         {
           "claim_id": "cl_001",
@@ -196,11 +299,115 @@
       "answer_version": 1,
       "evidence_pack_id": "ep_001",
       "jurisdiction": "BO",
-      "sections": [],
+      "sections": {
+        "conclusion_operativa": {
+          "title": "Fuentes utilizadas",
+          "content": "Titulo incoherente para la seccion."
+        },
+        "hechos_considerados": {
+          "title": "Hechos considerados",
+          "content": ""
+        },
+        "fundamento_normativo": {
+          "title": "Fundamento normativo",
+          "content": ""
+        },
+        "jurisprudencia_relevante": {
+          "title": "Jurisprudencia relevante",
+          "content": ""
+        },
+        "analisis_aplicado": {
+          "title": "Analisis aplicado",
+          "content": ""
+        },
+        "incertidumbres_vigencia_conflictos": {
+          "title": "Incertidumbres, vigencia y conflictos",
+          "content": ""
+        },
+        "recomendacion_profesional": {
+          "title": "Recomendacion profesional",
+          "content": ""
+        },
+        "fuentes_utilizadas": {
+          "title": "Fuentes utilizadas",
+          "content": ""
+        }
+      },
       "claims": [],
       "citations": [],
+      "sources_used": [],
+      "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "answer_id": "ans_003",
+      "answer_version": 1,
+      "evidence_pack_id": "ep_001",
+      "jurisdiction": "BO",
+      "sections": {
+        "conclusion_operativa": {
+          "title": "Conclusion operativa",
+          "content": "Respuesta con fuente final no citada."
+        },
+        "hechos_considerados": {
+          "title": "Hechos considerados",
+          "content": ""
+        },
+        "fundamento_normativo": {
+          "title": "Fundamento normativo",
+          "content": ""
+        },
+        "jurisprudencia_relevante": {
+          "title": "Jurisprudencia relevante",
+          "content": ""
+        },
+        "analisis_aplicado": {
+          "title": "Analisis aplicado",
+          "content": ""
+        },
+        "incertidumbres_vigencia_conflictos": {
+          "title": "Incertidumbres, vigencia y conflictos",
+          "content": ""
+        },
+        "recomendacion_profesional": {
+          "title": "Recomendacion profesional",
+          "content": ""
+        },
+        "fuentes_utilizadas": {
+          "title": "Fuentes utilizadas",
+          "content": "F2 - Fuente no citada."
+        }
+      },
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+          "claim_type": "procedimiento",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citations": [
+        {
+          "citation_ref": "C1",
+          "passage_ref": "F1:P1",
+          "source_ref": "F1",
+          "status": "valid",
+          "supports_claim_ids": [
+            "cl_001"
+          ],
+          "auditor_notes": []
+        }
+      ],
       "sources_used": [
-        "F99"
+        "F2"
       ],
       "warnings": [],
       "created_at": "2026-05-22T00:00:00Z"
