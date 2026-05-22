@@ -1,0 +1,30 @@
+document_status: Accepted
+date: 2026-05-22
+responsible: Codex / JusNova Chief Backend Architect
+related_decision: Fase 0.2 - Taxonomias base del sistema
+
+source_tiers:
+  TIER1_CANONICO:
+    description: "Fuente oficial primaria de publicacion o tribunal competente."
+    allowed_for_primary_support: true
+    requires_warning: false
+  TIER1_OFICIAL:
+    description: "Fuente oficial institucional, no necesariamente canonica."
+    allowed_for_primary_support: true
+    requires_warning: "conditional"
+  TIER1_STRUCTURED:
+    description: "Sistema oficial estructurado, util para consulta y contraste."
+    allowed_for_primary_support: true
+    requires_warning: "conditional"
+  TIER2_CONFIABLE:
+    description: "Repositorio confiable o mirror no canonico."
+    allowed_for_primary_support: "conditional"
+    requires_warning: true
+  TIER3_SECUNDARIO:
+    description: "Blog, articulo, doctrina, nota o fuente secundaria."
+    allowed_for_primary_support: false
+    requires_warning: true
+  USER_DOCUMENT:
+    description: "Documento aportado por usuario. Sirve para hechos o texto privado, no como derecho vigente por si mismo."
+    allowed_for_primary_support: false
+    requires_warning: "conditional"

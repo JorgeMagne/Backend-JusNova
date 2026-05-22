@@ -1,0 +1,27 @@
+document_status: Accepted
+date: 2026-05-22
+responsible: Codex / JusNova Chief Backend Architect
+related_decision: Fase 0.2 - Taxonomias base del sistema
+
+complexity_levels:
+  SIMPLE:
+    description: "Pregunta puntual, bajo cruce de fuentes, bajo riesgo."
+    max_subquestions: 0
+    default_mode: STANDARD
+    research_credit_required: false
+  MEDIO:
+    description: "Pregunta con varios aspectos, norma mas explicacion, o busqueda moderada."
+    max_subquestions: 1
+    default_mode: STANDARD
+    research_credit_required: false
+  COMPLEJO:
+    description: "Cruce de fuentes, documentos, contradicciones, vigencia o alto riesgo."
+    max_subquestions: 3
+    default_mode: RESEARCH_CREDIT_REQUIRED
+    research_credit_required: true
+  INVESTIGACION:
+    description: "Investigacion profunda con mas fuentes, loops y validacion."
+    max_subquestions: 5
+    default_mode: RESEARCH
+    research_credit_required: true
+

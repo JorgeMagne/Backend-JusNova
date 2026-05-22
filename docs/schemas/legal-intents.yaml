@@ -1,0 +1,50 @@
+document_status: Accepted
+date: 2026-05-22
+responsible: Codex / JusNova Chief Backend Architect
+related_decision: Fase 0.2 - Taxonomias base del sistema
+
+legal_intents:
+  NORMATIVA:
+    description: "Consulta sobre normas, articulos, decretos, reglamentos, requisitos o vigencia."
+    requires_external_sources: true
+    default_required_source_types: ["norma"]
+  JURISPRUDENCIA:
+    description: "Consulta sobre SCP, Autos Supremos, sentencias, precedentes o criterios judiciales."
+    requires_external_sources: true
+    default_required_source_types: ["jurisprudencia"]
+  PROCEDIMIENTO:
+    description: "Consulta sobre pasos procesales, recursos, tramites, plazos o competencias."
+    requires_external_sources: true
+    default_required_source_types: ["norma", "jurisprudencia"]
+  ESTRATEGIA:
+    description: "Consulta sobre alternativas, riesgos, argumentos o enfoque juridico."
+    requires_external_sources: true
+    default_required_source_types: ["norma", "jurisprudencia", "documento_usuario"]
+  DOC_ANALYSIS:
+    description: "Analisis de documentos adjuntos o expediente."
+    requires_external_sources: false
+    default_required_source_types: ["documento_usuario"]
+  REDACCION:
+    description: "Redaccion de memoriales, clausulas, cartas, contratos o escritos."
+    requires_external_sources: "conditional"
+    default_required_source_types: ["norma", "documento_usuario"]
+  SECTORIAL:
+    description: "Consulta sobre regulacion administrativa especifica por entidad publica o sector."
+    requires_external_sources: true
+    default_required_source_types: ["norma", "institucional"]
+  SUBNACIONAL:
+    description: "Consulta sobre normativa departamental, municipal o autonomica."
+    requires_external_sources: true
+    default_required_source_types: ["norma", "institucional"]
+  VIGENCIA:
+    description: "Consulta sobre confirmacion de vigencia, modificacion, derogacion o conflicto normativo."
+    requires_external_sources: true
+    default_required_source_types: ["norma"]
+  MIXTO:
+    description: "Consulta que combina hechos, documentos y derecho aplicable."
+    requires_external_sources: true
+    default_required_source_types: ["norma", "jurisprudencia", "documento_usuario"]
+  META:
+    description: "Consulta sobre uso del sistema, fuentes, trazabilidad, limitaciones o funcionamiento de JusNova."
+    requires_external_sources: false
+    default_required_source_types: []

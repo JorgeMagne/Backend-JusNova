@@ -1,0 +1,28 @@
+# Risk Register
+
+**Estado documental:** Draft  
+**Fecha:** 2026-05-22  
+**Responsable:** Codex / JusNova Chief Backend Architect  
+**Decision relacionada:** Registro vivo de riesgos de Fase 0
+
+## Escala
+
+| Campo | Valores |
+|---|---|
+| Probabilidad | Low, Medium, High |
+| Impacto | Low, Medium, High, Critical |
+| Estado | Open, Mitigating, Accepted, Closed |
+
+## Riesgos iniciales
+
+| ID | Riesgo | Probabilidad | Impacto | Estado | Mitigacion | Responsable |
+|---|---|---|---|---|---|---|
+| R-001 | Sobrediseno documental sin avance ejecutable hacia Fase 1. | Medium | High | Open | Timebox por subfase, checklist de cierre y handoff concreto a Sprint 1. | Codex / JusNova Chief Backend Architect |
+| R-002 | Contratos demasiado abstractos para implementacion. | Medium | High | Open | Exigir JSON Schemas, ejemplos validos/invalidos y criterios de aceptacion. | Codex / JusNova Chief Backend Architect |
+| R-003 | Contradicciones entre ADRs, policies y contracts. | Medium | High | Open | Revision cruzada en Subfase 0.14 y decision pack final. | Codex / JusNova Chief Backend Architect |
+| R-004 | Dependencia accidental de proveedor externo en documentos de Fase 0. | Medium | Critical | Open | Provider interfaces obligatorias y ADR-011 con boundaries. | Codex / JusNova Chief Backend Architect |
+| R-005 | Politica de vigencia insuficiente o ambigua. | Medium | Critical | Open | Estados cerrados de vigencia, frases prohibidas y abstention policy. | Codex / JusNova Chief Backend Architect |
+| R-006 | Seguridad tratada tarde. | Medium | Critical | Open | Security/privacy policy, data classification y ownership matrix desde Fase 0. | Codex / JusNova Chief Backend Architect |
+| R-007 | Trazabilidad insuficiente para auditar respuestas juridicas. | Medium | Critical | Open | TraceObject, model/tool calls, usage events y answer versioning como P0. | Codex / JusNova Chief Backend Architect |
+| R-008 | Cost Governor no refleja plan base de 400 Bs. | Medium | High | Open | `budgets.yaml`, usage-event contract y commercial plans v0. | Codex / JusNova Chief Backend Architect |
+

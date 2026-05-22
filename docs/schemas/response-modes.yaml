@@ -1,0 +1,34 @@
+document_status: Accepted
+date: 2026-05-22
+responsible: Codex / JusNova Chief Backend Architect
+related_decision: Fase 0.2 - Taxonomias base del sistema
+
+response_modes:
+  STANDARD:
+    description: "Modo estandar para consultas simples y medias dentro del plan."
+    default_complexities: ["SIMPLE", "MEDIO"]
+  RESEARCH:
+    description: "Modo investigacion con mas fuentes, mas tiempo, mas validacion y consumo de creditos."
+    default_complexities: ["INVESTIGACION"]
+  RESEARCH_CREDIT_REQUIRED:
+    description: "Modo que requiere credito de investigacion por complejidad o profundidad."
+    default_complexities: ["COMPLEJO"]
+  DOCUMENT:
+    description: "Modo documento que prioriza documentos del usuario y citas [D#:P#]."
+    default_intents: ["DOC_ANALYSIS", "MIXTO"]
+  JURISPRUDENTIAL:
+    description: "Modo jurisprudencial que prioriza TSJ, TCP y analisis de criterios."
+    default_intents: ["JURISPRUDENCIA"]
+  VALIDITY:
+    description: "Modo vigencia que prioriza confirmacion, modificacion, derogacion o conflicto normativo."
+    default_intents: ["VIGENCIA"]
+  SECTORIAL:
+    description: "Modo sectorial que prioriza entidades publicas especificas y normativa regulatoria."
+    default_intents: ["SECTORIAL"]
+  SUBNATIONAL:
+    description: "Modo subnacional que prioriza jurisdiccion departamental, municipal o autonomica."
+    default_intents: ["SUBNACIONAL"]
+  DRAFTING:
+    description: "Modo redaccion que genera documentos separando fundamento, hechos, inferencias y revision profesional."
+    default_intents: ["REDACCION"]
+

@@ -1,0 +1,24 @@
+document_status: Accepted
+date: 2026-05-22
+responsible: Codex / JusNova Chief Backend Architect
+related_decision: Fase 0.2 - Taxonomias base del sistema
+
+validity_statuses:
+  VIGENCIA_CONFIRMADA:
+    meaning: "Existe evidencia suficiente para afirmar vigencia en el momento de consulta."
+    may_say_vigente: true
+  VIGENCIA_NO_CONFIRMADA:
+    meaning: "No se pudo confirmar vigencia actual."
+    may_say_vigente: false
+  POSIBLEMENTE_MODIFICADA:
+    meaning: "Hay senales de modificacion, sustitucion o inconsistencia."
+    may_say_vigente: false
+  DEROGADA_CONFIRMADA:
+    meaning: "Existe evidencia explicita de derogacion."
+    may_say_vigente: false
+  CONFLICTIVA:
+    meaning: "Fuentes contradictorias o estado no resoluble automaticamente."
+    may_say_vigente: false
+  NO_APLICA:
+    meaning: "La vigencia no aplica al tipo de fuente o documento."
+    may_say_vigente: false

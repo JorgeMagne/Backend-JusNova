@@ -1,0 +1,15 @@
+document_status: Accepted
+date: 2026-05-22
+responsible: Codex / JusNova Chief Backend Architect
+related_decision: Fase 0.2 - Taxonomias base del sistema
+
+host_statuses:
+  HEALTHY:
+    description: "Host responde dentro de latencia aceptable y sin errores relevantes."
+  DEGRADED:
+    description: "Host responde, pero lento, intermitente o con fallos parciales."
+  DOWN:
+    description: "Host no responde o falla consistentemente."
+  UNKNOWN:
+    description: "Estado no evaluado o sin datos suficientes."
+
