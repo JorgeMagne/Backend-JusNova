@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/source.schema.json",
+  "title": "EvidenceSource",
+  "description": "Fuente normalizada usada dentro de un EvidencePack. Distingue fuentes externas, documentos del usuario, tiers, snapshots y estado de vigencia.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+  },
+  "required": [
+    "source_ref",
+    "source_type",
+    "tier",
+    "title",
+    "retrieved_at",
+    "validity_status",
+    "warnings",
+    "metadata"
+  ],
+  "properties": {
+    "source_ref": {
+      "type": "string",
+      "pattern": "^F[0-9]+$|^D[0-9]+$"
+    },
+    "source_type": {
+      "enum": [
+        "norma",
+        "jurisprudencia",
+        "documento_usuario",
+        "doctrina",
+        "web",
+        "institucional"
+      ]
+    },
+    "tier": {
+      "enum": [
+        "TIER1_CANONICO",
+        "TIER1_OFICIAL",
+        "TIER1_STRUCTURED",
+        "TIER2_CONFIABLE",
+        "TIER3_SECUNDARIO",
+        "USER_DOCUMENT"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "issuer": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    },
+    "snapshot_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "retrieved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "validity_status": {
+      "enum": [
+        "VIGENCIA_CONFIRMADA",
+        "VIGENCIA_NO_CONFIRMADA",
+        "POSIBLEMENTE_MODIFICADA",
+        "DEROGADA_CONFIRMADA",
+        "CONFLICTIVA",
+        "NO_APLICA"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "source_ref": "F1",
+      "source_type": "norma",
+      "tier": "TIER1_CANONICO",
+      "title": "Codigo Procesal Civil",
+      "issuer": "Gaceta Oficial de Bolivia",
+      "url": "https://www.example.gob.bo/norma/ley-439",
+      "snapshot_id": "snap_001",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": "2013-11-19",
+      "validity_status": "VIGENCIA_NO_CONFIRMADA",
+      "warnings": [
+        "Vigencia actual no confirmada."
+      ],
+      "metadata": {
+        "jurisdiction": "BO"
+      }
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "source_ref": "X1",
+      "source_type": "norma",
+      "tier": "TIER1_CANONICO",
+      "title": "Codigo Procesal Civil",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "validity_status": "VIGENCIA_NO_CONFIRMADA",
+      "warnings": [],
+      "metadata": {}
+    }
+  ]
+}

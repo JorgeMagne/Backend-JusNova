@@ -18,6 +18,23 @@ Los contratos definen las estructuras que Fase 1 implementara en codigo. Un modu
 - Todo contrato que referencie otro schema debe usar rutas relativas estables.
 - Los nombres de enums deben venir de `docs/schemas/` cuando exista una taxonomia aprobada.
 
+## Contratos aceptados en Subfase 0.4
+
+Estos contratos quedan aceptados como base documental del flujo `EvidencePack -> AnswerDraft -> ClaimExtractor -> CitationAuditor -> ClaimVerifier -> FinalAnswer`. Esta aceptacion no implementa backend funcional ni `citation-audit.schema.json`.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Answer Contract | Accepted | `answer-contract.schema.json` |
+| Evidence Pack | Accepted | `evidence-pack.schema.json` |
+| Source | Accepted | `source.schema.json` |
+| Passage | Accepted | `passage.schema.json` |
+| Citation | Accepted | `citation.schema.json` |
+| Claim | Accepted | `claim.schema.json` |
+
+## Fuera de alcance de Subfase 0.4
+
+`citation-audit.schema.json` queda delegado a Subfase 0.7 junto con trazabilidad, auditoria y versionado. Subfase 0.4 define la forma de `Citation` y las policies de citacion/abstencion, pero no el resultado completo del auditor.
+
 ## Schemas minimos esperados
 
 ```txt
@@ -46,4 +63,3 @@ usage-event.schema.json
 case-memory.schema.json
 conversation.schema.json
 ```
-

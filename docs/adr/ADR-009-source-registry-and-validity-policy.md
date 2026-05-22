@@ -47,7 +47,7 @@ El Source Registry permite priorizar autoridad, controlar fuentes debiles, audit
 
 ## Dependencias posteriores
 
-- Subfase 0.6 debe crear source, validity, conflict, uncertainty y abstention policies.
+- Subfase 0.6 debe crear source, validity, conflict y uncertainty policies.
 - Subfase 0.5 debe definir source routing.
 - Subfase 0.9 debe separar document evidence.
 - Fase 4 y Fase 5 implementaran registry/adapters iniciales.
@@ -86,4 +86,3 @@ Revisar al cerrar Subfase 0.6, al implementar Fase 5, y cuando `source_tier_corr
 ## Consecuencias
 
 Las fuentes son objetos gobernados, no simples URLs.
-

@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/evidence-pack.schema.json",
+  "title": "EvidencePack",
+  "description": "Paquete normalizado de evidencia que alimenta la generacion de respuesta. Es la unica base permitida para claims juridicos criticos.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+  },
+  "required": [
+    "evidence_pack_id",
+    "query_id",
+    "retrieval_run_id",
+    "jurisdiction",
+    "legal_area",
+    "sources",
+    "passages",
+    "quality",
+    "created_at"
+  ],
+  "properties": {
+    "evidence_pack_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "query_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "retrieval_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jurisdiction": {
+      "type": "string",
+      "const": "BO"
+    },
+    "legal_area": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "CIVIL",
+          "PROCESAL_CIVIL",
+          "PENAL",
+          "PROCESAL_PENAL",
+          "LABORAL",
+          "CONSTITUCIONAL",
+          "ADMINISTRATIVO",
+          "TRIBUTARIO",
+          "COMERCIAL",
+          "FAMILIA",
+          "NIÑEZ_ADOLESCENCIA",
+          "AGROAMBIENTAL",
+          "COACTIVO_FISCAL",
+          "CONTENCIOSO_ADMINISTRATIVO",
+          "REGULATORIO_SECTORIAL",
+          "MUNICIPAL_AUTONOMICO",
+          "NOTARIAL_REGISTRAL",
+          "MIGRATORIO",
+          "OTRO"
+        ]
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "./source.schema.json"
+      },
+      "minItems": 0
+    },
+    "passages": {
+      "type": "array",
+      "items": {
+        "$ref": "./passage.schema.json"
+      },
+      "minItems": 0
+    },
+    "quality": {
+      "type": "object",
+      "required": [
+        "overall",
+        "authority_score",
+        "coverage_score",
+        "warnings"
+      ],
+      "properties": {
+        "overall": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "NONE"
+          ]
+        },
+        "authority_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "coverage_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "evidence_pack_id": "ep_001",
+      "query_id": "q_001",
+      "retrieval_run_id": "rr_001",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "PROCESAL_CIVIL"
+      ],
+      "sources": [
+        {
+          "source_ref": "F1",
+          "source_type": "norma",
+          "tier": "TIER1_CANONICO",
+          "title": "Codigo Procesal Civil",
+          "issuer": "Gaceta Oficial de Bolivia",
+          "url": "https://www.example.gob.bo/norma/ley-439",
+          "snapshot_id": "snap_001",
+          "retrieved_at": "2026-05-22T00:00:00Z",
+          "published_at": "2013-11-19",
+          "validity_status": "VIGENCIA_NO_CONFIRMADA",
+          "warnings": [
+            "Vigencia actual no confirmada."
+          ],
+          "metadata": {
+            "jurisdiction": "BO"
+          }
+        }
+      ],
+      "passages": [
+        {
+          "passage_ref": "F1:P1",
+          "source_ref": "F1",
+          "text": "El recurso debe interponerse dentro del plazo previsto por la norma aplicable.",
+          "locator": {
+            "page": 4,
+            "article": "Art. 274",
+            "section": "Recurso de casacion",
+            "paragraph": 2,
+            "coordinates": null,
+            "url_fragment": "#art274"
+          },
+          "extraction_method": "pdf_parse",
+          "extraction_confidence": 0.93,
+          "warnings": []
+        }
+      ],
+      "quality": {
+        "overall": "MEDIUM",
+        "authority_score": 0.95,
+        "coverage_score": 0.82,
+        "warnings": [
+          "Vigencia no confirmada."
+        ]
+      },
+      "created_at": "2026-05-22T00:00:00Z"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "evidence_pack_id": "ep_002",
+      "query_id": "q_002",
+      "jurisdiction": "BO",
+      "sources": [],
+      "passages": [],
+      "quality": {
+        "overall": "HIGH",
+        "authority_score": 0.95,
+        "coverage_score": 0.82,
+        "warnings": []
+      },
+      "created_at": "2026-05-22T00:00:00Z"
+    }
+  ]
+}

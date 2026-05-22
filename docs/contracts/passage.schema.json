@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/passage.schema.json",
+  "title": "EvidencePassage",
+  "description": "Pasaje localizable extraido de una fuente o documento. Es la unidad citable que conecta una cita con una fuente.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+  },
+  "required": [
+    "passage_ref",
+    "source_ref",
+    "text",
+    "locator",
+    "extraction_method",
+    "extraction_confidence",
+    "warnings"
+  ],
+  "properties": {
+    "passage_ref": {
+      "type": "string",
+      "pattern": "^[FD][0-9]+:P[0-9]+$"
+    },
+    "source_ref": {
+      "type": "string",
+      "pattern": "^F[0-9]+$|^D[0-9]+$"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "locator": {
+      "type": "object",
+      "required": [
+        "page",
+        "article",
+        "section",
+        "paragraph",
+        "coordinates",
+        "url_fragment"
+      ],
+      "properties": {
+        "page": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "article": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "section": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "paragraph": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "coordinates": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "url_fragment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "extraction_method": {
+      "enum": [
+        "native_text",
+        "ocr",
+        "html_parse",
+        "pdf_parse",
+        "manual_adapter",
+        "model_vision",
+        "unknown"
+      ]
+    },
+    "extraction_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "passage_ref": "F1:P1",
+      "source_ref": "F1",
+      "text": "El recurso debe interponerse dentro del plazo previsto por la norma aplicable.",
+      "locator": {
+        "page": 4,
+        "article": "Art. 274",
+        "section": "Recurso de casacion",
+        "paragraph": 2,
+        "coordinates": null,
+        "url_fragment": "#art274"
+      },
+      "extraction_method": "pdf_parse",
+      "extraction_confidence": 0.93,
+      "warnings": []
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "passage_ref": "P1",
+      "source_ref": "F1",
+      "text": "",
+      "locator": {},
+      "extraction_method": "pdf_parse",
+      "extraction_confidence": 1.2,
+      "warnings": []
+    }
+  ]
+}

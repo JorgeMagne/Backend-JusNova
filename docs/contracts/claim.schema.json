@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/claim.schema.json",
+  "title": "Claim",
+  "description": "Afirmacion verificable generada por JusNova. Los claims criticos requieren citas validas por Citation Policy y Abstention Policy.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+  },
+  "required": [
+    "claim_id",
+    "text",
+    "claim_type",
+    "criticality",
+    "support_level",
+    "citations",
+    "verification_status",
+    "requires_human_review"
+  ],
+  "properties": {
+    "claim_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claim_type": {
+      "enum": [
+        "plazo",
+        "requisito",
+        "competencia",
+        "causal",
+        "procedimiento",
+        "norma",
+        "jurisprudencia",
+        "vigencia",
+        "hecho_usuario",
+        "hecho_documento",
+        "inferencia",
+        "recomendacion",
+        "otro"
+      ]
+    },
+    "criticality": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "support_level": {
+      "enum": [
+        "direct",
+        "inferential",
+        "weak",
+        "unsupported"
+      ]
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^C[0-9]+$"
+      }
+    },
+    "verification_status": {
+      "enum": [
+        "passed",
+        "failed",
+        "needs_review",
+        "blocked"
+      ]
+    },
+    "requires_human_review": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "claim_id": "cl_001",
+      "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+      "claim_type": "procedimiento",
+      "criticality": "high",
+      "support_level": "direct",
+      "citations": [
+        "C1"
+      ],
+      "verification_status": "passed",
+      "requires_human_review": false
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "claim_id": "cl_002",
+      "text": "La norma esta vigente.",
+      "claim_type": "vigencia",
+      "criticality": "high",
+      "support_level": "unsupported",
+      "verification_status": "passed",
+      "requires_human_review": false
+    }
+  ]
+}
