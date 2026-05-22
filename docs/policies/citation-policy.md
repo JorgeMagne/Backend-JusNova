@@ -29,13 +29,16 @@ Aplica a `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Claim`, `Citation
 4. `Citation.passage_ref` debe apuntar a un `EvidencePassage.source_ref` igual a `Citation.source_ref`.
 5. El identificador antes de `:P#` en `EvidencePassage.passage_ref` debe ser exactamente igual a `EvidencePassage.source_ref`.
 6. Todo `Claim.citations[]` debe apuntar a una `Citation.citation_ref` existente.
-7. Todo claim critico con `criticality = high` y `claim_type` juridico debe tener al menos una cita `valid`.
-8. Una fuente final en `sources_used` debe aparecer en al menos una `Citation.source_ref`.
-9. Las fuentes externas se citan como `[F#:P#]`.
-10. Los documentos del usuario se citan como `[D#:P#]`.
-11. Una fuente `TIER2_CONFIABLE` o `TIER3_SECUNDARIO` usada en respuesta visible debe generar advertencia.
-12. Una fuente `TIER3_SECUNDARIO` no puede ser unico soporte de un claim normativo critico.
-13. No se permite listar fuentes no citadas como bibliografia.
+7. Toda `Citation` incluida en `AnswerContract.citations` debe aparecer en al menos un `Claim.citations[]`.
+8. Toda `Citation` con `status = valid` debe tener al menos un `supports_claim_ids[]`.
+9. Todo `supports_claim_ids[]` debe apuntar a un `Claim.claim_id` existente.
+10. Todo claim critico con `criticality = high` y `claim_type` juridico debe tener al menos una cita `valid`.
+11. Una fuente final en `sources_used` debe aparecer en al menos una `Citation.source_ref` que soporte un claim existente.
+12. Las fuentes externas se citan como `[F#:P#]`.
+13. Los documentos del usuario se citan como `[D#:P#]`.
+14. Una fuente `TIER2_CONFIABLE` o `TIER3_SECUNDARIO` usada en respuesta visible debe generar advertencia.
+15. Una fuente `TIER3_SECUNDARIO` no puede ser unico soporte de un claim normativo critico.
+16. No se permite listar fuentes no citadas como bibliografia.
 
 ## Reglas deterministicas
 
@@ -48,9 +51,12 @@ Estas reglas deben implementarse en validadores, tests o auditoria de citas; no 
 5. Rechazar cita cuyo `source_ref` no exista.
 6. Rechazar cita cuyo source no coincida con el source del pasaje.
 7. Rechazar pasaje cuyo identificador de fuente en `passage_ref` no coincida exactamente con `source_ref`.
-8. Rechazar claim critico sin cita valida.
-9. Rechazar `sources_used` que contenga source no citado.
-10. Rechazar fuente TIER3 como unico soporte normativo critico.
+8. Rechazar `Citation` no referenciada por ningun claim.
+9. Rechazar `Citation.status = valid` con `supports_claim_ids = []`.
+10. Rechazar `supports_claim_ids[]` que no apunte a un claim existente.
+11. Rechazar claim critico sin cita valida.
+12. Rechazar `sources_used` que contenga source no citado por una cita que soporte claim existente.
+13. Rechazar fuente TIER3 como unico soporte normativo critico.
 
 ## Reglas asistidas por IA
 
@@ -61,6 +67,7 @@ Estas reglas deben implementarse en validadores, tests o auditoria de citas; no 
 ## Comportamiento ante incumplimiento
 
 - Cita rota: bloquear respuesta final o reparar sin agregar claims nuevos.
+- Cita valida sin claim soportado: bloquear respuesta final por cita decorativa.
 - Claim critico sin cita valida: bloquear o abstener parcialmente.
 - Fuente final no citada: eliminar de `sources_used` o bloquear hasta reparar.
 - Fuente secundaria como unico soporte critico: bloquear, advertir o pedir Modo Investigacion.
@@ -109,7 +116,7 @@ Cadena valida:
 
 - El equipo puede explicar `claim -> citation -> passage -> source`.
 - Los ejemplos validos de 0.4 muestran la cadena completa.
-- Las validaciones negativas cubren cita a pasaje inexistente, claim critico sin cita, fuente final no citada y TIER3 como unico soporte normativo critico.
+- Las validaciones negativas cubren cita a pasaje inexistente, cita valida sin claim soportado, claim critico sin cita, fuente final no citada y TIER3 como unico soporte normativo critico.
 
 ## Relacion con contratos
 

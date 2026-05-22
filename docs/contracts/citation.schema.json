@@ -55,6 +55,27 @@
     }
   },
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "valid"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "supports_claim_ids": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
   "examples": [
     {
       "citation_ref": "C1",
@@ -76,6 +97,14 @@
       "supports_claim_ids": [
         "cl_001"
       ],
+      "auditor_notes": []
+    },
+    {
+      "citation_ref": "C9",
+      "passage_ref": "F1:P1",
+      "source_ref": "F1",
+      "status": "valid",
+      "supports_claim_ids": [],
       "auditor_notes": []
     }
   ],
