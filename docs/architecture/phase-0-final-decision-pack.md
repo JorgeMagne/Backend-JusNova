@@ -81,3 +81,29 @@ Estos ADRs quedan aceptados como decisiones arquitectonicas. Esta lista no impli
 ## Canon de numeracion ADR
 
 La lista ADR-001 a ADR-012 definida en `docs/adr/decision-matrix.md` es la referencia canonica de Fase 0. Cualquier orden anterior del plan padre es referencia historica si contradice esta lista.
+
+## Contratos aceptados en Subfase 0.4
+
+Estos contratos quedan aceptados como contratos documentales. Esta lista no implica que el backend funcional, Citation Auditor, Claim Verifier o TraceObject ya esten implementados.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Evidence Pack | Accepted | `docs/contracts/evidence-pack.schema.json` |
+| Evidence Source | Accepted | `docs/contracts/source.schema.json` |
+| Evidence Passage | Accepted | `docs/contracts/passage.schema.json` |
+| Citation | Accepted | `docs/contracts/citation.schema.json` |
+| Claim | Accepted | `docs/contracts/claim.schema.json` |
+| Answer Contract | Accepted | `docs/contracts/answer-contract.schema.json` |
+
+## Politicas aceptadas en Subfase 0.4
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Citation Policy | Accepted | `docs/policies/citation-policy.md` |
+| Abstention Policy | Accepted | `docs/policies/abstention-policy.md` |
+
+## Dependencias posteriores preservadas
+
+- `citation-audit.schema.json` queda delegado a Subfase 0.7.
+- Source, validity, conflict y uncertainty policies quedan delegadas a Subfase 0.6.
+- Fase 0 global permanece en `Draft` hasta completar 0.1 a 0.14.

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/citation.schema.json",
+  "title": "Citation",
+  "description": "Cita auditada que conecta un claim con un pasaje y una fuente. La existencia cruzada passage/source se valida por Citation Policy y tests de auditoria.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+  },
+  "required": [
+    "citation_ref",
+    "passage_ref",
+    "source_ref",
+    "status",
+    "supports_claim_ids",
+    "auditor_notes"
+  ],
+  "properties": {
+    "citation_ref": {
+      "type": "string",
+      "pattern": "^C[0-9]+$"
+    },
+    "passage_ref": {
+      "type": "string",
+      "pattern": "^[FD][0-9]+:P[0-9]+$"
+    },
+    "source_ref": {
+      "type": "string",
+      "pattern": "^F[0-9]+$|^D[0-9]+$"
+    },
+    "status": {
+      "enum": [
+        "valid",
+        "broken",
+        "unsupported",
+        "weak",
+        "needs_review"
+      ]
+    },
+    "supports_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "auditor_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "valid"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "supports_claim_ids": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "citation_ref": "C1",
+      "passage_ref": "F1:P1",
+      "source_ref": "F1",
+      "status": "valid",
+      "supports_claim_ids": [
+        "cl_001"
+      ],
+      "auditor_notes": []
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "citation_ref": "C1",
+      "passage_ref": "missing",
+      "source_ref": "F1",
+      "status": "valid",
+      "supports_claim_ids": [
+        "cl_001"
+      ],
+      "auditor_notes": []
+    },
+    {
+      "citation_ref": "C9",
+      "passage_ref": "F1:P1",
+      "source_ref": "F1",
+      "status": "valid",
+      "supports_claim_ids": [],
+      "auditor_notes": []
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "citation_ref": "C2",
+      "passage_ref": "F1:P999",
+      "source_ref": "F1",
+      "status": "valid",
+      "supports_claim_ids": [
+        "cl_001"
+      ],
+      "auditor_notes": [
+        "Estructuralmente valida, pero el pasaje no existe en el EvidencePack."
+      ]
+    }
+  ]
+}

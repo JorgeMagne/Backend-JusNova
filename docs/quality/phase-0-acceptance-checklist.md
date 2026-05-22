@@ -23,15 +23,16 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Item | Bloqueante | Estado | Responsable | Evidencia |
 |---|---:|---|---|---|
 | ADR-001 a ADR-012 estan Accepted o Accepted with Review Date | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/` |
-| Answer Contract aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-contract.schema.json` |
-| Evidence Pack Contract aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/evidence-pack.schema.json` |
-| Citation Contract aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/citation.schema.json` |
-| Claim Contract aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/claim.schema.json` |
+| Answer Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-contract.schema.json` |
+| Evidence Pack Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/evidence-pack.schema.json` |
+| Citation Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/citation.schema.json` |
+| Claim Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/claim.schema.json` |
 | Live Legal Search Contract aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-query.schema.json` |
 | Source Registry Contract aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/source-registry-entry.schema.json` |
 | Validity Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/validity-policy.md` |
 | Source Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/source-policy.md` |
-| Abstention Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/abstention-policy.md` |
+| Citation Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/citation-policy.md` |
+| Abstention Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/abstention-policy.md` |
 | Conflict Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/conflict-policy.md` |
 | Cost Governor Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/cost-governor-policy.md` |
 | `budgets.yaml` aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/schemas/budgets.yaml` |
@@ -105,4 +106,20 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Coverage matrix creada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/adr-requirements-coverage.md` |
 | ADR-001 respaldado por arquitectura | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/architecture-overview.md`, `docs/architecture/module-boundaries.md` |
 | Open questions sin preguntas Blocking | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/open-questions.md` |
+| Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.4
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| `evidence-pack.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/evidence-pack.schema.json` |
+| `source.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/source.schema.json` |
+| `passage.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/passage.schema.json` |
+| `citation.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/citation.schema.json` |
+| `claim.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/claim.schema.json` |
+| `answer-contract.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-contract.schema.json` |
+| `citation-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/citation-policy.md` |
+| `abstention-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/abstention-policy.md` |
+| Ejemplos validos demuestran `claim -> citation -> passage -> source` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-contract.schema.json`, `docs/policies/citation-policy.md` |
+| `citation-audit.schema.json` queda fuera de 0.4 y delegado a 0.7 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/README.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |

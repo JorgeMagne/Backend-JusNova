@@ -17,6 +17,13 @@ Las politicas convierten principios juridicos, tecnicos, comerciales y de seguri
 - Toda politica critica debe distinguir reglas deterministicas de reglas asistidas por IA.
 - Toda politica que bloquee una respuesta debe describir el comportamiento esperado.
 
+## Politicas aceptadas en Subfase 0.4
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Citation Policy | Accepted | `citation-policy.md` |
+| Abstention Policy | Accepted | `abstention-policy.md` |
+
 ## Politicas minimas esperadas
 
 ```txt
