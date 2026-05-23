@@ -39,7 +39,7 @@ No define retencion final, permisos productivos completos ni proceso de incident
 12. Model calls y tool calls registran `input_hash`; `output_hash` solo es obligatorio en `success`.
 13. Estados fallidos registran `error_code` y no guardan salida completa.
 14. `citation_audit` registra evaluacion estructurada de cita y claim; no guarda pasajes crudos fuera de las referencias aprobadas.
-15. Si una traza se marca `blocked` o `total_abstention`, debe existir `abstention_reason` o una advertencia visible.
+15. Si una traza se marca `blocked` o `total_abstention`, debe existir `abstention_reason`; `warnings[]` puede complementar la explicacion visible, pero no sustituye la razon reconstruible.
 16. Si una traza se marca `answered` o `partial_abstention`, su `citation_audit.overall_status` debe ser `passed`.
 17. Si una traza se marca `partial_abstention`, debe existir `abstention_reason` o una advertencia visible sobre la parte no respondida.
 18. Si una traza se marca `answered`, todos sus claims deben tener `verification_status = passed`.
