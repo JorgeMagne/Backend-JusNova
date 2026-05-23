@@ -1114,6 +1114,38 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "abstention_reason": {
+            "const": "policy_blocked"
+          }
+        },
+        "required": [
+          "abstention_reason"
+        ]
+      },
+      "then": {
+        "properties": {
+          "citation_audit": {
+            "properties": {
+              "blocking_failures": {
+                "contains": {
+                  "properties": {
+                    "failure_code": {
+                      "const": "policy_blocked"
+                    }
+                  },
+                  "required": [
+                    "failure_code"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
     }
   ],
   "examples": [
@@ -1891,6 +1923,63 @@
       },
       "cost": {
         "cost_report_id": "cr_013",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_014",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_014",
+      "answer_version_ref": "av_014",
+      "answer_version": 1,
+      "conversation_id": "conv_014",
+      "response_outcome": "blocked",
+      "abstention_reason": "policy_blocked",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_014",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "blocked",
+        "results": [],
+        "blocking_failures": [
+          {
+            "failure_code": "unsupported_claim",
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "severity": "blocking"
+          }
+        ],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_014",
         "currency": "NONE",
         "is_estimated": false,
         "billing_source": "not_billable",
