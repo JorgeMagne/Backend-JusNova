@@ -185,6 +185,12 @@
                 },
                 "severity": {
                   "const": "low"
+                },
+                "support_assessment": {
+                  "enum": [
+                    "direct",
+                    "inferential"
+                  ]
                 }
               }
             }
@@ -356,6 +362,25 @@
           "severity": "blocking"
         }
       ],
+      "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "citation_audit_id": "ca_007",
+      "auditor_version": "citation-auditor-v1",
+      "overall_status": "passed",
+      "results": [
+        {
+          "citation_ref": "C1",
+          "claim_id": "cl_001",
+          "passage_ref": "F1:P1",
+          "source_ref": "F1",
+          "status": "valid",
+          "support_assessment": "unsupported",
+          "severity": "low"
+        }
+      ],
+      "blocking_failures": [],
       "warnings": [],
       "created_at": "2026-05-22T00:00:00Z"
     },

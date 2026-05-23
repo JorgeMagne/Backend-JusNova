@@ -104,6 +104,31 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "billing_source": {
+            "const": "not_billable"
+          }
+        },
+        "required": [
+          "billing_source"
+        ]
+      },
+      "then": {
+        "properties": {
+          "currency": {
+            "const": "NONE"
+          },
+          "provider_estimated_costs": {
+            "maxItems": 0
+          },
+          "estimated_total_cost": {
+            "const": 0
+          }
+        }
+      }
     }
   ],
   "examples": [
@@ -181,6 +206,17 @@
       "provider_estimated_costs": [],
       "estimated_total_cost": 0,
       "research_credits": 2
+    },
+    {
+      "cost_report_id": "cr_007",
+      "currency": "USD",
+      "is_estimated": false,
+      "billing_source": "not_billable",
+      "model_input_tokens": 0,
+      "model_output_tokens": 0,
+      "tool_calls": 0,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0
     }
   ]
 }
