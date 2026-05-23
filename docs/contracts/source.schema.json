@@ -15,7 +15,6 @@
     "source_type",
     "tier",
     "title",
-    "snapshot_id",
     "retrieved_at",
     "validity_status",
     "warnings",
@@ -170,6 +169,39 @@
       }
     },
     {
+      "anyOf": [
+        {
+          "required": [
+            "snapshot_id"
+          ],
+          "properties": {
+            "snapshot_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "required": [
+            "snapshot_unavailable_reason"
+          ],
+          "properties": {
+            "snapshot_unavailable_reason": {
+              "type": "string",
+              "enum": [
+                "host_blocked_snapshot",
+                "content_too_large",
+                "transient_fetch_error",
+                "legal_access_restricted",
+                "dynamic_render_failed",
+                "user_private_document_not_snapshotted"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "if": {
         "properties": {
           "snapshot_id": {
@@ -215,6 +247,33 @@
               "dynamic_render_failed",
               "user_private_document_not_snapshotted"
             ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "snapshot_unavailable_reason": {
+            "type": "string",
+            "enum": [
+              "host_blocked_snapshot",
+              "content_too_large",
+              "transient_fetch_error",
+              "legal_access_restricted",
+              "dynamic_render_failed",
+              "user_private_document_not_snapshotted"
+            ]
+          }
+        },
+        "required": [
+          "snapshot_unavailable_reason"
+        ]
+      },
+      "then": {
+        "properties": {
+          "snapshot_id": {
+            "type": "null"
           }
         }
       }
@@ -356,7 +415,6 @@
       "title": "Ficha de jurisprudencia oficial temporalmente no snapshotteada",
       "issuer": "Tribunal Constitucional Plurinacional",
       "url": "https://jurisprudencia.tcpbolivia.bo/Fichas/Ficha/12345",
-      "snapshot_id": null,
       "snapshot_unavailable_reason": "transient_fetch_error",
       "retrieved_at": "2026-05-22T00:00:00Z",
       "published_at": "2024-03-01",
@@ -375,7 +433,6 @@
       "title": "Contrato privado aportado por el usuario",
       "issuer": null,
       "url": null,
-      "snapshot_id": null,
       "snapshot_unavailable_reason": "user_private_document_not_snapshotted",
       "retrieved_at": "2026-05-22T00:00:00Z",
       "published_at": null,

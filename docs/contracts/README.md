@@ -60,6 +60,7 @@ Estos contratos quedan aceptados como base documental del JusNova Live Legal Sea
 ## Hardening contractual de Subfase 0.6
 
 - `source.schema.json` representa snapshot de fuente usada mediante `snapshot_id` o `snapshot_unavailable_reason`.
+- `snapshot_id` no es obligatorio cuando existe `snapshot_unavailable_reason` cerrada; no se exige emitir un `null` sintetico.
 - `snapshot_unavailable_reason` usa enum compartido con `legal-search-result.schema.json`.
 - `user_private_document_not_snapshotted` solo aplica a `USER_DOCUMENT` o `documento_usuario`.
 - Una fuente usada sin snapshot ni razon cerrada no puede entrar al Evidence Pack final.

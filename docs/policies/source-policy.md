@@ -41,7 +41,7 @@ Aplica a fuentes externas, fuentes oficiales, fuentes secundarias, fuentes cache
 2. `source_type = documento_usuario` exige `tier = USER_DOCUMENT` y `validity_status = NO_APLICA`.
 3. `tier = USER_DOCUMENT` exige `source_type = documento_usuario` y `validity_status = NO_APLICA`.
 4. `snapshot_id` y `snapshot_unavailable_reason` no pueden coexistir como estados positivos.
-5. Si `snapshot_id = null`, `snapshot_unavailable_reason` debe ser una razon cerrada.
+5. Si `snapshot_id` esta ausente o es `null`, `snapshot_unavailable_reason` debe ser una razon cerrada.
 6. `user_private_document_not_snapshotted` solo aplica a `USER_DOCUMENT`.
 7. `TIER3_SECUNDARIO` no puede ser soporte unico de `claim_type = norma` o `claim_type = vigencia`.
 8. `TIER2_CONFIABLE` usado por caida de fuente oficial exige warning visible.
