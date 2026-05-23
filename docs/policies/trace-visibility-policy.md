@@ -44,10 +44,13 @@ No define retencion final, permisos productivos completos ni proceso de incident
 17. Si una traza se marca `answered`, todos sus claims deben tener `verification_status = passed`.
 18. Si una traza se marca `partial_abstention`, debe existir al menos un claim con `verification_status = passed`.
 19. Si una traza se marca `answered` o `partial_abstention`, debe existir al menos un `ModelCall` con `purpose = answer_generation` y `status = success`.
-20. Si una traza se marca `answered`, no debe existir `abstention_reason`.
-21. Si una traza se marca `total_abstention`, no debe contener claims publicados ni fuentes usadas.
-22. Si una traza se marca `blocked`, puede conservar claims intentados, pero ninguno puede tener `verification_status = passed`.
-23. Ningun nivel de visibilidad puede convertir una fuente decorativa en fuente usada.
+20. Si `citation_audit.overall_status = passed`, cada `claims[].citations[]` publicado debe aparecer en `citation_audit.results[]` con el mismo `claim_id`, `citation_ref` y `status = valid`.
+21. Si `citation_audit.overall_status = passed`, cada `sources_used[]` debe aparecer como `source_ref` en al menos un resultado auditado valido.
+22. Un `TraceObject` no puede presentarse en `USER_SUMMARY`, `SUPPORT_VIEW` ni `INTERNAL_AUDIT` como auditoria aprobada si tiene claims, citas o fuentes publicadas fuera de `CitationAudit.results[]`.
+23. Si una traza se marca `answered`, no debe existir `abstention_reason`.
+24. Si una traza se marca `total_abstention`, no debe contener claims publicados ni fuentes usadas.
+25. Si una traza se marca `blocked`, puede conservar claims intentados, pero ninguno puede tener `verification_status = passed`.
+26. Ningun nivel de visibilidad puede convertir una fuente decorativa en fuente usada.
 
 ## Reglas asistidas por IA
 
@@ -88,6 +91,7 @@ El motivo debe ser concreto: soporte de usuario, investigacion de incidente, eva
 - `trace-object.schema.json` no permite objetos libres para fuentes rechazadas ni latencias.
 - `model-call.schema.json` y `tool-call.schema.json` no almacenan material crudo.
 - `citation-audit.schema.json` audita cita, claim, pasaje y fuente por referencia.
+- `citation_audit.overall_status = passed` cubre todos los claims citados y todas las fuentes usadas de la traza.
 - Los niveles de visibilidad quedan definidos y no permiten acceso libre en `INTERNAL_AUDIT`.
 - Todo acceso elevado tiene campos minimos de registro.
 

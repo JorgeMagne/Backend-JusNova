@@ -1873,5 +1873,104 @@
       },
       "warnings": []
     }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "trace_id": "tr_policy_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_policy_001",
+      "answer_version_ref": "av_policy_001",
+      "answer_version": 1,
+      "conversation_id": "conv_policy_001",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_policy_001",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:input-policy-001",
+          "output_hash": "sha256:output-policy-001",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F99"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim publicado con cita no cubierta por la auditoria.",
+          "claim_type": "norma",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C99"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_policy_001",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_policy_001",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 1000,
+        "model_total": 800,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-valid but policy-invalid: C99 and F99 are not covered by citation_audit.results."
+      ]
+    }
   ]
 }
