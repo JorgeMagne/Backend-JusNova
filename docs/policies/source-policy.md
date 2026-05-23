@@ -20,6 +20,7 @@ Aplica a fuentes externas, fuentes oficiales, fuentes secundarias, fuentes cache
 - `Fuente oficial canonica`: publicacion primaria o tribunal competente.
 - `Documento de usuario`: documento privado aportado por usuario; sostiene hechos o texto documental, no derecho vigente.
 - `Snapshot`: captura o registro reproducible de la fuente consultada.
+- `Modo Investigacion`: ejecucion de mayor profundidad con presupuesto tecnico o credito explicito para buscar fuente oficial, extraer pasajes y revalidar vigencia antes de publicar una conclusion critica.
 
 ## Reglas obligatorias
 
@@ -57,9 +58,16 @@ Aplica a fuentes externas, fuentes oficiales, fuentes secundarias, fuentes cache
 
 - Fuente sin `retrieved_at`, `tier` o `source_type`: bloquear uso en respuesta final.
 - Fuente sin pasaje extraido: permitir discovery o contexto interno, pero impedir cita.
-- Fuente secundaria como unico soporte critico: abstencion o Modo Investigacion.
 - Documento de usuario tratado como norma vigente: bloquear respuesta.
 - Snapshot ausente sin razon: bloquear inclusion en Evidence Pack final.
+
+| Caso | Accion obligatoria |
+|---|---|
+| `TIER3_SECUNDARIO` es el unico soporte de `claim_type = norma` o `claim_type = vigencia` | No publicar conclusion critica. Si existe presupuesto o credito, ofrecer Modo Investigacion antes de cualquier respuesta sustantiva; si no existe o no se activa, emitir abstencion parcial o total. |
+| `TIER2_CONFIABLE` o `TIER3_SECUNDARIO` es el unico soporte para confirmar vigencia o derogacion | No usar `VIGENCIA_CONFIRMADA` ni `DEROGADA_CONFIRMADA`; aplicar `validity-policy.md` y responder solo con advertencia o abstencion. |
+| Fuente secundaria se usa solo como contexto no critico | Permitir solo con warning visible, sin tratarla como fundamento principal. |
+
+La abstencion es parcial solo si existen puntos verificables con citas validas. Si el punto preguntado depende por completo de fuente secundaria insuficiente, la abstencion es total.
 
 ## Ejemplos permitidos
 
