@@ -47,7 +47,7 @@ El Source Registry permite priorizar autoridad, controlar fuentes debiles, audit
 
 ## Dependencias posteriores
 
-- Subfase 0.6 debe crear source, validity, conflict y uncertainty policies.
+- Subfase 0.6 acepta `source-policy.md`, `validity-policy.md`, `conflict-policy.md` y `uncertainty-policy.md`.
 - Subfase 0.5 debe definir source routing.
 - Subfase 0.9 debe separar document evidence.
 - Fase 4 y Fase 5 implementaran registry/adapters iniciales.
@@ -75,7 +75,7 @@ El Source Registry permite priorizar autoridad, controlar fuentes debiles, audit
 ## Criterios de aceptacion
 
 - Subfase posterior crea `source-registry-entry.schema.json`.
-- Se crean `source-policy.md`, `validity-policy.md`, `conflict-policy.md` y `uncertainty-policy.md`.
+- `source-policy.md`, `validity-policy.md`, `conflict-policy.md` y `uncertainty-policy.md` quedan aceptadas como politicas operativas de Subfase 0.6.
 - TIER2/TIER3 quedan reguladas.
 - Cache no se trata como confirmacion de vigencia.
 

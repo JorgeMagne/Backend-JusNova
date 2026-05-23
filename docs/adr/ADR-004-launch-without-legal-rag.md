@@ -53,7 +53,7 @@ La busqueda viva, adaptadores oficiales, snapshots y documentos del usuario perm
 
 ## Dependencias posteriores
 
-- Subfase 0.6 debe crear `no-rag-launch-policy.md` y source/cache warnings.
+- Subfase 0.6 acepta `no-rag-launch-policy.md` y regula warnings de fuente/cache mediante `source-policy.md`, `validity-policy.md` y `uncertainty-policy.md`.
 - Fase 8 implementara Evidence Cache y Source Snapshot Registry.
 - Fase post-mercado podra reconsiderar corpus propio con ADR nuevo.
 
@@ -81,6 +81,7 @@ La busqueda viva, adaptadores oficiales, snapshots y documentos del usuario perm
 - El documento no usa terminologia ambigua de RAG parcial para lanzamiento.
 - El equipo entiende que la informacion viene de recuperacion viva y documentos.
 - Respuestas desde cache muestran fecha y advertencia cuando corresponda.
+- `no-rag-launch-policy.md` queda aceptada como politica operativa de lanzamiento sin corpus propio.
 
 ## Momento de revision
 
@@ -89,4 +90,3 @@ Revisar despues de tres meses de beta o cuando el 60% de consultas repetidas pro
 ## Consecuencias
 
 El diferencial inicial se construye en busqueda, extraccion, ranking, citacion, trazabilidad y evaluacion, no en prometer corpus propio.
-

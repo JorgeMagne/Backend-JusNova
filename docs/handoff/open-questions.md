@@ -29,7 +29,9 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 | OQ-005 | Lista canonica ADR-001 a ADR-012 de Fase 0 detallada. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto por `docs/adr/decision-matrix.md`. |
 | OQ-006 | Si Evidence Cache puede tratarse como corpus juridico completo. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por ADR-004. |
 | OQ-007 | Si una pregunta de Fase 0.3 queda bloqueando aceptacion. | Resolved | Closed | Codex / JusNova Chief Backend Architect | No hay preguntas `Blocking` al cierre de Subfase 0.3. |
+| OQ-008 | Donde vive la razon de no snapshot para una fuente usada. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto por `source.schema.json` con `snapshot_unavailable_reason` en Subfase 0.6. |
+| OQ-009 | Si cache o snapshot confirman vigencia. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `validity-policy.md` y `no-rag-launch-policy.md`. |
 
 ## Preguntas Blocking
 
-No hay preguntas `Blocking` registradas al cierre documental de Subfase 0.3.
+No hay preguntas `Blocking` registradas al estado actual de Fase 0.

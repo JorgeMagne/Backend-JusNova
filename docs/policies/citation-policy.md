@@ -70,7 +70,9 @@ Estas reglas deben implementarse en validadores, tests o auditoria de citas; no 
 - Cita valida sin claim soportado: bloquear respuesta final por cita decorativa.
 - Claim critico sin cita valida: bloquear o abstener parcialmente.
 - Fuente final no citada: eliminar de `sources_used` o bloquear hasta reparar.
-- Fuente secundaria como unico soporte critico: bloquear, advertir o pedir Modo Investigacion.
+- Fuente `TIER3_SECUNDARIO` como unico soporte de claim normativo o de vigencia critico: no publicar conclusion critica. Si existe presupuesto o credito, ofrecer Modo Investigacion antes de cualquier respuesta sustantiva; si no existe o no se activa, bloquear o emitir abstencion parcial o total.
+
+La advertencia por fuente secundaria nunca es salida suficiente cuando la fuente `TIER3_SECUNDARIO` es el unico soporte de un claim normativo o de vigencia critico.
 
 ## Ejemplos permitidos
 

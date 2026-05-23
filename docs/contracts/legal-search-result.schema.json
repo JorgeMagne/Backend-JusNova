@@ -8,7 +8,7 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract; Subfase 0.6 - Politicas de fuentes, vigencia, conflicto e incertidumbre"
   },
   "required": [
     "result_id",
@@ -156,7 +156,8 @@
         "content_too_large",
         "transient_fetch_error",
         "legal_access_restricted",
-        "dynamic_render_failed"
+        "dynamic_render_failed",
+        "user_private_document_not_snapshotted"
       ]
     },
     "validity_status": {
@@ -259,6 +260,64 @@
     {
       "if": {
         "properties": {
+          "validity_status": {
+            "enum": [
+              "VIGENCIA_CONFIRMADA",
+              "DEROGADA_CONFIRMADA"
+            ]
+          }
+        },
+        "required": [
+          "validity_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "extraction_status",
+          "passage_refs"
+        ],
+        "properties": {
+          "tier": {
+            "enum": [
+              "TIER1_CANONICO",
+              "TIER1_OFICIAL",
+              "TIER1_STRUCTURED"
+            ]
+          },
+          "extraction_status": {
+            "const": "extracted"
+          },
+          "passage_refs": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tier": {
+            "enum": [
+              "TIER2_CONFIABLE",
+              "TIER3_SECUNDARIO"
+            ]
+          }
+        },
+        "required": [
+          "tier"
+        ]
+      },
+      "then": {
+        "properties": {
+          "warnings": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
           "extraction_status": {
             "const": "extracted"
           }
@@ -283,6 +342,42 @@
         "required": [
           "snapshot_id",
           "snapshot_unavailable_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "snapshot_unavailable_reason": {
+            "const": "user_private_document_not_snapshotted"
+          }
+        },
+        "required": [
+          "snapshot_unavailable_reason"
+        ]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "properties": {
+              "tier": {
+                "const": "USER_DOCUMENT"
+              }
+            },
+            "required": [
+              "tier"
+            ]
+          },
+          {
+            "properties": {
+              "source_type": {
+                "const": "documento_usuario"
+              }
+            },
+            "required": [
+              "source_type"
+            ]
+          }
         ]
       }
     },
@@ -542,6 +637,110 @@
       "snapshot_unavailable_reason": "transient_fetch_error",
       "warnings": [
         "Snapshot y razon de imposibilidad no pueden coexistir aunque no sea citable."
+      ]
+    },
+    {
+      "result_id": "lsr_010",
+      "title": "Fuente publica con razon privada invalida",
+      "url": "https://www.example.gob.bo/documento",
+      "tier": "TIER1_OFICIAL",
+      "source_type": "institucional",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.9,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "snapshot_id": null,
+      "snapshot_unavailable_reason": "user_private_document_not_snapshotted",
+      "warnings": [
+        "La razon privada de no snapshot solo aplica a USER_DOCUMENT."
+      ]
+    },
+    {
+      "result_id": "lsr_011",
+      "title": "Norma secundaria marcada como vigente",
+      "url": "https://www.example.com/blog-ley",
+      "tier": "TIER3_SECUNDARIO",
+      "source_type": "norma",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.2,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "validity_status": "VIGENCIA_CONFIRMADA",
+      "warnings": [
+        "Fuente secundaria no puede confirmar vigencia."
+      ]
+    },
+    {
+      "result_id": "lsr_012",
+      "title": "Resultado secundario sin advertencia",
+      "url": "https://www.example.com/blog",
+      "tier": "TIER3_SECUNDARIO",
+      "source_type": "web",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.2,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "warnings": []
+    },
+    {
+      "result_id": "lsr_013",
+      "title": "Norma oficial marcada vigente sin pasaje",
+      "url": "https://www.example.gob.bo/ley",
+      "tier": "TIER1_CANONICO",
+      "source_type": "norma",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.95,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "validity_status": "VIGENCIA_CONFIRMADA",
+      "warnings": []
+    },
+    {
+      "result_id": "lsr_014",
+      "title": "Fuente secundaria marcada como derogacion confirmada",
+      "url": "https://www.example.com/norma-derogada",
+      "tier": "TIER2_CONFIABLE",
+      "source_type": "norma",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.4,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "extracted",
+      "citation_eligible": false,
+      "passage_refs": [
+        "F14:P1"
+      ],
+      "validity_status": "DEROGADA_CONFIRMADA",
+      "warnings": [
+        "Fuente secundaria no puede confirmar derogacion."
       ]
     }
   ]

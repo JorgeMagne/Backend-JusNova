@@ -25,4 +25,7 @@
 | R-006 | Seguridad tratada tarde. | Medium | Critical | Open | Security/privacy policy, data classification y ownership matrix desde Fase 0. | Codex / JusNova Chief Backend Architect |
 | R-007 | Trazabilidad insuficiente para auditar respuestas juridicas. | Medium | Critical | Open | TraceObject, model/tool calls, usage events y answer versioning como P0. | Codex / JusNova Chief Backend Architect |
 | R-008 | Cost Governor no refleja plan base de 400 Bs. | Medium | High | Open | `budgets.yaml`, usage-event contract y commercial plans v0. | Codex / JusNova Chief Backend Architect |
-
+| R-009 | Fuente oficial clave caida durante busqueda viva. | High | High | Open | `source-policy.md`, `legal-search-policy.md`, warnings de fallback y PRL en fases posteriores. | Codex / JusNova Chief Backend Architect |
+| R-010 | Vigencia no confirmada presentada como vigente. | Medium | Critical | Mitigating | `validity-policy.md`, estados cerrados de vigencia y frases prohibidas. | Codex / JusNova Chief Backend Architect |
+| R-011 | Conflicto irresoluble ocultado en respuesta categorica. | Medium | Critical | Mitigating | `conflict-policy.md`, `uncertainty-policy.md` y abstencion ante conflicto critico. | Codex / JusNova Chief Backend Architect |
+| R-012 | Uso excesivo de fuente secundaria por accesibilidad. | Medium | High | Mitigating | Source tiers, advertencias obligatorias y prohibicion de TIER3 como soporte normativo critico unico. | Codex / JusNova Chief Backend Architect |

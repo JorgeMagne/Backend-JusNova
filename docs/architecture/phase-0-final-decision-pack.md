@@ -68,12 +68,12 @@ Estos ADRs quedan aceptados como decisiones arquitectonicas. Esta lista no impli
 | ADR-001 | High-Assurance Modular Core + Distributed Execution Layer | Accepted | Fase 1 estructura modular; workers por fases. |
 | ADR-002 | Stack Backend And Infrastructure | Accepted | Fase 1 scaffold, settings, DB, Redis, OpenSearch, observabilidad. |
 | ADR-003 | JusNova Live Legal Search Engine | Accepted | Subfase 0.5 contratos; Fases 4-8 implementacion. |
-| ADR-004 | Launch Without Own Legal RAG | Accepted | Subfase 0.6 policies; Fase 8 cache/snapshots. |
+| ADR-004 | Launch Without Own Legal RAG | Accepted | Subfase 0.6 no-rag policy accepted; Fase 8 cache/snapshots. |
 | ADR-005 | AI Provider And Model Policy | Accepted | Fase 1 ModelProvider; Subfase 0.10 provider policy. |
 | ADR-006 | Document OCR Policy | Accepted | Subfase 0.9/0.10 policies; Fase 9 implementacion. |
 | ADR-007 | Evidence, Answer, Citation And Claim Contracts | Accepted | Subfase 0.4 schemas; Fase 2 auditor. |
 | ADR-008 | Cost Governor And Commercial Budgets | Accepted | Subfase 0.8 budgets; Fase 1 CostGovernor/UsageLedger. |
-| ADR-009 | Source Registry And Validity Policy | Accepted | Subfase 0.6 source/validity/conflict/uncertainty policies. |
+| ADR-009 | Source Registry And Validity Policy | Accepted | Subfase 0.6 source/validity/conflict/uncertainty policies accepted; Fase 4/5 registry/adapters. |
 | ADR-010 | Traceability And Answer Versioning | Accepted | Subfase 0.7 trace/answer version schemas. |
 | ADR-011 | Security, Privacy And Provider Boundaries | Accepted | Subfase 0.10 policies; Fase 1 ownership. |
 | ADR-012 | Evaluation And Quality Gates | Accepted | Subfase 0.12 eval plan, dataset and gates. |
@@ -123,8 +123,26 @@ Estos contratos quedan aceptados como contratos documentales del JusNova Live Le
 | Legal Search Policy | Accepted | `docs/policies/legal-search-policy.md` |
 | Source Routing Matrix | Accepted | `docs/policies/source-routing-matrix.md` |
 
+## Politicas aceptadas en Subfase 0.6
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Source Policy | Accepted | `docs/policies/source-policy.md` |
+| Validity Policy | Accepted | `docs/policies/validity-policy.md` |
+| Conflict Policy | Accepted | `docs/policies/conflict-policy.md` |
+| Uncertainty Policy | Accepted | `docs/policies/uncertainty-policy.md` |
+| No RAG Launch Policy | Accepted | `docs/policies/no-rag-launch-policy.md` |
+| Abstention Policy Extension | Accepted | `docs/policies/abstention-policy.md` |
+
+## Contratos endurecidos en Subfase 0.6
+
+| Contrato | Estado | Ajuste |
+|---|---|---|
+| Evidence Source | Accepted | `snapshot_unavailable_reason`, reglas de snapshot, vigencia no aplicable para norma bloqueada, confirmacion/derogacion solo en TIER1 y warnings obligatorios en TIER2/TIER3. |
+| Legal Search Result | Accepted | Enum compartido de razon de snapshot, restriccion de razon privada a `USER_DOCUMENT`, confirmacion/derogacion solo en TIER1 con pasaje extraido y warnings obligatorios en TIER2/TIER3. |
+
 ## Dependencias posteriores preservadas
 
 - `citation-audit.schema.json` queda delegado a Subfase 0.7.
-- Source, validity, conflict y uncertainty policies quedan delegadas a Subfase 0.6.
+- Source Registry schema completo queda delegado a subfases posteriores y Fase 4.
 - Fase 0 global permanece en `Draft` hasta completar 0.1 a 0.14.

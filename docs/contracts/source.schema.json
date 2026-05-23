@@ -8,7 +8,7 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts; Subfase 0.6 - Politicas de fuentes, vigencia, conflicto e incertidumbre"
   },
   "required": [
     "source_ref",
@@ -66,6 +66,22 @@
       "type": [
         "string",
         "null"
+      ],
+      "minLength": 1
+    },
+    "snapshot_unavailable_reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "host_blocked_snapshot",
+        "content_too_large",
+        "transient_fetch_error",
+        "legal_access_restricted",
+        "dynamic_render_failed",
+        "user_private_document_not_snapshotted",
+        null
       ]
     },
     "retrieved_at": {
@@ -151,6 +167,225 @@
           }
         }
       }
+    },
+    {
+      "anyOf": [
+        {
+          "required": [
+            "snapshot_id"
+          ],
+          "properties": {
+            "snapshot_id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "required": [
+            "snapshot_unavailable_reason"
+          ],
+          "properties": {
+            "snapshot_unavailable_reason": {
+              "type": "string",
+              "enum": [
+                "host_blocked_snapshot",
+                "content_too_large",
+                "transient_fetch_error",
+                "legal_access_restricted",
+                "dynamic_render_failed",
+                "user_private_document_not_snapshotted"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "if": {
+        "properties": {
+          "snapshot_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "snapshot_id"
+        ]
+      },
+      "then": {
+        "properties": {
+          "snapshot_unavailable_reason": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "snapshot_id": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "snapshot_id"
+        ]
+      },
+      "then": {
+        "required": [
+          "snapshot_unavailable_reason"
+        ],
+        "properties": {
+          "snapshot_unavailable_reason": {
+            "type": "string",
+            "enum": [
+              "host_blocked_snapshot",
+              "content_too_large",
+              "transient_fetch_error",
+              "legal_access_restricted",
+              "dynamic_render_failed",
+              "user_private_document_not_snapshotted"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "snapshot_unavailable_reason": {
+            "type": "string",
+            "enum": [
+              "host_blocked_snapshot",
+              "content_too_large",
+              "transient_fetch_error",
+              "legal_access_restricted",
+              "dynamic_render_failed",
+              "user_private_document_not_snapshotted"
+            ]
+          }
+        },
+        "required": [
+          "snapshot_unavailable_reason"
+        ]
+      },
+      "then": {
+        "properties": {
+          "snapshot_id": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "snapshot_unavailable_reason": {
+            "const": "user_private_document_not_snapshotted"
+          }
+        },
+        "required": [
+          "snapshot_unavailable_reason"
+        ]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "properties": {
+              "tier": {
+                "const": "USER_DOCUMENT"
+              }
+            },
+            "required": [
+              "tier"
+            ]
+          },
+          {
+            "properties": {
+              "source_type": {
+                "const": "documento_usuario"
+              }
+            },
+            "required": [
+              "source_type"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_type": {
+            "const": "norma"
+          }
+        },
+        "required": [
+          "source_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "validity_status": {
+            "enum": [
+              "VIGENCIA_CONFIRMADA",
+              "VIGENCIA_NO_CONFIRMADA",
+              "POSIBLEMENTE_MODIFICADA",
+              "DEROGADA_CONFIRMADA",
+              "CONFLICTIVA"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "validity_status": {
+            "enum": [
+              "VIGENCIA_CONFIRMADA",
+              "DEROGADA_CONFIRMADA"
+            ]
+          }
+        },
+        "required": [
+        "validity_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "tier": {
+            "enum": [
+              "TIER1_CANONICO",
+              "TIER1_OFICIAL",
+              "TIER1_STRUCTURED"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tier": {
+            "enum": [
+              "TIER2_CONFIABLE",
+              "TIER3_SECUNDARIO"
+            ]
+          }
+        },
+        "required": [
+          "tier"
+        ]
+      },
+      "then": {
+        "properties": {
+          "warnings": {
+            "minItems": 1
+          }
+        }
+      }
     }
   ],
   "examples": [
@@ -162,11 +397,48 @@
       "issuer": "Gaceta Oficial de Bolivia",
       "url": "https://www.example.gob.bo/norma/ley-439",
       "snapshot_id": "snap_001",
+      "snapshot_unavailable_reason": null,
       "retrieved_at": "2026-05-22T00:00:00Z",
       "published_at": "2013-11-19",
       "validity_status": "VIGENCIA_NO_CONFIRMADA",
       "warnings": [
         "Vigencia actual no confirmada."
+      ],
+      "metadata": {
+        "jurisdiction": "BO"
+      }
+    },
+    {
+      "source_ref": "F2",
+      "source_type": "jurisprudencia",
+      "tier": "TIER1_CANONICO",
+      "title": "Ficha de jurisprudencia oficial temporalmente no snapshotteada",
+      "issuer": "Tribunal Constitucional Plurinacional",
+      "url": "https://jurisprudencia.tcpbolivia.bo/Fichas/Ficha/12345",
+      "snapshot_unavailable_reason": "transient_fetch_error",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": "2024-03-01",
+      "validity_status": "NO_APLICA",
+      "warnings": [
+        "Snapshot no disponible por error transitorio de fetch."
+      ],
+      "metadata": {
+        "jurisdiction": "BO"
+      }
+    },
+    {
+      "source_ref": "D1",
+      "source_type": "documento_usuario",
+      "tier": "USER_DOCUMENT",
+      "title": "Contrato privado aportado por el usuario",
+      "issuer": null,
+      "url": null,
+      "snapshot_unavailable_reason": "user_private_document_not_snapshotted",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": null,
+      "validity_status": "NO_APLICA",
+      "warnings": [
+        "Documento privado; no se snapshottea como fuente publica."
       ],
       "metadata": {
         "jurisdiction": "BO"
@@ -182,6 +454,109 @@
       "retrieved_at": "2026-05-22T00:00:00Z",
       "validity_status": "VIGENCIA_NO_CONFIRMADA",
       "warnings": [],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F3",
+      "source_type": "norma",
+      "tier": "TIER1_CANONICO",
+      "title": "Ley sin estado de snapshot",
+      "issuer": "Gaceta Oficial de Bolivia",
+      "url": "https://www.example.gob.bo/norma/ley",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": "2024-01-01",
+      "validity_status": "VIGENCIA_NO_CONFIRMADA",
+      "warnings": [],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F4",
+      "source_type": "norma",
+      "tier": "TIER1_CANONICO",
+      "title": "Ley con snapshot contradictorio",
+      "issuer": "Gaceta Oficial de Bolivia",
+      "url": "https://www.example.gob.bo/norma/ley",
+      "snapshot_id": "snap_004",
+      "snapshot_unavailable_reason": "transient_fetch_error",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": "2024-01-01",
+      "validity_status": "VIGENCIA_NO_CONFIRMADA",
+      "warnings": [],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F5",
+      "source_type": "web",
+      "tier": "TIER3_SECUNDARIO",
+      "title": "Blog publico con razon privada invalida",
+      "issuer": null,
+      "url": "https://www.example.com/blog",
+      "snapshot_id": null,
+      "snapshot_unavailable_reason": "user_private_document_not_snapshotted",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": null,
+      "validity_status": "NO_APLICA",
+      "warnings": [],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F6",
+      "source_type": "norma",
+      "tier": "TIER1_CANONICO",
+      "title": "Norma con vigencia no aplicable",
+      "issuer": "Gaceta Oficial de Bolivia",
+      "url": "https://www.example.gob.bo/norma/ley",
+      "snapshot_id": "snap_006",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": "2024-01-01",
+      "validity_status": "NO_APLICA",
+      "warnings": [],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F7",
+      "source_type": "norma",
+      "tier": "TIER3_SECUNDARIO",
+      "title": "Blog que afirma vigencia normativa",
+      "issuer": null,
+      "url": "https://www.example.com/blog-ley",
+      "snapshot_id": "snap_007",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": null,
+      "validity_status": "VIGENCIA_CONFIRMADA",
+      "warnings": [
+        "Fuente secundaria no puede confirmar vigencia."
+      ],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F8",
+      "source_type": "web",
+      "tier": "TIER3_SECUNDARIO",
+      "title": "Fuente secundaria sin advertencia",
+      "issuer": null,
+      "url": "https://www.example.com/blog",
+      "snapshot_id": "snap_008",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": null,
+      "validity_status": "NO_APLICA",
+      "warnings": [],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F9",
+      "source_type": "norma",
+      "tier": "TIER2_CONFIABLE",
+      "title": "Repositorio secundario que afirma derogacion",
+      "issuer": null,
+      "url": "https://www.example.com/norma-derogada",
+      "snapshot_id": "snap_009",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": null,
+      "validity_status": "DEROGADA_CONFIRMADA",
+      "warnings": [
+        "Fuente secundaria no puede confirmar derogacion."
+      ],
       "metadata": {}
     },
     {

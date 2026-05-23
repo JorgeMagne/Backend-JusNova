@@ -57,6 +57,18 @@ Estos contratos quedan aceptados como base documental del JusNova Live Legal Sea
 - El snapshot es obligatorio salvo imposibilidad documentada.
 - `tier` es el nombre canonico alineado con `source.schema.json`.
 
+## Hardening contractual de Subfase 0.6
+
+- `source.schema.json` representa snapshot de fuente usada mediante `snapshot_id` o `snapshot_unavailable_reason`.
+- `snapshot_id` no es obligatorio cuando existe `snapshot_unavailable_reason` cerrada; no se exige emitir un `null` sintetico.
+- `snapshot_unavailable_reason` usa enum compartido con `legal-search-result.schema.json`.
+- `user_private_document_not_snapshotted` solo aplica a `USER_DOCUMENT` o `documento_usuario`.
+- Una fuente usada sin snapshot ni razon cerrada no puede entrar al Evidence Pack final.
+- `source_type = norma` no puede usar `validity_status = NO_APLICA`.
+- `VIGENCIA_CONFIRMADA` y `DEROGADA_CONFIRMADA` requieren fuente `TIER1_CANONICO`, `TIER1_OFICIAL` o `TIER1_STRUCTURED`.
+- En `legal-search-result.schema.json`, `VIGENCIA_CONFIRMADA` y `DEROGADA_CONFIRMADA` requieren extraccion con `passage_refs`.
+- `TIER2_CONFIABLE` y `TIER3_SECUNDARIO` requieren advertencia en contratos de fuente y resultado.
+
 ## Schemas minimos esperados
 
 ```txt
