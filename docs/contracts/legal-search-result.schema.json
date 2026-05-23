@@ -236,7 +236,18 @@
       "then": {
         "required": [
           "validity_status"
-        ]
+        ],
+        "properties": {
+          "validity_status": {
+            "enum": [
+              "VIGENCIA_CONFIRMADA",
+              "VIGENCIA_NO_CONFIRMADA",
+              "POSIBLEMENTE_MODIFICADA",
+              "DEROGADA_CONFIRMADA",
+              "CONFLICTIVA"
+            ]
+          }
+        }
       }
     },
     {
@@ -276,7 +287,7 @@
         "required": [
           "passage_refs"
         ],
-        "anyOf": [
+        "oneOf": [
           {
             "required": [
               "snapshot_id"
@@ -429,6 +440,52 @@
       "validity_status": "VIGENCIA_CONFIRMADA",
       "warnings": [
         "Documento de usuario no puede ser fuente oficial vigente."
+      ]
+    },
+    {
+      "result_id": "lsr_006",
+      "title": "Norma con vigencia no aplicable",
+      "url": "https://www.example.gob.bo/ley",
+      "tier": "TIER1_CANONICO",
+      "source_type": "norma",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.9,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "validity_status": "NO_APLICA",
+      "warnings": [
+        "Una norma no puede tener vigencia NO_APLICA."
+      ]
+    },
+    {
+      "result_id": "lsr_007",
+      "title": "Resultado citable con snapshot contradictorio",
+      "url": "https://www.example.gob.bo/documento",
+      "tier": "TIER1_OFICIAL",
+      "source_type": "institucional",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.9,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "extracted",
+      "citation_eligible": true,
+      "passage_refs": [
+        "F2:P1"
+      ],
+      "snapshot_id": "snap_007",
+      "snapshot_unavailable_reason": "transient_fetch_error",
+      "warnings": [
+        "Snapshot y razon de imposibilidad no pueden coexistir."
       ]
     }
   ]

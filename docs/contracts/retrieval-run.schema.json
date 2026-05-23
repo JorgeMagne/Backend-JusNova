@@ -166,6 +166,14 @@
       },
       "additionalProperties": false
     },
+    "cancellation_reason": {
+      "enum": [
+        "user_cancelled",
+        "timeout_cancelled",
+        "system_cancelled",
+        "superseded_by_new_run"
+      ]
+    },
     "latency_ms": {
       "type": "integer",
       "minimum": 0
@@ -185,10 +193,7 @@
       "format": "date-time"
     },
     "completed_at": {
-      "type": [
-        "string",
-        "null"
-      ],
+      "type": "string",
       "format": "date-time"
     }
   },
@@ -235,6 +240,11 @@
               "required": [
                 "error"
               ]
+            },
+            {
+              "required": [
+                "cancellation_reason"
+              ]
             }
           ]
         }
@@ -280,6 +290,11 @@
               "required": [
                 "error"
               ]
+            },
+            {
+              "required": [
+                "cancellation_reason"
+              ]
             }
           ]
         }
@@ -311,6 +326,11 @@
               "required": [
                 "no_evidence_reason"
               ]
+            },
+            {
+              "required": [
+                "cancellation_reason"
+              ]
             }
           ]
         }
@@ -341,6 +361,44 @@
             {
               "required": [
                 "evidence_pack_id"
+              ]
+            },
+            {
+              "required": [
+                "error"
+              ]
+            },
+            {
+              "required": [
+                "cancellation_reason"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "cancelled"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "evidence_pack_id"
+              ]
+            },
+            {
+              "required": [
+                "no_evidence_reason"
               ]
             },
             {
@@ -392,6 +450,23 @@
       "warnings": [],
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:24Z"
+    },
+    {
+      "retrieval_run_id": "rr_cancelled_001",
+      "query_id": "q_legal_cancelled_001",
+      "retrieval_plan_id": "rp_cancelled_001",
+      "status": "cancelled",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "cancellation_reason": "user_cancelled",
+      "latency_ms": 1200,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
     }
   ],
   "x-invalid-examples": [
@@ -559,6 +634,55 @@
         "error_code": "provider_timeout",
         "message": "Timeout al consultar fuentes oficiales."
       },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_010",
+      "query_id": "q_legal_010",
+      "retrieval_plan_id": "rp_010",
+      "status": "completed_with_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_010",
+      "quality": {
+        "overall": "LOW",
+        "coverage": 0.2,
+        "authority": 0.5,
+        "citation_readiness": 0.3,
+        "validity_risk": "HIGH",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": null
+    },
+    {
+      "retrieval_run_id": "rr_011",
+      "query_id": "q_legal_011",
+      "retrieval_plan_id": "rp_011",
+      "status": "cancelled",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_011",
+      "no_evidence_reason": "no_evidence_found",
+      "error": {
+        "error_code": "cancelled_with_error",
+        "message": "Estado cancelado con payload contradictorio."
+      },
+      "cancellation_reason": "user_cancelled",
       "latency_ms": 100,
       "estimated_cost": 0,
       "warnings": [],

@@ -195,6 +195,29 @@
           "maximum": 600000
         }
       },
+      "anyOf": [
+        {
+          "properties": {
+            "discovery_calls_max": {
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "source_fetches_max": {
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "official_adapter_calls_max": {
+              "minimum": 1
+            }
+          }
+        }
+      ],
       "additionalProperties": false
     }
   },
@@ -280,6 +303,25 @@
         "max_results_per_provider": 0,
         "tool_rounds_max": 0,
         "timeout_ms": 1000
+      }
+    },
+    {
+      "query_id": "q_legal_003",
+      "raw_query": "Busca jurisprudencia.",
+      "jurisdiction": "BO",
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "required_source_types": [
+        "jurisprudencia"
+      ],
+      "budget": {
+        "discovery_calls_max": 0,
+        "source_fetches_max": 0,
+        "official_adapter_calls_max": 0,
+        "max_results_per_provider": 10,
+        "tool_rounds_max": 1,
+        "timeout_ms": 90000
       }
     }
   ]
