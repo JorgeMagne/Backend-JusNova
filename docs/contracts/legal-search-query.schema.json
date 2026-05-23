@@ -1,0 +1,352 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/legal-search-query.schema.json",
+  "title": "LegalSearchQuery",
+  "description": "Entrada contractual para una ejecucion real del LiveLegalSearchEngine. Si una consulta META no requiere busqueda juridica viva, no debe crear LegalSearchQuery.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+  },
+  "required": [
+    "query_id",
+    "raw_query",
+    "jurisdiction",
+    "intents",
+    "required_source_types",
+    "budget"
+  ],
+  "properties": {
+    "query_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "raw_query": {
+      "type": "string",
+      "minLength": 1
+    },
+    "normalized_query": {
+      "type": "string"
+    },
+    "jurisdiction": {
+      "type": "string",
+      "const": "BO"
+    },
+    "legal_area": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "CIVIL",
+          "PROCESAL_CIVIL",
+          "PENAL",
+          "PROCESAL_PENAL",
+          "LABORAL",
+          "CONSTITUCIONAL",
+          "ADMINISTRATIVO",
+          "TRIBUTARIO",
+          "COMERCIAL",
+          "FAMILIA",
+          "NIÑEZ_ADOLESCENCIA",
+          "AGROAMBIENTAL",
+          "COACTIVO_FISCAL",
+          "CONTENCIOSO_ADMINISTRATIVO",
+          "REGULATORIO_SECTORIAL",
+          "MUNICIPAL_AUTONOMICO",
+          "NOTARIAL_REGISTRAL",
+          "MIGRATORIO",
+          "OTRO"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "intents": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "NORMATIVA",
+          "JURISPRUDENCIA",
+          "PROCEDIMIENTO",
+          "ESTRATEGIA",
+          "DOC_ANALYSIS",
+          "REDACCION",
+          "SECTORIAL",
+          "SUBNACIONAL",
+          "VIGENCIA",
+          "MIXTO",
+          "META"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "required_source_types": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "norma",
+          "jurisprudencia",
+          "institucional",
+          "doctrina",
+          "documento_usuario"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "./legal-entity.schema.json"
+      }
+    },
+    "date_constraints": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "to": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "as_of": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      },
+      "additionalProperties": false
+    },
+    "must_verify_validity": {
+      "type": "boolean"
+    },
+    "allowed_domains": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9.-]+$"
+      },
+      "uniqueItems": true
+    },
+    "blocked_domains": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9.-]+$"
+      },
+      "uniqueItems": true
+    },
+    "budget": {
+      "$ref": "#/$defs/search_budget"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "search_budget": {
+      "type": "object",
+      "required": [
+        "discovery_calls_max",
+        "source_fetches_max",
+        "official_adapter_calls_max",
+        "max_results_per_provider",
+        "tool_rounds_max",
+        "timeout_ms"
+      ],
+      "properties": {
+        "discovery_calls_max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "source_fetches_max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "official_adapter_calls_max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "max_results_per_provider": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "tool_rounds_max": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 600000
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "discovery_calls_max": {
+              "minimum": 1
+            },
+            "source_fetches_max": {
+              "minimum": 1
+            },
+            "max_results_per_provider": {
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "official_adapter_calls_max": {
+              "minimum": 1
+            },
+            "source_fetches_max": {
+              "minimum": 1
+            },
+            "max_results_per_provider": {
+              "minimum": 1
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "examples": [
+    {
+      "query_id": "q_legal_001",
+      "raw_query": "Busca jurisprudencia del TCP sobre accion de amparo por debido proceso.",
+      "normalized_query": "jurisprudencia tcp accion de amparo debido proceso",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "CONSTITUCIONAL"
+      ],
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "required_source_types": [
+        "jurisprudencia"
+      ],
+      "entities": [
+        {
+          "entity_id": "ent_001",
+          "entity_type": "institucion",
+          "value": "Tribunal Constitucional Plurinacional",
+          "number": null,
+          "year": null,
+          "authority": "TCP",
+          "confidence": 0.95,
+          "needs_disambiguation": false
+        }
+      ],
+      "date_constraints": {
+        "from": null,
+        "to": null,
+        "as_of": "2026-05-22"
+      },
+      "must_verify_validity": false,
+      "allowed_domains": [
+        "tcpbolivia.bo"
+      ],
+      "blocked_domains": [],
+      "budget": {
+        "discovery_calls_max": 2,
+        "source_fetches_max": 6,
+        "official_adapter_calls_max": 2,
+        "max_results_per_provider": 10,
+        "tool_rounds_max": 3,
+        "timeout_ms": 90000
+      }
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "query_id": "q_legal_002",
+      "raw_query": "Busca jurisprudencia.",
+      "jurisdiction": "AR",
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "required_source_types": [
+        "jurisprudencia"
+      ],
+      "budget": {
+        "discovery_calls_max": 2,
+        "source_fetches_max": 6,
+        "official_adapter_calls_max": 2,
+        "max_results_per_provider": 10,
+        "tool_rounds_max": 3,
+        "timeout_ms": 90000
+      }
+    },
+    {
+      "query_id": "q_meta_001",
+      "raw_query": "Como uso JusNova?",
+      "jurisdiction": "BO",
+      "intents": [
+        "META"
+      ],
+      "required_source_types": [],
+      "budget": {
+        "discovery_calls_max": 0,
+        "source_fetches_max": 0,
+        "official_adapter_calls_max": 0,
+        "max_results_per_provider": 0,
+        "tool_rounds_max": 0,
+        "timeout_ms": 1000
+      }
+    },
+    {
+      "query_id": "q_legal_003",
+      "raw_query": "Busca jurisprudencia.",
+      "jurisdiction": "BO",
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "required_source_types": [
+        "jurisprudencia"
+      ],
+      "budget": {
+        "discovery_calls_max": 0,
+        "source_fetches_max": 0,
+        "official_adapter_calls_max": 0,
+        "max_results_per_provider": 10,
+        "tool_rounds_max": 1,
+        "timeout_ms": 90000
+      }
+    },
+    {
+      "query_id": "q_legal_004",
+      "raw_query": "Busca jurisprudencia.",
+      "jurisdiction": "BO",
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "required_source_types": [
+        "jurisprudencia"
+      ],
+      "budget": {
+        "discovery_calls_max": 1,
+        "source_fetches_max": 0,
+        "official_adapter_calls_max": 0,
+        "max_results_per_provider": 0,
+        "tool_rounds_max": 0,
+        "timeout_ms": 1000
+      }
+    }
+  ]
+}

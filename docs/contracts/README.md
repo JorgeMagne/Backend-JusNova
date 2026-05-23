@@ -35,6 +35,28 @@ Estos contratos quedan aceptados como base documental del flujo `EvidencePack ->
 
 `citation-audit.schema.json` queda delegado a Subfase 0.7 junto con trazabilidad, auditoria y versionado. Subfase 0.4 define la forma de `Citation` y las policies de citacion/abstencion, pero no el resultado completo del auditor.
 
+## Contratos aceptados en Subfase 0.5
+
+Estos contratos quedan aceptados como base documental del JusNova Live Legal Search Engine. Esta aceptacion no implementa backend funcional, adaptadores oficiales ni providers externos.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Legal Entity | Accepted | `legal-entity.schema.json` |
+| Legal Search Query | Accepted | `legal-search-query.schema.json` |
+| Legal Search Result | Accepted | `legal-search-result.schema.json` |
+| Retrieval Plan | Accepted | `retrieval-plan.schema.json` |
+| Retrieval Run | Accepted | `retrieval-run.schema.json` |
+| Evidence Quality | Accepted | `evidence-quality.schema.json` |
+| Provider Interfaces | Accepted | `provider-interfaces.md` |
+
+## Reglas especificas de Subfase 0.5
+
+- `LegalSearchQuery.budget` usa un `search_budget` interno tecnico.
+- El presupuesto comercial del Cost Governor queda para Subfase 0.8.
+- Todo resultado citable requiere pasaje extraido.
+- El snapshot es obligatorio salvo imposibilidad documentada.
+- `tier` es el nombre canonico alineado con `source.schema.json`.
+
 ## Schemas minimos esperados
 
 ```txt

@@ -73,7 +73,7 @@ Estos ADRs quedan aceptados como decisiones arquitectonicas. Esta lista no impli
 | ADR-006 | Document OCR Policy | Accepted | Subfase 0.9/0.10 policies; Fase 9 implementacion. |
 | ADR-007 | Evidence, Answer, Citation And Claim Contracts | Accepted | Subfase 0.4 schemas; Fase 2 auditor. |
 | ADR-008 | Cost Governor And Commercial Budgets | Accepted | Subfase 0.8 budgets; Fase 1 CostGovernor/UsageLedger. |
-| ADR-009 | Source Registry And Validity Policy | Accepted | Subfase 0.6 source/validity/conflict policies. |
+| ADR-009 | Source Registry And Validity Policy | Accepted | Subfase 0.6 source/validity/conflict/uncertainty policies. |
 | ADR-010 | Traceability And Answer Versioning | Accepted | Subfase 0.7 trace/answer version schemas. |
 | ADR-011 | Security, Privacy And Provider Boundaries | Accepted | Subfase 0.10 policies; Fase 1 ownership. |
 | ADR-012 | Evaluation And Quality Gates | Accepted | Subfase 0.12 eval plan, dataset and gates. |
@@ -101,6 +101,27 @@ Estos contratos quedan aceptados como contratos documentales. Esta lista no impl
 |---|---|---|
 | Citation Policy | Accepted | `docs/policies/citation-policy.md` |
 | Abstention Policy | Accepted | `docs/policies/abstention-policy.md` |
+
+## Contratos aceptados en Subfase 0.5
+
+Estos contratos quedan aceptados como contratos documentales del JusNova Live Legal Search Engine. Esta lista no implica que adaptadores oficiales, discovery providers, fetchers, extractors, snapshots o ranking ya esten implementados.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Legal Entity | Accepted | `docs/contracts/legal-entity.schema.json` |
+| Legal Search Query | Accepted | `docs/contracts/legal-search-query.schema.json` |
+| Legal Search Result | Accepted | `docs/contracts/legal-search-result.schema.json` |
+| Retrieval Plan | Accepted | `docs/contracts/retrieval-plan.schema.json` |
+| Retrieval Run | Accepted | `docs/contracts/retrieval-run.schema.json` |
+| Evidence Quality | Accepted | `docs/contracts/evidence-quality.schema.json` |
+| Provider Interfaces | Accepted | `docs/contracts/provider-interfaces.md` |
+
+## Politicas aceptadas en Subfase 0.5
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Legal Search Policy | Accepted | `docs/policies/legal-search-policy.md` |
+| Source Routing Matrix | Accepted | `docs/policies/source-routing-matrix.md` |
 
 ## Dependencias posteriores preservadas
 

@@ -59,6 +59,44 @@
     {
       "if": {
         "properties": {
+          "passage_ref": {
+            "pattern": "^F[0-9]+:P[0-9]+$"
+          }
+        },
+        "required": [
+          "passage_ref"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_ref": {
+            "pattern": "^F[0-9]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "passage_ref": {
+            "pattern": "^D[0-9]+:P[0-9]+$"
+          }
+        },
+        "required": [
+          "passage_ref"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_ref": {
+            "pattern": "^D[0-9]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
           "status": {
             "const": "valid"
           }
@@ -106,6 +144,16 @@
       "status": "valid",
       "supports_claim_ids": [],
       "auditor_notes": []
+    },
+    {
+      "citation_ref": "C10",
+      "passage_ref": "F1:P1",
+      "source_ref": "D1",
+      "status": "weak",
+      "supports_claim_ids": [],
+      "auditor_notes": [
+        "Una cita F no puede apuntar a una fuente D."
+      ]
     }
   ],
   "x-policy-invalid-examples": [

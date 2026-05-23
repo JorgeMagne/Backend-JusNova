@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/evidence-quality.schema.json",
+  "title": "EvidenceQuality",
+  "description": "Evaluacion normalizada de calidad de evidencia producida por retrieval. CONFLICTIVE representa conflicto material de fuentes, no solo advertencia menor.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+  },
+  "required": [
+    "overall",
+    "coverage",
+    "authority",
+    "citation_readiness",
+    "validity_risk",
+    "conflicts_detected",
+    "warnings"
+  ],
+  "properties": {
+    "overall": {
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "NONE",
+        "CONFLICTIVE"
+      ]
+    },
+    "coverage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "authority": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "citation_readiness": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "validity_risk": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "UNKNOWN"
+      ]
+    },
+    "conflicts_detected": {
+      "type": "boolean"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "overall": {
+            "const": "CONFLICTIVE"
+          }
+        },
+        "required": [
+          "overall"
+        ]
+      },
+      "then": {
+        "properties": {
+          "conflicts_detected": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "overall": {
+            "const": "NONE"
+          }
+        },
+        "required": [
+          "overall"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage": {
+            "const": 0
+          },
+          "authority": {
+            "const": 0
+          },
+          "citation_readiness": {
+            "const": 0
+          },
+          "validity_risk": {
+            "const": "UNKNOWN"
+          },
+          "conflicts_detected": {
+            "const": false
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "overall": "MEDIUM",
+      "coverage": 0.72,
+      "authority": 0.91,
+      "citation_readiness": 0.84,
+      "validity_risk": "MEDIUM",
+      "conflicts_detected": false,
+      "warnings": [
+        "Vigencia no confirmada."
+      ]
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "overall": "CONFLICTIVE",
+      "coverage": 0.72,
+      "authority": 0.91,
+      "citation_readiness": 0.84,
+      "validity_risk": "HIGH",
+      "conflicts_detected": false,
+      "warnings": [
+        "Conflicto declarado sin flag de conflicto."
+      ]
+    },
+    {
+      "overall": "NONE",
+      "coverage": 1,
+      "authority": 1,
+      "citation_readiness": 1,
+      "validity_risk": "LOW",
+      "conflicts_detected": false,
+      "warnings": [
+        "NONE no puede tener metricas positivas."
+      ]
+    },
+    {
+      "overall": "NONE",
+      "coverage": 0,
+      "authority": 0,
+      "citation_readiness": 0,
+      "validity_risk": "UNKNOWN",
+      "conflicts_detected": true,
+      "warnings": [
+        "NONE no puede declarar conflicto; use CONFLICTIVE."
+      ]
+    }
+  ]
+}

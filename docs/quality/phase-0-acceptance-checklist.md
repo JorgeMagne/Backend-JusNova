@@ -27,7 +27,7 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Evidence Pack Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/evidence-pack.schema.json` |
 | Citation Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/citation.schema.json` |
 | Claim Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/claim.schema.json` |
-| Live Legal Search Contract aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-query.schema.json` |
+| Live Legal Search Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-query.schema.json` |
 | Source Registry Contract aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/source-registry-entry.schema.json` |
 | Validity Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/validity-policy.md` |
 | Source Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/source-policy.md` |
@@ -122,4 +122,21 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | `abstention-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/abstention-policy.md` |
 | Ejemplos validos demuestran `claim -> citation -> passage -> source` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-contract.schema.json`, `docs/policies/citation-policy.md` |
 | `citation-audit.schema.json` queda fuera de 0.4 y delegado a 0.7 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/README.md` |
+| Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.5
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| `legal-entity.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-entity.schema.json` |
+| `legal-search-query.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-query.schema.json` |
+| `legal-search-result.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-result.schema.json` |
+| `retrieval-plan.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/retrieval-plan.schema.json` |
+| `retrieval-run.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/retrieval-run.schema.json` |
+| `evidence-quality.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/evidence-quality.schema.json` |
+| `provider-interfaces.md` creado y aceptado sin provider obligatorio | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/provider-interfaces.md` |
+| `legal-search-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/legal-search-policy.md` |
+| `source-routing-matrix.md` cubre los 11 intents canonicos | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/source-routing-matrix.md`, `docs/schemas/legal-intents.yaml` |
+| `LegalSearchQuery` no referencia presupuesto comercial de Subfase 0.8 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-query.schema.json` |
+| Ningun resultado web crudo es citable | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/legal-search-policy.md`, `docs/contracts/legal-search-result.schema.json` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |

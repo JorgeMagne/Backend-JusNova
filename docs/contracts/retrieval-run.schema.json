@@ -1,0 +1,943 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/retrieval-run.schema.json",
+  "title": "RetrievalRun",
+  "description": "Ejecucion trazable de un RetrievalPlan. Registra proveedores, resultados, fuentes rechazadas, calidad, costos estimados y razones cerradas de no evidencia.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+  },
+  "required": [
+    "retrieval_run_id",
+    "query_id",
+    "retrieval_plan_id",
+    "status",
+    "providers_used",
+    "adapter_calls",
+    "discovery_results",
+    "sources_opened",
+    "sources_rejected",
+    "latency_ms",
+    "estimated_cost",
+    "warnings",
+    "started_at",
+    "completed_at"
+  ],
+  "properties": {
+    "retrieval_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "query_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "retrieval_plan_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "completed_with_evidence",
+        "completed_no_evidence",
+        "failed",
+        "cancelled",
+        "budget_exhausted"
+      ]
+    },
+    "providers_used": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "adapter_calls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "adapter_name",
+          "status"
+        ],
+        "properties": {
+          "adapter_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "success",
+              "partial",
+              "error",
+              "timeout",
+              "skipped"
+            ]
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "success",
+                    "skipped"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "properties": {
+                "error_code": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "partial",
+                    "error",
+                    "timeout"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "required": [
+                "error_code"
+              ],
+              "properties": {
+                "error_code": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    "discovery_results": {
+      "type": "array",
+      "items": {
+        "$ref": "./legal-search-result.schema.json"
+      }
+    },
+    "sources_opened": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "uniqueItems": true
+    },
+    "sources_rejected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "url",
+          "reason"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "reason": {
+            "enum": [
+              "foreign_jurisdiction",
+              "low_authority",
+              "duplicate",
+              "not_extractable",
+              "access_not_allowed",
+              "tier_not_allowed",
+              "irrelevant"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence_pack_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "no_evidence_reason": {
+      "enum": [
+        "no_evidence_found",
+        "insufficient_budget",
+        "official_sources_down",
+        "conflict_unresolved",
+        "missing_user_info",
+        "access_not_allowed",
+        "extraction_failed"
+      ]
+    },
+    "quality": {
+      "$ref": "./evidence-quality.schema.json"
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "error_code",
+        "message"
+      ],
+      "properties": {
+        "error_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "cancellation_reason": {
+      "enum": [
+        "user_cancelled",
+        "timeout_cancelled",
+        "system_cancelled",
+        "superseded_by_new_run"
+      ]
+    },
+    "latency_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "estimated_cost": {
+      "type": "number",
+      "minimum": 0
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "completed_with_evidence"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "quality",
+          "evidence_pack_id"
+        ],
+        "properties": {
+          "quality": {
+            "properties": {
+              "overall": {
+                "enum": [
+                  "HIGH",
+                  "MEDIUM",
+                  "LOW",
+                  "CONFLICTIVE"
+                ]
+              }
+            }
+          }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "no_evidence_reason"
+              ]
+            },
+            {
+              "required": [
+                "error"
+              ]
+            },
+            {
+              "required": [
+                "cancellation_reason"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "completed_no_evidence"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "quality",
+          "no_evidence_reason"
+        ],
+        "properties": {
+          "quality": {
+            "properties": {
+              "overall": {
+                "enum": [
+                  "NONE",
+                  "LOW",
+                  "CONFLICTIVE"
+                ]
+              }
+            }
+          }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "evidence_pack_id"
+              ]
+            },
+            {
+              "required": [
+                "error"
+              ]
+            },
+            {
+              "required": [
+                "cancellation_reason"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "failed"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "evidence_pack_id"
+              ]
+            },
+            {
+              "required": [
+                "no_evidence_reason"
+              ]
+            },
+            {
+              "required": [
+                "quality"
+              ]
+            },
+            {
+              "required": [
+                "cancellation_reason"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "budget_exhausted"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "no_evidence_reason"
+        ],
+        "properties": {
+          "no_evidence_reason": {
+            "const": "insufficient_budget"
+          }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "evidence_pack_id"
+              ]
+            },
+            {
+              "required": [
+                "error"
+              ]
+            },
+            {
+              "required": [
+                "quality"
+              ]
+            },
+            {
+              "required": [
+                "cancellation_reason"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "cancelled"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "cancellation_reason"
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "evidence_pack_id"
+              ]
+            },
+            {
+              "required": [
+                "no_evidence_reason"
+              ]
+            },
+            {
+              "required": [
+                "error"
+              ]
+            },
+            {
+              "required": [
+                "quality"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "retrieval_run_id": "rr_001",
+      "query_id": "q_legal_001",
+      "retrieval_plan_id": "rp_001",
+      "status": "completed_with_evidence",
+      "providers_used": [
+        "TCPAdapter",
+        "OpenAIWebSearchDiscoveryProvider"
+      ],
+      "adapter_calls": [
+        {
+          "adapter_name": "TCPAdapter",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "discovery_results": [],
+      "sources_opened": [
+        "https://jurisprudencia.tcpbolivia.bo/Fichas/Ficha/12345"
+      ],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_001",
+      "quality": {
+        "overall": "MEDIUM",
+        "coverage": 0.72,
+        "authority": 0.91,
+        "citation_readiness": 0.84,
+        "validity_risk": "MEDIUM",
+        "conflicts_detected": false,
+        "warnings": [
+          "Vigencia no confirmada."
+        ]
+      },
+      "latency_ms": 24120,
+      "estimated_cost": 0.08,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:24Z"
+    },
+    {
+      "retrieval_run_id": "rr_cancelled_001",
+      "query_id": "q_legal_cancelled_001",
+      "retrieval_plan_id": "rp_cancelled_001",
+      "status": "cancelled",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "cancellation_reason": "user_cancelled",
+      "latency_ms": 1200,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "retrieval_run_id": "rr_002",
+      "query_id": "q_legal_002",
+      "retrieval_plan_id": "rp_002",
+      "status": "completed_with_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "quality": {
+        "overall": "NONE",
+        "coverage": 0,
+        "authority": 0,
+        "citation_readiness": 0,
+        "validity_risk": "UNKNOWN",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_013",
+      "query_id": "q_legal_013",
+      "retrieval_plan_id": "rp_013",
+      "status": "completed_with_evidence",
+      "providers_used": [
+        "TCPAdapter"
+      ],
+      "adapter_calls": [
+        {
+          "adapter_name": "TCPAdapter",
+          "status": "error"
+        }
+      ],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_013",
+      "quality": {
+        "overall": "LOW",
+        "coverage": 0.2,
+        "authority": 0.5,
+        "citation_readiness": 0.3,
+        "validity_risk": "HIGH",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_004",
+      "query_id": "q_legal_004",
+      "retrieval_plan_id": "rp_004",
+      "status": "completed_with_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_004",
+      "quality": {
+        "overall": "NONE",
+        "coverage": 0,
+        "authority": 0,
+        "citation_readiness": 0,
+        "validity_risk": "UNKNOWN",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_005",
+      "query_id": "q_legal_005",
+      "retrieval_plan_id": "rp_005",
+      "status": "completed_no_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "no_evidence_reason": "no_evidence_found",
+      "quality": {
+        "overall": "HIGH",
+        "coverage": 1,
+        "authority": 1,
+        "citation_readiness": 1,
+        "validity_risk": "LOW",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_006",
+      "query_id": "q_legal_006",
+      "retrieval_plan_id": "rp_006",
+      "status": "completed_with_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_006",
+      "no_evidence_reason": "no_evidence_found",
+      "quality": {
+        "overall": "LOW",
+        "coverage": 0.2,
+        "authority": 0.5,
+        "citation_readiness": 0.3,
+        "validity_risk": "HIGH",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_007",
+      "query_id": "q_legal_007",
+      "retrieval_plan_id": "rp_007",
+      "status": "completed_no_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_007",
+      "no_evidence_reason": "no_evidence_found",
+      "quality": {
+        "overall": "NONE",
+        "coverage": 0,
+        "authority": 0,
+        "citation_readiness": 0,
+        "validity_risk": "UNKNOWN",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_008",
+      "query_id": "q_legal_008",
+      "retrieval_plan_id": "rp_008",
+      "status": "budget_exhausted",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_008",
+      "no_evidence_reason": "insufficient_budget",
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_009",
+      "query_id": "q_legal_009",
+      "retrieval_plan_id": "rp_009",
+      "status": "failed",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_009",
+      "error": {
+        "error_code": "provider_timeout",
+        "message": "Timeout al consultar fuentes oficiales."
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_017",
+      "query_id": "q_legal_017",
+      "retrieval_plan_id": "rp_017",
+      "status": "completed_with_evidence",
+      "providers_used": [
+        "TCPAdapter"
+      ],
+      "adapter_calls": [
+        {
+          "adapter_name": "TCPAdapter",
+          "status": "success",
+          "error_code": "timeout"
+        }
+      ],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_017",
+      "quality": {
+        "overall": "LOW",
+        "coverage": 0.2,
+        "authority": 0.5,
+        "citation_readiness": 0.3,
+        "validity_risk": "HIGH",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_014",
+      "query_id": "q_legal_014",
+      "retrieval_plan_id": "rp_014",
+      "status": "failed",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "error": {
+        "error_code": "provider_timeout",
+        "message": "Timeout al consultar fuentes oficiales."
+      },
+      "quality": {
+        "overall": "HIGH",
+        "coverage": 1,
+        "authority": 1,
+        "citation_readiness": 1,
+        "validity_risk": "LOW",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_010",
+      "query_id": "q_legal_010",
+      "retrieval_plan_id": "rp_010",
+      "status": "completed_with_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_010",
+      "quality": {
+        "overall": "LOW",
+        "coverage": 0.2,
+        "authority": 0.5,
+        "citation_readiness": 0.3,
+        "validity_risk": "HIGH",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": null
+    },
+    {
+      "retrieval_run_id": "rr_011",
+      "query_id": "q_legal_011",
+      "retrieval_plan_id": "rp_011",
+      "status": "cancelled",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_011",
+      "no_evidence_reason": "no_evidence_found",
+      "error": {
+        "error_code": "cancelled_with_error",
+        "message": "Estado cancelado con payload contradictorio."
+      },
+      "cancellation_reason": "user_cancelled",
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_012",
+      "query_id": "q_legal_012",
+      "retrieval_plan_id": "rp_012",
+      "status": "cancelled",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_015",
+      "query_id": "q_legal_015",
+      "retrieval_plan_id": "rp_015",
+      "status": "budget_exhausted",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "no_evidence_reason": "insufficient_budget",
+      "quality": {
+        "overall": "HIGH",
+        "coverage": 1,
+        "authority": 1,
+        "citation_readiness": 1,
+        "validity_risk": "LOW",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_016",
+      "query_id": "q_legal_016",
+      "retrieval_plan_id": "rp_016",
+      "status": "cancelled",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "cancellation_reason": "system_cancelled",
+      "quality": {
+        "overall": "LOW",
+        "coverage": 0.2,
+        "authority": 0.5,
+        "citation_readiness": 0.3,
+        "validity_risk": "HIGH",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_003",
+      "query_id": "q_legal_003",
+      "retrieval_plan_id": "rp_003",
+      "status": "budget_exhausted",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "no_evidence_reason": "official_sources_down",
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    }
+  ]
+}

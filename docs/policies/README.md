@@ -24,6 +24,13 @@ Las politicas convierten principios juridicos, tecnicos, comerciales y de seguri
 | Citation Policy | Accepted | `citation-policy.md` |
 | Abstention Policy | Accepted | `abstention-policy.md` |
 
+## Politicas aceptadas en Subfase 0.5
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Legal Search Policy | Accepted | `legal-search-policy.md` |
+| Source Routing Matrix | Accepted | `source-routing-matrix.md` |
+
 ## Politicas minimas esperadas
 
 ```txt
