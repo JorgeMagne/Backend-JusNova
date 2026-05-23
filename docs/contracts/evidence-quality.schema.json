@@ -82,6 +82,34 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "overall": {
+            "const": "NONE"
+          }
+        },
+        "required": [
+          "overall"
+        ]
+      },
+      "then": {
+        "properties": {
+          "coverage": {
+            "const": 0
+          },
+          "authority": {
+            "const": 0
+          },
+          "citation_readiness": {
+            "const": 0
+          },
+          "validity_risk": {
+            "const": "UNKNOWN"
+          }
+        }
+      }
     }
   ],
   "examples": [
@@ -107,6 +135,17 @@
       "conflicts_detected": false,
       "warnings": [
         "Conflicto declarado sin flag de conflicto."
+      ]
+    },
+    {
+      "overall": "NONE",
+      "coverage": 1,
+      "authority": 1,
+      "citation_readiness": 1,
+      "validity_risk": "LOW",
+      "conflicts_detected": false,
+      "warnings": [
+        "NONE no puede tener metricas positivas."
       ]
     }
   ]

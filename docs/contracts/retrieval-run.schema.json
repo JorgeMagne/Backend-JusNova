@@ -389,6 +389,9 @@
         ]
       },
       "then": {
+        "required": [
+          "cancellation_reason"
+        ],
         "not": {
           "anyOf": [
             {
@@ -683,6 +686,22 @@
         "message": "Estado cancelado con payload contradictorio."
       },
       "cancellation_reason": "user_cancelled",
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_012",
+      "query_id": "q_legal_012",
+      "retrieval_plan_id": "rp_012",
+      "status": "cancelled",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
       "latency_ms": 100,
       "estimated_cost": 0,
       "warnings": [],
