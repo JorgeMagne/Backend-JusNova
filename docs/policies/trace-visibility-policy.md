@@ -59,7 +59,13 @@ No define retencion final, permisos productivos completos ni proceso de incident
 32. Cada `ModelCall`, `ToolCall` y `RetrievalRun` debe cumplir `completed_at >= started_at`.
 33. `latency_ms.total` representa duracion wall-clock de la traza y no puede ser menor que ningun componente: `model_total`, `tool_total`, `retrieval_total`, `citation_audit`, `persistence` o `queue`.
 34. Un componente de latencia positivo con `latency_ms.total = 0` es inconsistente y debe rechazarse.
-35. Las reglas 27 a 34 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
+35. `latency_ms.model_total` no puede ser menor que la mayor duracion derivada de `model_calls[]`.
+36. `latency_ms.tool_total` no puede ser menor que la mayor duracion derivada de `tool_calls[]`.
+37. `latency_ms.retrieval_total` no puede ser menor que la mayor duracion derivada de `retrieval_runs[]`.
+38. `latency_ms.total` no puede ser menor que la mayor duracion derivada de cualquier `ModelCall`, `ToolCall` o `RetrievalRun`.
+39. Dentro de un `TraceObject`, `model_calls[].model_call_id`, `tool_calls[].tool_call_id`, `retrieval_runs[].retrieval_run_id` y `claims[].claim_id` deben ser unicos.
+40. Dentro de `citation_audit.results[]`, la clave `(claim_id, citation_ref, passage_ref, source_ref)` debe ser unica.
+41. Las reglas 27 a 40 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
 
 ## Reglas asistidas por IA
 
@@ -104,6 +110,7 @@ El motivo debe ser concreto: soporte de usuario, investigacion de incidente, eva
 - `cost-report.schema.json` debe cuadrar con `model_calls[]` y `tool_calls[]` de la misma traza.
 - `model-call.schema.json` debe cuadrar `token_usage.total_tokens` con sus tokens de entrada y salida.
 - `latency_ms` y timestamps de llamadas o retrieval runs no pueden expresar duraciones negativas o totales imposibles.
+- Los IDs internos de `TraceObject` y las claves de `citation_audit.results[]` no pueden duplicarse.
 - Los niveles de visibilidad quedan definidos y no permiten acceso libre en `INTERNAL_AUDIT`.
 - Todo acceso elevado tiene campos minimos de registro.
 
