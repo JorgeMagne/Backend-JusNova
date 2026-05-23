@@ -29,11 +29,13 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Claim Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/claim.schema.json` |
 | Live Legal Search Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-query.schema.json` |
 | Source Registry Contract aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/source-registry-entry.schema.json` |
-| Validity Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/validity-policy.md` |
-| Source Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/source-policy.md` |
+| Validity Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/validity-policy.md` |
+| Source Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/source-policy.md` |
 | Citation Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/citation-policy.md` |
 | Abstention Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/abstention-policy.md` |
-| Conflict Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/conflict-policy.md` |
+| Conflict Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/conflict-policy.md` |
+| Uncertainty Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/uncertainty-policy.md` |
+| No RAG Launch Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/no-rag-launch-policy.md` |
 | Cost Governor Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/cost-governor-policy.md` |
 | `budgets.yaml` aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/schemas/budgets.yaml` |
 | Plan base 400 Bs reflejado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/commercial-plans-v0.md` |
@@ -122,6 +124,22 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | `abstention-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/abstention-policy.md` |
 | Ejemplos validos demuestran `claim -> citation -> passage -> source` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-contract.schema.json`, `docs/policies/citation-policy.md` |
 | `citation-audit.schema.json` queda fuera de 0.4 y delegado a 0.7 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/README.md` |
+| Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.6
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| `source-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/source-policy.md` |
+| `validity-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/validity-policy.md` |
+| `conflict-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/conflict-policy.md` |
+| `uncertainty-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/uncertainty-policy.md` |
+| `no-rag-launch-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/no-rag-launch-policy.md` |
+| `abstention-policy.md` extendido con historial 0.4/0.6 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/abstention-policy.md` |
+| `source.schema.json` representa snapshot o razon cerrada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/source.schema.json` |
+| `legal-search-result.schema.json` comparte enum de snapshot reason | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-result.schema.json` |
+| ADR-004 cierra dependencia de no-rag launch policy | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-004-launch-without-legal-rag.md` |
+| ADR-009 cierra dependencias de source/validity/conflict/uncertainty policies | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-009-source-registry-and-validity-policy.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
 
 ## Checklist especifico de Subfase 0.5

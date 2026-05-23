@@ -23,7 +23,7 @@ Las decisiones fuera de `docs/` no son vinculantes para implementacion. Cualquie
 | 0.3 | ADRs fundacionales | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.4 | Contratos juridicos de respuesta, evidencia, citas y claims | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.5 | Contrato del Live Legal Search Engine | Accepted | Codex / JusNova Chief Backend Architect |
-| 0.6 | Fuentes, vigencia, conflicto e incertidumbre | Draft | Codex / JusNova Chief Backend Architect |
+| 0.6 | Fuentes, vigencia, conflicto e incertidumbre | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.7 | Trazabilidad, auditoria y versionado | Draft | Codex / JusNova Chief Backend Architect |
 | 0.8 | Cost Governor, planes y presupuestos | Draft | Codex / JusNova Chief Backend Architect |
 | 0.9 | Conversacion, memoria, documentos y OCR | Draft | Codex / JusNova Chief Backend Architect |

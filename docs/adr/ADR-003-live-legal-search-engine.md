@@ -53,7 +53,7 @@ La busqueda viva permite operar sin corpus propio y, a la vez, sostener respuest
 ## Dependencias posteriores
 
 - Subfase 0.5 creo contratos de legal search, provider interfaces, retrieval plan/run y source routing matrix.
-- Subfase 0.6 debe completar source, validity, conflict y uncertainty policies.
+- Subfase 0.6 acepto source, validity, conflict y uncertainty policies.
 - Fase 4 implementara core del motor.
 - Fases 5 a 8 implementaran adaptadores, resiliencia, vigencia, conflicto y cache.
 

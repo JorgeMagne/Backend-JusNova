@@ -8,7 +8,7 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract; Subfase 0.6 - Politicas de fuentes, vigencia, conflicto e incertidumbre"
   },
   "required": [
     "result_id",
@@ -156,7 +156,8 @@
         "content_too_large",
         "transient_fetch_error",
         "legal_access_restricted",
-        "dynamic_render_failed"
+        "dynamic_render_failed",
+        "user_private_document_not_snapshotted"
       ]
     },
     "validity_status": {
@@ -283,6 +284,42 @@
         "required": [
           "snapshot_id",
           "snapshot_unavailable_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "snapshot_unavailable_reason": {
+            "const": "user_private_document_not_snapshotted"
+          }
+        },
+        "required": [
+          "snapshot_unavailable_reason"
+        ]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "properties": {
+              "tier": {
+                "const": "USER_DOCUMENT"
+              }
+            },
+            "required": [
+              "tier"
+            ]
+          },
+          {
+            "properties": {
+              "source_type": {
+                "const": "documento_usuario"
+              }
+            },
+            "required": [
+              "source_type"
+            ]
+          }
         ]
       }
     },
@@ -542,6 +579,28 @@
       "snapshot_unavailable_reason": "transient_fetch_error",
       "warnings": [
         "Snapshot y razon de imposibilidad no pueden coexistir aunque no sea citable."
+      ]
+    },
+    {
+      "result_id": "lsr_010",
+      "title": "Fuente publica con razon privada invalida",
+      "url": "https://www.example.gob.bo/documento",
+      "tier": "TIER1_OFICIAL",
+      "source_type": "institucional",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.9,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "snapshot_id": null,
+      "snapshot_unavailable_reason": "user_private_document_not_snapshotted",
+      "warnings": [
+        "La razon privada de no snapshot solo aplica a USER_DOCUMENT."
       ]
     }
   ]

@@ -31,6 +31,17 @@ Las politicas convierten principios juridicos, tecnicos, comerciales y de seguri
 | Legal Search Policy | Accepted | `legal-search-policy.md` |
 | Source Routing Matrix | Accepted | `source-routing-matrix.md` |
 
+## Politicas aceptadas en Subfase 0.6
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Source Policy | Accepted | `source-policy.md` |
+| Validity Policy | Accepted | `validity-policy.md` |
+| Conflict Policy | Accepted | `conflict-policy.md` |
+| Uncertainty Policy | Accepted | `uncertainty-policy.md` |
+| No RAG Launch Policy | Accepted | `no-rag-launch-policy.md` |
+| Abstention Policy Extension | Accepted | `abstention-policy.md` |
+
 ## Politicas minimas esperadas
 
 ```txt

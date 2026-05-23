@@ -24,19 +24,19 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-002 | Object storage obligatorio. | ADR-002: Decision, Justificacion. | Accepted | Fase 1 StorageProvider. | PDFs/snapshots en base transaccional. |
 | ADR-002 | Condicion para adoptar Kubernetes. | ADR-002: No afirma todavia, Criterios de aceptacion, Revision. | Accepted | Metricas operativas futuras. | Plataforma sobredimensionada. |
 | ADR-003 | Que significa busqueda juridica viva. | ADR-003: Decision, Justificacion, Componentes aprobados; `docs/policies/legal-search-policy.md`. | Accepted | Fase 4 implementacion. | Busqueda generica sin estructura juridica. |
-| ADR-003 | Que fuentes consulta. | ADR-003: Contexto; ADR-009 fuentes iniciales; `docs/policies/source-routing-matrix.md`. | Accepted | Subfase 0.6 source policies. | Cobertura Bolivia-first incompleta. |
+| ADR-003 | Que fuentes consulta. | ADR-003: Contexto; ADR-009 fuentes iniciales; `docs/policies/source-routing-matrix.md`; `docs/policies/source-policy.md`. | Accepted | Fase 5 adapters. | Cobertura Bolivia-first incompleta. |
 | ADR-003 | Que adaptadores existen. | ADR-003: Componentes aprobados; `docs/contracts/provider-interfaces.md`. | Accepted | Fase 5 adapters. | Portales oficiales no modelados. |
 | ADR-003 | Rol de discovery web. | ADR-003: Problema, Decision, No afirma todavia; `docs/policies/legal-search-policy.md`. | Accepted | Fase 4 provider implementation. | Discovery tratado como fuente final. |
 | ADR-003 | Rol de snapshots. | ADR-003: Componentes aprobados. | Accepted | Fase 8 Source Snapshot Registry. | No reproducibilidad de fuentes. |
 | ADR-003 | Rol de Evidence Cache. | ADR-003: Componentes aprobados; ADR-004. | Accepted | Fase 8 Evidence Cache. | Cache confundido con corpus o vigencia. |
-| ADR-003 | Que no es RAG. | ADR-003: No afirma todavia; ADR-004. | Accepted | Subfase 0.6 no-rag policy. | Promesa comercial incorrecta. |
+| ADR-003 | Que no es RAG. | ADR-003: No afirma todavia; ADR-004; `docs/policies/no-rag-launch-policy.md`. | Accepted | Fase 8 cache/snapshots. | Promesa comercial incorrecta. |
 | ADR-003 | Como se generan Evidence Packs. | ADR-003: Componentes aprobados; `retrieval-run.schema.json`; `evidence-pack.schema.json`. | Accepted | Fase 4 implementation. | Respuestas desde texto crudo. |
 | ADR-003 | Como se evalua calidad de busqueda. | ADR-003: Mitigaciones, Revision; `evidence-quality.schema.json`; ADR-012. | Accepted | Subfase 0.12 evaluation plan. | Calidad subjetiva del motor. |
 | ADR-003 | No depender de un unico proveedor de discovery. | ADR-003: Restricciones, No afirma todavia, Criterios; `provider-interfaces.md`. | Accepted | Fase 4 provider implementation. | Fragilidad y costo por proveedor unico. |
 | ADR-003 | No devolver texto crudo sin normalizacion. | ADR-003: Criterios de aceptacion; `legal-search-policy.md`; `legal-search-result.schema.json`. | Accepted | Fase 4 implementation. | Modelo cita texto no confiable. |
 | ADR-004 | Fuera de alcance antes de lanzamiento. | ADR-004: Fuera de lanzamiento. | Accepted | Ninguna para decision. | Alcance inflado. |
 | ADR-004 | Que si se construye. | ADR-004: Dentro de lanzamiento. | Accepted | Fases 4-9. | No hay sustituto al corpus propio. |
-| ADR-004 | Evitar vender Evidence Cache como corpus. | ADR-004: Problema, Decision, No afirma todavia. | Accepted | Subfase 0.6 policies. | Riesgo comercial/juridico. |
+| ADR-004 | Evitar vender Evidence Cache como corpus. | ADR-004: Problema, Decision, No afirma todavia; `docs/policies/no-rag-launch-policy.md`. | Accepted | Fase 8 cache/snapshots. | Riesgo comercial/juridico. |
 | ADR-004 | Cuando reconsiderar RAG propio. | ADR-004: Momento de revision. | Accepted | ADR futuro post-mercado. | Corpus prematuro sin permisos. |
 | ADR-005 | Que tareas usa IA. | ADR-005: Tareas que pueden usar IA. | Accepted | Fase 1 ModelProvider. | Uso IA indefinido. |
 | ADR-005 | Que tareas no dependen solo de IA. | ADR-005: Tareas que no dependen solo de IA. | Accepted | Fase 1/2 validators/auditors. | Prompt como control unico. |
@@ -67,13 +67,13 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-008 | Plan de entrada 400 Bs. | ADR-008: Contexto, Restricciones, Decision. | Accepted | Subfase 0.8 commercial plans. | Restriccion comercial no reflejada. |
 | ADR-008 | No reducir citacion para ahorrar costo. | ADR-008: Restricciones, Criterios. | Accepted | Subfase 0.8 cost policy. | Respuestas menos verificables por costo. |
 | ADR-009 | Fuentes iniciales prioritarias. | ADR-009: Fuentes iniciales prioritarias. | Accepted | Fase 5 adapters. | Cobertura sin prioridades. |
-| ADR-009 | Campos minimos de registro. | ADR-009: Restricciones. | Accepted | Subfase 0.6 source schema. | Fuente sin metadata. |
-| ADR-009 | Tiers. | ADR-009: Decision, Mitigaciones. | Accepted | Subfase 0.6 source tiers. | Fuentes debiles sin etiqueta. |
-| ADR-009 | Validity statuses. | ADR-009: Restricciones, Decision. | Accepted | Subfase 0.6 validity statuses. | Vigencia presumida. |
-| ADR-009 | Policy TIER2/TIER3. | ADR-009: Criterios, Mitigaciones. | Accepted | Subfase 0.6 source policy. | Fuente secundaria como primaria. |
-| ADR-009 | Conflictos. | ADR-009: Decision, Mitigaciones. | Accepted | Subfase 0.6 conflict policy. | Contradicciones ocultas. |
+| ADR-009 | Campos minimos de registro. | ADR-009: Restricciones; `docs/contracts/source.schema.json`; `docs/policies/source-policy.md`. | Accepted | Source Registry Entry schema posterior. | Fuente sin metadata. |
+| ADR-009 | Tiers. | ADR-009: Decision, Mitigaciones; `docs/schemas/source-tiers.yaml`; `docs/policies/source-policy.md`. | Accepted | Fase 4 registry. | Fuentes debiles sin etiqueta. |
+| ADR-009 | Validity statuses. | ADR-009: Restricciones, Decision; `docs/schemas/validity-statuses.yaml`; `docs/policies/validity-policy.md`. | Accepted | Fase 4 validity resolver. | Vigencia presumida. |
+| ADR-009 | Policy TIER2/TIER3. | ADR-009: Criterios, Mitigaciones; `docs/policies/source-policy.md`. | Accepted | Fase 4 registry. | Fuente secundaria como primaria. |
+| ADR-009 | Conflictos. | ADR-009: Decision, Mitigaciones; `docs/policies/conflict-policy.md`. | Accepted | Conflict Resolver futuro. | Contradicciones ocultas. |
 | ADR-009 | Snapshots. | ADR-009: Decision, Mitigaciones. | Accepted | Fase 8 snapshots. | Fuentes no reproducibles. |
-| ADR-009 | Source, validity y conflict policies requeridas. | ADR-009: Dependencias posteriores, Criterios. | Accepted | Subfase 0.6. | Decision sin politicas operativas. |
+| ADR-009 | Source, validity, conflict y uncertainty policies requeridas. | ADR-009: Dependencias posteriores, Criterios; `docs/policies/source-policy.md`; `docs/policies/validity-policy.md`; `docs/policies/conflict-policy.md`; `docs/policies/uncertainty-policy.md`. | Accepted | Fase 4/5 implementacion. | Decision sin politicas operativas. |
 | ADR-010 | Que se registra. | ADR-010: Trazabilidad aprobada. | Accepted | Subfase 0.7 schemas. | Respuesta no reconstruible. |
 | ADR-010 | Que es visible al usuario. | ADR-010: Restricciones. | Accepted | Subfase 0.7 trace visibility. | Exposicion excesiva. |
 | ADR-010 | Que es interno. | ADR-010: Restricciones, Mitigaciones. | Accepted | Subfase 0.7 trace visibility. | Soporte sin datos o con datos excesivos. |
