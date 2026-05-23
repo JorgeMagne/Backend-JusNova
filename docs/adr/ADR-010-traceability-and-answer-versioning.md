@@ -70,7 +70,7 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 
 - Trace visibility levels.
 - Hashes y minimizacion.
-- Retrieval runs embebidos como resumen sanitizado, sin URLs crudas ni resultados discovery completos.
+- Retrieval runs embebidos como resumen sanitizado, sin URLs crudas, resultados discovery completos, mensajes libres de error ni warnings libres.
 - Redaccion de logs.
 - Ownership/tenant en trazas.
 - Politica de retencion.

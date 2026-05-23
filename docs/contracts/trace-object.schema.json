@@ -274,18 +274,188 @@
           "type": "object",
           "required": [
             "error_code",
-            "message"
+            "safe_message_code"
           ],
           "properties": {
             "error_code": {
-              "type": "string",
-              "minLength": 1
+              "enum": [
+                "provider_timeout",
+                "provider_error",
+                "official_sources_down",
+                "access_not_allowed",
+                "extraction_failed",
+                "budget_exhausted",
+                "cancelled",
+                "unknown_error"
+              ]
             },
-            "message": {
-              "type": "string",
-              "minLength": 1
+            "safe_message_code": {
+              "enum": [
+                "retrieval_provider_timeout",
+                "retrieval_provider_error",
+                "official_source_unavailable",
+                "retrieval_access_denied",
+                "retrieval_extraction_failed",
+                "retrieval_budget_exhausted",
+                "retrieval_cancelled",
+                "retrieval_unknown_error"
+              ]
             }
           },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "provider_timeout"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_provider_timeout"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "provider_error"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_provider_error"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "official_sources_down"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "official_source_unavailable"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "access_not_allowed"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_access_denied"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "extraction_failed"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_extraction_failed"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "budget_exhausted"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_budget_exhausted"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "cancelled"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_cancelled"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "unknown_error"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_unknown_error"
+                  }
+                }
+              }
+            }
+          ],
           "additionalProperties": false
         },
         "cancellation_reason": {
@@ -307,7 +477,18 @@
         "warnings": {
           "type": "array",
           "items": {
-            "type": "string"
+            "enum": [
+              "official_sources_down",
+              "partial_results",
+              "extraction_failed",
+              "no_evidence_found",
+              "budget_exhausted",
+              "provider_timeout",
+              "provider_error",
+              "sanitized_summary",
+              "latency_estimated",
+              "cost_estimated"
+            ]
           }
         },
         "started_at": {
@@ -2754,7 +2935,7 @@
           "sources_rejected": [],
           "error": {
             "error_code": "provider_timeout",
-            "message": "Busqueda fallida con tiempos imposibles."
+            "safe_message_code": "retrieval_provider_timeout"
           },
           "latency_ms": 100,
           "estimated_cost": 0,
@@ -3103,7 +3284,7 @@
           "sources_rejected": [],
           "error": {
             "error_code": "provider_timeout",
-            "message": "Busqueda fallida con costo estimado local."
+            "safe_message_code": "retrieval_provider_timeout"
           },
           "latency_ms": 1000,
           "estimated_cost": 88,

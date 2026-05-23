@@ -34,7 +34,7 @@ No define retencion final, permisos productivos completos ni proceso de incident
 7. Material crudo solo puede consultarse mediante proceso de incidente definido en Subfase 0.10.
 8. Todo acceso elevado registra `trace_id`, `actor_ref`, `actor_type`, `reason`, `accessed_at` y `visibility_level`.
 9. `sources_rejected` y `retrieval_runs[].sources_rejected` deben guardar razon cerrada y hashes, no contenido crudo.
-10. `TraceObject.retrieval_runs[]` debe ser resumen sanitizado; no puede embeber `RetrievalRun` operativo completo, `LegalSearchResult.url`, `sources_opened[]` como URL cruda ni `sources_rejected[].url`.
+10. `TraceObject.retrieval_runs[]` debe ser resumen sanitizado; no puede embeber `RetrievalRun` operativo completo, `LegalSearchResult.url`, `sources_opened[]` como URL cruda, `sources_rejected[].url`, mensajes libres de error ni warnings libres.
 11. `latency_ms`, `cost`, `token_usage` y `cost_units` deben ser objetos cerrados sin metadata libre.
 12. Model calls y tool calls registran `input_hash`; `output_hash` solo es obligatorio en `success`.
 13. Estados fallidos registran `error_code` y no guardan salida completa.
@@ -85,7 +85,7 @@ No define retencion final, permisos productivos completos ni proceso de incident
 | Documento completo | No se guarda en trazas; usar referencias de documento, pagina, pasaje o hash. |
 | Mensaje completo del usuario | No se guarda en trazas 0.7; usar hash o referencia conversacional. |
 | URL sensible | Guardar hash cuando se registre fuente abierta o rechazada dentro de `TraceObject`; URLs operativas crudas quedan fuera de la traza 0.7. |
-| Error tecnico | Guardar `error_code` y mensaje controlado cuando el contrato lo permita. |
+| Error tecnico | Guardar `error_code` y `safe_message_code`; el texto humano se genera desde catalogo cerrado en la vista. |
 | Costos y latencias | Guardar valores numericos observados, sin plan comercial ni precio mensual. |
 
 ## Registro de acceso elevado
