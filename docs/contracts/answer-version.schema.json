@@ -203,26 +203,224 @@
       "created_by_ref": "actor_hash_001"
     }
   ],
+  "x-policy-invalid-examples": [
+    {
+      "answer_version_id": "av_policy_prev_001",
+      "answer_id": "ans_001",
+      "answer_version": 2,
+      "previous_answer_version": 2,
+      "answer_hash": "sha256:answer-policy-prev-001",
+      "trace_id": "tr_001",
+      "answer_contract_ref": "ans_001:v2",
+      "rendered_answer_snapshot_id": null,
+      "version_reason": "citation_repaired",
+      "created_at": "2026-05-22T00:10:00Z",
+      "created_by_ref": "actor_hash_001"
+    }
+  ],
   "x-cross-contract-policy-invalid-examples": [
     {
       "description": "Los tres contratos validan por separado, pero sus identidades no corresponden a la misma respuesta versionada.",
       "trace_object": {
         "trace_id": "tr_001",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
         "answer_id": "ans_001",
         "answer_version_ref": "av_001",
-        "answer_version": 1
+        "answer_version": 1,
+        "conversation_id": "conv_001",
+        "case_id": null,
+        "response_outcome": "answered",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_001",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:input001",
+            "output_hash": "sha256:output001",
+            "token_usage": {
+              "input_tokens": 1200,
+              "output_tokens": 700,
+              "total_tokens": 1900
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:03Z",
+            "status": "success",
+            "error_code": null
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [
+          "ep_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [
+          {
+            "source_ref": null,
+            "result_id": "lsr_002",
+            "url_hash": "sha256:url002",
+            "reason": "low_authority",
+            "tier": "TIER3_SECUNDARIO",
+            "source_type": "web",
+            "rejected_at": "2026-05-22T00:00:00Z",
+            "warning_codes": [
+              "tier3_not_primary"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_001",
+          "currency": "USD",
+          "is_estimated": true,
+          "billing_source": "provider_estimate",
+          "model_input_tokens": 1200,
+          "model_output_tokens": 700,
+          "tool_calls": 0,
+          "provider_estimated_costs": [
+            {
+              "provider": "openai",
+              "estimated_cost": 0.08
+            }
+          ],
+          "estimated_total_cost": 0.08
+        },
+        "latency_ms": {
+          "total": 3200,
+          "model_total": 3000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": []
       },
       "answer_version": {
         "answer_version_id": "different_av",
         "answer_id": "different_answer",
         "answer_version": 2,
+        "previous_answer_version": 1,
+        "answer_hash": "sha256:answer002",
         "trace_id": "different_trace",
-        "answer_contract_ref": "third_answer:v7"
+        "answer_contract_ref": "third_answer:v7",
+        "rendered_answer_snapshot_id": "render_snap_001",
+        "version_reason": "citation_repaired",
+        "created_at": "2026-05-22T00:05:00Z",
+        "created_by_ref": "actor_hash_001"
       },
       "answer_contract": {
-        "trace_id": "third_trace",
         "answer_id": "third_answer",
-        "answer_version": 7
+        "answer_version": 7,
+        "trace_id": "third_trace",
+        "evidence_pack_id": "ep_001",
+        "jurisdiction": "BO",
+        "sections": {
+          "conclusion_operativa": {
+            "title": "Conclusion operativa",
+            "content": "Con la evidencia recuperada, el requisito formal debe verificarse contra la norma citada [F1:P1]."
+          },
+          "hechos_considerados": {
+            "title": "Hechos considerados",
+            "content": "No se aportaron hechos adicionales del caso."
+          },
+          "fundamento_normativo": {
+            "title": "Fundamento normativo",
+            "content": "La respuesta se apoya en el pasaje normativo citado [F1:P1]."
+          },
+          "jurisprudencia_relevante": {
+            "title": "Jurisprudencia relevante",
+            "content": "No se recupero jurisprudencia relevante dentro del EvidencePack."
+          },
+          "analisis_aplicado": {
+            "title": "Analisis aplicado",
+            "content": "La aplicacion al caso requiere contrastar los hechos con el expediente."
+          },
+          "incertidumbres_vigencia_conflictos": {
+            "title": "Incertidumbres, vigencia y conflictos",
+            "content": "La vigencia no fue confirmada."
+          },
+          "recomendacion_profesional": {
+            "title": "Recomendacion profesional",
+            "content": "Verificar texto vigente y antecedentes antes de presentar el recurso."
+          },
+          "fuentes_utilizadas": {
+            "title": "Fuentes utilizadas",
+            "content": "F1 - Codigo Procesal Civil."
+          }
+        },
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citations": [
+          {
+            "citation_ref": "C1",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "supports_claim_ids": [
+              "cl_001"
+            ],
+            "auditor_notes": []
+          }
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "warnings": [
+          "Vigencia no confirmada."
+        ],
+        "created_at": "2026-05-22T00:00:00Z"
       },
       "policy_errors": [
         "TraceObject.answer_version_ref != AnswerVersion.answer_version_id",

@@ -45,7 +45,7 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 18. `TraceObject.trace_id`, `TraceObject.answer_id` y `TraceObject.answer_version` deben ser iguales a `AnswerVersion.trace_id`, `AnswerVersion.answer_id` y `AnswerVersion.answer_version`.
 19. `AnswerContract.trace_id`, `AnswerContract.answer_id` y `AnswerContract.answer_version` deben ser iguales a los campos equivalentes de `TraceObject` y `AnswerVersion`.
 20. `AnswerVersion.answer_contract_ref` debe resolver al `AnswerContract` correspondiente; no puede apuntar a otro `answer_id`, otra version o otra traza.
-21. Las reglas 17 a 20 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
+21. La regla 4 y las reglas 17 a 20 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
 
 ## Reglas asistidas por IA
 
@@ -60,7 +60,7 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 - Toda reparacion juridicamente relevante genera nueva version.
 - `answer-version.schema.json` rechaza una version 1 con `previous_answer_version` no nulo.
 - `answer-version.schema.json` rechaza una version 2 o superior sin `previous_answer_version`.
-- La politica declara que `previous_answer_version < answer_version` es regla obligatoria de implementacion futura.
+- La politica declara y ejemplifica que `previous_answer_version < answer_version` es regla obligatoria de implementacion futura.
 - La politica impide guardar respuesta completa sensible dentro del contrato de version.
 - La politica exige identidad consistente entre `TraceObject`, `AnswerVersion` y `AnswerContract`.
 
