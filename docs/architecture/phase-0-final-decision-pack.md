@@ -102,6 +102,27 @@ Estos contratos quedan aceptados como contratos documentales. Esta lista no impl
 | Citation Policy | Accepted | `docs/policies/citation-policy.md` |
 | Abstention Policy | Accepted | `docs/policies/abstention-policy.md` |
 
+## Contratos aceptados en Subfase 0.5
+
+Estos contratos quedan aceptados como contratos documentales del JusNova Live Legal Search Engine. Esta lista no implica que adaptadores oficiales, discovery providers, fetchers, extractors, snapshots o ranking ya esten implementados.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Legal Entity | Accepted | `docs/contracts/legal-entity.schema.json` |
+| Legal Search Query | Accepted | `docs/contracts/legal-search-query.schema.json` |
+| Legal Search Result | Accepted | `docs/contracts/legal-search-result.schema.json` |
+| Retrieval Plan | Accepted | `docs/contracts/retrieval-plan.schema.json` |
+| Retrieval Run | Accepted | `docs/contracts/retrieval-run.schema.json` |
+| Evidence Quality | Accepted | `docs/contracts/evidence-quality.schema.json` |
+| Provider Interfaces | Accepted | `docs/contracts/provider-interfaces.md` |
+
+## Politicas aceptadas en Subfase 0.5
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Legal Search Policy | Accepted | `docs/policies/legal-search-policy.md` |
+| Source Routing Matrix | Accepted | `docs/policies/source-routing-matrix.md` |
+
 ## Dependencias posteriores preservadas
 
 - `citation-audit.schema.json` queda delegado a Subfase 0.7.

@@ -52,7 +52,7 @@ La busqueda viva permite operar sin corpus propio y, a la vez, sostener respuest
 
 ## Dependencias posteriores
 
-- Subfase 0.5 debe crear contratos de legal search, provider interfaces, retrieval plan/run y source routing matrix.
+- Subfase 0.5 creo contratos de legal search, provider interfaces, retrieval plan/run y source routing matrix.
 - Subfase 0.6 debe completar source, validity, conflict y uncertainty policies.
 - Fase 4 implementara core del motor.
 - Fases 5 a 8 implementaran adaptadores, resiliencia, vigencia, conflicto y cache.
@@ -81,7 +81,7 @@ La busqueda viva permite operar sin corpus propio y, a la vez, sostener respuest
 
 ## Criterios de aceptacion
 
-- El contrato Live Legal Search queda definido en Subfase 0.5.
+- El contrato Live Legal Search queda definido en Subfase 0.5 mediante `legal-search-query.schema.json`, `legal-search-result.schema.json`, `retrieval-plan.schema.json`, `retrieval-run.schema.json`, `evidence-quality.schema.json`, `provider-interfaces.md`, `legal-search-policy.md` y `source-routing-matrix.md`.
 - El motor distingue fuente oficial, secundaria y documento de usuario.
 - El motor produce trazas.
 - El motor no devuelve texto crudo sin normalizacion.
@@ -94,4 +94,3 @@ Revisar al cerrar Subfase 0.5, al completar Fase 4, y cuando `official_source_re
 ## Consecuencias
 
 Toda consulta juridica critica debera pasar por plan de retrieval, Evidence Pack o abstencion estructurada antes de respuesta final.
-

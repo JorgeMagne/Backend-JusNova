@@ -81,6 +81,31 @@
     }
   },
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "criticality": {
+            "const": "high"
+          },
+          "verification_status": {
+            "const": "passed"
+          }
+        },
+        "required": [
+          "criticality",
+          "verification_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "citations": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
   "examples": [
     {
       "claim_id": "cl_001",
@@ -102,6 +127,7 @@
       "claim_type": "vigencia",
       "criticality": "high",
       "support_level": "unsupported",
+      "citations": [],
       "verification_status": "passed",
       "requires_human_review": false
     }

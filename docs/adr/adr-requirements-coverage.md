@@ -23,17 +23,17 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-002 | Redis no es fuente de verdad. | ADR-002: Decision; `architecture-overview.md`. | Accepted | Fase 1 cache/locks. | Perdida de datos transaccionales. |
 | ADR-002 | Object storage obligatorio. | ADR-002: Decision, Justificacion. | Accepted | Fase 1 StorageProvider. | PDFs/snapshots en base transaccional. |
 | ADR-002 | Condicion para adoptar Kubernetes. | ADR-002: No afirma todavia, Criterios de aceptacion, Revision. | Accepted | Metricas operativas futuras. | Plataforma sobredimensionada. |
-| ADR-003 | Que significa busqueda juridica viva. | ADR-003: Decision, Justificacion, Componentes aprobados. | Accepted | Subfase 0.5 contratos. | Busqueda generica sin estructura juridica. |
-| ADR-003 | Que fuentes consulta. | ADR-003: Contexto; ADR-009 fuentes iniciales. | Accepted | Subfase 0.5/0.6 source routing. | Cobertura Bolivia-first incompleta. |
-| ADR-003 | Que adaptadores existen. | ADR-003: Componentes aprobados. | Accepted | Subfase 0.5 provider interfaces. | Portales oficiales no modelados. |
-| ADR-003 | Rol de discovery web. | ADR-003: Problema, Decision, No afirma todavia. | Accepted | Subfase 0.5 discovery provider contracts. | Discovery tratado como fuente final. |
+| ADR-003 | Que significa busqueda juridica viva. | ADR-003: Decision, Justificacion, Componentes aprobados; `docs/policies/legal-search-policy.md`. | Accepted | Fase 4 implementacion. | Busqueda generica sin estructura juridica. |
+| ADR-003 | Que fuentes consulta. | ADR-003: Contexto; ADR-009 fuentes iniciales; `docs/policies/source-routing-matrix.md`. | Accepted | Subfase 0.6 source policies. | Cobertura Bolivia-first incompleta. |
+| ADR-003 | Que adaptadores existen. | ADR-003: Componentes aprobados; `docs/contracts/provider-interfaces.md`. | Accepted | Fase 5 adapters. | Portales oficiales no modelados. |
+| ADR-003 | Rol de discovery web. | ADR-003: Problema, Decision, No afirma todavia; `docs/policies/legal-search-policy.md`. | Accepted | Fase 4 provider implementation. | Discovery tratado como fuente final. |
 | ADR-003 | Rol de snapshots. | ADR-003: Componentes aprobados. | Accepted | Fase 8 Source Snapshot Registry. | No reproducibilidad de fuentes. |
 | ADR-003 | Rol de Evidence Cache. | ADR-003: Componentes aprobados; ADR-004. | Accepted | Fase 8 Evidence Cache. | Cache confundido con corpus o vigencia. |
 | ADR-003 | Que no es RAG. | ADR-003: No afirma todavia; ADR-004. | Accepted | Subfase 0.6 no-rag policy. | Promesa comercial incorrecta. |
-| ADR-003 | Como se generan Evidence Packs. | ADR-003: Componentes aprobados. | Accepted | Subfase 0.4/0.5 schemas. | Respuestas desde texto crudo. |
-| ADR-003 | Como se evalua calidad de busqueda. | ADR-003: Mitigaciones, Revision; ADR-012. | Accepted | Subfase 0.12 evaluation plan. | Calidad subjetiva del motor. |
-| ADR-003 | No depender de un unico proveedor de discovery. | ADR-003: Restricciones, No afirma todavia, Criterios. | Accepted | Subfase 0.5 provider interfaces. | Fragilidad y costo por proveedor unico. |
-| ADR-003 | No devolver texto crudo sin normalizacion. | ADR-003: Criterios de aceptacion. | Accepted | Subfase 0.5/0.4 contracts. | Modelo cita texto no confiable. |
+| ADR-003 | Como se generan Evidence Packs. | ADR-003: Componentes aprobados; `retrieval-run.schema.json`; `evidence-pack.schema.json`. | Accepted | Fase 4 implementation. | Respuestas desde texto crudo. |
+| ADR-003 | Como se evalua calidad de busqueda. | ADR-003: Mitigaciones, Revision; `evidence-quality.schema.json`; ADR-012. | Accepted | Subfase 0.12 evaluation plan. | Calidad subjetiva del motor. |
+| ADR-003 | No depender de un unico proveedor de discovery. | ADR-003: Restricciones, No afirma todavia, Criterios; `provider-interfaces.md`. | Accepted | Fase 4 provider implementation. | Fragilidad y costo por proveedor unico. |
+| ADR-003 | No devolver texto crudo sin normalizacion. | ADR-003: Criterios de aceptacion; `legal-search-policy.md`; `legal-search-result.schema.json`. | Accepted | Fase 4 implementation. | Modelo cita texto no confiable. |
 | ADR-004 | Fuera de alcance antes de lanzamiento. | ADR-004: Fuera de lanzamiento. | Accepted | Ninguna para decision. | Alcance inflado. |
 | ADR-004 | Que si se construye. | ADR-004: Dentro de lanzamiento. | Accepted | Fases 4-9. | No hay sustituto al corpus propio. |
 | ADR-004 | Evitar vender Evidence Cache como corpus. | ADR-004: Problema, Decision, No afirma todavia. | Accepted | Subfase 0.6 policies. | Riesgo comercial/juridico. |

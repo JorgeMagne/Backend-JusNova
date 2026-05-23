@@ -75,7 +75,7 @@ El Source Registry permite priorizar autoridad, controlar fuentes debiles, audit
 ## Criterios de aceptacion
 
 - Subfase posterior crea `source-registry-entry.schema.json`.
-- Se crean `source-policy.md`, `validity-policy.md` y `conflict-policy.md`.
+- Se crean `source-policy.md`, `validity-policy.md`, `conflict-policy.md` y `uncertainty-policy.md`.
 - TIER2/TIER3 quedan reguladas.
 - Cache no se trata como confirmacion de vigencia.
 

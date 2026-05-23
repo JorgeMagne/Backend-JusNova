@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/retrieval-run.schema.json",
+  "title": "RetrievalRun",
+  "description": "Ejecucion trazable de un RetrievalPlan. Registra proveedores, resultados, fuentes rechazadas, calidad, costos estimados y razones cerradas de no evidencia.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+  },
+  "required": [
+    "retrieval_run_id",
+    "query_id",
+    "retrieval_plan_id",
+    "status",
+    "providers_used",
+    "adapter_calls",
+    "discovery_results",
+    "sources_opened",
+    "sources_rejected",
+    "latency_ms",
+    "estimated_cost",
+    "warnings",
+    "started_at",
+    "completed_at"
+  ],
+  "properties": {
+    "retrieval_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "query_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "retrieval_plan_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "completed_with_evidence",
+        "completed_no_evidence",
+        "failed",
+        "cancelled",
+        "budget_exhausted"
+      ]
+    },
+    "providers_used": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "adapter_calls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "adapter_name",
+          "status"
+        ],
+        "properties": {
+          "adapter_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "success",
+              "partial",
+              "error",
+              "timeout",
+              "skipped"
+            ]
+          },
+          "error_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "discovery_results": {
+      "type": "array",
+      "items": {
+        "$ref": "./legal-search-result.schema.json"
+      }
+    },
+    "sources_opened": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "uniqueItems": true
+    },
+    "sources_rejected": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "url",
+          "reason"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "reason": {
+            "enum": [
+              "foreign_jurisdiction",
+              "low_authority",
+              "duplicate",
+              "not_extractable",
+              "access_not_allowed",
+              "tier_not_allowed",
+              "irrelevant"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence_pack_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "no_evidence_reason": {
+      "enum": [
+        "no_evidence_found",
+        "insufficient_budget",
+        "official_sources_down",
+        "conflict_unresolved",
+        "missing_user_info",
+        "access_not_allowed",
+        "extraction_failed"
+      ]
+    },
+    "quality": {
+      "$ref": "./evidence-quality.schema.json"
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "error_code",
+        "message"
+      ],
+      "properties": {
+        "error_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "latency_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "estimated_cost": {
+      "type": "number",
+      "minimum": 0
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "completed_with_evidence"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "quality",
+          "evidence_pack_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "completed_no_evidence"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "quality",
+          "no_evidence_reason"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "failed"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "budget_exhausted"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "no_evidence_reason"
+        ],
+        "properties": {
+          "no_evidence_reason": {
+            "const": "insufficient_budget"
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "retrieval_run_id": "rr_001",
+      "query_id": "q_legal_001",
+      "retrieval_plan_id": "rp_001",
+      "status": "completed_with_evidence",
+      "providers_used": [
+        "TCPAdapter",
+        "OpenAIWebSearchDiscoveryProvider"
+      ],
+      "adapter_calls": [
+        {
+          "adapter_name": "TCPAdapter",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "discovery_results": [],
+      "sources_opened": [
+        "https://jurisprudencia.tcpbolivia.bo/Fichas/Ficha/12345"
+      ],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_001",
+      "quality": {
+        "overall": "MEDIUM",
+        "coverage": 0.72,
+        "authority": 0.91,
+        "citation_readiness": 0.84,
+        "validity_risk": "MEDIUM",
+        "conflicts_detected": false,
+        "warnings": [
+          "Vigencia no confirmada."
+        ]
+      },
+      "latency_ms": 24120,
+      "estimated_cost": 0.08,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:24Z"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "retrieval_run_id": "rr_002",
+      "query_id": "q_legal_002",
+      "retrieval_plan_id": "rp_002",
+      "status": "completed_with_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "quality": {
+        "overall": "NONE",
+        "coverage": 0,
+        "authority": 0,
+        "citation_readiness": 0,
+        "validity_risk": "UNKNOWN",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_003",
+      "query_id": "q_legal_003",
+      "retrieval_plan_id": "rp_003",
+      "status": "budget_exhausted",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "no_evidence_reason": "official_sources_down",
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    }
+  ]
+}

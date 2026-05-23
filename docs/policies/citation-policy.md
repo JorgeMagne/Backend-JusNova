@@ -86,7 +86,8 @@ Cadena valida:
     "citation_ref": "C1",
     "passage_ref": "F1:P1",
     "source_ref": "F1",
-    "status": "valid"
+    "status": "valid",
+    "supports_claim_ids": ["cl_001"]
   },
   "passage": {
     "passage_ref": "F1:P1",

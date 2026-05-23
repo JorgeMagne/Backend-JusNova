@@ -1,0 +1,370 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/legal-search-result.schema.json",
+  "title": "LegalSearchResult",
+  "description": "Resultado normalizado de discovery o adaptador oficial. No es citable hasta fetch, extraction, pasaje y snapshot o razon de imposibilidad de snapshot.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+  },
+  "required": [
+    "result_id",
+    "title",
+    "url",
+    "tier",
+    "source_type",
+    "jurisdiction",
+    "relevance_score",
+    "authority_score",
+    "jurisdiction_score",
+    "freshness_score",
+    "extractability_score",
+    "source_health_score",
+    "extraction_status",
+    "citation_eligible",
+    "retrieved_at",
+    "warnings"
+  ],
+  "properties": {
+    "result_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "tier": {
+      "enum": [
+        "TIER1_CANONICO",
+        "TIER1_OFICIAL",
+        "TIER1_STRUCTURED",
+        "TIER2_CONFIABLE",
+        "TIER3_SECUNDARIO",
+        "USER_DOCUMENT"
+      ]
+    },
+    "source_type": {
+      "enum": [
+        "norma",
+        "jurisprudencia",
+        "documento_usuario",
+        "doctrina",
+        "web",
+        "institucional"
+      ]
+    },
+    "jurisdiction": {
+      "type": "string",
+      "const": "BO"
+    },
+    "issuer": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "published_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "retrieved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "snippet": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "relevance_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "authority_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "jurisdiction_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "freshness_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "extractability_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "source_health_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "final_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "extraction_status": {
+      "enum": [
+        "not_fetched",
+        "fetched",
+        "extracted",
+        "failed",
+        "partial"
+      ]
+    },
+    "citation_eligible": {
+      "type": "boolean"
+    },
+    "passage_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[FD][0-9]+:P[0-9]+$"
+      },
+      "uniqueItems": true
+    },
+    "snapshot_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "snapshot_unavailable_reason": {
+      "enum": [
+        "host_blocked_snapshot",
+        "content_too_large",
+        "transient_fetch_error",
+        "legal_access_restricted",
+        "dynamic_render_failed"
+      ]
+    },
+    "validity_status": {
+      "enum": [
+        "VIGENCIA_CONFIRMADA",
+        "VIGENCIA_NO_CONFIRMADA",
+        "POSIBLEMENTE_MODIFICADA",
+        "DEROGADA_CONFIRMADA",
+        "CONFLICTIVA",
+        "NO_APLICA"
+      ]
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source_type": {
+            "const": "norma"
+          }
+        },
+        "required": [
+          "source_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "validity_status"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "extraction_status": {
+            "const": "extracted"
+          }
+        },
+        "required": [
+          "extraction_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "passage_refs"
+        ],
+        "properties": {
+          "passage_refs": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "citation_eligible": {
+            "const": true
+          }
+        },
+        "required": [
+          "citation_eligible"
+        ]
+      },
+      "then": {
+        "required": [
+          "passage_refs"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "snapshot_id"
+            ],
+            "properties": {
+              "snapshot_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "snapshot_unavailable_reason"
+            ]
+          }
+        ],
+        "properties": {
+          "extraction_status": {
+            "const": "extracted"
+          },
+          "passage_refs": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "passage_refs"
+        ],
+        "properties": {
+          "passage_refs": {
+            "minItems": 1
+          },
+          "snapshot_id": {
+            "type": "null"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "snapshot_unavailable_reason"
+        ]
+      }
+    }
+  ],
+  "examples": [
+    {
+      "result_id": "lsr_001",
+      "title": "Sentencia Constitucional Plurinacional sobre debido proceso",
+      "url": "https://jurisprudencia.tcpbolivia.bo/Fichas/Ficha/12345",
+      "tier": "TIER1_CANONICO",
+      "source_type": "jurisprudencia",
+      "jurisdiction": "BO",
+      "issuer": "Tribunal Constitucional Plurinacional",
+      "published_at": "2024-03-01",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "snippet": "Debido proceso y accion de amparo constitucional.",
+      "relevance_score": 0.88,
+      "authority_score": 0.97,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.79,
+      "extractability_score": 0.91,
+      "source_health_score": 0.86,
+      "final_score": 0.9,
+      "extraction_status": "extracted",
+      "citation_eligible": true,
+      "passage_refs": [
+        "F1:P1"
+      ],
+      "snapshot_id": "snap_001",
+      "warnings": []
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "result_id": "lsr_002",
+      "title": "Ley sin vigencia",
+      "url": "https://www.example.gob.bo/ley",
+      "tier": "TIER1_CANONICO",
+      "source_type": "norma",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.5,
+      "authority_score": 0.9,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "warnings": []
+    },
+    {
+      "result_id": "lsr_003",
+      "title": "Resultado extraido sin pasaje",
+      "url": "https://www.example.gob.bo/documento",
+      "tier": "TIER1_OFICIAL",
+      "source_type": "institucional",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 1.2,
+      "authority_score": 0.9,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "extracted",
+      "citation_eligible": true,
+      "warnings": []
+    },
+    {
+      "result_id": "lsr_004",
+      "title": "Resultado web crudo marcado como citable",
+      "url": "https://www.example.com/blog",
+      "tier": "TIER3_SECUNDARIO",
+      "source_type": "web",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.2,
+      "jurisdiction_score": 0.8,
+      "freshness_score": 0.7,
+      "extractability_score": 0.3,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": true,
+      "warnings": [
+        "Web crudo no puede ser citable."
+      ]
+    }
+  ]
+}

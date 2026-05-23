@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/retrieval-plan.schema.json",
+  "title": "RetrievalPlan",
+  "description": "Plan trazable de busqueda juridica viva. Define rutas, estrategias, proveedores candidatos y condiciones de parada antes de ejecutar retrieval.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+  },
+  "required": [
+    "retrieval_plan_id",
+    "query_id",
+    "jurisdiction",
+    "intents",
+    "strategies",
+    "source_targets",
+    "search_queries",
+    "fallback_allowed",
+    "stop_conditions",
+    "created_at"
+  ],
+  "properties": {
+    "retrieval_plan_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "query_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jurisdiction": {
+      "type": "string",
+      "const": "BO"
+    },
+    "intents": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "NORMATIVA",
+          "JURISPRUDENCIA",
+          "PROCEDIMIENTO",
+          "ESTRATEGIA",
+          "DOC_ANALYSIS",
+          "REDACCION",
+          "SECTORIAL",
+          "SUBNACIONAL",
+          "VIGENCIA",
+          "MIXTO",
+          "META"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "strategies": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "OFFICIAL_DIRECT",
+          "ENTITY_LOOKUP",
+          "JURISPRUDENCE_DISCOVERY",
+          "NORMATIVE_DISCOVERY",
+          "VALIDITY_DISCOVERY",
+          "SECTORIAL_DISCOVERY",
+          "SUBNATIONAL_DISCOVERY",
+          "PDF_DISCOVERY",
+          "OPEN_WEB_DISCOVERY",
+          "CACHE_REUSE"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "source_targets": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "GACETA",
+          "SILEP_CANDIDATE",
+          "TSJ_GENESIS",
+          "TCP",
+          "OFFICIAL_DOMAIN",
+          "SECTOR_PACK",
+          "SUBNATIONAL_OFFICIAL",
+          "USER_DOCUMENT",
+          "OPEN_WEB_DISCOVERY",
+          "TIER2_FALLBACK"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "search_queries": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "fallback_allowed": {
+      "type": "boolean"
+    },
+    "stop_conditions": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "sufficient_tier1_evidence",
+          "budget_exhausted",
+          "all_official_sources_down",
+          "conflict_requires_research",
+          "missing_required_user_info",
+          "no_extractable_passage"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "retrieval_plan_id": "rp_001",
+      "query_id": "q_legal_001",
+      "jurisdiction": "BO",
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "strategies": [
+        "OFFICIAL_DIRECT",
+        "JURISPRUDENCE_DISCOVERY"
+      ],
+      "source_targets": [
+        "TCP",
+        "OPEN_WEB_DISCOVERY"
+      ],
+      "search_queries": [
+        "site:jurisprudencia.tcpbolivia.bo debido proceso accion de amparo"
+      ],
+      "fallback_allowed": true,
+      "stop_conditions": [
+        "sufficient_tier1_evidence",
+        "budget_exhausted"
+      ],
+      "created_at": "2026-05-22T00:00:00Z"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "retrieval_plan_id": "rp_002",
+      "query_id": "q_legal_002",
+      "jurisdiction": "BO",
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "strategies": [],
+      "source_targets": [
+        "TCP"
+      ],
+      "search_queries": [
+        "debido proceso"
+      ],
+      "fallback_allowed": true,
+      "stop_conditions": [
+        "budget_exhausted"
+      ],
+      "created_at": "2026-05-22T00:00:00Z"
+    }
+  ]
+}
