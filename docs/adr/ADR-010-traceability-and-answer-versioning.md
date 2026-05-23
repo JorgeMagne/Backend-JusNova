@@ -39,7 +39,7 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 
 - Model calls con purpose, provider, model, prompt version y hashes.
 - Tool calls con purpose, status, errores y costos.
-- Retrieval runs y evidence pack IDs.
+- Retrieval run summaries sanitizados y evidence pack IDs.
 - Sources used/rejected.
 - Claims.
 - Citation audit.
@@ -70,6 +70,7 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 
 - Trace visibility levels.
 - Hashes y minimizacion.
+- Retrieval runs embebidos como resumen sanitizado, sin URLs crudas ni resultados discovery completos.
 - Redaccion de logs.
 - Ownership/tenant en trazas.
 - Politica de retencion.

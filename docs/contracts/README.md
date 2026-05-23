@@ -85,6 +85,7 @@ Estos contratos quedan aceptados como base documental de trazabilidad, auditoria
 ## Reglas especificas de Subfase 0.7
 
 - `TraceObject` exige organizacion, actor pseudonimizado, version de respuesta, auditoria de citas, costo observado y latencias cerradas.
+- `TraceObject.retrieval_runs[]` usa resumen sanitizado; no embebe `RetrievalRun` operativo completo ni URLs crudas de discovery, fuentes abiertas o fuentes rechazadas.
 - `ModelCall` y `ToolCall` guardan hashes y codigos de error; no guardan prompts, salidas, documentos ni mensajes completos.
 - `CitationAudit` contiene resultados por cita y fallas bloqueantes; `passed` no admite fallas bloqueantes.
 - `AnswerVersion` referencia contrato/render snapshot y hash; no embebe respuesta completa sensible.

@@ -113,9 +113,10 @@
       }
     },
     "retrieval_runs": {
+      "description": "Summaries sanitizados de retrieval runs usados en trazas. No embebe RetrievalRun operativo completo porque ese contrato puede contener URLs crudas u otros detalles internos de ejecucion.",
       "type": "array",
       "items": {
-        "$ref": "./retrieval-run.schema.json"
+        "$ref": "#/$defs/retrieval_run_trace_summary"
       }
     },
     "evidence_pack_ids": {
@@ -164,6 +165,393 @@
     }
   },
   "$defs": {
+    "retrieval_run_trace_summary": {
+      "type": "object",
+      "required": [
+        "retrieval_run_id",
+        "query_id",
+        "retrieval_plan_id",
+        "status",
+        "providers_used",
+        "sources_opened",
+        "sources_rejected",
+        "latency_ms",
+        "estimated_cost",
+        "warnings",
+        "started_at",
+        "completed_at"
+      ],
+      "properties": {
+        "retrieval_run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "query_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retrieval_plan_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "completed_with_evidence",
+            "completed_no_evidence",
+            "failed",
+            "cancelled",
+            "budget_exhausted"
+          ]
+        },
+        "providers_used": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "sources_opened": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "url_hash",
+              "opened_at"
+            ],
+            "properties": {
+              "source_ref": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^F[0-9]+$|^D[0-9]+$"
+              },
+              "result_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              },
+              "url_hash": {
+                "type": "string",
+                "minLength": 1
+              },
+              "opened_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "sources_rejected": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rejected_source"
+          }
+        },
+        "evidence_pack_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "no_evidence_reason": {
+          "enum": [
+            "no_evidence_found",
+            "insufficient_budget",
+            "official_sources_down",
+            "conflict_unresolved",
+            "missing_user_info",
+            "access_not_allowed",
+            "extraction_failed"
+          ]
+        },
+        "quality": {
+          "$ref": "./evidence-quality.schema.json"
+        },
+        "error": {
+          "type": "object",
+          "required": [
+            "error_code",
+            "message"
+          ],
+          "properties": {
+            "error_code": {
+              "type": "string",
+              "minLength": 1
+            },
+            "message": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "cancellation_reason": {
+          "enum": [
+            "user_cancelled",
+            "timeout_cancelled",
+            "system_cancelled",
+            "superseded_by_new_run"
+          ]
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "estimated_cost": {
+          "type": "number",
+          "minimum": 0
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "completed_with_evidence"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "quality",
+              "evidence_pack_id"
+            ],
+            "properties": {
+              "quality": {
+                "properties": {
+                  "overall": {
+                    "enum": [
+                      "HIGH",
+                      "MEDIUM",
+                      "LOW",
+                      "CONFLICTIVE"
+                    ]
+                  }
+                }
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "no_evidence_reason"
+                  ]
+                },
+                {
+                  "required": [
+                    "error"
+                  ]
+                },
+                {
+                  "required": [
+                    "cancellation_reason"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "completed_no_evidence"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "quality",
+              "no_evidence_reason"
+            ],
+            "properties": {
+              "quality": {
+                "properties": {
+                  "overall": {
+                    "enum": [
+                      "NONE",
+                      "LOW",
+                      "CONFLICTIVE"
+                    ]
+                  }
+                }
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "evidence_pack_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "error"
+                  ]
+                },
+                {
+                  "required": [
+                    "cancellation_reason"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "failed"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "error"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "evidence_pack_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "no_evidence_reason"
+                  ]
+                },
+                {
+                  "required": [
+                    "quality"
+                  ]
+                },
+                {
+                  "required": [
+                    "cancellation_reason"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "budget_exhausted"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "no_evidence_reason"
+            ],
+            "properties": {
+              "no_evidence_reason": {
+                "const": "insufficient_budget"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "evidence_pack_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "error"
+                  ]
+                },
+                {
+                  "required": [
+                    "quality"
+                  ]
+                },
+                {
+                  "required": [
+                    "cancellation_reason"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "cancelled"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "cancellation_reason"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "evidence_pack_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "no_evidence_reason"
+                  ]
+                },
+                {
+                  "required": [
+                    "error"
+                  ]
+                },
+                {
+                  "required": [
+                    "quality"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
     "rejected_source": {
       "type": "object",
       "required": [
@@ -1872,6 +2260,145 @@
         "queue": 50
       },
       "warnings": []
+    },
+    {
+      "trace_id": "tr_018",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_018",
+      "answer_version_ref": "av_018",
+      "answer_version": 1,
+      "conversation_id": "conv_018",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_018",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:input018",
+          "output_hash": "sha256:output018",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [
+        {
+          "retrieval_run_id": "rr_018",
+          "query_id": "q_018",
+          "retrieval_plan_id": "rp_018",
+          "status": "failed",
+          "providers_used": [],
+          "adapter_calls": [],
+          "discovery_results": [
+            {
+              "result_id": "r_018",
+              "title": "Resultado crudo no sanitizado",
+              "url": "https://example.com/private-query?id=123",
+              "tier": "TIER3_SECUNDARIO",
+              "source_type": "web",
+              "retrieved_at": "2026-05-22T00:00:00Z",
+              "validity_status": "NO_APLICA",
+              "relevance_score": 0.1,
+              "authority_score": 0.1,
+              "freshness_score": 0.1,
+              "extraction_status": "not_fetched",
+              "citation_eligible": false,
+              "warnings": []
+            }
+          ],
+          "sources_opened": [
+            "https://example.com/private-query?id=123"
+          ],
+          "sources_rejected": [
+            {
+              "url": "https://example.com/private-query?id=123",
+              "reason": "irrelevant"
+            }
+          ],
+          "error": {
+            "error_code": "provider_timeout",
+            "message": "Payload operativo crudo no debe embebirse en TraceObject."
+          },
+          "latency_ms": 1000,
+          "estimated_cost": 0,
+          "warnings": [],
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z"
+        }
+      ],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim publicado.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_018",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_018",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 1000,
+        "model_total": 1000,
+        "tool_total": 0,
+        "retrieval_total": 1000,
+        "citation_audit": 0,
+        "persistence": 0,
+        "queue": 0
+      },
+      "warnings": []
     }
   ],
   "x-policy-invalid-examples": [
@@ -2223,8 +2750,6 @@
           "retrieval_plan_id": "rp_policy_004",
           "status": "failed",
           "providers_used": [],
-          "adapter_calls": [],
-          "discovery_results": [],
           "sources_opened": [],
           "sources_rejected": [],
           "error": {
@@ -2574,8 +3099,6 @@
           "retrieval_plan_id": "rp_policy_007",
           "status": "failed",
           "providers_used": [],
-          "adapter_calls": [],
-          "discovery_results": [],
           "sources_opened": [],
           "sources_rejected": [],
           "error": {

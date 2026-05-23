@@ -33,40 +33,41 @@ No define retencion final, permisos productivos completos ni proceso de incident
 6. `INTERNAL_AUDIT` no significa acceso libre: usa hashes y referencias por defecto.
 7. Material crudo solo puede consultarse mediante proceso de incidente definido en Subfase 0.10.
 8. Todo acceso elevado registra `trace_id`, `actor_ref`, `actor_type`, `reason`, `accessed_at` y `visibility_level`.
-9. `sources_rejected` debe guardar razon cerrada y hashes, no contenido crudo.
-10. `latency_ms`, `cost`, `token_usage` y `cost_units` deben ser objetos cerrados sin metadata libre.
-11. Model calls y tool calls registran `input_hash`; `output_hash` solo es obligatorio en `success`.
-12. Estados fallidos registran `error_code` y no guardan salida completa.
-13. `citation_audit` registra evaluacion estructurada de cita y claim; no guarda pasajes crudos fuera de las referencias aprobadas.
-14. Si una traza se marca `blocked` o `total_abstention`, debe existir `abstention_reason` o una advertencia visible.
-15. Si una traza se marca `answered` o `partial_abstention`, su `citation_audit.overall_status` debe ser `passed`.
-16. Si una traza se marca `partial_abstention`, debe existir `abstention_reason` o una advertencia visible sobre la parte no respondida.
-17. Si una traza se marca `answered`, todos sus claims deben tener `verification_status = passed`.
-18. Si una traza se marca `partial_abstention`, debe existir al menos un claim con `verification_status = passed`.
-19. Si una traza se marca `answered` o `partial_abstention`, debe existir al menos un `ModelCall` con `purpose = answer_generation` y `status = success`.
-20. Si `citation_audit.overall_status = passed`, cada `claims[].citations[]` publicado debe aparecer en `citation_audit.results[]` con el mismo `claim_id`, `citation_ref` y `status = valid`.
-21. Si `citation_audit.overall_status = passed`, cada `sources_used[]` debe aparecer como `source_ref` en al menos un resultado auditado valido.
-22. Un `TraceObject` no puede presentarse en `USER_SUMMARY`, `SUPPORT_VIEW` ni `INTERNAL_AUDIT` como auditoria aprobada si tiene claims, citas o fuentes publicadas fuera de `CitationAudit.results[]`.
-23. Si una traza se marca `answered`, no debe existir `abstention_reason`.
-24. Si una traza se marca `total_abstention`, no debe contener claims publicados ni fuentes usadas.
-25. Si una traza se marca `blocked`, puede conservar claims intentados, pero ninguno puede tener `verification_status = passed`.
-26. Ningun nivel de visibilidad puede convertir una fuente decorativa en fuente usada.
-27. Cada `ModelCall.token_usage.total_tokens` debe ser igual a `input_tokens + output_tokens`.
-28. `TraceObject.cost.model_input_tokens` debe ser igual a la suma de `model_calls[].token_usage.input_tokens`.
-29. `TraceObject.cost.model_output_tokens` debe ser igual a la suma de `model_calls[].token_usage.output_tokens`.
-30. `TraceObject.cost.tool_calls` debe ser igual a la cantidad de elementos en `tool_calls[]`; si en 0.8 se requiere distinguir llamadas facturables, se agregara un campo separado.
-31. `CostReport.estimated_total_cost` debe coincidir con la suma de `provider_estimated_costs[].estimated_cost`, `tool_calls[].cost_units.estimated_cost` y `retrieval_runs[].estimated_cost` bajo la politica de redondeo definida por implementacion.
-32. Cada `ModelCall`, `ToolCall` y `RetrievalRun` debe cumplir `completed_at >= started_at`.
-33. `latency_ms.total` representa duracion wall-clock de la traza y no puede ser menor que ningun componente: `model_total`, `tool_total`, `retrieval_total`, `citation_audit`, `persistence` o `queue`.
-34. Un componente de latencia positivo con `latency_ms.total = 0` es inconsistente y debe rechazarse.
-35. `latency_ms.model_total` no puede ser menor que la mayor duracion derivada de `model_calls[]`.
-36. `latency_ms.tool_total` no puede ser menor que la mayor duracion derivada de `tool_calls[]`.
-37. `latency_ms.retrieval_total` no puede ser menor que la mayor duracion derivada de `retrieval_runs[]`.
-38. `latency_ms.total` no puede ser menor que la mayor duracion derivada de cualquier `ModelCall`, `ToolCall` o `RetrievalRun`.
-39. Dentro de un `TraceObject`, `model_calls[].model_call_id`, `tool_calls[].tool_call_id`, `retrieval_runs[].retrieval_run_id` y `claims[].claim_id` deben ser unicos.
-40. Dentro de `citation_audit.results[]`, la clave `(claim_id, citation_ref, passage_ref, source_ref)` debe ser unica.
-41. Si `CostReport.currency = NONE`, entonces `provider_estimated_costs[]`, `tool_calls[].cost_units.estimated_cost`, `retrieval_runs[].estimated_cost` y `estimated_total_cost` deben ser `0`.
-42. Las reglas 27 a 41 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
+9. `sources_rejected` y `retrieval_runs[].sources_rejected` deben guardar razon cerrada y hashes, no contenido crudo.
+10. `TraceObject.retrieval_runs[]` debe ser resumen sanitizado; no puede embeber `RetrievalRun` operativo completo, `LegalSearchResult.url`, `sources_opened[]` como URL cruda ni `sources_rejected[].url`.
+11. `latency_ms`, `cost`, `token_usage` y `cost_units` deben ser objetos cerrados sin metadata libre.
+12. Model calls y tool calls registran `input_hash`; `output_hash` solo es obligatorio en `success`.
+13. Estados fallidos registran `error_code` y no guardan salida completa.
+14. `citation_audit` registra evaluacion estructurada de cita y claim; no guarda pasajes crudos fuera de las referencias aprobadas.
+15. Si una traza se marca `blocked` o `total_abstention`, debe existir `abstention_reason` o una advertencia visible.
+16. Si una traza se marca `answered` o `partial_abstention`, su `citation_audit.overall_status` debe ser `passed`.
+17. Si una traza se marca `partial_abstention`, debe existir `abstention_reason` o una advertencia visible sobre la parte no respondida.
+18. Si una traza se marca `answered`, todos sus claims deben tener `verification_status = passed`.
+19. Si una traza se marca `partial_abstention`, debe existir al menos un claim con `verification_status = passed`.
+20. Si una traza se marca `answered` o `partial_abstention`, debe existir al menos un `ModelCall` con `purpose = answer_generation` y `status = success`.
+21. Si `citation_audit.overall_status = passed`, cada `claims[].citations[]` publicado debe aparecer en `citation_audit.results[]` con el mismo `claim_id`, `citation_ref` y `status = valid`.
+22. Si `citation_audit.overall_status = passed`, cada `sources_used[]` debe aparecer como `source_ref` en al menos un resultado auditado valido.
+23. Un `TraceObject` no puede presentarse en `USER_SUMMARY`, `SUPPORT_VIEW` ni `INTERNAL_AUDIT` como auditoria aprobada si tiene claims, citas o fuentes publicadas fuera de `CitationAudit.results[]`.
+24. Si una traza se marca `answered`, no debe existir `abstention_reason`.
+25. Si una traza se marca `total_abstention`, no debe contener claims publicados ni fuentes usadas.
+26. Si una traza se marca `blocked`, puede conservar claims intentados, pero ninguno puede tener `verification_status = passed`.
+27. Ningun nivel de visibilidad puede convertir una fuente decorativa en fuente usada.
+28. Cada `ModelCall.token_usage.total_tokens` debe ser igual a `input_tokens + output_tokens`.
+29. `TraceObject.cost.model_input_tokens` debe ser igual a la suma de `model_calls[].token_usage.input_tokens`.
+30. `TraceObject.cost.model_output_tokens` debe ser igual a la suma de `model_calls[].token_usage.output_tokens`.
+31. `TraceObject.cost.tool_calls` debe ser igual a la cantidad de elementos en `tool_calls[]`; si en 0.8 se requiere distinguir llamadas facturables, se agregara un campo separado.
+32. `CostReport.estimated_total_cost` debe coincidir con la suma de `provider_estimated_costs[].estimated_cost`, `tool_calls[].cost_units.estimated_cost` y `retrieval_runs[].estimated_cost` bajo la politica de redondeo definida por implementacion.
+33. Cada `ModelCall`, `ToolCall` y `RetrievalRun` debe cumplir `completed_at >= started_at`.
+34. `latency_ms.total` representa duracion wall-clock de la traza y no puede ser menor que ningun componente: `model_total`, `tool_total`, `retrieval_total`, `citation_audit`, `persistence` o `queue`.
+35. Un componente de latencia positivo con `latency_ms.total = 0` es inconsistente y debe rechazarse.
+36. `latency_ms.model_total` no puede ser menor que la mayor duracion derivada de `model_calls[]`.
+37. `latency_ms.tool_total` no puede ser menor que la mayor duracion derivada de `tool_calls[]`.
+38. `latency_ms.retrieval_total` no puede ser menor que la mayor duracion derivada de `retrieval_runs[]`.
+39. `latency_ms.total` no puede ser menor que la mayor duracion derivada de cualquier `ModelCall`, `ToolCall` o `RetrievalRun`.
+40. Dentro de un `TraceObject`, `model_calls[].model_call_id`, `tool_calls[].tool_call_id`, `retrieval_runs[].retrieval_run_id` y `claims[].claim_id` deben ser unicos.
+41. Dentro de `citation_audit.results[]`, la clave `(claim_id, citation_ref, passage_ref, source_ref)` debe ser unica.
+42. Si `CostReport.currency = NONE`, entonces `provider_estimated_costs[]`, `tool_calls[].cost_units.estimated_cost`, `retrieval_runs[].estimated_cost` y `estimated_total_cost` deben ser `0`.
+43. Las reglas 28 a 42 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
 
 ## Reglas asistidas por IA
 
@@ -83,7 +84,7 @@ No define retencion final, permisos productivos completos ni proceso de incident
 | Salida completa del modelo | No se guarda en contratos 0.7; usar `output_hash` cuando exista. |
 | Documento completo | No se guarda en trazas; usar referencias de documento, pagina, pasaje o hash. |
 | Mensaje completo del usuario | No se guarda en trazas 0.7; usar hash o referencia conversacional. |
-| URL sensible | Guardar hash cuando se registre fuente rechazada. |
+| URL sensible | Guardar hash cuando se registre fuente abierta o rechazada dentro de `TraceObject`; URLs operativas crudas quedan fuera de la traza 0.7. |
 | Error tecnico | Guardar `error_code` y mensaje controlado cuando el contrato lo permita. |
 | Costos y latencias | Guardar valores numericos observados, sin plan comercial ni precio mensual. |
 
@@ -105,6 +106,7 @@ El motivo debe ser concreto: soporte de usuario, investigacion de incidente, eva
 ## Criterios de aceptacion
 
 - `trace-object.schema.json` no permite objetos libres para fuentes rechazadas ni latencias.
+- `trace-object.schema.json` no embebe retrieval runs operativos completos con URLs crudas; usa resumen sanitizado con hashes.
 - `model-call.schema.json` y `tool-call.schema.json` no almacenan material crudo.
 - `citation-audit.schema.json` audita cita, claim, pasaje y fuente por referencia.
 - `citation_audit.overall_status = passed` cubre todos los claims citados y todas las fuentes usadas de la traza.
