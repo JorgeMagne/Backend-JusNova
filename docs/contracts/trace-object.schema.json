@@ -626,17 +626,7 @@
         "citation_audit_id": "ca_002",
         "auditor_version": "citation-auditor-v1",
         "overall_status": "needs_review",
-        "results": [
-          {
-            "citation_ref": "C1",
-            "claim_id": "cl_001",
-            "passage_ref": "F1:P1",
-            "source_ref": "F1",
-            "status": "needs_review",
-            "support_assessment": "not_found",
-            "severity": "medium"
-          }
-        ],
+        "results": [],
         "blocking_failures": [],
         "warnings": [
           "No hubo evidencia suficiente para respuesta sustantiva."

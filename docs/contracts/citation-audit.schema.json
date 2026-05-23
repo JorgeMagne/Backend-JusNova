@@ -38,7 +38,6 @@
     },
     "results": {
       "type": "array",
-      "minItems": 1,
       "items": {
         "$ref": "#/$defs/citation_audit_result"
       }
@@ -178,6 +177,7 @@
       "then": {
         "properties": {
           "results": {
+            "minItems": 1,
             "items": {
               "properties": {
                 "status": {
@@ -418,6 +418,15 @@
           "severity": "low"
         }
       ],
+      "blocking_failures": [],
+      "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "citation_audit_id": "ca_008",
+      "auditor_version": "citation-auditor-v1",
+      "overall_status": "needs_review",
+      "results": [],
       "blocking_failures": [],
       "warnings": [],
       "created_at": "2026-05-22T00:00:00Z"
