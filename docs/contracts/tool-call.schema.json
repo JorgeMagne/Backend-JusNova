@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/tool-call.schema.json",
+  "title": "ToolCall",
+  "description": "Registro minimizado de una llamada a tool interna o proveedor. No almacena payloads crudos.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+  },
+  "required": [
+    "tool_call_id",
+    "tool_name",
+    "purpose",
+    "input_hash",
+    "status",
+    "started_at",
+    "completed_at",
+    "cost_units"
+  ],
+  "properties": {
+    "tool_call_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tool_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_hash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output_hash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "success",
+        "error",
+        "timeout",
+        "rate_limited",
+        "cancelled"
+      ]
+    },
+    "error_code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "tool_error",
+        "tool_timeout",
+        "rate_limited",
+        "cancelled_by_user",
+        "cancelled_by_budget",
+        "cancelled_by_timeout",
+        "cancelled_by_system",
+        "policy_blocked",
+        null
+      ]
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cost_units": {
+      "type": "object",
+      "required": [
+        "requests",
+        "pages",
+        "tokens",
+        "estimated_cost"
+      ],
+      "properties": {
+        "requests": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pages": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "estimated_cost": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "success"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "output_hash"
+        ],
+        "properties": {
+          "output_hash": {
+            "type": "string",
+            "minLength": 1
+          },
+          "error_code": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "error"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ],
+        "properties": {
+          "output_hash": {
+            "type": "null"
+          },
+          "error_code": {
+            "enum": [
+              "tool_error",
+              "policy_blocked"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "timeout"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ],
+        "properties": {
+          "output_hash": {
+            "type": "null"
+          },
+          "error_code": {
+            "const": "tool_timeout"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "rate_limited"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ],
+        "properties": {
+          "output_hash": {
+            "type": "null"
+          },
+          "error_code": {
+            "const": "rate_limited"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "cancelled"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ],
+        "properties": {
+          "output_hash": {
+            "type": "null"
+          },
+          "error_code": {
+            "enum": [
+              "cancelled_by_user",
+              "cancelled_by_budget",
+              "cancelled_by_timeout",
+              "cancelled_by_system"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "tool_call_id": "tc_001",
+      "tool_name": "LiveLegalSearchEngine",
+      "purpose": "legal_search",
+      "input_hash": "sha256:tool_input_001",
+      "output_hash": "sha256:tool_output_001",
+      "status": "success",
+      "error_code": null,
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:08Z",
+      "cost_units": {
+        "requests": 2,
+        "pages": 0,
+        "tokens": 0,
+        "estimated_cost": 0.04
+      }
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "tool_call_id": "tc_002",
+      "tool_name": "LiveLegalSearchEngine",
+      "purpose": "legal_search",
+      "input_hash": "sha256:tool_input_002",
+      "output_hash": "sha256:tool_output_002",
+      "status": "success",
+      "error_code": "tool_error",
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:08Z",
+      "cost_units": {
+        "requests": 2,
+        "pages": 0,
+        "tokens": 0,
+        "estimated_cost": 0.04
+      }
+    },
+    {
+      "tool_call_id": "tc_003",
+      "tool_name": "LiveLegalSearchEngine",
+      "purpose": "legal_search",
+      "input_hash": "sha256:tool_input_003",
+      "status": "rate_limited",
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:08Z",
+      "cost_units": {
+        "requests": 2,
+        "pages": 0,
+        "tokens": 0,
+        "estimated_cost": 0.04
+      }
+    },
+    {
+      "tool_call_id": "tc_004",
+      "tool_name": "LiveLegalSearchEngine",
+      "purpose": "legal_search",
+      "input_hash": "sha256:tool_input_004",
+      "output_hash": "sha256:tool_output_004",
+      "status": "cancelled",
+      "error_code": "cancelled_by_user",
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:08Z",
+      "cost_units": {
+        "requests": 2,
+        "pages": 0,
+        "tokens": 0,
+        "estimated_cost": 0.04
+      }
+    }
+  ]
+}

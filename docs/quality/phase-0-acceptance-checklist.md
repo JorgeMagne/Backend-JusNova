@@ -39,7 +39,7 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Cost Governor Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/cost-governor-policy.md` |
 | `budgets.yaml` aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/schemas/budgets.yaml` |
 | Plan base 400 Bs reflejado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/commercial-plans-v0.md` |
-| TraceObject aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json` |
+| TraceObject aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json` |
 | Provider Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/provider-policy.md` |
 | Security/Privacy Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/privacy-security-policy.md` |
 | Evaluation Plan v0 aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/quality/evaluation-plan-v0.md` |
@@ -157,4 +157,22 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | `legal-search-result.schema.json` comparte enum de snapshot reason | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-result.schema.json` |
 | ADR-004 cierra dependencia de no-rag launch policy | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-004-launch-without-legal-rag.md` |
 | ADR-009 cierra dependencias de source/validity/conflict/uncertainty policies | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-009-source-registry-and-validity-policy.md` |
+| Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.7
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| `trace-object.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json` |
+| `model-call.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/model-call.schema.json` |
+| `tool-call.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/tool-call.schema.json` |
+| `citation-audit.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/citation-audit.schema.json` |
+| `answer-version.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-version.schema.json` |
+| `cost-report.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/cost-report.schema.json` |
+| `answer-versioning-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/answer-versioning-policy.md` |
+| `trace-visibility-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/trace-visibility-policy.md` |
+| Trazas no permiten prompts, salidas, documentos ni mensajes completos como propiedades validas | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json`, `docs/contracts/model-call.schema.json`, `docs/contracts/tool-call.schema.json` |
+| AnswerVersion no embebe respuesta completa sensible | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-version.schema.json` |
+| ADR-010 cierra dependencias documentales de trace y answer version | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-010-traceability-and-answer-versioning.md` |
+| ADR-007 registra que CitationAudit queda aceptado en 0.7 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-007-evidence-answer-citation-contracts.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |

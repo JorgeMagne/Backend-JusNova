@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/answer-version.schema.json",
+  "title": "AnswerVersion",
+  "description": "Version estable de una respuesta legal. No almacena respuesta completa ni material sensible; referencia contrato/render snapshot y conserva hashes.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+  },
+  "required": [
+    "answer_version_id",
+    "answer_id",
+    "answer_version",
+    "previous_answer_version",
+    "answer_hash",
+    "trace_id",
+    "answer_contract_ref",
+    "version_reason",
+    "created_at",
+    "created_by_ref"
+  ],
+  "properties": {
+    "answer_version_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "previous_answer_version": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "answer_hash": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer_contract_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rendered_answer_snapshot_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "version_reason": {
+      "enum": [
+        "initial_answer",
+        "citation_repaired",
+        "answer_regenerated",
+        "evidence_updated",
+        "validity_revalidated",
+        "feedback_correction",
+        "formal_export",
+        "source_added",
+        "source_removed",
+        "claim_corrected"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "answer_version": {
+            "const": 1
+          }
+        },
+        "required": [
+          "answer_version"
+        ]
+      },
+      "then": {
+        "properties": {
+          "previous_answer_version": {
+            "type": "null"
+          },
+          "version_reason": {
+            "const": "initial_answer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "answer_version": {
+            "minimum": 2
+          }
+        },
+        "required": [
+          "answer_version"
+        ]
+      },
+      "then": {
+        "properties": {
+          "previous_answer_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "version_reason": {
+            "not": {
+              "const": "initial_answer"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "answer_version_id": "av_001",
+      "answer_id": "ans_001",
+      "answer_version": 1,
+      "previous_answer_version": null,
+      "answer_hash": "sha256:answer001",
+      "trace_id": "tr_001",
+      "answer_contract_ref": "ans_001:v1",
+      "rendered_answer_snapshot_id": null,
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_002",
+      "answer_id": "ans_001",
+      "answer_version": 2,
+      "previous_answer_version": 1,
+      "answer_hash": "sha256:answer002",
+      "trace_id": "tr_002",
+      "answer_contract_ref": "ans_001:v2",
+      "rendered_answer_snapshot_id": "render_snap_001",
+      "version_reason": "citation_repaired",
+      "created_at": "2026-05-22T00:05:00Z",
+      "created_by_ref": "actor_hash_001"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "answer_version_id": "av_003",
+      "answer_id": "ans_001",
+      "answer_version": 1,
+      "previous_answer_version": 1,
+      "answer_hash": "sha256:answer003",
+      "trace_id": "tr_003",
+      "answer_contract_ref": "ans_001:v1",
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_004",
+      "answer_id": "ans_001",
+      "answer_version": 2,
+      "previous_answer_version": null,
+      "answer_hash": "sha256:answer004",
+      "trace_id": "tr_004",
+      "answer_contract_ref": "ans_001:v2",
+      "version_reason": "citation_repaired",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_005",
+      "answer_id": "ans_001",
+      "answer_version": 2,
+      "previous_answer_version": 1,
+      "answer_hash": "sha256:answer005",
+      "trace_id": "tr_005",
+      "answer_contract_ref": "ans_001:v2",
+      "answer_contract": {
+        "answer_id": "ans_001"
+      },
+      "version_reason": "citation_repaired",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    }
+  ]
+}

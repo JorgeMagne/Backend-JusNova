@@ -1,0 +1,401 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/citation-audit.schema.json",
+  "title": "CitationAudit",
+  "description": "Resultado estructurado del auditor de citas. Registra estado de auditoria, resultados por cita y fallas bloqueantes sin almacenar evidencia cruda.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+  },
+  "required": [
+    "citation_audit_id",
+    "auditor_version",
+    "overall_status",
+    "results",
+    "blocking_failures",
+    "warnings",
+    "created_at"
+  ],
+  "properties": {
+    "citation_audit_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "auditor_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "overall_status": {
+      "enum": [
+        "passed",
+        "failed",
+        "blocked",
+        "needs_review"
+      ]
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/citation_audit_result"
+      }
+    },
+    "blocking_failures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/blocking_failure"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "citation_audit_result": {
+      "type": "object",
+      "required": [
+        "citation_ref",
+        "claim_id",
+        "passage_ref",
+        "source_ref",
+        "status",
+        "support_assessment",
+        "severity"
+      ],
+      "properties": {
+        "citation_ref": {
+          "type": "string",
+          "pattern": "^C[0-9]+$"
+        },
+        "claim_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "passage_ref": {
+          "type": "string",
+          "pattern": "^[FD][0-9]+:P[0-9]+$"
+        },
+        "source_ref": {
+          "type": "string",
+          "pattern": "^F[0-9]+$|^D[0-9]+$"
+        },
+        "status": {
+          "enum": [
+            "valid",
+            "broken",
+            "unsupported",
+            "weak",
+            "needs_review"
+          ]
+        },
+        "support_assessment": {
+          "enum": [
+            "direct",
+            "inferential",
+            "weak",
+            "unsupported",
+            "not_found"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "blocking"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "blocking_failure": {
+      "type": "object",
+      "required": [
+        "failure_code",
+        "citation_ref",
+        "claim_id",
+        "severity"
+      ],
+      "properties": {
+        "failure_code": {
+          "enum": [
+            "citation_missing",
+            "passage_missing",
+            "source_missing",
+            "unsupported_claim",
+            "tier3_only_critical_support",
+            "validity_not_confirmed",
+            "decorative_source",
+            "source_passage_mismatch"
+          ]
+        },
+        "citation_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^C[0-9]+$"
+        },
+        "claim_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "blocking"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "const": "passed"
+          }
+        },
+        "required": [
+          "overall_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "results": {
+            "items": {
+              "properties": {
+                "status": {
+                  "const": "valid"
+                },
+                "severity": {
+                  "const": "low"
+                }
+              }
+            }
+          },
+          "blocking_failures": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "enum": [
+              "failed",
+              "blocked"
+            ]
+          }
+        },
+        "required": [
+          "overall_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "blocking_failures": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "overall_status": {
+            "const": "needs_review"
+          }
+        },
+        "required": [
+          "overall_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "blocking_failures": {
+            "maxItems": 0
+          }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "warnings": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "results": {
+                "contains": {
+                  "properties": {
+                    "status": {
+                      "const": "needs_review"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "results": {
+                "contains": {
+                  "properties": {
+                    "severity": {
+                      "enum": [
+                        "medium",
+                        "high"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "severity"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "examples": [
+    {
+      "citation_audit_id": "ca_001",
+      "auditor_version": "citation-auditor-v1",
+      "overall_status": "passed",
+      "results": [
+        {
+          "citation_ref": "C1",
+          "claim_id": "cl_001",
+          "passage_ref": "F1:P1",
+          "source_ref": "F1",
+          "status": "valid",
+          "support_assessment": "direct",
+          "severity": "low"
+        }
+      ],
+      "blocking_failures": [],
+      "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "citation_audit_id": "ca_002",
+      "auditor_version": "citation-auditor-v1",
+      "overall_status": "needs_review",
+      "results": [
+        {
+          "citation_ref": "C2",
+          "claim_id": "cl_002",
+          "passage_ref": "F2:P1",
+          "source_ref": "F2",
+          "status": "needs_review",
+          "support_assessment": "weak",
+          "severity": "medium"
+        }
+      ],
+      "blocking_failures": [],
+      "warnings": [
+        "Soporte debil requiere revision humana."
+      ],
+      "created_at": "2026-05-22T00:00:00Z"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "citation_audit_id": "ca_003",
+      "auditor_version": "citation-auditor-v1",
+      "overall_status": "passed",
+      "results": [],
+      "blocking_failures": [],
+      "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "citation_audit_id": "ca_004",
+      "auditor_version": "citation-auditor-v1",
+      "overall_status": "passed",
+      "results": [
+        {
+          "citation_ref": "C1",
+          "claim_id": "cl_001",
+          "passage_ref": "F1:P1",
+          "source_ref": "F1",
+          "status": "valid",
+          "support_assessment": "direct",
+          "severity": "low"
+        }
+      ],
+      "blocking_failures": [
+        {
+          "failure_code": "unsupported_claim",
+          "citation_ref": "C1",
+          "claim_id": "cl_001",
+          "severity": "blocking"
+        }
+      ],
+      "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "citation_audit_id": "ca_005",
+      "auditor_version": "citation-auditor-v1",
+      "overall_status": "blocked",
+      "results": [
+        {
+          "citation_ref": "C1",
+          "claim_id": "cl_001",
+          "passage_ref": "F1:P1",
+          "source_ref": "F1",
+          "status": "unsupported",
+          "support_assessment": "unsupported",
+          "severity": "blocking"
+        }
+      ],
+      "blocking_failures": [],
+      "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "citation_audit_id": "ca_006",
+      "auditor_version": "citation-auditor-v1",
+      "overall_status": "needs_review",
+      "results": [
+        {
+          "citation_ref": "C1",
+          "claim_id": "cl_001",
+          "passage_ref": "F1:P1",
+          "source_ref": "F1",
+          "status": "weak",
+          "support_assessment": "weak",
+          "severity": "low"
+        }
+      ],
+      "blocking_failures": [],
+      "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
+    }
+  ]
+}
