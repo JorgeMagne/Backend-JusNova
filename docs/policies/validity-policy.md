@@ -18,6 +18,7 @@ Aplica a fuentes normativas, jurisprudenciales, institucionales, cacheadas, snap
 - `Vigencia`: estado actual verificable de una norma o disposicion.
 - `Evidencia explicita`: pasaje oficial o fuente primaria que sustenta vigencia, modificacion o derogacion.
 - `Cache`: evidencia previamente consultada; no confirma vigencia por si sola.
+- `Modo Investigacion`: ejecucion de mayor profundidad definida por `no-rag-launch-policy.md` y budgets futuros; no autoriza afirmar vigencia sin evidencia explicita.
 
 ## Reglas obligatorias
 
@@ -47,10 +48,19 @@ Aplica a fuentes normativas, jurisprudenciales, institucionales, cacheadas, snap
 
 ## Comportamiento ante incumplimiento
 
-- Claim de vigencia sin evidencia: bloquear, abstenerse o responder con advertencia de vigencia no confirmada.
 - Fuente cacheada sin revalidacion: mostrar fecha de consulta y advertencia.
 - Fuentes contradictorias: usar `CONFLICTIVA` y aplicar `conflict-policy.md`.
 - Usuario pide afirmacion categorica no soportada: aplicar `abstention-policy.md`.
+
+| Caso | Accion obligatoria |
+|---|---|
+| Usuario pide afirmar vigencia o derogacion categorica y no existe evidencia explicita suficiente | Bloquear la conclusion categorica y emitir abstencion parcial o total. |
+| Claim de vigencia o derogacion afecta plazo, estrategia, competencia o requisito critico | Exigir `VIGENCIA_CONFIRMADA` o `DEROGADA_CONFIRMADA`; si no existe, abstencion parcial y recomendacion de verificacion humana o Modo Investigacion. |
+| Se explica una fuente normativa sin confirmar vigencia actual | Permitir respuesta solo con advertencia visible y `validity_status = VIGENCIA_NO_CONFIRMADA` o `POSIBLEMENTE_MODIFICADA`. |
+| Vigencia depende solo de cache o snapshot no revalidado | Prohibir afirmacion categorica; mostrar fecha de consulta y advertencia de vigencia no confirmada. |
+| Fuentes contradictorias sobre vigencia o derogacion | Usar `CONFLICTIVA`, explicar el conflicto y no resolver artificialmente. |
+
+La abstencion es parcial solo cuando existe algun punto verificable con cita valida. Si la pregunta depende por completo de vigencia o derogacion no verificable, la abstencion es total.
 
 ## Frases permitidas
 
@@ -78,7 +88,7 @@ Aplica a fuentes normativas, jurisprudenciales, institucionales, cacheadas, snap
 
 - Depende de `source.schema.json`, `legal-search-result.schema.json`, `claim.schema.json`, `evidence-quality.schema.json` y `answer-contract.schema.json`.
 - Usa `validity-statuses.yaml` como taxonomia canonica.
-- Complementa `source-policy.md`, `conflict-policy.md` y `abstention-policy.md`.
+- Complementa `source-policy.md`, `conflict-policy.md`, `abstention-policy.md` y `no-rag-launch-policy.md`.
 
 ## Momento de revision
 

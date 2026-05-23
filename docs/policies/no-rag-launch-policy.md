@@ -18,6 +18,7 @@ Aplica a lenguaje de producto, arquitectura de retrieval, Evidence Cache, snapsh
 - `Corpus juridico propio`: ingestion sistematica, versionada y evaluada de fuentes juridicas bolivianas.
 - `Evidence Cache`: registro de evidencia consultada y snapshots usados; no es corpus exhaustivo.
 - `Busqueda viva`: recuperacion, fetch, extraccion, snapshot, ranking y evaluacion en tiempo de consulta.
+- `Modo Investigacion`: ejecucion de mayor profundidad, con presupuesto tecnico o credito explicito, que permite mas discovery, fetch, extraccion y validacion. Si no esta disponible o no hay credito, no reemplaza la abstencion.
 
 ## Reglas obligatorias
 
@@ -45,8 +46,16 @@ Aplica a lenguaje de producto, arquitectura de retrieval, Evidence Cache, snapsh
 ## Comportamiento ante incumplimiento
 
 - Mensaje que presenta cache como corpus completo: bloquear copy o respuesta.
-- Claim de vigencia basado solo en cache: bloquear o advertir.
-- Respuesta juridica sin busqueda ni evidencia para intent critico: abstencion o Modo Investigacion.
+
+| Caso | Accion obligatoria |
+|---|---|
+| Claim de vigencia basado solo en cache y redactado como afirmacion categorica | Bloquear la afirmacion categorica y emitir abstencion parcial sobre vigencia. |
+| Claim no categorico que menciona una fuente cacheada sin revalidacion | Permitir solo con advertencia visible de `VIGENCIA_NO_CONFIRMADA` y fecha de recuperacion o ultima verificacion. |
+| Intent critico sin evidencia suficiente por falta de datos del usuario | Pedir el dato faltante y responder solo lo verificable. |
+| Intent critico sin evidencia suficiente por presupuesto o profundidad insuficiente | Ofrecer Modo Investigacion si existe credito o presupuesto; si no existe, emitir abstencion parcial o total. |
+| Intent critico sin evidencia suficiente aunque se agoto la busqueda permitida | Emitir abstencion parcial o total; no fabricar conclusion. |
+
+La abstencion es parcial solo cuando hay puntos verificables con citas validas. Si no hay ningun punto verificable, la abstencion es total.
 
 ## Ejemplos permitidos
 
