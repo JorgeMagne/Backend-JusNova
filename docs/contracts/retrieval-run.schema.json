@@ -223,6 +223,20 @@
               }
             }
           }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "no_evidence_reason"
+              ]
+            },
+            {
+              "required": [
+                "error"
+              ]
+            }
+          ]
         }
       }
     },
@@ -254,6 +268,20 @@
               }
             }
           }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "evidence_pack_id"
+              ]
+            },
+            {
+              "required": [
+                "error"
+              ]
+            }
+          ]
         }
       }
     },
@@ -271,7 +299,21 @@
       "then": {
         "required": [
           "error"
-        ]
+        ],
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "evidence_pack_id"
+              ]
+            },
+            {
+              "required": [
+                "no_evidence_reason"
+              ]
+            }
+          ]
+        }
       }
     },
     {
@@ -293,6 +335,20 @@
           "no_evidence_reason": {
             "const": "insufficient_budget"
           }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "evidence_pack_id"
+              ]
+            },
+            {
+              "required": [
+                "error"
+              ]
+            }
+          ]
         }
       }
     }
@@ -409,6 +465,99 @@
         "validity_risk": "LOW",
         "conflicts_detected": false,
         "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_006",
+      "query_id": "q_legal_006",
+      "retrieval_plan_id": "rp_006",
+      "status": "completed_with_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_006",
+      "no_evidence_reason": "no_evidence_found",
+      "quality": {
+        "overall": "LOW",
+        "coverage": 0.2,
+        "authority": 0.5,
+        "citation_readiness": 0.3,
+        "validity_risk": "HIGH",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_007",
+      "query_id": "q_legal_007",
+      "retrieval_plan_id": "rp_007",
+      "status": "completed_no_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_007",
+      "no_evidence_reason": "no_evidence_found",
+      "quality": {
+        "overall": "NONE",
+        "coverage": 0,
+        "authority": 0,
+        "citation_readiness": 0,
+        "validity_risk": "UNKNOWN",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_008",
+      "query_id": "q_legal_008",
+      "retrieval_plan_id": "rp_008",
+      "status": "budget_exhausted",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_008",
+      "no_evidence_reason": "insufficient_budget",
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_009",
+      "query_id": "q_legal_009",
+      "retrieval_plan_id": "rp_009",
+      "status": "failed",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_009",
+      "error": {
+        "error_code": "provider_timeout",
+        "message": "Timeout al consultar fuentes oficiales."
       },
       "latency_ms": 100,
       "estimated_cost": 0,
