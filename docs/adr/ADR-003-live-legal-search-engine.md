@@ -81,7 +81,7 @@ La busqueda viva permite operar sin corpus propio y, a la vez, sostener respuest
 
 ## Criterios de aceptacion
 
-- El contrato Live Legal Search queda definido en Subfase 0.5 mediante `legal-search-query.schema.json`, `legal-search-result.schema.json`, `retrieval-plan.schema.json`, `retrieval-run.schema.json`, `evidence-quality.schema.json`, `provider-interfaces.md`, `legal-search-policy.md` y `source-routing-matrix.md`.
+- El contrato Live Legal Search queda definido en Subfase 0.5 mediante `legal-search-query.schema.json`, `legal-search-result.schema.json`, `legal-entity.schema.json`, `retrieval-plan.schema.json`, `retrieval-run.schema.json`, `evidence-quality.schema.json`, `provider-interfaces.md`, `legal-search-policy.md` y `source-routing-matrix.md`.
 - El motor distingue fuente oficial, secundaria y documento de usuario.
 - El motor produce trazas.
 - El motor no devuelve texto crudo sin normalizacion.

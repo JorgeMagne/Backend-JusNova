@@ -20,6 +20,22 @@ Definir las interfaces documentales que Fase 4 implementara para discovery, adap
 ## Interfaces
 
 ```python
+class ProviderMetadata:
+    name: str
+    provider_type: str
+    enabled_feature_flag: str
+    default_timeout_ms: int
+    retry_policy: "RetryPolicy"
+    error_mapping: dict[str, str]
+    data_received: list[str]
+```
+
+```python
+class BaseProvider:
+    metadata: ProviderMetadata
+```
+
+```python
 class SearchBudget:
     discovery_calls_max: int
     source_fetches_max: int
@@ -30,9 +46,7 @@ class SearchBudget:
 ```
 
 ```python
-class SearchDiscoveryProvider:
-    name: str
-
+class SearchDiscoveryProvider(BaseProvider):
     def search(
         self,
         query: str,
@@ -45,7 +59,7 @@ class SearchDiscoveryProvider:
 ```
 
 ```python
-class OfficialSourceAdapter:
+class OfficialSourceAdapter(BaseProvider):
     source_name: str
     supported_entity_types: list[str]
 
@@ -64,7 +78,7 @@ class OfficialSourceAdapter:
 ```
 
 ```python
-class SourceFetcher:
+class SourceFetcher(BaseProvider):
     def fetch(
         self,
         url: str,
@@ -74,7 +88,7 @@ class SourceFetcher:
 ```
 
 ```python
-class EvidenceExtractor:
+class EvidenceExtractor(BaseProvider):
     def extract(
         self,
         fetched_source: "FetchedSource",
@@ -84,7 +98,7 @@ class EvidenceExtractor:
 ```
 
 ```python
-class SnapshotProvider:
+class SnapshotProvider(BaseProvider):
     def snapshot(
         self,
         fetched_source: "FetchedSource",
@@ -93,7 +107,7 @@ class SnapshotProvider:
 ```
 
 ```python
-class LegalRankingProvider:
+class LegalRankingProvider(BaseProvider):
     def rank(
         self,
         results: list["LegalSearchResult"],

@@ -107,6 +107,9 @@
           },
           "validity_risk": {
             "const": "UNKNOWN"
+          },
+          "conflicts_detected": {
+            "const": false
           }
         }
       }
@@ -146,6 +149,17 @@
       "conflicts_detected": false,
       "warnings": [
         "NONE no puede tener metricas positivas."
+      ]
+    },
+    {
+      "overall": "NONE",
+      "coverage": 0,
+      "authority": 0,
+      "citation_readiness": 0,
+      "validity_risk": "UNKNOWN",
+      "conflicts_detected": true,
+      "warnings": [
+        "NONE no puede declarar conflicto; use CONFLICTIVE."
       ]
     }
   ]

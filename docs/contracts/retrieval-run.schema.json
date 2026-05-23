@@ -85,6 +85,35 @@
             ]
           }
         },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "partial",
+                    "error",
+                    "timeout"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "required": [
+                "error_code"
+              ],
+              "properties": {
+                "error_code": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        ],
         "additionalProperties": false
       }
     },
@@ -329,6 +358,11 @@
             },
             {
               "required": [
+                "quality"
+              ]
+            },
+            {
+              "required": [
                 "cancellation_reason"
               ]
             }
@@ -370,6 +404,11 @@
             },
             {
               "required": [
+                "quality"
+              ]
+            },
+            {
+              "required": [
                 "cancellation_reason"
               ]
             }
@@ -407,6 +446,11 @@
             {
               "required": [
                 "error"
+              ]
+            },
+            {
+              "required": [
+                "quality"
               ]
             }
           ]
@@ -489,6 +533,39 @@
         "authority": 0,
         "citation_readiness": 0,
         "validity_risk": "UNKNOWN",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_013",
+      "query_id": "q_legal_013",
+      "retrieval_plan_id": "rp_013",
+      "status": "completed_with_evidence",
+      "providers_used": [
+        "TCPAdapter"
+      ],
+      "adapter_calls": [
+        {
+          "adapter_name": "TCPAdapter",
+          "status": "error"
+        }
+      ],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_013",
+      "quality": {
+        "overall": "LOW",
+        "coverage": 0.2,
+        "authority": 0.5,
+        "citation_readiness": 0.3,
+        "validity_risk": "HIGH",
         "conflicts_detected": false,
         "warnings": []
       },
@@ -644,6 +721,35 @@
       "completed_at": "2026-05-22T00:00:01Z"
     },
     {
+      "retrieval_run_id": "rr_014",
+      "query_id": "q_legal_014",
+      "retrieval_plan_id": "rp_014",
+      "status": "failed",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "error": {
+        "error_code": "provider_timeout",
+        "message": "Timeout al consultar fuentes oficiales."
+      },
+      "quality": {
+        "overall": "HIGH",
+        "coverage": 1,
+        "authority": 1,
+        "citation_readiness": 1,
+        "validity_risk": "LOW",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
       "retrieval_run_id": "rr_010",
       "query_id": "q_legal_010",
       "retrieval_plan_id": "rp_010",
@@ -702,6 +808,58 @@
       "discovery_results": [],
       "sources_opened": [],
       "sources_rejected": [],
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_015",
+      "query_id": "q_legal_015",
+      "retrieval_plan_id": "rp_015",
+      "status": "budget_exhausted",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "no_evidence_reason": "insufficient_budget",
+      "quality": {
+        "overall": "HIGH",
+        "coverage": 1,
+        "authority": 1,
+        "citation_readiness": 1,
+        "validity_risk": "LOW",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_016",
+      "query_id": "q_legal_016",
+      "retrieval_plan_id": "rp_016",
+      "status": "cancelled",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "cancellation_reason": "system_cancelled",
+      "quality": {
+        "overall": "LOW",
+        "coverage": 0.2,
+        "authority": 0.5,
+        "citation_readiness": 0.3,
+        "validity_risk": "HIGH",
+        "conflicts_detected": false,
+        "warnings": []
+      },
       "latency_ms": 100,
       "estimated_cost": 0,
       "warnings": [],

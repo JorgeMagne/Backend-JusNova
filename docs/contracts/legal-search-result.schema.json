@@ -190,6 +190,9 @@
         ]
       },
       "then": {
+        "required": [
+          "validity_status"
+        ],
         "properties": {
           "tier": {
             "const": "USER_DOCUMENT"
@@ -212,6 +215,9 @@
         ]
       },
       "then": {
+        "required": [
+          "validity_status"
+        ],
         "properties": {
           "source_type": {
             "const": "documento_usuario"
@@ -440,6 +446,26 @@
       "validity_status": "VIGENCIA_CONFIRMADA",
       "warnings": [
         "Documento de usuario no puede ser fuente oficial vigente."
+      ]
+    },
+    {
+      "result_id": "lsr_008",
+      "title": "Documento privado sin vigencia NO_APLICA",
+      "url": "https://www.example.com/documento-usuario.pdf",
+      "tier": "USER_DOCUMENT",
+      "source_type": "documento_usuario",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.2,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "warnings": [
+        "Documento de usuario debe declarar validity_status NO_APLICA."
       ]
     },
     {
