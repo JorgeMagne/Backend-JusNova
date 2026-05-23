@@ -43,10 +43,11 @@ No define retencion final, permisos productivos completos ni proceso de incident
 16. Si una traza se marca `partial_abstention`, debe existir `abstention_reason` o una advertencia visible sobre la parte no respondida.
 17. Si una traza se marca `answered`, todos sus claims deben tener `verification_status = passed`.
 18. Si una traza se marca `partial_abstention`, debe existir al menos un claim con `verification_status = passed`.
-19. Si una traza se marca `answered`, no debe existir `abstention_reason`.
-20. Si una traza se marca `total_abstention`, no debe contener claims publicados ni fuentes usadas.
-21. Si una traza se marca `blocked`, puede conservar claims intentados, pero ninguno puede tener `verification_status = passed`.
-22. Ningun nivel de visibilidad puede convertir una fuente decorativa en fuente usada.
+19. Si una traza se marca `answered` o `partial_abstention`, debe existir al menos un `ModelCall` con `purpose = answer_generation` y `status = success`.
+20. Si una traza se marca `answered`, no debe existir `abstention_reason`.
+21. Si una traza se marca `total_abstention`, no debe contener claims publicados ni fuentes usadas.
+22. Si una traza se marca `blocked`, puede conservar claims intentados, pero ninguno puede tener `verification_status = passed`.
+23. Ningun nivel de visibilidad puede convertir una fuente decorativa en fuente usada.
 
 ## Reglas asistidas por IA
 

@@ -307,7 +307,21 @@
         },
         "properties": {
           "model_calls": {
-            "minItems": 1
+            "minItems": 1,
+            "contains": {
+              "properties": {
+                "purpose": {
+                  "const": "answer_generation"
+                },
+                "status": {
+                  "const": "success"
+                }
+              },
+              "required": [
+                "purpose",
+                "status"
+              ]
+            }
           },
           "evidence_pack_ids": {
             "minItems": 1
@@ -363,7 +377,21 @@
         ],
         "properties": {
           "model_calls": {
-            "minItems": 1
+            "minItems": 1,
+            "contains": {
+              "properties": {
+                "purpose": {
+                  "const": "answer_generation"
+                },
+                "status": {
+                  "const": "success"
+                }
+              },
+              "required": [
+                "purpose",
+                "status"
+              ]
+            }
           },
           "evidence_pack_ids": {
             "minItems": 1
@@ -1635,6 +1663,196 @@
       },
       "cost": {
         "cost_report_id": "cr_015",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_016",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_016",
+      "answer_version_ref": "av_016",
+      "answer_version": 1,
+      "conversation_id": "conv_016",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_016",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:input016",
+          "output_hash": null,
+          "token_usage": {
+            "input_tokens": 1,
+            "output_tokens": 0,
+            "total_tokens": 1
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "error",
+          "error_code": "provider_error"
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim publicado.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_016",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_016",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_017",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_017",
+      "answer_version_ref": "av_017",
+      "answer_version": 1,
+      "conversation_id": "conv_017",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_017",
+          "purpose": "intent_classification",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "intent-v1",
+          "input_hash": "sha256:input017",
+          "output_hash": "sha256:output017",
+          "token_usage": {
+            "input_tokens": 1,
+            "output_tokens": 1,
+            "total_tokens": 2
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim publicado.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_017",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_017",
         "currency": "NONE",
         "is_estimated": false,
         "billing_source": "not_billable",
