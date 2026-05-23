@@ -34,4 +34,4 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 
 ## Preguntas Blocking
 
-No hay preguntas `Blocking` registradas al cierre documental de Subfase 0.3.
+No hay preguntas `Blocking` registradas al estado actual de Fase 0.

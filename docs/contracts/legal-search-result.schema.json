@@ -261,7 +261,10 @@
       "if": {
         "properties": {
           "validity_status": {
-            "const": "VIGENCIA_CONFIRMADA"
+            "enum": [
+              "VIGENCIA_CONFIRMADA",
+              "DEROGADA_CONFIRMADA"
+            ]
           }
         },
         "required": [
@@ -269,6 +272,10 @@
         ]
       },
       "then": {
+        "required": [
+          "extraction_status",
+          "passage_refs"
+        ],
         "properties": {
           "tier": {
             "enum": [
@@ -276,6 +283,12 @@
               "TIER1_OFICIAL",
               "TIER1_STRUCTURED"
             ]
+          },
+          "extraction_status": {
+            "const": "extracted"
+          },
+          "passage_refs": {
+            "minItems": 1
           }
         }
       }
@@ -686,6 +699,49 @@
       "extraction_status": "not_fetched",
       "citation_eligible": false,
       "warnings": []
+    },
+    {
+      "result_id": "lsr_013",
+      "title": "Norma oficial marcada vigente sin pasaje",
+      "url": "https://www.example.gob.bo/ley",
+      "tier": "TIER1_CANONICO",
+      "source_type": "norma",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.95,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "validity_status": "VIGENCIA_CONFIRMADA",
+      "warnings": []
+    },
+    {
+      "result_id": "lsr_014",
+      "title": "Fuente secundaria marcada como derogacion confirmada",
+      "url": "https://www.example.com/norma-derogada",
+      "tier": "TIER2_CONFIABLE",
+      "source_type": "norma",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.4,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "extracted",
+      "citation_eligible": false,
+      "passage_refs": [
+        "F14:P1"
+      ],
+      "validity_status": "DEROGADA_CONFIRMADA",
+      "warnings": [
+        "Fuente secundaria no puede confirmar derogacion."
+      ]
     }
   ]
 }

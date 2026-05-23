@@ -284,11 +284,14 @@
       "if": {
         "properties": {
           "validity_status": {
-            "const": "VIGENCIA_CONFIRMADA"
+            "enum": [
+              "VIGENCIA_CONFIRMADA",
+              "DEROGADA_CONFIRMADA"
+            ]
           }
         },
         "required": [
-          "validity_status"
+        "validity_status"
         ]
       },
       "then": {
@@ -481,6 +484,22 @@
       "published_at": null,
       "validity_status": "NO_APLICA",
       "warnings": [],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F9",
+      "source_type": "norma",
+      "tier": "TIER2_CONFIABLE",
+      "title": "Repositorio secundario que afirma derogacion",
+      "issuer": null,
+      "url": "https://www.example.com/norma-derogada",
+      "snapshot_id": "snap_009",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": null,
+      "validity_status": "DEROGADA_CONFIRMADA",
+      "warnings": [
+        "Fuente secundaria no puede confirmar derogacion."
+      ],
       "metadata": {}
     },
     {

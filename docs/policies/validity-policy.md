@@ -37,7 +37,7 @@ Aplica a fuentes normativas, jurisprudenciales, institucionales, cacheadas, snap
 4. `DEROGADA_CONFIRMADA` requiere evidencia explicita de derogacion.
 5. `CONFLICTIVA` requiere identificar las fuentes o pasajes en conflicto.
 6. Cache o snapshot sin revalidacion produce como maximo `VIGENCIA_NO_CONFIRMADA`.
-7. Fuente secundaria no confirma vigencia critica sin soporte oficial.
+7. Fuente secundaria no confirma vigencia critica ni derogacion critica sin soporte oficial.
 
 ## Reglas asistidas por IA
 
