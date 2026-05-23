@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://jusnova.local/contracts/answer-contract.schema.json",
   "title": "AnswerContract",
-  "description": "Contrato de respuesta final. sources_used debe derivarse exclusivamente de citas reales en citations; esta relacion cruzada se valida por Citation Policy y validaciones negativas porque JSON Schema no puede garantizarla por si solo.",
+  "description": "Contrato de respuesta final. Toda respuesta final requiere trace_id. sources_used debe derivarse exclusivamente de citas reales en citations; esta relacion cruzada se valida por Citation Policy y validaciones negativas porque JSON Schema no puede garantizarla por si solo.",
   "type": "object",
   "x-governance": {
     "document_status": "Accepted",
@@ -13,6 +13,7 @@
   "required": [
     "answer_id",
     "answer_version",
+    "trace_id",
     "evidence_pack_id",
     "jurisdiction",
     "sections",
@@ -30,6 +31,10 @@
     "answer_version": {
       "type": "integer",
       "minimum": 1
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
     },
     "evidence_pack_id": {
       "type": "string",
@@ -198,6 +203,7 @@
     {
       "answer_id": "ans_001",
       "answer_version": 1,
+      "trace_id": "tr_001",
       "evidence_pack_id": "ep_001",
       "jurisdiction": "BO",
       "sections": {
@@ -297,6 +303,7 @@
     {
       "answer_id": "ans_002",
       "answer_version": 1,
+      "trace_id": "tr_002",
       "evidence_pack_id": "ep_001",
       "jurisdiction": "BO",
       "sections": {
@@ -338,12 +345,58 @@
       "sources_used": [],
       "warnings": [],
       "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "answer_id": "ans_004",
+      "answer_version": 1,
+      "evidence_pack_id": "ep_001",
+      "jurisdiction": "BO",
+      "sections": {
+        "conclusion_operativa": {
+          "title": "Conclusion operativa",
+          "content": "Respuesta sin traza."
+        },
+        "hechos_considerados": {
+          "title": "Hechos considerados",
+          "content": ""
+        },
+        "fundamento_normativo": {
+          "title": "Fundamento normativo",
+          "content": ""
+        },
+        "jurisprudencia_relevante": {
+          "title": "Jurisprudencia relevante",
+          "content": ""
+        },
+        "analisis_aplicado": {
+          "title": "Analisis aplicado",
+          "content": ""
+        },
+        "incertidumbres_vigencia_conflictos": {
+          "title": "Incertidumbres, vigencia y conflictos",
+          "content": ""
+        },
+        "recomendacion_profesional": {
+          "title": "Recomendacion profesional",
+          "content": ""
+        },
+        "fuentes_utilizadas": {
+          "title": "Fuentes utilizadas",
+          "content": ""
+        }
+      },
+      "claims": [],
+      "citations": [],
+      "sources_used": [],
+      "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
     }
   ],
   "x-policy-invalid-examples": [
     {
       "answer_id": "ans_003",
       "answer_version": 1,
+      "trace_id": "tr_003",
       "evidence_pack_id": "ep_001",
       "jurisdiction": "BO",
       "sections": {

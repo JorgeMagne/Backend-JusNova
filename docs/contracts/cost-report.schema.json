@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/cost-report.schema.json",
+  "title": "CostReport",
+  "description": "Reporte tecnico observado de costos y consumo para trazabilidad. No define presupuestos comerciales, planes, precios ni creditos.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+  },
+  "required": [
+    "cost_report_id",
+    "currency",
+    "is_estimated",
+    "billing_source",
+    "model_input_tokens",
+    "model_output_tokens",
+    "tool_calls",
+    "provider_estimated_costs",
+    "estimated_total_cost"
+  ],
+  "properties": {
+    "cost_report_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "currency": {
+      "enum": [
+        "USD",
+        "BOB",
+        "NONE"
+      ]
+    },
+    "is_estimated": {
+      "type": "boolean"
+    },
+    "billing_source": {
+      "enum": [
+        "provider_estimate",
+        "internal_estimate",
+        "not_billable"
+      ]
+    },
+    "model_input_tokens": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "model_output_tokens": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tool_calls": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "provider_estimated_costs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "provider",
+          "estimated_cost"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string",
+            "minLength": 1
+          },
+          "estimated_cost": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "estimated_total_cost": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "currency": {
+            "const": "NONE"
+          }
+        },
+        "required": [
+          "currency"
+        ]
+      },
+      "then": {
+        "properties": {
+          "billing_source": {
+            "const": "not_billable"
+          },
+          "provider_estimated_costs": {
+            "maxItems": 0
+          },
+          "estimated_total_cost": {
+            "const": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "billing_source": {
+            "enum": [
+              "provider_estimate",
+              "internal_estimate"
+            ]
+          }
+        },
+        "required": [
+          "billing_source"
+        ]
+      },
+      "then": {
+        "properties": {
+          "currency": {
+            "enum": [
+              "USD",
+              "BOB"
+            ]
+          },
+          "is_estimated": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "billing_source": {
+            "const": "provider_estimate"
+          }
+        },
+        "required": [
+          "billing_source"
+        ]
+      },
+      "then": {
+        "properties": {
+          "provider_estimated_costs": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "billing_source": {
+            "const": "not_billable"
+          }
+        },
+        "required": [
+          "billing_source"
+        ]
+      },
+      "then": {
+        "properties": {
+          "currency": {
+            "const": "NONE"
+          },
+          "is_estimated": {
+            "const": false
+          },
+          "provider_estimated_costs": {
+            "maxItems": 0
+          },
+          "estimated_total_cost": {
+            "const": 0
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "cost_report_id": "cr_001",
+      "currency": "USD",
+      "is_estimated": true,
+      "billing_source": "provider_estimate",
+      "model_input_tokens": 1800,
+      "model_output_tokens": 900,
+      "tool_calls": 3,
+      "provider_estimated_costs": [
+        {
+          "provider": "openai",
+          "estimated_cost": 0.08
+        }
+      ],
+      "estimated_total_cost": 0.08
+    },
+    {
+      "cost_report_id": "cr_002",
+      "currency": "NONE",
+      "is_estimated": false,
+      "billing_source": "not_billable",
+      "model_input_tokens": 0,
+      "model_output_tokens": 0,
+      "tool_calls": 0,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "cost_report_id": "cr_003",
+      "currency": "USD",
+      "is_estimated": true,
+      "billing_source": "provider_estimate",
+      "model_input_tokens": -1,
+      "model_output_tokens": 900,
+      "tool_calls": 3,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0.08
+    },
+    {
+      "cost_report_id": "cr_004",
+      "currency": "NONE",
+      "is_estimated": false,
+      "billing_source": "not_billable",
+      "model_input_tokens": 0,
+      "model_output_tokens": 0,
+      "tool_calls": 0,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0.01
+    },
+    {
+      "cost_report_id": "cr_005",
+      "currency": "BOB",
+      "is_estimated": true,
+      "billing_source": "internal_estimate",
+      "model_input_tokens": 0,
+      "model_output_tokens": 0,
+      "tool_calls": 0,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0,
+      "plan_id": "professional_400"
+    },
+    {
+      "cost_report_id": "cr_006",
+      "currency": "BOB",
+      "is_estimated": true,
+      "billing_source": "internal_estimate",
+      "model_input_tokens": 0,
+      "model_output_tokens": 0,
+      "tool_calls": 0,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0,
+      "research_credits": 2
+    },
+    {
+      "cost_report_id": "cr_007",
+      "currency": "USD",
+      "is_estimated": false,
+      "billing_source": "not_billable",
+      "model_input_tokens": 0,
+      "model_output_tokens": 0,
+      "tool_calls": 0,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0
+    },
+    {
+      "cost_report_id": "cr_008",
+      "currency": "NONE",
+      "is_estimated": true,
+      "billing_source": "provider_estimate",
+      "model_input_tokens": 1,
+      "model_output_tokens": 1,
+      "tool_calls": 0,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0
+    },
+    {
+      "cost_report_id": "cr_009",
+      "currency": "USD",
+      "is_estimated": true,
+      "billing_source": "provider_estimate",
+      "model_input_tokens": 1,
+      "model_output_tokens": 1,
+      "tool_calls": 0,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0
+    }
+  ]
+}

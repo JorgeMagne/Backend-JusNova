@@ -39,7 +39,7 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 
 - Model calls con purpose, provider, model, prompt version y hashes.
 - Tool calls con purpose, status, errores y costos.
-- Retrieval runs y evidence pack IDs.
+- Retrieval run summaries sanitizados y evidence pack IDs.
 - Sources used/rejected.
 - Claims.
 - Citation audit.
@@ -49,13 +49,14 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 
 ## Dependencias posteriores
 
-- Subfase 0.7 debe crear schemas de trace, model call, tool call, citation audit y answer version.
+- Subfase 0.7 creo `trace-object.schema.json`, `model-call.schema.json`, `tool-call.schema.json`, `citation-audit.schema.json`, `answer-version.schema.json`, `abstention-render.schema.json` y `cost-report.schema.json`.
+- Subfase 0.7 creo `answer-versioning-policy.md` y `trace-visibility-policy.md`.
 - Subfase 0.10 debe alinear privacy/security policy.
 - Fase 3 implementara versionado basico de respuestas.
 
 ## No afirma todavia
 
-- No afirma que schemas de trazabilidad ya existan.
+- No afirma que persistencia, endpoints, UI de soporte ni permisos finales ya existan.
 - No afirma que prompts completos sean visibles a soporte.
 - No afirma que toda traza sea visible al usuario.
 
@@ -69,6 +70,8 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 
 - Trace visibility levels.
 - Hashes y minimizacion.
+- Retrieval runs embebidos como resumen sanitizado, sin URLs crudas, resultados discovery completos, mensajes libres de error, warning codes libres ni warnings libres.
+- Abstenciones totales y bloqueos versionados mediante `abstention_render_ref` hacia `abstention-render.schema.json`, sin inventar EvidencePack sintetico.
 - Redaccion de logs.
 - Ownership/tenant en trazas.
 - Politica de retencion.
@@ -76,8 +79,10 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 ## Criterios de aceptacion
 
 - Subfase 0.7 aprueba `trace-object.schema.json`.
-- Subfase 0.7 aprueba `answer-version.schema.json`.
-- Logs y privacidad quedan alineados.
+- Subfase 0.7 aprueba `model-call.schema.json`, `tool-call.schema.json` y `citation-audit.schema.json`.
+- Subfase 0.7 aprueba `answer-version.schema.json` y `abstention-render.schema.json`.
+- Subfase 0.7 aprueba `answer-versioning-policy.md` y `trace-visibility-policy.md`.
+- Logs y privacidad quedan alineados a nivel contractual; controles finales quedan para Subfase 0.10.
 - Nueva version se crea ante cambio de evidencia, claim, cita o respuesta.
 
 ## Momento de revision
@@ -87,4 +92,3 @@ Revisar al cerrar Subfase 0.7, al completar Fase 3, y ante cualquier incidente d
 ## Consecuencias
 
 Ninguna respuesta juridica critica debe persistirse sin traza estructurada futura.
-

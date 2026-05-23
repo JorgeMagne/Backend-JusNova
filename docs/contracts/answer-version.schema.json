@@ -1,0 +1,1250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/answer-version.schema.json",
+  "title": "AnswerVersion",
+  "description": "Version estable de una respuesta legal. No almacena respuesta completa ni material sensible; referencia AnswerContract para respuestas sustantivas o AbstentionRender para abstenciones/bloqueos y conserva hashes.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+  },
+  "required": [
+    "answer_version_id",
+    "answer_id",
+    "answer_version",
+    "previous_answer_version",
+    "response_outcome",
+    "answer_hash",
+    "trace_id",
+    "answer_contract_ref",
+    "version_reason",
+    "created_at",
+    "created_by_ref"
+  ],
+  "properties": {
+    "answer_version_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "previous_answer_version": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "response_outcome": {
+      "enum": [
+        "answered",
+        "partial_abstention",
+        "total_abstention",
+        "blocked"
+      ]
+    },
+    "answer_hash": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer_contract_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "abstention_render_ref": {
+      "description": "Referencia a abstention-render.schema.json para total_abstention o blocked.",
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "rendered_answer_snapshot_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "version_reason": {
+      "enum": [
+        "initial_answer",
+        "citation_repaired",
+        "answer_regenerated",
+        "evidence_updated",
+        "validity_revalidated",
+        "feedback_correction",
+        "formal_export",
+        "source_added",
+        "source_removed",
+        "claim_corrected"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "answer_version": {
+            "const": 1
+          }
+        },
+        "required": [
+          "answer_version"
+        ]
+      },
+      "then": {
+        "properties": {
+          "previous_answer_version": {
+            "type": "null"
+          },
+          "version_reason": {
+            "const": "initial_answer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "answer_version": {
+            "minimum": 2
+          }
+        },
+        "required": [
+          "answer_version"
+        ]
+      },
+      "then": {
+        "properties": {
+          "previous_answer_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "version_reason": {
+            "not": {
+              "const": "initial_answer"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "response_outcome": {
+            "enum": [
+              "answered",
+              "partial_abstention"
+            ]
+          }
+        },
+        "required": [
+          "response_outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "answer_contract_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "abstention_render_ref": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "response_outcome": {
+            "enum": [
+              "total_abstention",
+              "blocked"
+            ]
+          }
+        },
+        "required": [
+          "response_outcome"
+        ]
+      },
+      "then": {
+        "required": [
+          "abstention_render_ref"
+        ],
+        "properties": {
+          "answer_contract_ref": {
+            "type": "null"
+          },
+          "abstention_render_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "answer_version_id": "av_001",
+      "answer_id": "ans_001",
+      "answer_version": 1,
+      "previous_answer_version": null,
+      "response_outcome": "answered",
+      "answer_hash": "sha256:17a43c7e947da714477613c570263048f6350027857be6ca236132f68f52011a",
+      "trace_id": "tr_001",
+      "answer_contract_ref": "ans_001:v1",
+      "rendered_answer_snapshot_id": null,
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_002",
+      "answer_id": "ans_001",
+      "answer_version": 2,
+      "previous_answer_version": 1,
+      "response_outcome": "answered",
+      "answer_hash": "sha256:ae39ea48d91cbb1c31f12361e77dc07c982cb1f8af23f5820ca0d3c5b091c0ea",
+      "trace_id": "tr_002",
+      "answer_contract_ref": "ans_001:v2",
+      "rendered_answer_snapshot_id": "render_snap_001",
+      "version_reason": "citation_repaired",
+      "created_at": "2026-05-22T00:05:00Z",
+      "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_abstention_001",
+      "answer_id": "ans_002",
+      "answer_version": 1,
+      "previous_answer_version": null,
+      "response_outcome": "total_abstention",
+      "answer_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
+      "trace_id": "tr_abstention_001",
+      "answer_contract_ref": null,
+      "abstention_render_ref": "abstention_render_001",
+      "rendered_answer_snapshot_id": null,
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "answer_version_id": "av_003",
+      "answer_id": "ans_001",
+      "answer_version": 1,
+      "previous_answer_version": 1,
+      "response_outcome": "answered",
+      "answer_hash": "sha256:a18c23fa3638a18edde392be36cef3b90957a627ab8f8389fd48c1b633e5a36b",
+      "trace_id": "tr_003",
+      "answer_contract_ref": "ans_001:v1",
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_004",
+      "answer_id": "ans_001",
+      "answer_version": 2,
+      "previous_answer_version": null,
+      "response_outcome": "answered",
+      "answer_hash": "sha256:6f7e45465c1af02259d1cee62ca77e18e642911fdfbcc7907a46a13ad4d2803f",
+      "trace_id": "tr_004",
+      "answer_contract_ref": "ans_001:v2",
+      "version_reason": "citation_repaired",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_005",
+      "answer_id": "ans_001",
+      "answer_version": 2,
+      "previous_answer_version": 1,
+      "response_outcome": "answered",
+      "answer_hash": "sha256:7d8f8a4d7da15c324de14807ed7c4bd6285fb682b8777a095f31f7ca58bb420e",
+      "trace_id": "tr_005",
+      "answer_contract_ref": "ans_001:v2",
+      "answer_contract": {
+        "answer_id": "ans_001"
+      },
+      "version_reason": "citation_repaired",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_006",
+      "answer_id": "ans_006",
+      "answer_version": 1,
+      "previous_answer_version": null,
+      "response_outcome": "answered",
+      "answer_hash": "sha256:9bae0ae05ddd47c0a57bf60528c13df644a9d9ddcbf879fa07c2a1814f1ac2a2",
+      "trace_id": "tr_006",
+      "answer_contract_ref": null,
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_007",
+      "answer_id": "ans_007",
+      "answer_version": 1,
+      "previous_answer_version": null,
+      "response_outcome": "total_abstention",
+      "answer_hash": "sha256:787ff9bd97f293f9fd1acc5c8024ded60c358f048ff0ca137a67f0dc8a23d3f5",
+      "trace_id": "tr_007",
+      "answer_contract_ref": null,
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
+    },
+    {
+      "answer_version_id": "av_hash_raw_001",
+      "answer_id": "ans_hash_raw_001",
+      "answer_version": 1,
+      "previous_answer_version": null,
+      "response_outcome": "answered",
+      "answer_hash": "answer001",
+      "trace_id": "tr_hash_raw_001",
+      "answer_contract_ref": "ans_hash_raw_001:v1",
+      "rendered_answer_snapshot_id": null,
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "answer_version_id": "av_policy_prev_001",
+      "answer_id": "ans_001",
+      "answer_version": 2,
+      "previous_answer_version": 2,
+      "response_outcome": "answered",
+      "answer_hash": "sha256:3f9ae746f97cf4e0e696416d0217232bf4a7224e3a9f8345821ea9785347ab8d",
+      "trace_id": "tr_001",
+      "answer_contract_ref": "ans_001:v2",
+      "rendered_answer_snapshot_id": null,
+      "version_reason": "citation_repaired",
+      "created_at": "2026-05-22T00:10:00Z",
+      "created_by_ref": "actor_hash_001"
+    }
+  ],
+  "x-cross-contract-policy-invalid-examples": [
+    {
+      "description": "TraceObject, AnswerVersion y AbstentionRender validan por separado y comparten identidad, pero response_outcome diverge entre la traza y la version/render.",
+      "trace_object": {
+        "trace_id": "tr_abstention_001",
+        "organization_id": "org_001",
+        "actor_ref": "system",
+        "actor_type": "system",
+        "answer_id": "ans_002",
+        "answer_version_ref": "av_abstention_001",
+        "answer_version": 1,
+        "conversation_id": "conv_002",
+        "case_id": null,
+        "response_outcome": "total_abstention",
+        "abstention_reason": "no_evidence",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [],
+        "sources_used": [],
+        "sources_rejected": [],
+        "claims": [],
+        "citation_audit": {
+          "citation_audit_id": "ca_002",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "needs_review",
+          "results": [],
+          "blocking_failures": [],
+          "warnings": [
+            "No hubo evidencia suficiente para respuesta sustantiva."
+          ],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_002",
+          "currency": "NONE",
+          "is_estimated": false,
+          "billing_source": "not_billable",
+          "model_input_tokens": 0,
+          "model_output_tokens": 0,
+          "tool_calls": 0,
+          "provider_estimated_costs": [],
+          "estimated_total_cost": 0
+        },
+        "latency_ms": {
+          "total": 100,
+          "model_total": 0,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 0,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": [
+          "No hay evidencia suficiente."
+        ]
+      },
+      "answer_version": {
+        "answer_version_id": "av_abstention_001",
+        "answer_id": "ans_002",
+        "answer_version": 1,
+        "previous_answer_version": null,
+        "response_outcome": "blocked",
+        "answer_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
+        "trace_id": "tr_abstention_001",
+        "answer_contract_ref": null,
+        "abstention_render_ref": "abstention_render_001",
+        "rendered_answer_snapshot_id": null,
+        "version_reason": "initial_answer",
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "system"
+      },
+      "abstention_render": {
+        "abstention_render_id": "abstention_render_001",
+        "trace_id": "tr_abstention_001",
+        "answer_id": "ans_002",
+        "answer_version": 1,
+        "response_outcome": "blocked",
+        "render_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
+        "render_storage_ref": "render_abstention_001",
+        "rendered_answer_snapshot_id": null,
+        "reason_code": "no_evidence",
+        "redaction_profile": "USER_SUMMARY_SAFE",
+        "source_trace_refs": {
+          "evidence_pack_ids": [],
+          "claim_ids": [],
+          "citation_refs": [],
+          "source_refs": []
+        },
+        "warning_codes": [
+          "no_evidence_found"
+        ],
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "system"
+      },
+      "policy_errors": [
+        "TraceObject.response_outcome != AnswerVersion.response_outcome",
+        "TraceObject.response_outcome != AbstentionRender.response_outcome"
+      ]
+    },
+    {
+      "description": "Los tres contratos validan por separado, pero sus identidades no corresponden a la misma respuesta versionada.",
+      "trace_object": {
+        "trace_id": "tr_001",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_001",
+        "answer_version_ref": "av_001",
+        "answer_version": 1,
+        "conversation_id": "conv_001",
+        "case_id": null,
+        "response_outcome": "answered",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_001",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+            "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+            "token_usage": {
+              "input_tokens": 1200,
+              "output_tokens": 700,
+              "total_tokens": 1900
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:03Z",
+            "status": "success",
+            "error_code": null
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [
+          "ep_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [
+          {
+            "source_ref": null,
+            "result_id": "lsr_002",
+            "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+            "reason": "low_authority",
+            "tier": "TIER3_SECUNDARIO",
+            "source_type": "web",
+            "rejected_at": "2026-05-22T00:00:00Z",
+            "warning_codes": [
+              "tier3_not_primary"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_001",
+          "currency": "USD",
+          "is_estimated": true,
+          "billing_source": "provider_estimate",
+          "model_input_tokens": 1200,
+          "model_output_tokens": 700,
+          "tool_calls": 0,
+          "provider_estimated_costs": [
+            {
+              "provider": "openai",
+              "estimated_cost": 0.08
+            }
+          ],
+          "estimated_total_cost": 0.08
+        },
+        "latency_ms": {
+          "total": 3200,
+          "model_total": 3000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": []
+      },
+      "answer_version": {
+        "answer_version_id": "different_av",
+        "answer_id": "different_answer",
+        "answer_version": 2,
+        "previous_answer_version": 1,
+        "response_outcome": "answered",
+        "answer_hash": "sha256:ae39ea48d91cbb1c31f12361e77dc07c982cb1f8af23f5820ca0d3c5b091c0ea",
+        "trace_id": "different_trace",
+        "answer_contract_ref": "third_answer:v7",
+        "rendered_answer_snapshot_id": "render_snap_001",
+        "version_reason": "citation_repaired",
+        "created_at": "2026-05-22T00:05:00Z",
+        "created_by_ref": "actor_hash_001"
+      },
+      "answer_contract": {
+        "answer_id": "third_answer",
+        "answer_version": 7,
+        "trace_id": "third_trace",
+        "evidence_pack_id": "ep_001",
+        "jurisdiction": "BO",
+        "sections": {
+          "conclusion_operativa": {
+            "title": "Conclusion operativa",
+            "content": "Con la evidencia recuperada, el requisito formal debe verificarse contra la norma citada [F1:P1]."
+          },
+          "hechos_considerados": {
+            "title": "Hechos considerados",
+            "content": "No se aportaron hechos adicionales del caso."
+          },
+          "fundamento_normativo": {
+            "title": "Fundamento normativo",
+            "content": "La respuesta se apoya en el pasaje normativo citado [F1:P1]."
+          },
+          "jurisprudencia_relevante": {
+            "title": "Jurisprudencia relevante",
+            "content": "No se recupero jurisprudencia relevante dentro del EvidencePack."
+          },
+          "analisis_aplicado": {
+            "title": "Analisis aplicado",
+            "content": "La aplicacion al caso requiere contrastar los hechos con el expediente."
+          },
+          "incertidumbres_vigencia_conflictos": {
+            "title": "Incertidumbres, vigencia y conflictos",
+            "content": "La vigencia no fue confirmada."
+          },
+          "recomendacion_profesional": {
+            "title": "Recomendacion profesional",
+            "content": "Verificar texto vigente y antecedentes antes de presentar el recurso."
+          },
+          "fuentes_utilizadas": {
+            "title": "Fuentes utilizadas",
+            "content": "F1 - Codigo Procesal Civil."
+          }
+        },
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citations": [
+          {
+            "citation_ref": "C1",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "supports_claim_ids": [
+              "cl_001"
+            ],
+            "auditor_notes": []
+          }
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "warnings": [
+          "Vigencia no confirmada."
+        ],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "policy_errors": [
+        "TraceObject.answer_version_ref != AnswerVersion.answer_version_id",
+        "TraceObject.answer_id != AnswerVersion.answer_id",
+        "TraceObject.answer_version != AnswerVersion.answer_version",
+        "TraceObject.trace_id != AnswerVersion.trace_id",
+        "AnswerContract.trace_id != TraceObject.trace_id",
+        "AnswerContract.answer_id != TraceObject.answer_id",
+        "AnswerContract.answer_version != TraceObject.answer_version"
+      ]
+    },
+    {
+      "description": "Los tres contratos validan por separado y comparten identidad, pero el AnswerContract publicado no coincide con la evidencia, claims, citas ni fuentes reconstruibles desde TraceObject.",
+      "trace_object": {
+        "trace_id": "tr_content_001",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_content_001",
+        "answer_version_ref": "av_content_001",
+        "answer_version": 1,
+        "conversation_id": "conv_content_001",
+        "case_id": null,
+        "response_outcome": "answered",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_content_001",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:4f18cf90cb4ea3a27191662e132c3b2cb7a74e2418f339b1add802f48df750d9",
+            "output_hash": "sha256:a5ba52601e5516dc78422011dae8812bacf0c3bb771dba77679f0b7b7c6fc107",
+            "token_usage": {
+              "input_tokens": 10,
+              "output_tokens": 20,
+              "total_tokens": 30
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:01Z",
+            "status": "success",
+            "error_code": null
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [
+          "ep_trace_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [],
+        "claims": [
+          {
+            "claim_id": "cl_trace_001",
+            "text": "Claim trazado y auditado.",
+            "claim_type": "norma",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_content_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_trace_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_content_001",
+          "currency": "NONE",
+          "is_estimated": false,
+          "billing_source": "not_billable",
+          "model_input_tokens": 10,
+          "model_output_tokens": 20,
+          "tool_calls": 0,
+          "provider_estimated_costs": [],
+          "estimated_total_cost": 0
+        },
+        "latency_ms": {
+          "total": 1000,
+          "model_total": 1000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": []
+      },
+      "answer_version": {
+        "answer_version_id": "av_content_001",
+        "answer_id": "ans_content_001",
+        "answer_version": 1,
+        "previous_answer_version": null,
+        "response_outcome": "answered",
+        "answer_hash": "sha256:c1aa99f461dd0029b8f379b70a9901348b56fb0104de6fa0d4a074361eb2833f",
+        "trace_id": "tr_content_001",
+        "answer_contract_ref": "ans_content_001:v1",
+        "rendered_answer_snapshot_id": null,
+        "version_reason": "initial_answer",
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "actor_hash_001"
+      },
+      "answer_contract": {
+        "answer_id": "ans_content_001",
+        "answer_version": 1,
+        "trace_id": "tr_content_001",
+        "evidence_pack_id": "ep_untraced_999",
+        "jurisdiction": "BO",
+        "sections": {
+          "conclusion_operativa": {
+            "title": "Conclusion operativa",
+            "content": "Respuesta publicada con evidencia no trazada [F99:P1]."
+          },
+          "hechos_considerados": {
+            "title": "Hechos considerados",
+            "content": "No se aportaron hechos adicionales del caso."
+          },
+          "fundamento_normativo": {
+            "title": "Fundamento normativo",
+            "content": "La respuesta publicada usa una cita distinta [F99:P1]."
+          },
+          "jurisprudencia_relevante": {
+            "title": "Jurisprudencia relevante",
+            "content": "No se recupero jurisprudencia relevante dentro del EvidencePack."
+          },
+          "analisis_aplicado": {
+            "title": "Analisis aplicado",
+            "content": "La aplicacion al caso requiere contrastar los hechos con el expediente."
+          },
+          "incertidumbres_vigencia_conflictos": {
+            "title": "Incertidumbres, vigencia y conflictos",
+            "content": "La vigencia no fue confirmada."
+          },
+          "recomendacion_profesional": {
+            "title": "Recomendacion profesional",
+            "content": "Verificar texto vigente antes de actuar."
+          },
+          "fuentes_utilizadas": {
+            "title": "Fuentes utilizadas",
+            "content": "F99 - Fuente no presente en TraceObject."
+          }
+        },
+        "claims": [
+          {
+            "claim_id": "cl_untraced_999",
+            "text": "Claim publicado que no existe en la traza.",
+            "claim_type": "norma",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C99"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citations": [
+          {
+            "citation_ref": "C99",
+            "passage_ref": "F99:P1",
+            "source_ref": "F99",
+            "status": "valid",
+            "supports_claim_ids": [
+              "cl_untraced_999"
+            ],
+            "auditor_notes": []
+          }
+        ],
+        "sources_used": [
+          "F99"
+        ],
+        "warnings": [
+          "Vigencia no confirmada."
+        ],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "policy_errors": [
+        "AnswerContract.evidence_pack_id is not in TraceObject.evidence_pack_ids",
+        "AnswerContract.claims[].claim_id does not match TraceObject.claims[].claim_id",
+        "AnswerContract.sources_used[] does not match TraceObject.sources_used[]",
+        "AnswerContract.citations[] is not covered by TraceObject.citation_audit.results[]"
+      ]
+    },
+    {
+      "description": "Los tres contratos validan por separado, comparten identidad y usan los mismos IDs, pero el AnswerContract cambia contenido canonico del claim y estado publicable de la cita.",
+      "trace_object": {
+        "trace_id": "tr_content_002",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_content_002",
+        "answer_version_ref": "av_content_002",
+        "answer_version": 1,
+        "conversation_id": "conv_content_002",
+        "case_id": null,
+        "response_outcome": "answered",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_content_002",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:5b2deebe34040e8217793e6a8d3716d66dcf85e7bf41a15f59150135152f7959",
+            "output_hash": "sha256:3b6c7fa296a41404fd6cf43492c848edada52e979c79ff67c76585d08b636622",
+            "token_usage": {
+              "input_tokens": 10,
+              "output_tokens": 20,
+              "total_tokens": 30
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:01Z",
+            "status": "success",
+            "error_code": null
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [
+          "ep_trace_002"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [],
+        "claims": [
+          {
+            "claim_id": "cl_same_001",
+            "text": "Claim trazado con texto canonico original.",
+            "claim_type": "norma",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_content_002",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_same_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_content_002",
+          "currency": "NONE",
+          "is_estimated": false,
+          "billing_source": "not_billable",
+          "model_input_tokens": 10,
+          "model_output_tokens": 20,
+          "tool_calls": 0,
+          "provider_estimated_costs": [],
+          "estimated_total_cost": 0
+        },
+        "latency_ms": {
+          "total": 1000,
+          "model_total": 1000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": []
+      },
+      "answer_version": {
+        "answer_version_id": "av_content_002",
+        "answer_id": "ans_content_002",
+        "answer_version": 1,
+        "previous_answer_version": null,
+        "response_outcome": "answered",
+        "answer_hash": "sha256:a04e0381f78f6a29f4b506d9cb9dee605c0d396382c560629dfeadc5fe0a9a8a",
+        "trace_id": "tr_content_002",
+        "answer_contract_ref": "ans_content_002:v1",
+        "rendered_answer_snapshot_id": null,
+        "version_reason": "initial_answer",
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "actor_hash_001"
+      },
+      "answer_contract": {
+        "answer_id": "ans_content_002",
+        "answer_version": 1,
+        "trace_id": "tr_content_002",
+        "evidence_pack_id": "ep_trace_002",
+        "jurisdiction": "BO",
+        "sections": {
+          "conclusion_operativa": {
+            "title": "Conclusion operativa",
+            "content": "Respuesta publicada con el mismo claim ID pero contenido alterado [F1:P1]."
+          },
+          "hechos_considerados": {
+            "title": "Hechos considerados",
+            "content": "No se aportaron hechos adicionales del caso."
+          },
+          "fundamento_normativo": {
+            "title": "Fundamento normativo",
+            "content": "La respuesta se apoya en el pasaje normativo citado [F1:P1]."
+          },
+          "jurisprudencia_relevante": {
+            "title": "Jurisprudencia relevante",
+            "content": "No se recupero jurisprudencia relevante dentro del EvidencePack."
+          },
+          "analisis_aplicado": {
+            "title": "Analisis aplicado",
+            "content": "La aplicacion al caso requiere contrastar los hechos con el expediente."
+          },
+          "incertidumbres_vigencia_conflictos": {
+            "title": "Incertidumbres, vigencia y conflictos",
+            "content": "La vigencia no fue confirmada."
+          },
+          "recomendacion_profesional": {
+            "title": "Recomendacion profesional",
+            "content": "Verificar texto vigente antes de actuar."
+          },
+          "fuentes_utilizadas": {
+            "title": "Fuentes utilizadas",
+            "content": "F1 - Fuente trazada."
+          }
+        },
+        "claims": [
+          {
+            "claim_id": "cl_same_001",
+            "text": "Claim publicado con texto canonico alterado.",
+            "claim_type": "vigencia",
+            "criticality": "high",
+            "support_level": "weak",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citations": [
+          {
+            "citation_ref": "C1",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "weak",
+            "supports_claim_ids": [
+              "cl_same_001"
+            ],
+            "auditor_notes": []
+          }
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "warnings": [
+          "Vigencia no confirmada."
+        ],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "policy_errors": [
+        "AnswerContract.claims[] reuses claim_id with different canonical claim content",
+        "AnswerContract.citations[].status is not valid",
+        "AnswerContract.citations[] does not match the audited publicable citation result"
+      ]
+    },
+    {
+      "description": "Los tres contratos validan por separado, comparten identidad, claims, citas y fuentes, pero el contenido visible de sections cambio sin actualizar AnswerVersion.answer_hash.",
+      "trace_object": {
+        "trace_id": "tr_hash_001",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_hash_001",
+        "answer_version_ref": "av_hash_001",
+        "answer_version": 1,
+        "conversation_id": "conv_hash_001",
+        "case_id": null,
+        "response_outcome": "answered",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_hash_001",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:950a42cb8ae1c0399c50e1779a3eae190c86c1d6e4b64d940221e9e27923f9a6",
+            "output_hash": "sha256:6e95eb11ced8acae9a5fe4cb9095afa9e171aa6671b133bdd1e7d4727ac0346b",
+            "token_usage": {
+              "input_tokens": 10,
+              "output_tokens": 20,
+              "total_tokens": 30
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:01Z",
+            "status": "success",
+            "error_code": null
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [
+          "ep_hash_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [],
+        "claims": [
+          {
+            "claim_id": "cl_hash_001",
+            "text": "Claim trazado con contenido juridico estable.",
+            "claim_type": "norma",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_hash_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_hash_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_hash_001",
+          "currency": "NONE",
+          "is_estimated": false,
+          "billing_source": "not_billable",
+          "model_input_tokens": 10,
+          "model_output_tokens": 20,
+          "tool_calls": 0,
+          "provider_estimated_costs": [],
+          "estimated_total_cost": 0
+        },
+        "latency_ms": {
+          "total": 1000,
+          "model_total": 1000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": []
+      },
+      "answer_version": {
+        "answer_version_id": "av_hash_001",
+        "answer_id": "ans_hash_001",
+        "answer_version": 1,
+        "previous_answer_version": null,
+        "response_outcome": "answered",
+        "answer_hash": "sha256:c7b20090fcd5cb43689d124382ccc67518169af55aa634e2d7d30b395ba282f3",
+        "trace_id": "tr_hash_001",
+        "answer_contract_ref": "ans_hash_001:v1",
+        "rendered_answer_snapshot_id": null,
+        "version_reason": "initial_answer",
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "actor_hash_001"
+      },
+      "answer_contract": {
+        "answer_id": "ans_hash_001",
+        "answer_version": 1,
+        "trace_id": "tr_hash_001",
+        "evidence_pack_id": "ep_hash_001",
+        "jurisdiction": "BO",
+        "sections": {
+          "conclusion_operativa": {
+            "title": "Conclusion operativa",
+            "content": "Texto visible alterado despues de calcular answer_hash [F1:P1]."
+          },
+          "hechos_considerados": {
+            "title": "Hechos considerados",
+            "content": "No se aportaron hechos adicionales del caso."
+          },
+          "fundamento_normativo": {
+            "title": "Fundamento normativo",
+            "content": "La respuesta se apoya en el pasaje normativo citado [F1:P1]."
+          },
+          "jurisprudencia_relevante": {
+            "title": "Jurisprudencia relevante",
+            "content": "No se recupero jurisprudencia relevante dentro del EvidencePack."
+          },
+          "analisis_aplicado": {
+            "title": "Analisis aplicado",
+            "content": "La aplicacion al caso requiere contrastar los hechos con el expediente."
+          },
+          "incertidumbres_vigencia_conflictos": {
+            "title": "Incertidumbres, vigencia y conflictos",
+            "content": "La vigencia no fue confirmada."
+          },
+          "recomendacion_profesional": {
+            "title": "Recomendacion profesional",
+            "content": "Verificar texto vigente antes de actuar."
+          },
+          "fuentes_utilizadas": {
+            "title": "Fuentes utilizadas",
+            "content": "F1 - Fuente trazada."
+          }
+        },
+        "claims": [
+          {
+            "claim_id": "cl_hash_001",
+            "text": "Claim trazado con contenido juridico estable.",
+            "claim_type": "norma",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citations": [
+          {
+            "citation_ref": "C1",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "supports_claim_ids": [
+              "cl_hash_001"
+            ],
+            "auditor_notes": []
+          }
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "warnings": [
+          "Vigencia no confirmada."
+        ],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "policy_errors": [
+        "AnswerVersion.answer_hash != sha256(canonicalize(AnswerContract))",
+        "AnswerContract.sections changed visible content without a new matching answer_hash"
+      ]
+    }
+  ]
+}

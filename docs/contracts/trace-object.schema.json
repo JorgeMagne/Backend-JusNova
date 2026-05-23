@@ -1,0 +1,3719 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/trace-object.schema.json",
+  "title": "TraceObject",
+  "description": "Traza minimizada y reconstruible de una respuesta legal. Registra referencias, hashes, resultados de auditoria, costos y latencias sin material crudo sensible.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+  },
+  "required": [
+    "trace_id",
+    "organization_id",
+    "actor_ref",
+    "actor_type",
+    "answer_id",
+    "answer_version_ref",
+    "answer_version",
+    "conversation_id",
+    "response_outcome",
+    "created_at",
+    "model_calls",
+    "tool_calls",
+    "retrieval_runs",
+    "evidence_pack_ids",
+    "sources_used",
+    "sources_rejected",
+    "claims",
+    "citation_audit",
+    "cost",
+    "latency_ms",
+    "warnings"
+  ],
+  "properties": {
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor_type": {
+      "enum": [
+        "user",
+        "system",
+        "support",
+        "service"
+      ]
+    },
+    "answer_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer_version_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "conversation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "case_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "response_outcome": {
+      "enum": [
+        "answered",
+        "partial_abstention",
+        "total_abstention",
+        "blocked"
+      ]
+    },
+    "abstention_reason": {
+      "enum": [
+        "no_evidence",
+        "unsupported_critical_claim",
+        "conflict_unresolved",
+        "missing_user_info",
+        "insufficient_budget",
+        "validity_not_confirmed",
+        "policy_blocked"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "model_calls": {
+      "type": "array",
+      "items": {
+        "$ref": "./model-call.schema.json"
+      }
+    },
+    "tool_calls": {
+      "type": "array",
+      "items": {
+        "$ref": "./tool-call.schema.json"
+      }
+    },
+    "retrieval_runs": {
+      "description": "Summaries sanitizados de retrieval runs usados en trazas. No embebe RetrievalRun operativo completo porque ese contrato puede contener URLs crudas u otros detalles internos de ejecucion.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/retrieval_run_trace_summary"
+      }
+    },
+    "evidence_pack_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "sources_used": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^F[0-9]+$|^D[0-9]+$"
+      },
+      "uniqueItems": true
+    },
+    "sources_rejected": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rejected_source"
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "$ref": "./claim.schema.json"
+      }
+    },
+    "citation_audit": {
+      "$ref": "./citation-audit.schema.json"
+    },
+    "cost": {
+      "$ref": "./cost-report.schema.json"
+    },
+    "latency_ms": {
+      "$ref": "#/$defs/latency_report"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "retrieval_run_trace_summary": {
+      "type": "object",
+      "required": [
+        "retrieval_run_id",
+        "query_id",
+        "retrieval_plan_id",
+        "status",
+        "providers_used",
+        "sources_opened",
+        "sources_rejected",
+        "latency_ms",
+        "estimated_cost",
+        "warnings",
+        "started_at",
+        "completed_at"
+      ],
+      "properties": {
+        "retrieval_run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "query_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retrieval_plan_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "completed_with_evidence",
+            "completed_no_evidence",
+            "failed",
+            "cancelled",
+            "budget_exhausted"
+          ]
+        },
+        "providers_used": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "sources_opened": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "url_hash",
+              "opened_at"
+            ],
+            "properties": {
+              "source_ref": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^F[0-9]+$|^D[0-9]+$"
+              },
+              "result_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "minLength": 1
+              },
+              "url_hash": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+              },
+              "opened_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "sources_rejected": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rejected_source"
+          }
+        },
+        "evidence_pack_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "no_evidence_reason": {
+          "enum": [
+            "no_evidence_found",
+            "insufficient_budget",
+            "official_sources_down",
+            "conflict_unresolved",
+            "missing_user_info",
+            "access_not_allowed",
+            "extraction_failed"
+          ]
+        },
+        "quality": {
+          "$ref": "./evidence-quality.schema.json"
+        },
+        "error": {
+          "type": "object",
+          "required": [
+            "error_code",
+            "safe_message_code"
+          ],
+          "properties": {
+            "error_code": {
+              "enum": [
+                "provider_timeout",
+                "provider_error",
+                "official_sources_down",
+                "access_not_allowed",
+                "extraction_failed",
+                "budget_exhausted",
+                "cancelled",
+                "unknown_error"
+              ]
+            },
+            "safe_message_code": {
+              "enum": [
+                "retrieval_provider_timeout",
+                "retrieval_provider_error",
+                "official_source_unavailable",
+                "retrieval_access_denied",
+                "retrieval_extraction_failed",
+                "retrieval_budget_exhausted",
+                "retrieval_cancelled",
+                "retrieval_unknown_error"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "provider_timeout"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_provider_timeout"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "provider_error"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_provider_error"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "official_sources_down"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "official_source_unavailable"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "access_not_allowed"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_access_denied"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "extraction_failed"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_extraction_failed"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "budget_exhausted"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_budget_exhausted"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "cancelled"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_cancelled"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "error_code": {
+                    "const": "unknown_error"
+                  }
+                },
+                "required": [
+                  "error_code"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "safe_message_code": {
+                    "const": "retrieval_unknown_error"
+                  }
+                }
+              }
+            }
+          ],
+          "additionalProperties": false
+        },
+        "cancellation_reason": {
+          "enum": [
+            "user_cancelled",
+            "timeout_cancelled",
+            "system_cancelled",
+            "superseded_by_new_run"
+          ]
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "estimated_cost": {
+          "type": "number",
+          "minimum": 0
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "official_sources_down",
+              "partial_results",
+              "extraction_failed",
+              "no_evidence_found",
+              "budget_exhausted",
+              "provider_timeout",
+              "provider_error",
+              "sanitized_summary",
+              "latency_estimated",
+              "cost_estimated"
+            ]
+          }
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "completed_with_evidence"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "quality",
+              "evidence_pack_id"
+            ],
+            "properties": {
+              "quality": {
+                "properties": {
+                  "overall": {
+                    "enum": [
+                      "HIGH",
+                      "MEDIUM",
+                      "LOW",
+                      "CONFLICTIVE"
+                    ]
+                  }
+                }
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "no_evidence_reason"
+                  ]
+                },
+                {
+                  "required": [
+                    "error"
+                  ]
+                },
+                {
+                  "required": [
+                    "cancellation_reason"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "completed_no_evidence"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "quality",
+              "no_evidence_reason"
+            ],
+            "properties": {
+              "quality": {
+                "properties": {
+                  "overall": {
+                    "enum": [
+                      "NONE",
+                      "LOW",
+                      "CONFLICTIVE"
+                    ]
+                  }
+                }
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "evidence_pack_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "error"
+                  ]
+                },
+                {
+                  "required": [
+                    "cancellation_reason"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "failed"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "error"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "evidence_pack_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "no_evidence_reason"
+                  ]
+                },
+                {
+                  "required": [
+                    "quality"
+                  ]
+                },
+                {
+                  "required": [
+                    "cancellation_reason"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "budget_exhausted"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "no_evidence_reason"
+            ],
+            "properties": {
+              "no_evidence_reason": {
+                "const": "insufficient_budget"
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "evidence_pack_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "error"
+                  ]
+                },
+                {
+                  "required": [
+                    "quality"
+                  ]
+                },
+                {
+                  "required": [
+                    "cancellation_reason"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "cancelled"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "required": [
+              "cancellation_reason"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "evidence_pack_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "no_evidence_reason"
+                  ]
+                },
+                {
+                  "required": [
+                    "error"
+                  ]
+                },
+                {
+                  "required": [
+                    "quality"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "rejected_source": {
+      "type": "object",
+      "required": [
+        "source_ref",
+        "result_id",
+        "url_hash",
+        "reason",
+        "tier",
+        "source_type",
+        "rejected_at",
+        "warning_codes"
+      ],
+      "properties": {
+        "source_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^F[0-9]+$|^D[0-9]+$"
+        },
+        "result_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "url_hash": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+        },
+        "reason": {
+          "enum": [
+            "foreign_jurisdiction",
+            "low_authority",
+            "duplicate",
+            "not_extractable",
+            "access_not_allowed",
+            "tier_not_allowed",
+            "irrelevant",
+            "unsupported_for_critical_claim"
+          ]
+        },
+        "tier": {
+          "enum": [
+            "TIER1_CANONICO",
+            "TIER1_OFICIAL",
+            "TIER1_STRUCTURED",
+            "TIER2_CONFIABLE",
+            "TIER3_SECUNDARIO",
+            "USER_DOCUMENT"
+          ]
+        },
+        "source_type": {
+          "enum": [
+            "norma",
+            "jurisprudencia",
+            "documento_usuario",
+            "doctrina",
+            "web",
+            "institucional"
+          ]
+        },
+        "rejected_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "warning_codes": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "tier3_not_primary",
+              "tier2_fallback",
+              "low_authority",
+              "duplicate",
+              "not_extractable",
+              "access_not_allowed",
+              "unsupported_for_critical_claim",
+              "foreign_jurisdiction",
+              "tier_not_allowed",
+              "irrelevant",
+              "validity_not_confirmed",
+              "snapshot_unavailable"
+            ]
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "latency_report": {
+      "type": "object",
+      "required": [
+        "total",
+        "model_total",
+        "tool_total",
+        "retrieval_total",
+        "citation_audit",
+        "persistence",
+        "queue"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "model_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tool_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retrieval_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "citation_audit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "persistence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "queue": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "response_outcome": {
+            "const": "answered"
+          }
+        },
+        "required": [
+          "response_outcome"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "abstention_reason"
+          ]
+        },
+        "properties": {
+          "model_calls": {
+            "minItems": 1,
+            "contains": {
+              "properties": {
+                "purpose": {
+                  "const": "answer_generation"
+                },
+                "status": {
+                  "const": "success"
+                }
+              },
+              "required": [
+                "purpose",
+                "status"
+              ]
+            }
+          },
+          "evidence_pack_ids": {
+            "minItems": 1
+          },
+          "sources_used": {
+            "minItems": 1
+          },
+          "claims": {
+            "minItems": 1,
+            "items": {
+              "properties": {
+                "verification_status": {
+                  "const": "passed"
+                }
+              }
+            }
+          },
+          "citation_audit": {
+            "properties": {
+              "overall_status": {
+                "const": "passed"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "response_outcome": {
+            "const": "partial_abstention"
+          }
+        },
+        "required": [
+          "response_outcome"
+        ]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "required": [
+              "abstention_reason"
+            ]
+          },
+          {
+            "properties": {
+              "warnings": {
+                "minItems": 1
+              }
+            }
+          }
+        ],
+        "properties": {
+          "model_calls": {
+            "minItems": 1,
+            "contains": {
+              "properties": {
+                "purpose": {
+                  "const": "answer_generation"
+                },
+                "status": {
+                  "const": "success"
+                }
+              },
+              "required": [
+                "purpose",
+                "status"
+              ]
+            }
+          },
+          "evidence_pack_ids": {
+            "minItems": 1
+          },
+          "sources_used": {
+            "minItems": 1
+          },
+          "claims": {
+            "minItems": 1,
+            "contains": {
+              "properties": {
+                "verification_status": {
+                  "const": "passed"
+                }
+              },
+              "required": [
+                "verification_status"
+              ]
+            }
+          },
+          "citation_audit": {
+            "properties": {
+              "overall_status": {
+                "const": "passed"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "response_outcome": {
+            "const": "total_abstention"
+          }
+        },
+        "required": [
+          "response_outcome"
+        ]
+      },
+      "then": {
+        "required": [
+          "abstention_reason"
+        ],
+        "properties": {
+          "claims": {
+            "maxItems": 0
+          },
+          "sources_used": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "response_outcome": {
+            "const": "blocked"
+          }
+        },
+        "required": [
+          "response_outcome"
+        ]
+      },
+      "then": {
+        "required": [
+          "abstention_reason"
+        ],
+        "properties": {
+          "claims": {
+            "items": {
+              "properties": {
+                "verification_status": {
+                  "enum": [
+                    "failed",
+                    "needs_review",
+                    "blocked"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "response_outcome": {
+            "const": "total_abstention"
+          }
+        },
+        "required": [
+          "response_outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "citation_audit": {
+            "properties": {
+              "overall_status": {
+                "enum": [
+                  "failed",
+                  "blocked",
+                  "needs_review"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "response_outcome": {
+            "const": "blocked"
+          }
+        },
+        "required": [
+          "response_outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "citation_audit": {
+            "properties": {
+              "overall_status": {
+                "enum": [
+                  "failed",
+                  "blocked"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "abstention_reason": {
+            "const": "policy_blocked"
+          }
+        },
+        "required": [
+          "abstention_reason"
+        ]
+      },
+      "then": {
+        "properties": {
+          "citation_audit": {
+            "properties": {
+              "blocking_failures": {
+                "contains": {
+                  "properties": {
+                    "failure_code": {
+                      "const": "policy_blocked"
+                    }
+                  },
+                  "required": [
+                    "failure_code"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "trace_id": "tr_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_001",
+      "answer_version_ref": "av_001",
+      "answer_version": 1,
+      "conversation_id": "conv_001",
+      "case_id": null,
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_001",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+          "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+          "token_usage": {
+            "input_tokens": 1200,
+            "output_tokens": 700,
+            "total_tokens": 1900
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:03Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [
+        {
+          "source_ref": null,
+          "result_id": "lsr_002",
+          "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+          "reason": "low_authority",
+          "tier": "TIER3_SECUNDARIO",
+          "source_type": "web",
+          "rejected_at": "2026-05-22T00:00:00Z",
+          "warning_codes": [
+            "tier3_not_primary"
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+          "claim_type": "procedimiento",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_001",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_001",
+        "currency": "USD",
+        "is_estimated": true,
+        "billing_source": "provider_estimate",
+        "model_input_tokens": 1200,
+        "model_output_tokens": 700,
+        "tool_calls": 0,
+        "provider_estimated_costs": [
+          {
+            "provider": "openai",
+            "estimated_cost": 0.08
+          }
+        ],
+        "estimated_total_cost": 0.08
+      },
+      "latency_ms": {
+        "total": 3200,
+        "model_total": 3000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_abstention_001",
+      "organization_id": "org_001",
+      "actor_ref": "system",
+      "actor_type": "system",
+      "answer_id": "ans_002",
+      "answer_version_ref": "av_abstention_001",
+      "answer_version": 1,
+      "conversation_id": "conv_002",
+      "case_id": null,
+      "response_outcome": "total_abstention",
+      "abstention_reason": "no_evidence",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_002",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "needs_review",
+        "results": [],
+        "blocking_failures": [],
+        "warnings": [
+          "No hubo evidencia suficiente para respuesta sustantiva."
+        ],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_002",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "No hay evidencia suficiente."
+      ]
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "trace_id": "tr_003",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "answer_id": "ans_003",
+      "answer_version_ref": "av_003",
+      "answer_version": 1,
+      "conversation_id": "conv_003",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "cost": {
+        "cost_report_id": "cr_003",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_004",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_004",
+      "answer_version_ref": "av_004",
+      "answer_version": 1,
+      "conversation_id": "conv_004",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_004",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_004",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_004b",
+      "organization_id": "org_001",
+      "actor_ref": "system",
+      "actor_type": "system",
+      "answer_id": "ans_004b",
+      "answer_version_ref": "av_004b",
+      "answer_version": 1,
+      "conversation_id": "conv_004b",
+      "response_outcome": "total_abstention",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_004b",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "needs_review",
+        "results": [],
+        "blocking_failures": [],
+        "warnings": [
+          "No hubo evidencia suficiente para respuesta sustantiva."
+        ],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_004b",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-invalid: total_abstention requiere abstention_reason aunque haya warning visible."
+      ]
+    },
+    {
+      "trace_id": "tr_005",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_005",
+      "answer_version_ref": "av_005",
+      "answer_version": 1,
+      "conversation_id": "conv_005",
+      "response_outcome": "blocked",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_005",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "blocked",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "unsupported",
+            "support_assessment": "unsupported",
+            "severity": "blocking"
+          }
+        ],
+        "blocking_failures": [
+          {
+            "failure_code": "unsupported_claim",
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "severity": "blocking"
+          }
+        ],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_005",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-invalid: blocked requiere abstention_reason aunque haya warning visible."
+      ]
+    },
+    {
+      "trace_id": "tr_006",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_006",
+      "answer_version_ref": "av_006",
+      "answer_version": 1,
+      "conversation_id": "conv_006",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001",
+        "ep_001"
+      ],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_006",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_006",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_007",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_007",
+      "answer_version_ref": "av_007",
+      "answer_version": 1,
+      "conversation_id": "conv_007",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [],
+      "sources_rejected": [
+        {
+          "source_ref": null,
+          "result_id": "lsr_007",
+          "url_hash": "sha256:560e6bdf485c611da5c07e11e7e92ef5e17100d2440e38cfc9e0ad170d13a873",
+          "reason": "low_authority",
+          "tier": "TIER3_SECUNDARIO",
+          "source_type": "web",
+          "rejected_at": "2026-05-22T00:00:00Z",
+          "warning_codes": [],
+          "raw_output": "texto sensible no permitido"
+        }
+      ],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_007",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_007",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_008",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_008",
+      "answer_version_ref": "av_008",
+      "answer_version": 1,
+      "conversation_id": "conv_008",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_008",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_008",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50,
+        "document_text": "texto sensible no permitido"
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_009",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_009",
+      "answer_version_ref": "av_009",
+      "answer_version": 1,
+      "conversation_id": "conv_009",
+      "response_outcome": "blocked",
+      "abstention_reason": "policy_blocked",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_009",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_009",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_012",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_012",
+      "answer_version_ref": "av_012",
+      "answer_version": 1,
+      "conversation_id": "conv_012",
+      "response_outcome": "total_abstention",
+      "abstention_reason": "no_evidence",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim no publicable.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_012",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "needs_review",
+        "results": [],
+        "blocking_failures": [],
+        "warnings": [
+          "No hubo evidencia suficiente para respuesta sustantiva."
+        ],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_012",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_013",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_013",
+      "answer_version_ref": "av_013",
+      "answer_version": 1,
+      "conversation_id": "conv_013",
+      "response_outcome": "blocked",
+      "abstention_reason": "policy_blocked",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim bloqueado pero marcado passed.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_013",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "blocked",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "unsupported",
+            "support_assessment": "unsupported",
+            "severity": "blocking"
+          }
+        ],
+        "blocking_failures": [
+          {
+            "failure_code": "unsupported_claim",
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "severity": "blocking"
+          }
+        ],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_013",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_014",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_014",
+      "answer_version_ref": "av_014",
+      "answer_version": 1,
+      "conversation_id": "conv_014",
+      "response_outcome": "blocked",
+      "abstention_reason": "policy_blocked",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_014",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "blocked",
+        "results": [],
+        "blocking_failures": [
+          {
+            "failure_code": "unsupported_claim",
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "severity": "blocking"
+          }
+        ],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_014",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_010",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_010",
+      "answer_version_ref": "av_010",
+      "answer_version": 1,
+      "conversation_id": "conv_010",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_010",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:94a38f666eea19e16a00117c19922d5bfae732e28ae28cdccfe725dfe2d0c311",
+          "output_hash": "sha256:45d61cb0aa66059e84be3e952bd1c971c430f187064be890515e7edbf32a29a3",
+          "token_usage": {
+            "input_tokens": 1,
+            "output_tokens": 1,
+            "total_tokens": 2
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim publicado.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_010",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "failed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "unsupported",
+            "support_assessment": "unsupported",
+            "severity": "blocking"
+          }
+        ],
+        "blocking_failures": [
+          {
+            "failure_code": "unsupported_claim",
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "severity": "blocking"
+          }
+        ],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_010",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_011",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_011",
+      "answer_version_ref": "av_011",
+      "answer_version": 1,
+      "conversation_id": "conv_011",
+      "response_outcome": "partial_abstention",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_011",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:5eb8c7cd2e1aa3b8cb44c82873445deebd72c83d1b81c0c1489c03c717b3c85e",
+          "output_hash": "sha256:4e1e463d59c6037fd8ce010ff6a34e911a63302bd1c9070e4a8a00091fdd4170",
+          "token_usage": {
+            "input_tokens": 1,
+            "output_tokens": 1,
+            "total_tokens": 2
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim parcialmente respondido.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_011",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_011",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_014",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_014",
+      "answer_version_ref": "av_014",
+      "answer_version": 1,
+      "conversation_id": "conv_014",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_014",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:5e433fa126e38fe6e9aaeae9b3b4023fd433ee3eee7a28ea44ab7024d274a80d",
+          "output_hash": "sha256:a38fef503ec40acdaa4946cec0fb99f41a1f7c71966d37ce1557890047af8651",
+          "token_usage": {
+            "input_tokens": 1,
+            "output_tokens": 1,
+            "total_tokens": 2
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim no publicable en respuesta completa.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "unsupported",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "blocked",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_014",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_014",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_015",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_015",
+      "answer_version_ref": "av_015",
+      "answer_version": 1,
+      "conversation_id": "conv_015",
+      "response_outcome": "partial_abstention",
+      "abstention_reason": "unsupported_critical_claim",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_015",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:b011a75aac8637e746f39b3e75e69150aaf265f9914f939f4888ea9f25e4aaa6",
+          "output_hash": "sha256:7782834adc85add9c4b53b4e5ff006dad98a929d3ed547885d63bfe92a09fd87",
+          "token_usage": {
+            "input_tokens": 1,
+            "output_tokens": 1,
+            "total_tokens": 2
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim fallido sin parte respondida.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "unsupported",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "blocked",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_015",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_015",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_016",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_016",
+      "answer_version_ref": "av_016",
+      "answer_version": 1,
+      "conversation_id": "conv_016",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_016",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:af2f9a4d40c946a59b7b85b722853bb40b8918ea7f8edc9b17092bfaa5a6defd",
+          "output_hash": null,
+          "token_usage": {
+            "input_tokens": 1,
+            "output_tokens": 0,
+            "total_tokens": 1
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "error",
+          "error_code": "provider_error"
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim publicado.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_016",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_016",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_017",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_017",
+      "answer_version_ref": "av_017",
+      "answer_version": 1,
+      "conversation_id": "conv_017",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_017",
+          "purpose": "intent_classification",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "intent-v1",
+          "input_hash": "sha256:1f74be6a7b1874e28810ac9ba5bbebd9ea3d30ec52c30491660b28924f8d3526",
+          "output_hash": "sha256:bca72eb851e86e53a485ce33b751af62fe9e0bdd38f388ad1a8929e8ac640ef5",
+          "token_usage": {
+            "input_tokens": 1,
+            "output_tokens": 1,
+            "total_tokens": 2
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim publicado.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_017",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_017",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_018",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_018",
+      "answer_version_ref": "av_018",
+      "answer_version": 1,
+      "conversation_id": "conv_018",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_018",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:a18ad545558cd90cd33406907ac34ca6762568cc85375001ec4edb7f64cf17d8",
+          "output_hash": "sha256:36ccfb706130b2476071b3fbbf42c6e52c5ad8311a94b0b3dc3a2a7fe2b97e5a",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [
+        {
+          "retrieval_run_id": "rr_018",
+          "query_id": "q_018",
+          "retrieval_plan_id": "rp_018",
+          "status": "failed",
+          "providers_used": [],
+          "adapter_calls": [],
+          "discovery_results": [
+            {
+              "result_id": "r_018",
+              "title": "Resultado crudo no sanitizado",
+              "url": "https://example.com/private-query?id=123",
+              "tier": "TIER3_SECUNDARIO",
+              "source_type": "web",
+              "retrieved_at": "2026-05-22T00:00:00Z",
+              "validity_status": "NO_APLICA",
+              "relevance_score": 0.1,
+              "authority_score": 0.1,
+              "freshness_score": 0.1,
+              "extraction_status": "not_fetched",
+              "citation_eligible": false,
+              "warnings": []
+            }
+          ],
+          "sources_opened": [
+            "https://example.com/private-query?id=123"
+          ],
+          "sources_rejected": [
+            {
+              "url": "https://example.com/private-query?id=123",
+              "reason": "irrelevant"
+            }
+          ],
+          "error": {
+            "error_code": "provider_timeout",
+            "message": "Payload operativo crudo no debe embebirse en TraceObject."
+          },
+          "latency_ms": 1000,
+          "estimated_cost": 0,
+          "warnings": [],
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z"
+        }
+      ],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim publicado.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_018",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_018",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 1000,
+        "model_total": 1000,
+        "tool_total": 0,
+        "retrieval_total": 1000,
+        "citation_audit": 0,
+        "persistence": 0,
+        "queue": 0
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_019",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_019",
+      "answer_version_ref": "av_019",
+      "answer_version": 1,
+      "conversation_id": "conv_019",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_019",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:3dac60d78a6108787343d4d4e990c96a3def834ab5f5c52f551d24e566845b35",
+          "output_hash": "sha256:ae9c782cd15d3211a8dcfcf573ffac4df32340aeb2e38f31bb7b5a3c4aeb0444",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [
+        {
+          "source_ref": null,
+          "result_id": "lsr_019",
+          "url_hash": "sha256:ed611d62e8665fdcc31103628812887f63d4ac82de84f33729daf14f22b27af1",
+          "reason": "low_authority",
+          "tier": "TIER3_SECUNDARIO",
+          "source_type": "web",
+          "rejected_at": "2026-05-22T00:00:00Z",
+          "warning_codes": [
+            "https://example.com/private?case=123"
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim publicado.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_019",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_019",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 1000,
+        "model_total": 1000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 0,
+        "queue": 0
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_url_hash_raw_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_url_hash_raw_001",
+      "answer_version_ref": "av_url_hash_raw_001",
+      "answer_version": 1,
+      "conversation_id": "conv_001",
+      "case_id": null,
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_001",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+          "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+          "token_usage": {
+            "input_tokens": 1200,
+            "output_tokens": 700,
+            "total_tokens": 1900
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:03Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [
+        {
+          "source_ref": null,
+          "result_id": "lsr_002",
+          "url_hash": "https://example.com/private?case=123",
+          "reason": "low_authority",
+          "tier": "TIER3_SECUNDARIO",
+          "source_type": "web",
+          "rejected_at": "2026-05-22T00:00:00Z",
+          "warning_codes": [
+            "tier3_not_primary"
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+          "claim_type": "procedimiento",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_001",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_001",
+        "currency": "USD",
+        "is_estimated": true,
+        "billing_source": "provider_estimate",
+        "model_input_tokens": 1200,
+        "model_output_tokens": 700,
+        "tool_calls": 0,
+        "provider_estimated_costs": [
+          {
+            "provider": "openai",
+            "estimated_cost": 0.08
+          }
+        ],
+        "estimated_total_cost": 0.08
+      },
+      "latency_ms": {
+        "total": 3200,
+        "model_total": 3000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "trace_id": "tr_policy_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_policy_001",
+      "answer_version_ref": "av_policy_001",
+      "answer_version": 1,
+      "conversation_id": "conv_policy_001",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_policy_001",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:b79a7246f48375134c31f593358d86f145a10a59ee5c0d6a88b20b4b3cea271b",
+          "output_hash": "sha256:f62364c87424d16f69ff0283290d55d6f7a4a95ccdcc436f1b4c6c556d36976d",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F99"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim publicado con cita no cubierta por la auditoria.",
+          "claim_type": "norma",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C99"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_policy_001",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_policy_001",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 1000,
+        "model_total": 1000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-valid but policy-invalid: C99 and F99 are not covered by citation_audit.results."
+      ]
+    },
+    {
+      "trace_id": "tr_policy_002",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_policy_002",
+      "answer_version_ref": "av_policy_002",
+      "answer_version": 1,
+      "conversation_id": "conv_policy_002",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_policy_002",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:e1f40309e4f3f40c7e7fdf0f5877deb350f5d0b6992ffc7672df47631dfb6cbf",
+          "output_hash": "sha256:b962fa92f51ebaf8ebfb4e93ae52912f8068ec82f5754424caed3e63ffa687b0",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [
+        {
+          "tool_call_id": "tc_policy_002",
+          "tool_name": "legal_search",
+          "purpose": "legal_search",
+          "input_hash": "sha256:e1ae10680a072f0fc0ed6f8c415f81e488f4121ce9b4d0cc06c83b5bcf0071ec",
+          "output_hash": "sha256:d790c56a1fac8a51d946dff6bd63c39d85642eeb058196726e1b91a459fc2a00",
+          "status": "success",
+          "error_code": null,
+          "started_at": "2026-05-22T00:00:01Z",
+          "completed_at": "2026-05-22T00:00:02Z",
+          "cost_units": {
+            "requests": 1,
+            "pages": 0,
+            "tokens": 0,
+            "estimated_cost": 0
+          }
+        }
+      ],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_002"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_002",
+          "text": "Claim publicado con auditoria consistente y costo inconsistente.",
+          "claim_type": "norma",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_policy_002",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_002",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_policy_002",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 99,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 2000,
+        "model_total": 1000,
+        "tool_total": 1000,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-valid but policy-invalid: CostReport does not aggregate model_calls and tool_calls."
+      ]
+    },
+    {
+      "trace_id": "tr_policy_003",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_policy_003",
+      "answer_version_ref": "av_policy_003",
+      "answer_version": 1,
+      "conversation_id": "conv_policy_003",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_policy_003",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:550c143c041b35229a9f34577b20cba2ac63b1a0c94a5d58ea922debe16b6365",
+          "output_hash": "sha256:33f4c6eb1d1e260aaa754ff308de6a9aa714fd09c13d7ffcbe2052631ed992f9",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:05Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_003"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_003",
+          "text": "Claim publicado con tiempos imposibles.",
+          "claim_type": "norma",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_policy_003",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_003",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_policy_003",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 0,
+        "model_total": 1000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 999999,
+        "queue": 0
+      },
+      "warnings": [
+        "Schema-valid but policy-invalid: completed_at precedes started_at and latency components exceed total."
+      ]
+    },
+    {
+      "trace_id": "tr_policy_004",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_policy_004",
+      "answer_version_ref": "av_policy_004",
+      "answer_version": 1,
+      "conversation_id": "conv_policy_004",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_policy_004",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:7ce63dd23c4cf44fdc92eb77063c80fcca48df79adf87f91868606daa2a125fe",
+          "output_hash": "sha256:5679f159ac369dd9358d4cd76540c91f15c314fb0bb8d5c6bbc7bdf61b52b7d9",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [
+        {
+          "retrieval_run_id": "rr_policy_004",
+          "query_id": "q_policy_004",
+          "retrieval_plan_id": "rp_policy_004",
+          "status": "failed",
+          "providers_used": [],
+          "sources_opened": [],
+          "sources_rejected": [],
+          "error": {
+            "error_code": "provider_timeout",
+            "safe_message_code": "retrieval_provider_timeout"
+          },
+          "latency_ms": 100,
+          "estimated_cost": 0,
+          "warnings": [],
+          "started_at": "2026-05-22T00:00:10Z",
+          "completed_at": "2026-05-22T00:00:00Z"
+        }
+      ],
+      "evidence_pack_ids": [
+        "ep_004"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_004",
+          "text": "Claim publicado con retrieval temporalmente imposible.",
+          "claim_type": "norma",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_policy_004",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_004",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_policy_004",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 1000,
+        "model_total": 1000,
+        "tool_total": 0,
+        "retrieval_total": 100,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-valid but policy-invalid: retrieval_run.completed_at precedes retrieval_run.started_at."
+      ]
+    },
+    {
+      "trace_id": "tr_policy_005",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_policy_005",
+      "answer_version_ref": "av_policy_005",
+      "answer_version": 1,
+      "conversation_id": "conv_policy_005",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_policy_005",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:a41bec1464f4db9d0089209df5995b47b97f6c8fb1d7e49f3d53158b824562aa",
+          "output_hash": "sha256:0e59016c7769c5d61aee07315f7652c73c723d9ce046f6069fb2b97c6ed60f35",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:10Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_005"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_005",
+          "text": "Claim publicado con latencia subreportada.",
+          "claim_type": "norma",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_policy_005",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_005",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_policy_005",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 1000,
+        "model_total": 1000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-valid but policy-invalid: model call duration is 10000ms while model_total and total are 1000ms."
+      ]
+    },
+    {
+      "trace_id": "tr_policy_006",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_policy_006",
+      "answer_version_ref": "av_policy_006",
+      "answer_version": 1,
+      "conversation_id": "conv_policy_006",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_policy_006",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:d3d69425cc0c4d7b631ce2705f573fd0728858594b2f05300d6fdb3e7752fd1f",
+          "output_hash": "sha256:04831d68d4bc094b561ee4b755f7cee06389fed59f0457647a39b0b24a16b221",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_006"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_dup",
+          "text": "Primer claim con identificador duplicado.",
+          "claim_type": "norma",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        },
+        {
+          "claim_id": "cl_dup",
+          "text": "Segundo claim distinto con el mismo identificador.",
+          "claim_type": "vigencia",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_policy_006",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_dup",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          },
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_dup",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_policy_006",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 1000,
+        "model_total": 1000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-valid but policy-invalid: duplicate claim_id and duplicate citation audit result key."
+      ]
+    },
+    {
+      "trace_id": "tr_policy_007",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_policy_007",
+      "answer_version_ref": "av_policy_007",
+      "answer_version": 1,
+      "conversation_id": "conv_policy_007",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_policy_007",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:f8a7e929df787d1ad1a75c1d6e872dd7131f59e880cbb9906a6dcc32f9fc4f95",
+          "output_hash": "sha256:d36bc634bb1907cdb3cd82d82a0d167a3d9aa4fd01d6f97bdbd0b1e49e95fe07",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [
+        {
+          "tool_call_id": "tc_policy_007",
+          "tool_name": "legal_search",
+          "purpose": "legal_search",
+          "input_hash": "sha256:a63c39d30449b35b447f421ef9606ffcdd58fd6e0e905234a6d3353812758084",
+          "output_hash": "sha256:2aef402f8799a40fde1b5b1dec5c8bb9aa88bd70d9ed909d6af27ad22f342d3f",
+          "status": "success",
+          "error_code": null,
+          "started_at": "2026-05-22T00:00:01Z",
+          "completed_at": "2026-05-22T00:00:02Z",
+          "cost_units": {
+            "requests": 1,
+            "pages": 0,
+            "tokens": 0,
+            "estimated_cost": 99
+          }
+        }
+      ],
+      "retrieval_runs": [
+        {
+          "retrieval_run_id": "rr_policy_007",
+          "query_id": "q_policy_007",
+          "retrieval_plan_id": "rp_policy_007",
+          "status": "failed",
+          "providers_used": [],
+          "sources_opened": [],
+          "sources_rejected": [],
+          "error": {
+            "error_code": "provider_timeout",
+            "safe_message_code": "retrieval_provider_timeout"
+          },
+          "latency_ms": 1000,
+          "estimated_cost": 88,
+          "warnings": [],
+          "started_at": "2026-05-22T00:00:02Z",
+          "completed_at": "2026-05-22T00:00:03Z"
+        }
+      ],
+      "evidence_pack_ids": [
+        "ep_007"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_007",
+          "text": "Claim publicado con costos locales no reflejados.",
+          "claim_type": "norma",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_policy_007",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_007",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_policy_007",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 1,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 3000,
+        "model_total": 1000,
+        "tool_total": 1000,
+        "retrieval_total": 1000,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-valid but policy-invalid: local tool and retrieval estimated costs are positive while CostReport is NONE/0."
+      ]
+    }
+  ]
+}

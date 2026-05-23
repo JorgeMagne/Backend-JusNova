@@ -52,14 +52,14 @@ El pipeline contractual permite auditar claim -> cita -> pasaje -> fuente -> sna
 - Subfase 0.4 creo JSON Schemas de evidence pack, source, passage, citation, claim y answer contract.
 - Subfase 0.4 creo citation policy y abstention policy.
 - Subfase 0.6 acepto source, validity, conflict y uncertainty policies.
-- Subfase 0.7 debe crear citation-audit schema dentro de trazabilidad, auditoria y versionado.
+- Subfase 0.7 creo `citation-audit.schema.json` dentro de trazabilidad, auditoria y versionado.
 - Fase 2 implementara Citation Auditor y bloqueo de claims criticos.
 
 ## No afirma todavia
 
 - No afirma que el auditor ya este implementado.
 - No afirma que toda respuesta simple use formato largo.
-- No afirma que `citation-audit.schema.json` exista en Subfase 0.4.
+- No afirma que Citation Auditor ya este implementado; Subfase 0.7 solo acepta el contrato documental `citation-audit.schema.json`.
 
 ## Riesgos
 

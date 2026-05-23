@@ -71,10 +71,10 @@ Estos ADRs quedan aceptados como decisiones arquitectonicas. Esta lista no impli
 | ADR-004 | Launch Without Own Legal RAG | Accepted | Subfase 0.6 no-rag policy accepted; Fase 8 cache/snapshots. |
 | ADR-005 | AI Provider And Model Policy | Accepted | Fase 1 ModelProvider; Subfase 0.10 provider policy. |
 | ADR-006 | Document OCR Policy | Accepted | Subfase 0.9/0.10 policies; Fase 9 implementacion. |
-| ADR-007 | Evidence, Answer, Citation And Claim Contracts | Accepted | Subfase 0.4 schemas; Fase 2 auditor. |
+| ADR-007 | Evidence, Answer, Citation And Claim Contracts | Accepted | Subfase 0.4 schemas; Subfase 0.7 citation audit contract; Fase 2 auditor. |
 | ADR-008 | Cost Governor And Commercial Budgets | Accepted | Subfase 0.8 budgets; Fase 1 CostGovernor/UsageLedger. |
 | ADR-009 | Source Registry And Validity Policy | Accepted | Subfase 0.6 source/validity/conflict/uncertainty policies accepted; Fase 4/5 registry/adapters. |
-| ADR-010 | Traceability And Answer Versioning | Accepted | Subfase 0.7 trace/answer version schemas. |
+| ADR-010 | Traceability And Answer Versioning | Accepted | Subfase 0.7 trace/audit/version schemas and policies accepted; Fase 3 versionado basico. |
 | ADR-011 | Security, Privacy And Provider Boundaries | Accepted | Subfase 0.10 policies; Fase 1 ownership. |
 | ADR-012 | Evaluation And Quality Gates | Accepted | Subfase 0.12 eval plan, dataset and gates. |
 
@@ -141,8 +141,30 @@ Estos contratos quedan aceptados como contratos documentales del JusNova Live Le
 | Evidence Source | Accepted | `snapshot_unavailable_reason`, reglas de snapshot, vigencia no aplicable para norma bloqueada, confirmacion/derogacion solo en TIER1 y warnings obligatorios en TIER2/TIER3. |
 | Legal Search Result | Accepted | Enum compartido de razon de snapshot, restriccion de razon privada a `USER_DOCUMENT`, confirmacion/derogacion solo en TIER1 con pasaje extraido y warnings obligatorios en TIER2/TIER3. |
 
+## Contratos aceptados en Subfase 0.7
+
+Estos contratos quedan aceptados como contratos documentales de trazabilidad, auditoria y versionado. Esta lista no implica que persistencia, endpoints, Citation Auditor real, UI de soporte, permisos finales o retencion completa ya esten implementados.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Trace Object | Accepted | `docs/contracts/trace-object.schema.json` |
+| Model Call | Accepted | `docs/contracts/model-call.schema.json` |
+| Tool Call | Accepted | `docs/contracts/tool-call.schema.json` |
+| Citation Audit | Accepted | `docs/contracts/citation-audit.schema.json` |
+| Answer Version | Accepted | `docs/contracts/answer-version.schema.json` |
+| Abstention Render | Accepted | `docs/contracts/abstention-render.schema.json` |
+| Cost Report | Accepted | `docs/contracts/cost-report.schema.json` |
+
+## Politicas aceptadas en Subfase 0.7
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Answer Versioning Policy | Accepted | `docs/policies/answer-versioning-policy.md` |
+| Trace Visibility Policy | Accepted | `docs/policies/trace-visibility-policy.md` |
+
 ## Dependencias posteriores preservadas
 
-- `citation-audit.schema.json` queda delegado a Subfase 0.7.
 - Source Registry schema completo queda delegado a subfases posteriores y Fase 4.
+- Privacy/security policy, retencion, permisos finales y acceso a material crudo quedan delegados a Subfase 0.10.
+- Cost Governor, budgets comerciales y usage ledger quedan delegados a Subfase 0.8.
 - Fase 0 global permanece en `Draft` hasta completar 0.1 a 0.14.

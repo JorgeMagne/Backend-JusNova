@@ -3,7 +3,7 @@
 **Estado documental:** Accepted  
 **Fecha:** 2026-05-22  
 **Responsable:** Codex / JusNova Chief Backend Architect  
-**Decision relacionada:** Subfase 0.4 - Contratos juridicos de respuesta, evidencia, citas y claims
+**Decision relacionada:** Subfase 0.4 - Contratos juridicos de respuesta, evidencia, citas y claims; Subfase 0.7 - Trazabilidad, auditoria y versionado
 
 ## Proposito
 
@@ -11,7 +11,7 @@ Definir reglas obligatorias para que las citas de JusNova sean evidencia real y 
 
 ## Alcance
 
-Aplica a `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Claim`, `Citation` y `AnswerContract`.
+Aplica a `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Claim`, `Citation`, `AnswerContract`, `CitationAudit` y `TraceObject`.
 
 ## Definiciones
 
@@ -20,6 +20,8 @@ Aplica a `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Claim`, `Citation
 - `Passage`: fragmento localizable extraido de una fuente.
 - `Source`: fuente externa o documento del usuario.
 - `sources_used`: lista final de fuentes efectivamente citadas.
+- `CitationAudit`: resultado estructurado de auditoria de citas, claims, pasajes y fuentes.
+- `TraceObject`: traza terminal que une respuesta, claims publicados, fuentes usadas y auditoria.
 
 ## Reglas obligatorias
 
@@ -39,6 +41,9 @@ Aplica a `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Claim`, `Citation
 14. Una fuente `TIER2_CONFIABLE` o `TIER3_SECUNDARIO` usada en respuesta visible debe generar advertencia.
 15. Una fuente `TIER3_SECUNDARIO` no puede ser unico soporte de un claim normativo critico.
 16. No se permite listar fuentes no citadas como bibliografia.
+17. Todo `TraceObject` con `citation_audit.overall_status = passed` debe tener cada `Claim.citations[]` representado en `CitationAudit.results[]` con el mismo `claim_id` y `citation_ref`.
+18. Todo `TraceObject.sources_used[]` debe aparecer en al menos un `CitationAudit.results[].source_ref` con `status = valid` y asociado a un claim existente en `TraceObject.claims[]`.
+19. Un `TraceObject` no puede declarar auditoria `passed` si una cita publicada, claim publicado o fuente usada no fue cubierta por `CitationAudit.results[]`.
 
 ## Reglas deterministicas
 
@@ -57,6 +62,10 @@ Estas reglas deben implementarse en validadores, tests o auditoria de citas; no 
 11. Rechazar claim critico sin cita valida.
 12. Rechazar `sources_used` que contenga source no citado por una cita que soporte claim existente.
 13. Rechazar fuente TIER3 como unico soporte normativo critico.
+14. Para `TraceObject`, construir el conjunto de pares publicados `(claim_id, citation_ref)` desde `claims[].citations[]`.
+15. Para `TraceObject`, construir el conjunto de pares auditados `(claim_id, citation_ref)` desde `citation_audit.results[]`.
+16. Rechazar `citation_audit.overall_status = passed` si algun par publicado no aparece como par auditado con `status = valid`.
+17. Rechazar `citation_audit.overall_status = passed` si algun `sources_used[]` no aparece como `source_ref` en un resultado auditado valido.
 
 ## Reglas asistidas por IA
 
@@ -120,6 +129,7 @@ Cadena valida:
 - El equipo puede explicar `claim -> citation -> passage -> source`.
 - Los ejemplos validos de 0.4 muestran la cadena completa.
 - Las validaciones negativas cubren cita a pasaje inexistente, cita valida sin claim soportado, claim critico sin cita, fuente final no citada y TIER3 como unico soporte normativo critico.
+- Las validaciones de 0.7 cubren `TraceObject.claims[].citations[]` y `TraceObject.sources_used[]` contra `CitationAudit.results[]`.
 
 ## Relacion con contratos
 
@@ -128,6 +138,8 @@ Cadena valida:
 - `passage.schema.json` define la unidad citable.
 - `source.schema.json` define la fuente.
 - `answer-contract.schema.json` declara que `sources_used` deriva de citas reales.
+- `citation-audit.schema.json` registra resultados auditados por cita, claim, pasaje y fuente.
+- `trace-object.schema.json` une claims publicados, fuentes usadas y resultado de auditoria.
 
 ## Momento de revision
 

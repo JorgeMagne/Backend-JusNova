@@ -33,7 +33,7 @@ Estos contratos quedan aceptados como base documental del flujo `EvidencePack ->
 
 ## Fuera de alcance de Subfase 0.4
 
-`citation-audit.schema.json` queda delegado a Subfase 0.7 junto con trazabilidad, auditoria y versionado. Subfase 0.4 define la forma de `Citation` y las policies de citacion/abstencion, pero no el resultado completo del auditor.
+`citation-audit.schema.json` quedo delegado desde Subfase 0.4 a Subfase 0.7 junto con trazabilidad, auditoria y versionado. Subfase 0.4 define la forma de `Citation` y las policies de citacion/abstencion, pero no el resultado completo del auditor.
 
 ## Contratos aceptados en Subfase 0.5
 
@@ -69,10 +69,35 @@ Estos contratos quedan aceptados como base documental del JusNova Live Legal Sea
 - En `legal-search-result.schema.json`, `VIGENCIA_CONFIRMADA` y `DEROGADA_CONFIRMADA` requieren extraccion con `passage_refs`.
 - `TIER2_CONFIABLE` y `TIER3_SECUNDARIO` requieren advertencia en contratos de fuente y resultado.
 
+## Contratos aceptados en Subfase 0.7
+
+Estos contratos quedan aceptados como base documental de trazabilidad, auditoria y versionado. Esta aceptacion no implementa persistencia, endpoints, UI de soporte, permisos finales ni retencion completa.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Trace Object | Accepted | `trace-object.schema.json` |
+| Model Call | Accepted | `model-call.schema.json` |
+| Tool Call | Accepted | `tool-call.schema.json` |
+| Citation Audit | Accepted | `citation-audit.schema.json` |
+| Answer Version | Accepted | `answer-version.schema.json` |
+| Abstention Render | Accepted | `abstention-render.schema.json` |
+| Cost Report | Accepted | `cost-report.schema.json` |
+
+## Reglas especificas de Subfase 0.7
+
+- `TraceObject` exige organizacion, actor pseudonimizado, version de respuesta, auditoria de citas, costo observado y latencias cerradas.
+- `TraceObject.retrieval_runs[]` usa resumen sanitizado; no embebe `RetrievalRun` operativo completo, URLs crudas de discovery, fuentes abiertas o fuentes rechazadas, mensajes libres de error, warning codes libres ni warnings libres.
+- `ModelCall` y `ToolCall` guardan hashes y codigos de error; no guardan prompts, salidas, documentos ni mensajes completos.
+- `CitationAudit` contiene resultados por cita y fallas bloqueantes; `passed` no admite fallas bloqueantes.
+- `AnswerVersion` referencia `AnswerContract` para respuestas sustantivas y `AbstentionRender` para `total_abstention`/`blocked`; no crea EvidencePack sintetico ni embebe respuesta completa sensible.
+- `AbstentionRender` guarda hashes, refs internas y codigos cerrados para reconstruir abstenciones/bloqueos sin texto crudo sensible.
+- `CostReport` registra consumo observado y no presupuestos comerciales.
+
 ## Schemas minimos esperados
 
 ```txt
 answer-contract.schema.json
+abstention-render.schema.json
 claim.schema.json
 citation.schema.json
 citation-audit.schema.json

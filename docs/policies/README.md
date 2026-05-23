@@ -42,6 +42,13 @@ Las politicas convierten principios juridicos, tecnicos, comerciales y de seguri
 | No RAG Launch Policy | Accepted | `no-rag-launch-policy.md` |
 | Abstention Policy Extension | Accepted | `abstention-policy.md` |
 
+## Politicas aceptadas en Subfase 0.7
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Answer Versioning Policy | Accepted | `answer-versioning-policy.md` |
+| Trace Visibility Policy | Accepted | `trace-visibility-policy.md` |
+
 ## Politicas minimas esperadas
 
 ```txt
