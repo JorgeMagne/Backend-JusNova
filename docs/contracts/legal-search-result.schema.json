@@ -279,6 +279,14 @@
       }
     },
     {
+      "not": {
+        "required": [
+          "snapshot_id",
+          "snapshot_unavailable_reason"
+        ]
+      }
+    },
+    {
       "if": {
         "properties": {
           "citation_eligible": {
@@ -512,6 +520,28 @@
       "snapshot_unavailable_reason": "transient_fetch_error",
       "warnings": [
         "Snapshot y razon de imposibilidad no pueden coexistir."
+      ]
+    },
+    {
+      "result_id": "lsr_009",
+      "title": "Resultado no citable con snapshot contradictorio",
+      "url": "https://www.example.gob.bo/documento",
+      "tier": "TIER1_OFICIAL",
+      "source_type": "institucional",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.9,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "snapshot_id": "snap_009",
+      "snapshot_unavailable_reason": "transient_fetch_error",
+      "warnings": [
+        "Snapshot y razon de imposibilidad no pueden coexistir aunque no sea citable."
       ]
     }
   ]

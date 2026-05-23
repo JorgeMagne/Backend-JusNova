@@ -91,6 +91,28 @@
               "properties": {
                 "status": {
                   "enum": [
+                    "success",
+                    "skipped"
+                  ]
+                }
+              },
+              "required": [
+                "status"
+              ]
+            },
+            "then": {
+              "properties": {
+                "error_code": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
                     "partial",
                     "error",
                     "timeout"
@@ -713,6 +735,40 @@
       "error": {
         "error_code": "provider_timeout",
         "message": "Timeout al consultar fuentes oficiales."
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_017",
+      "query_id": "q_legal_017",
+      "retrieval_plan_id": "rp_017",
+      "status": "completed_with_evidence",
+      "providers_used": [
+        "TCPAdapter"
+      ],
+      "adapter_calls": [
+        {
+          "adapter_name": "TCPAdapter",
+          "status": "success",
+          "error_code": "timeout"
+        }
+      ],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_017",
+      "quality": {
+        "overall": "LOW",
+        "coverage": 0.2,
+        "authority": 0.5,
+        "citation_readiness": 0.3,
+        "validity_risk": "HIGH",
+        "conflicts_detected": false,
+        "warnings": []
       },
       "latency_ms": 100,
       "estimated_cost": 0,
