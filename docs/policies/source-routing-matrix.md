@@ -1,8 +1,8 @@
 # Source Routing Matrix
 
-**Estado documental:** Accepted  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Accepted
+**Fecha:** 2026-05-22
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Subfase 0.5 - Source Routing para Live Legal Search
 
 ## Proposito

@@ -201,6 +201,9 @@
             "discovery_calls_max": {
               "minimum": 1
             },
+            "source_fetches_max": {
+              "minimum": 1
+            },
             "max_results_per_provider": {
               "minimum": 1
             }
@@ -209,6 +212,9 @@
         {
           "properties": {
             "official_adapter_calls_max": {
+              "minimum": 1
+            },
+            "source_fetches_max": {
               "minimum": 1
             },
             "max_results_per_provider": {
