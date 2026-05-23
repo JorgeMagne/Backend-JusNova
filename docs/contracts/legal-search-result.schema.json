@@ -182,6 +182,50 @@
       "if": {
         "properties": {
           "source_type": {
+            "const": "documento_usuario"
+          }
+        },
+        "required": [
+          "source_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "tier": {
+            "const": "USER_DOCUMENT"
+          },
+          "validity_status": {
+            "const": "NO_APLICA"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tier": {
+            "const": "USER_DOCUMENT"
+          }
+        },
+        "required": [
+          "tier"
+        ]
+      },
+      "then": {
+        "properties": {
+          "source_type": {
+            "const": "documento_usuario"
+          },
+          "validity_status": {
+            "const": "NO_APLICA"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_type": {
             "const": "norma"
           }
         },
@@ -364,6 +408,27 @@
       "citation_eligible": true,
       "warnings": [
         "Web crudo no puede ser citable."
+      ]
+    },
+    {
+      "result_id": "lsr_005",
+      "title": "Documento privado mal clasificado",
+      "url": "https://www.example.com/documento-usuario.pdf",
+      "tier": "TIER1_CANONICO",
+      "source_type": "documento_usuario",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.2,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "validity_status": "VIGENCIA_CONFIRMADA",
+      "warnings": [
+        "Documento de usuario no puede ser fuente oficial vigente."
       ]
     }
   ]

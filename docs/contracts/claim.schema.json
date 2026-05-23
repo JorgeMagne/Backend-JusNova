@@ -134,16 +134,6 @@
   ],
   "x-policy-invalid-examples": [
     {
-      "claim_id": "cl_003",
-      "text": "La norma esta vigente.",
-      "claim_type": "vigencia",
-      "criticality": "high",
-      "support_level": "unsupported",
-      "citations": [],
-      "verification_status": "passed",
-      "requires_human_review": false
-    },
-    {
       "claim_id": "cl_004",
       "text": "La norma aplicable establece el requisito critico.",
       "claim_type": "norma",

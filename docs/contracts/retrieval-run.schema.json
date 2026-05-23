@@ -209,7 +209,21 @@
         "required": [
           "quality",
           "evidence_pack_id"
-        ]
+        ],
+        "properties": {
+          "quality": {
+            "properties": {
+              "overall": {
+                "enum": [
+                  "HIGH",
+                  "MEDIUM",
+                  "LOW",
+                  "CONFLICTIVE"
+                ]
+              }
+            }
+          }
+        }
       }
     },
     {
@@ -227,7 +241,20 @@
         "required": [
           "quality",
           "no_evidence_reason"
-        ]
+        ],
+        "properties": {
+          "quality": {
+            "properties": {
+              "overall": {
+                "enum": [
+                  "NONE",
+                  "LOW",
+                  "CONFLICTIVE"
+                ]
+              }
+            }
+          }
+        }
       }
     },
     {
@@ -328,6 +355,58 @@
         "authority": 0,
         "citation_readiness": 0,
         "validity_risk": "UNKNOWN",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_004",
+      "query_id": "q_legal_004",
+      "retrieval_plan_id": "rp_004",
+      "status": "completed_with_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_004",
+      "quality": {
+        "overall": "NONE",
+        "coverage": 0,
+        "authority": 0,
+        "citation_readiness": 0,
+        "validity_risk": "UNKNOWN",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z"
+    },
+    {
+      "retrieval_run_id": "rr_005",
+      "query_id": "q_legal_005",
+      "retrieval_plan_id": "rp_005",
+      "status": "completed_no_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "no_evidence_reason": "no_evidence_found",
+      "quality": {
+        "overall": "HIGH",
+        "coverage": 1,
+        "authority": 1,
+        "citation_readiness": 1,
+        "validity_risk": "LOW",
         "conflicts_detected": false,
         "warnings": []
       },
