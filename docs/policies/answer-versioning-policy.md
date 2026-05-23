@@ -19,6 +19,7 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 
 - `AnswerVersion`: version estable e inmutable de una respuesta legal.
 - `answer_hash`: hash del contenido versionado o representacion canonica aprobada.
+- `canonical_answer_contract_hash`: `sha256` de la canonicalizacion deterministica del `AnswerContract` completo para respuestas sustantivas.
 - `response_outcome`: resultado trazado de la respuesta versionada: `answered`, `partial_abstention`, `total_abstention` o `blocked`.
 - `answer_contract_ref`: referencia al contrato de respuesta persistido o renderizado para respuestas sustantivas; debe ser `null` para abstenciones totales o bloqueos sin AnswerContract.
 - `AbstentionRender`: metadata versionada del render de abstencion total o bloqueo, definida en `abstention-render.schema.json`.
@@ -56,18 +57,20 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 24. Para cada claim publicado, la equivalencia canonica incluye `claim_id`, `text`, `claim_type`, `criticality`, `support_level`, conjunto de `citations[]`, `verification_status` y `requires_human_review`.
 25. Si `response_outcome` es `answered` o `partial_abstention`, cada `AnswerContract.citations[]` debe estar cubierta por `TraceObject.citation_audit.results[]` con el mismo `citation_ref`, `passage_ref`, `source_ref`, `status = valid` y claims soportados equivalentes.
 26. Para cada cita publicada, `AnswerContract.citations[].status` debe ser `valid` y el conjunto `supports_claim_ids[]` debe coincidir con los `claim_id` auditados en `TraceObject.citation_audit.results[]` para la misma cita/pasaje/fuente.
-27. Si `response_outcome` es `total_abstention` o `blocked`, `AnswerVersion.answer_contract_ref` debe ser `null`, `abstention_render_ref` debe existir y no se debe crear un EvidencePack sintetico para satisfacer el versionado.
-28. Si `response_outcome` es `total_abstention` o `blocked`, `abstention_render_ref` debe resolver a un `AbstentionRender` con el mismo `trace_id`, `answer_id`, `answer_version` y `response_outcome`.
-29. Si `TraceObject.response_outcome` es `total_abstention` o `blocked`, `TraceObject.abstention_reason` es obligatorio; `warnings[]` es complemento visible, no sustituto de la razon reconstruible.
-30. Para abstenciones y bloqueos, `AbstentionRender.reason_code` debe ser exactamente igual a `TraceObject.abstention_reason`.
-31. Para abstenciones y bloqueos, `AnswerVersion.answer_hash` debe coincidir con `AbstentionRender.render_hash`; ese hash cubre el cuerpo canonico renderizado almacenado bajo `AbstentionRender.render_storage_ref`.
-32. `AbstentionRender.source_trace_refs.evidence_pack_ids[]` debe ser subconjunto de `TraceObject.evidence_pack_ids[]`.
-33. `AbstentionRender.source_trace_refs.claim_ids[]` debe ser subconjunto de `TraceObject.claims[].claim_id`.
-34. `AbstentionRender.source_trace_refs.citation_refs[]` debe ser subconjunto de las citas presentes en `TraceObject.citation_audit.results[].citation_ref` y `TraceObject.citation_audit.blocking_failures[].citation_ref`, excluyendo valores `null`.
-35. `AbstentionRender.source_trace_refs.source_refs[]` debe ser subconjunto de `TraceObject.sources_used[]`, `TraceObject.sources_rejected[].source_ref` no nulos y `TraceObject.citation_audit.results[].source_ref`.
-36. `AbstentionRender` no puede almacenar prompts, salidas completas del modelo, documentos completos, mensajes completos, HTML crudo, OCR completo, URLs crudas ni texto libre del usuario; solo hashes, referencias internas, codigos cerrados y refs de traza.
-37. Una respuesta publicada no puede considerarse reconstruible si `AnswerContract` usa evidence pack, claims, citas o fuentes que no aparecen en el `TraceObject` correspondiente, si reutiliza IDs con contenido juridico distinto, o si una abstencion/bloqueo no tiene `AbstentionRender` versionado y consistente.
-38. La regla 4 y las reglas 17 a 37 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
+27. Si `response_outcome` es `answered` o `partial_abstention`, `AnswerVersion.answer_hash` debe ser igual a `sha256(canonicalize(AnswerContract))` del `AnswerContract` resuelto por `answer_contract_ref`.
+28. La canonicalizacion de `AnswerContract` usa el objeto completo validado por `answer-contract.schema.json`, incluyendo `trace_id`, `answer_id`, `answer_version`, `evidence_pack_id`, `jurisdiction`, `sections` con `title` y `content`, `claims`, `citations`, `sources_used`, `warnings` y `created_at`; se serializa como JSON deterministico UTF-8 con claves de objeto ordenadas, arrays en el orden persistido y sin whitespace semantico.
+29. Si `response_outcome` es `total_abstention` o `blocked`, `AnswerVersion.answer_contract_ref` debe ser `null`, `abstention_render_ref` debe existir y no se debe crear un EvidencePack sintetico para satisfacer el versionado.
+30. Si `response_outcome` es `total_abstention` o `blocked`, `abstention_render_ref` debe resolver a un `AbstentionRender` con el mismo `trace_id`, `answer_id`, `answer_version` y `response_outcome`.
+31. Si `TraceObject.response_outcome` es `total_abstention` o `blocked`, `TraceObject.abstention_reason` es obligatorio; `warnings[]` es complemento visible, no sustituto de la razon reconstruible.
+32. Para abstenciones y bloqueos, `AbstentionRender.reason_code` debe ser exactamente igual a `TraceObject.abstention_reason`.
+33. Para abstenciones y bloqueos, `AnswerVersion.answer_hash` debe coincidir con `AbstentionRender.render_hash`; ese hash cubre el cuerpo canonico renderizado almacenado bajo `AbstentionRender.render_storage_ref`.
+34. `AbstentionRender.source_trace_refs.evidence_pack_ids[]` debe ser subconjunto de `TraceObject.evidence_pack_ids[]`.
+35. `AbstentionRender.source_trace_refs.claim_ids[]` debe ser subconjunto de `TraceObject.claims[].claim_id`.
+36. `AbstentionRender.source_trace_refs.citation_refs[]` debe ser subconjunto de las citas presentes en `TraceObject.citation_audit.results[].citation_ref` y `TraceObject.citation_audit.blocking_failures[].citation_ref`, excluyendo valores `null`.
+37. `AbstentionRender.source_trace_refs.source_refs[]` debe ser subconjunto de `TraceObject.sources_used[]`, `TraceObject.sources_rejected[].source_ref` no nulos y `TraceObject.citation_audit.results[].source_ref`.
+38. `AbstentionRender` no puede almacenar prompts, salidas completas del modelo, documentos completos, mensajes completos, HTML crudo, OCR completo, URLs crudas ni texto libre del usuario; solo hashes, referencias internas, codigos cerrados y refs de traza.
+39. Una respuesta publicada no puede considerarse reconstruible si `AnswerContract` usa evidence pack, claims, citas o fuentes que no aparecen en el `TraceObject` correspondiente, si reutiliza IDs con contenido juridico distinto, si `AnswerVersion.answer_hash` no cubre el `AnswerContract` visible completo, o si una abstencion/bloqueo no tiene `AbstentionRender` versionado y consistente.
+40. La regla 4 y las reglas 17 a 39 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
 
 ## Reglas asistidas por IA
 
@@ -86,6 +89,7 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 - La politica impide guardar respuesta completa sensible dentro del contrato de version.
 - La politica define ruta versionable para `total_abstention` y `blocked` mediante `abstention-render.schema.json`, sin EvidencePack sintetico.
 - La politica exige identidad y contenido consistente entre `TraceObject`, `AnswerVersion` y `AnswerContract`.
+- La politica exige que `answer_hash` cubra el `AnswerContract` visible completo para respuestas sustantivas.
 - La politica exige que `AbstentionRender` use la misma razon que `TraceObject` y que sus refs sean subconjuntos de la traza.
 
 ## Relacion con contratos
