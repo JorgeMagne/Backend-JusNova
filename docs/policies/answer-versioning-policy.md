@@ -58,15 +58,16 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 26. Para cada cita publicada, `AnswerContract.citations[].status` debe ser `valid` y el conjunto `supports_claim_ids[]` debe coincidir con los `claim_id` auditados en `TraceObject.citation_audit.results[]` para la misma cita/pasaje/fuente.
 27. Si `response_outcome` es `total_abstention` o `blocked`, `AnswerVersion.answer_contract_ref` debe ser `null`, `abstention_render_ref` debe existir y no se debe crear un EvidencePack sintetico para satisfacer el versionado.
 28. Si `response_outcome` es `total_abstention` o `blocked`, `abstention_render_ref` debe resolver a un `AbstentionRender` con el mismo `trace_id`, `answer_id`, `answer_version` y `response_outcome`.
-29. Para abstenciones y bloqueos, `AbstentionRender.reason_code` debe ser exactamente igual a `TraceObject.abstention_reason`.
-30. Para abstenciones y bloqueos, `AnswerVersion.answer_hash` debe coincidir con `AbstentionRender.render_hash`; ese hash cubre el cuerpo canonico renderizado almacenado bajo `AbstentionRender.render_storage_ref`.
-31. `AbstentionRender.source_trace_refs.evidence_pack_ids[]` debe ser subconjunto de `TraceObject.evidence_pack_ids[]`.
-32. `AbstentionRender.source_trace_refs.claim_ids[]` debe ser subconjunto de `TraceObject.claims[].claim_id`.
-33. `AbstentionRender.source_trace_refs.citation_refs[]` debe ser subconjunto de las citas presentes en `TraceObject.citation_audit.results[].citation_ref` y `TraceObject.citation_audit.blocking_failures[].citation_ref`, excluyendo valores `null`.
-34. `AbstentionRender.source_trace_refs.source_refs[]` debe ser subconjunto de `TraceObject.sources_used[]`, `TraceObject.sources_rejected[].source_ref` no nulos y `TraceObject.citation_audit.results[].source_ref`.
-35. `AbstentionRender` no puede almacenar prompts, salidas completas del modelo, documentos completos, mensajes completos, HTML crudo, OCR completo, URLs crudas ni texto libre del usuario; solo hashes, referencias internas, codigos cerrados y refs de traza.
-36. Una respuesta publicada no puede considerarse reconstruible si `AnswerContract` usa evidence pack, claims, citas o fuentes que no aparecen en el `TraceObject` correspondiente, si reutiliza IDs con contenido juridico distinto, o si una abstencion/bloqueo no tiene `AbstentionRender` versionado y consistente.
-37. La regla 4 y las reglas 17 a 36 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
+29. Si `TraceObject.response_outcome` es `total_abstention` o `blocked`, `TraceObject.abstention_reason` es obligatorio; `warnings[]` es complemento visible, no sustituto de la razon reconstruible.
+30. Para abstenciones y bloqueos, `AbstentionRender.reason_code` debe ser exactamente igual a `TraceObject.abstention_reason`.
+31. Para abstenciones y bloqueos, `AnswerVersion.answer_hash` debe coincidir con `AbstentionRender.render_hash`; ese hash cubre el cuerpo canonico renderizado almacenado bajo `AbstentionRender.render_storage_ref`.
+32. `AbstentionRender.source_trace_refs.evidence_pack_ids[]` debe ser subconjunto de `TraceObject.evidence_pack_ids[]`.
+33. `AbstentionRender.source_trace_refs.claim_ids[]` debe ser subconjunto de `TraceObject.claims[].claim_id`.
+34. `AbstentionRender.source_trace_refs.citation_refs[]` debe ser subconjunto de las citas presentes en `TraceObject.citation_audit.results[].citation_ref` y `TraceObject.citation_audit.blocking_failures[].citation_ref`, excluyendo valores `null`.
+35. `AbstentionRender.source_trace_refs.source_refs[]` debe ser subconjunto de `TraceObject.sources_used[]`, `TraceObject.sources_rejected[].source_ref` no nulos y `TraceObject.citation_audit.results[].source_ref`.
+36. `AbstentionRender` no puede almacenar prompts, salidas completas del modelo, documentos completos, mensajes completos, HTML crudo, OCR completo, URLs crudas ni texto libre del usuario; solo hashes, referencias internas, codigos cerrados y refs de traza.
+37. Una respuesta publicada no puede considerarse reconstruible si `AnswerContract` usa evidence pack, claims, citas o fuentes que no aparecen en el `TraceObject` correspondiente, si reutiliza IDs con contenido juridico distinto, o si una abstencion/bloqueo no tiene `AbstentionRender` versionado y consistente.
+38. La regla 4 y las reglas 17 a 37 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
 
 ## Reglas asistidas por IA
 

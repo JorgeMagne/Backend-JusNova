@@ -1015,19 +1015,8 @@
         ]
       },
       "then": {
-        "anyOf": [
-          {
-            "required": [
-              "abstention_reason"
-            ]
-          },
-          {
-            "properties": {
-              "warnings": {
-                "minItems": 1
-              }
-            }
-          }
+        "required": [
+          "abstention_reason"
         ],
         "properties": {
           "claims": {
@@ -1051,19 +1040,8 @@
         ]
       },
       "then": {
-        "anyOf": [
-          {
-            "required": [
-              "abstention_reason"
-            ]
-          },
-          {
-            "properties": {
-              "warnings": {
-                "minItems": 1
-              }
-            }
-          }
+        "required": [
+          "abstention_reason"
         ],
         "properties": {
           "claims": {
@@ -1409,6 +1387,59 @@
       "warnings": []
     },
     {
+      "trace_id": "tr_004b",
+      "organization_id": "org_001",
+      "actor_ref": "system",
+      "actor_type": "system",
+      "answer_id": "ans_004b",
+      "answer_version_ref": "av_004b",
+      "answer_version": 1,
+      "conversation_id": "conv_004b",
+      "response_outcome": "total_abstention",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [],
+      "citation_audit": {
+        "citation_audit_id": "ca_004b",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "needs_review",
+        "results": [],
+        "blocking_failures": [],
+        "warnings": [
+          "No hubo evidencia suficiente para respuesta sustantiva."
+        ],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_004b",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-invalid: total_abstention requiere abstention_reason aunque haya warning visible."
+      ]
+    },
+    {
       "trace_id": "tr_005",
       "organization_id": "org_001",
       "actor_ref": "actor_hash_001",
@@ -1472,7 +1503,9 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [
+        "Schema-invalid: blocked requiere abstention_reason aunque haya warning visible."
+      ]
     },
     {
       "trace_id": "tr_006",
