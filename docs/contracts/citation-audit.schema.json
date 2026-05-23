@@ -400,6 +400,34 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "blocking_failures": {
+            "contains": {
+              "properties": {
+                "failure_code": {
+                  "const": "policy_blocked"
+                }
+              },
+              "required": [
+                "failure_code"
+              ]
+            }
+          }
+        },
+        "required": [
+          "blocking_failures"
+        ]
+      },
+      "then": {
+        "properties": {
+          "overall_status": {
+            "const": "blocked"
+          }
+        }
+      }
     }
   ],
   "examples": [
@@ -618,6 +646,24 @@
       ],
       "warnings": [
         "unsupported_claim debe identificar claim y cita auditables."
+      ],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "citation_audit_id": "ca_012_invalid",
+      "auditor_version": "citation-auditor-v1",
+      "overall_status": "failed",
+      "results": [],
+      "blocking_failures": [
+        {
+          "failure_code": "policy_blocked",
+          "citation_ref": null,
+          "claim_id": null,
+          "severity": "blocking"
+        }
+      ],
+      "warnings": [
+        "policy_blocked debe usar overall_status blocked."
       ],
       "created_at": "2026-05-22T00:00:00Z"
     }

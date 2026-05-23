@@ -17,6 +17,7 @@
     "model",
     "prompt_version",
     "input_hash",
+    "token_usage",
     "started_at",
     "completed_at",
     "status"
@@ -335,6 +336,19 @@
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success"
+    },
+    {
+      "model_call_id": "mc_token_usage_missing_001",
+      "purpose": "answer_generation",
+      "provider": "openai",
+      "model": "gpt-5",
+      "prompt_version": "answer-generation-v1",
+      "input_hash": "sha256:8e485f772a1fda1f94de14d6a08830246f3c727ccf98908f890573ec71bf0d97",
+      "output_hash": "sha256:18979b119e18ee9c31d0c889ec04c14abf7af9b73d7b8f7957a3367697f91d57",
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:03Z",
+      "status": "success",
+      "error_code": null
     },
     {
       "model_call_id": "mc_hash_raw_001",
