@@ -33,7 +33,7 @@ No define retencion final, permisos productivos completos ni proceso de incident
 6. `INTERNAL_AUDIT` no significa acceso libre: usa hashes y referencias por defecto.
 7. Material crudo solo puede consultarse mediante proceso de incidente definido en Subfase 0.10.
 8. Todo acceso elevado registra `trace_id`, `actor_ref`, `actor_type`, `reason`, `accessed_at` y `visibility_level`.
-9. `sources_rejected` y `retrieval_runs[].sources_rejected` deben guardar razon cerrada y hashes, no contenido crudo.
+9. `sources_rejected` y `retrieval_runs[].sources_rejected` deben guardar razon cerrada, `warning_codes` cerrados y hashes, no contenido crudo.
 10. `TraceObject.retrieval_runs[]` debe ser resumen sanitizado; no puede embeber `RetrievalRun` operativo completo, `LegalSearchResult.url`, `sources_opened[]` como URL cruda, `sources_rejected[].url`, mensajes libres de error ni warnings libres.
 11. `latency_ms`, `cost`, `token_usage` y `cost_units` deben ser objetos cerrados sin metadata libre.
 12. Model calls y tool calls registran `input_hash`; `output_hash` solo es obligatorio en `success`.
