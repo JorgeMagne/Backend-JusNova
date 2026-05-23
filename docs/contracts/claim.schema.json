@@ -104,6 +104,52 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "verification_status": {
+            "const": "passed"
+          }
+        },
+        "required": [
+          "verification_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "support_level": {
+            "enum": [
+              "direct",
+              "inferential",
+              "weak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "support_level": {
+            "const": "unsupported"
+          }
+        },
+        "required": [
+          "support_level"
+        ]
+      },
+      "then": {
+        "properties": {
+          "verification_status": {
+            "enum": [
+              "failed",
+              "needs_review",
+              "blocked"
+            ]
+          }
+        }
+      }
     }
   ],
   "examples": [
@@ -128,6 +174,18 @@
       "criticality": "high",
       "support_level": "unsupported",
       "citations": [],
+      "verification_status": "passed",
+      "requires_human_review": false
+    },
+    {
+      "claim_id": "cl_005",
+      "text": "La norma esta vigente.",
+      "claim_type": "vigencia",
+      "criticality": "high",
+      "support_level": "unsupported",
+      "citations": [
+        "C1"
+      ],
       "verification_status": "passed",
       "requires_human_review": false
     }
