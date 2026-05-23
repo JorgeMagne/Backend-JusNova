@@ -77,7 +77,7 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-010 | Que se registra. | ADR-010: Trazabilidad aprobada; `trace-object.schema.json`; `model-call.schema.json`; `tool-call.schema.json`; `cost-report.schema.json`. | Accepted | Fase 3 persistencia. | Respuesta no reconstruible. |
 | ADR-010 | Que es visible al usuario. | ADR-010: Restricciones; `trace-visibility-policy.md`. | Accepted | Subfase 0.10 permisos finales. | Exposicion excesiva. |
 | ADR-010 | Que es interno. | ADR-010: Restricciones, Mitigaciones; `trace-visibility-policy.md`. | Accepted | Subfase 0.10 controles de acceso. | Soporte sin datos o con datos excesivos. |
-| ADR-010 | Contenido de answer version. | ADR-010: Decision, Justificacion; `answer-version.schema.json`. | Accepted | Fase 3 persistencia. | Sobrescritura silenciosa. |
+| ADR-010 | Contenido de answer version. | ADR-010: Decision, Justificacion; `answer-version.schema.json`; `abstention-render.schema.json`. | Accepted | Fase 3 persistencia. | Sobrescritura silenciosa o abstencion no reconstruible. |
 | ADR-010 | Cuando crear nueva version. | ADR-010: Decision, Criterios; `answer-versioning-policy.md`. | Accepted | Fase 3 implementacion. | Cambios invisibles. |
 | ADR-010 | Proteger datos sensibles en trazas. | ADR-010: Riesgos, Mitigaciones; `trace-object.schema.json`; `trace-visibility-policy.md`. | Accepted | Subfase 0.10 privacy policy. | Fuga de datos en trazas. |
 | ADR-010 | TraceObject futuro para respuesta juridica critica. | ADR-010: Decision, Trazabilidad aprobada, Consecuencias; `trace-object.schema.json`. | Accepted | Fase 3. | Respuesta no auditable. |

@@ -152,6 +152,7 @@ Estos contratos quedan aceptados como contratos documentales de trazabilidad, au
 | Tool Call | Accepted | `docs/contracts/tool-call.schema.json` |
 | Citation Audit | Accepted | `docs/contracts/citation-audit.schema.json` |
 | Answer Version | Accepted | `docs/contracts/answer-version.schema.json` |
+| Abstention Render | Accepted | `docs/contracts/abstention-render.schema.json` |
 | Cost Report | Accepted | `docs/contracts/cost-report.schema.json` |
 
 ## Politicas aceptadas en Subfase 0.7

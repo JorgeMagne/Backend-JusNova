@@ -21,7 +21,9 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 - `answer_hash`: hash del contenido versionado o representacion canonica aprobada.
 - `response_outcome`: resultado trazado de la respuesta versionada: `answered`, `partial_abstention`, `total_abstention` o `blocked`.
 - `answer_contract_ref`: referencia al contrato de respuesta persistido o renderizado para respuestas sustantivas; debe ser `null` para abstenciones totales o bloqueos sin AnswerContract.
-- `abstention_render_ref`: referencia estable al render/cuerpo versionado de abstencion total o bloqueo, sin embebido sensible dentro de `answer-version.schema.json`.
+- `AbstentionRender`: metadata versionada del render de abstencion total o bloqueo, definida en `abstention-render.schema.json`.
+- `abstention_render_ref`: referencia estable a `AbstentionRender`, sin embebido sensible dentro de `answer-version.schema.json`.
+- `render_hash`: hash del cuerpo canonico renderizado de una abstencion total o bloqueo; no es el texto renderizado.
 - `rendered_answer_snapshot_id`: referencia opcional a snapshot renderizado futuro.
 - `previous_answer_version`: version previa directa de la misma respuesta.
 
@@ -54,9 +56,11 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 25. Si `response_outcome` es `answered` o `partial_abstention`, cada `AnswerContract.citations[]` debe estar cubierta por `TraceObject.citation_audit.results[]` con el mismo `citation_ref`, `passage_ref`, `source_ref`, `status = valid` y claims soportados equivalentes.
 26. Para cada cita publicada, `AnswerContract.citations[].status` debe ser `valid` y el conjunto `supports_claim_ids[]` debe coincidir con los `claim_id` auditados en `TraceObject.citation_audit.results[]` para la misma cita/pasaje/fuente.
 27. Si `response_outcome` es `total_abstention` o `blocked`, `AnswerVersion.answer_contract_ref` debe ser `null`, `abstention_render_ref` debe existir y no se debe crear un EvidencePack sintetico para satisfacer el versionado.
-28. Si `response_outcome` es `total_abstention` o `blocked`, `abstention_render_ref` debe resolver al render versionado de abstencion/bloqueo asociado al mismo `trace_id`, `answer_id` y `answer_version`.
-29. Una respuesta publicada no puede considerarse reconstruible si `AnswerContract` usa evidence pack, claims, citas o fuentes que no aparecen en el `TraceObject` correspondiente, si reutiliza IDs con contenido juridico distinto, o si una abstencion/bloqueo no tiene render versionado.
-30. La regla 4 y las reglas 17 a 29 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
+28. Si `response_outcome` es `total_abstention` o `blocked`, `abstention_render_ref` debe resolver a un `AbstentionRender` con el mismo `trace_id`, `answer_id`, `answer_version` y `response_outcome`.
+29. Para abstenciones y bloqueos, `AnswerVersion.answer_hash` debe coincidir con `AbstentionRender.render_hash`; ese hash cubre el cuerpo canonico renderizado almacenado bajo `AbstentionRender.render_storage_ref`.
+30. `AbstentionRender` no puede almacenar prompts, salidas completas del modelo, documentos completos, mensajes completos, HTML crudo, OCR completo, URLs crudas ni texto libre del usuario; solo hashes, referencias internas, codigos cerrados y refs de traza.
+31. Una respuesta publicada no puede considerarse reconstruible si `AnswerContract` usa evidence pack, claims, citas o fuentes que no aparecen en el `TraceObject` correspondiente, si reutiliza IDs con contenido juridico distinto, o si una abstencion/bloqueo no tiene `AbstentionRender` versionado y consistente.
+32. La regla 4 y las reglas 17 a 31 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
 
 ## Reglas asistidas por IA
 
@@ -73,12 +77,13 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 - `answer-version.schema.json` rechaza una version 2 o superior sin `previous_answer_version`.
 - La politica declara y ejemplifica que `previous_answer_version < answer_version` es regla obligatoria de implementacion futura.
 - La politica impide guardar respuesta completa sensible dentro del contrato de version.
-- La politica define ruta versionable para `total_abstention` y `blocked` sin EvidencePack sintetico.
+- La politica define ruta versionable para `total_abstention` y `blocked` mediante `abstention-render.schema.json`, sin EvidencePack sintetico.
 - La politica exige identidad y contenido consistente entre `TraceObject`, `AnswerVersion` y `AnswerContract`.
 
 ## Relacion con contratos
 
 - Implementa `answer-version.schema.json`.
+- Implementa `abstention-render.schema.json` para renders de abstencion total y bloqueo.
 - Depende de `trace-object.schema.json` para reconstruccion.
 - Complementa `answer-contract.schema.json`, `citation-audit.schema.json`, `citation-policy.md`, `abstention-policy.md` y `trace-visibility-policy.md`.
 - Define reglas de identidad y contenido cruzado que deben validarse al persistir o publicar una respuesta final.

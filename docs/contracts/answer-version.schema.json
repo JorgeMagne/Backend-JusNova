@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://jusnova.local/contracts/answer-version.schema.json",
   "title": "AnswerVersion",
-  "description": "Version estable de una respuesta legal. No almacena respuesta completa ni material sensible; referencia contrato/render snapshot y conserva hashes.",
+  "description": "Version estable de una respuesta legal. No almacena respuesta completa ni material sensible; referencia AnswerContract para respuestas sustantivas o AbstentionRender para abstenciones/bloqueos y conserva hashes.",
   "type": "object",
   "x-governance": {
     "document_status": "Accepted",
@@ -67,6 +67,7 @@
       "minLength": 1
     },
     "abstention_render_ref": {
+      "description": "Referencia a abstention-render.schema.json para total_abstention o blocked.",
       "type": [
         "string",
         "null"
@@ -340,6 +341,106 @@
     }
   ],
   "x-cross-contract-policy-invalid-examples": [
+    {
+      "description": "TraceObject, AnswerVersion y AbstentionRender validan por separado y comparten identidad, pero response_outcome diverge entre la traza y la version/render.",
+      "trace_object": {
+        "trace_id": "tr_abstention_001",
+        "organization_id": "org_001",
+        "actor_ref": "system",
+        "actor_type": "system",
+        "answer_id": "ans_002",
+        "answer_version_ref": "av_abstention_001",
+        "answer_version": 1,
+        "conversation_id": "conv_002",
+        "case_id": null,
+        "response_outcome": "total_abstention",
+        "abstention_reason": "no_evidence",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [],
+        "sources_used": [],
+        "sources_rejected": [],
+        "claims": [],
+        "citation_audit": {
+          "citation_audit_id": "ca_002",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "needs_review",
+          "results": [],
+          "blocking_failures": [],
+          "warnings": [
+            "No hubo evidencia suficiente para respuesta sustantiva."
+          ],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_002",
+          "currency": "NONE",
+          "is_estimated": false,
+          "billing_source": "not_billable",
+          "model_input_tokens": 0,
+          "model_output_tokens": 0,
+          "tool_calls": 0,
+          "provider_estimated_costs": [],
+          "estimated_total_cost": 0
+        },
+        "latency_ms": {
+          "total": 100,
+          "model_total": 0,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 0,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": [
+          "No hay evidencia suficiente."
+        ]
+      },
+      "answer_version": {
+        "answer_version_id": "av_abstention_001",
+        "answer_id": "ans_002",
+        "answer_version": 1,
+        "previous_answer_version": null,
+        "response_outcome": "blocked",
+        "answer_hash": "sha256:abstention-answer-001",
+        "trace_id": "tr_abstention_001",
+        "answer_contract_ref": null,
+        "abstention_render_ref": "abstention_render_001",
+        "rendered_answer_snapshot_id": null,
+        "version_reason": "initial_answer",
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "system"
+      },
+      "abstention_render": {
+        "abstention_render_id": "abstention_render_001",
+        "trace_id": "tr_abstention_001",
+        "answer_id": "ans_002",
+        "answer_version": 1,
+        "response_outcome": "blocked",
+        "render_hash": "sha256:abstention-answer-001",
+        "render_storage_ref": "render_abstention_001",
+        "rendered_answer_snapshot_id": null,
+        "reason_code": "no_evidence",
+        "redaction_profile": "USER_SUMMARY_SAFE",
+        "source_trace_refs": {
+          "evidence_pack_ids": [],
+          "claim_ids": [],
+          "citation_refs": [],
+          "source_refs": []
+        },
+        "warning_codes": [
+          "no_evidence_found"
+        ],
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "system"
+      },
+      "policy_errors": [
+        "TraceObject.response_outcome != AnswerVersion.response_outcome",
+        "TraceObject.response_outcome != AbstentionRender.response_outcome"
+      ]
+    },
     {
       "description": "Los tres contratos validan por separado, pero sus identidades no corresponden a la misma respuesta versionada.",
       "trace_object": {

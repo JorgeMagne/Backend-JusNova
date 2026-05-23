@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/abstention-render.schema.json",
+  "title": "AbstentionRender",
+  "description": "Metadata versionada para reconstruir una abstencion total o bloqueo sin guardar respuesta completa, prompts, documentos completos, mensajes completos ni salidas completas del modelo.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-22",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+  },
+  "required": [
+    "abstention_render_id",
+    "trace_id",
+    "answer_id",
+    "answer_version",
+    "response_outcome",
+    "render_hash",
+    "render_storage_ref",
+    "reason_code",
+    "redaction_profile",
+    "source_trace_refs",
+    "created_at",
+    "created_by_ref"
+  ],
+  "properties": {
+    "abstention_render_id": {
+      "type": "string",
+      "pattern": "^abstention_render_[A-Za-z0-9_-]+$"
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "answer_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "response_outcome": {
+      "enum": [
+        "total_abstention",
+        "blocked"
+      ]
+    },
+    "render_hash": {
+      "description": "Hash sha256 de la representacion canonica renderizada de la abstencion o bloqueo. No es texto renderizado.",
+      "type": "string",
+      "pattern": "^sha256:.+$"
+    },
+    "render_storage_ref": {
+      "description": "Referencia interna e inmutable al objeto renderizado. No debe ser URL cruda ni contener contenido del usuario.",
+      "type": "string",
+      "pattern": "^(render|abstention_render|snap|obj)_[A-Za-z0-9_-]+$"
+    },
+    "rendered_answer_snapshot_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "reason_code": {
+      "enum": [
+        "no_evidence",
+        "insufficient_evidence",
+        "unsupported_critical_claim",
+        "unresolved_conflict",
+        "validity_not_confirmed",
+        "missing_case_data",
+        "user_requested_unsupported_assertion",
+        "provider_or_source_unavailable",
+        "policy_blocked"
+      ]
+    },
+    "redaction_profile": {
+      "enum": [
+        "USER_SUMMARY_SAFE",
+        "SUPPORT_VIEW_SAFE",
+        "INTERNAL_AUDIT_REF_ONLY"
+      ]
+    },
+    "source_trace_refs": {
+      "type": "object",
+      "required": [
+        "evidence_pack_ids",
+        "claim_ids",
+        "citation_refs",
+        "source_refs"
+      ],
+      "properties": {
+        "evidence_pack_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "claim_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "citation_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "warning_codes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "no_evidence_found",
+          "insufficient_evidence",
+          "validity_not_confirmed",
+          "conflict_unresolved",
+          "missing_case_data",
+          "source_unavailable",
+          "policy_blocked"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "abstention_render_id": "abstention_render_001",
+      "trace_id": "tr_abstention_001",
+      "answer_id": "ans_002",
+      "answer_version": 1,
+      "response_outcome": "total_abstention",
+      "render_hash": "sha256:abstention-answer-001",
+      "render_storage_ref": "render_abstention_001",
+      "rendered_answer_snapshot_id": null,
+      "reason_code": "no_evidence",
+      "redaction_profile": "USER_SUMMARY_SAFE",
+      "source_trace_refs": {
+        "evidence_pack_ids": [],
+        "claim_ids": [],
+        "citation_refs": [],
+        "source_refs": []
+      },
+      "warning_codes": [
+        "no_evidence_found"
+      ],
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "abstention_render_id": "abstention_render_bad_outcome",
+      "trace_id": "tr_abstention_001",
+      "answer_id": "ans_002",
+      "answer_version": 1,
+      "response_outcome": "answered",
+      "render_hash": "sha256:abstention-answer-001",
+      "render_storage_ref": "render_abstention_001",
+      "reason_code": "no_evidence",
+      "redaction_profile": "USER_SUMMARY_SAFE",
+      "source_trace_refs": {
+        "evidence_pack_ids": [],
+        "claim_ids": [],
+        "citation_refs": [],
+        "source_refs": []
+      },
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
+    },
+    {
+      "abstention_render_id": "abstention_render_raw_message",
+      "trace_id": "tr_abstention_001",
+      "answer_id": "ans_002",
+      "answer_version": 1,
+      "response_outcome": "total_abstention",
+      "render_hash": "sha256:abstention-answer-001",
+      "render_storage_ref": "render_abstention_001",
+      "reason_code": "no_evidence",
+      "redaction_profile": "USER_SUMMARY_SAFE",
+      "source_trace_refs": {
+        "evidence_pack_ids": [],
+        "claim_ids": [],
+        "citation_refs": [],
+        "source_refs": []
+      },
+      "user_message": "Texto completo del usuario no permitido.",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
+    },
+    {
+      "abstention_render_id": "abstention_render_raw_url",
+      "trace_id": "tr_abstention_001",
+      "answer_id": "ans_002",
+      "answer_version": 1,
+      "response_outcome": "total_abstention",
+      "render_hash": "sha256:abstention-answer-001",
+      "render_storage_ref": "https://example.com/raw-render",
+      "reason_code": "no_evidence",
+      "redaction_profile": "USER_SUMMARY_SAFE",
+      "source_trace_refs": {
+        "evidence_pack_ids": [],
+        "claim_ids": [],
+        "citation_refs": [],
+        "source_refs": []
+      },
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
+    },
+    {
+      "abstention_render_id": "abstention_render_missing_hash",
+      "trace_id": "tr_abstention_001",
+      "answer_id": "ans_002",
+      "answer_version": 1,
+      "response_outcome": "total_abstention",
+      "render_storage_ref": "render_abstention_001",
+      "reason_code": "no_evidence",
+      "redaction_profile": "USER_SUMMARY_SAFE",
+      "source_trace_refs": {
+        "evidence_pack_ids": [],
+        "claim_ids": [],
+        "citation_refs": [],
+        "source_refs": []
+      },
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
+    }
+  ]
+}

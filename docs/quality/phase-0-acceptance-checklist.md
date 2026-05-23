@@ -168,6 +168,7 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | `tool-call.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/tool-call.schema.json` |
 | `citation-audit.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/citation-audit.schema.json` |
 | `answer-version.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-version.schema.json` |
+| `abstention-render.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/abstention-render.schema.json` |
 | `cost-report.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/cost-report.schema.json` |
 | `answer-versioning-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/answer-versioning-policy.md` |
 | `trace-visibility-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/trace-visibility-policy.md` |

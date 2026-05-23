@@ -80,6 +80,7 @@ Estos contratos quedan aceptados como base documental de trazabilidad, auditoria
 | Tool Call | Accepted | `tool-call.schema.json` |
 | Citation Audit | Accepted | `citation-audit.schema.json` |
 | Answer Version | Accepted | `answer-version.schema.json` |
+| Abstention Render | Accepted | `abstention-render.schema.json` |
 | Cost Report | Accepted | `cost-report.schema.json` |
 
 ## Reglas especificas de Subfase 0.7
@@ -88,13 +89,15 @@ Estos contratos quedan aceptados como base documental de trazabilidad, auditoria
 - `TraceObject.retrieval_runs[]` usa resumen sanitizado; no embebe `RetrievalRun` operativo completo, URLs crudas de discovery, fuentes abiertas o fuentes rechazadas, mensajes libres de error, warning codes libres ni warnings libres.
 - `ModelCall` y `ToolCall` guardan hashes y codigos de error; no guardan prompts, salidas, documentos ni mensajes completos.
 - `CitationAudit` contiene resultados por cita y fallas bloqueantes; `passed` no admite fallas bloqueantes.
-- `AnswerVersion` referencia `AnswerContract` para respuestas sustantivas y `abstention_render_ref` para `total_abstention`/`blocked`; no crea EvidencePack sintetico ni embebe respuesta completa sensible.
+- `AnswerVersion` referencia `AnswerContract` para respuestas sustantivas y `AbstentionRender` para `total_abstention`/`blocked`; no crea EvidencePack sintetico ni embebe respuesta completa sensible.
+- `AbstentionRender` guarda hashes, refs internas y codigos cerrados para reconstruir abstenciones/bloqueos sin texto crudo sensible.
 - `CostReport` registra consumo observado y no presupuestos comerciales.
 
 ## Schemas minimos esperados
 
 ```txt
 answer-contract.schema.json
+abstention-render.schema.json
 claim.schema.json
 citation.schema.json
 citation-audit.schema.json
