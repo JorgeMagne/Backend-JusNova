@@ -51,6 +51,14 @@ No define retencion final, permisos productivos completos ni proceso de incident
 24. Si una traza se marca `total_abstention`, no debe contener claims publicados ni fuentes usadas.
 25. Si una traza se marca `blocked`, puede conservar claims intentados, pero ninguno puede tener `verification_status = passed`.
 26. Ningun nivel de visibilidad puede convertir una fuente decorativa en fuente usada.
+27. `TraceObject.cost.model_input_tokens` debe ser igual a la suma de `model_calls[].token_usage.input_tokens`.
+28. `TraceObject.cost.model_output_tokens` debe ser igual a la suma de `model_calls[].token_usage.output_tokens`.
+29. `TraceObject.cost.tool_calls` debe ser igual a la cantidad de elementos en `tool_calls[]`; si en 0.8 se requiere distinguir llamadas facturables, se agregara un campo separado.
+30. `CostReport.estimated_total_cost` debe coincidir con la suma de `provider_estimated_costs[].estimated_cost` bajo la politica de redondeo definida por implementacion; con `currency = NONE` debe ser `0`.
+31. Cada `ModelCall` y `ToolCall` debe cumplir `completed_at >= started_at`.
+32. `latency_ms.total` representa duracion wall-clock de la traza y no puede ser menor que ningun componente: `model_total`, `tool_total`, `retrieval_total`, `citation_audit`, `persistence` o `queue`.
+33. Un componente de latencia positivo con `latency_ms.total = 0` es inconsistente y debe rechazarse.
+34. Las reglas 27 a 33 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
 
 ## Reglas asistidas por IA
 
@@ -92,6 +100,8 @@ El motivo debe ser concreto: soporte de usuario, investigacion de incidente, eva
 - `model-call.schema.json` y `tool-call.schema.json` no almacenan material crudo.
 - `citation-audit.schema.json` audita cita, claim, pasaje y fuente por referencia.
 - `citation_audit.overall_status = passed` cubre todos los claims citados y todas las fuentes usadas de la traza.
+- `cost-report.schema.json` debe cuadrar con `model_calls[]` y `tool_calls[]` de la misma traza.
+- `latency_ms` y timestamps de llamadas no pueden expresar duraciones negativas o totales imposibles.
 - Los niveles de visibilidad quedan definidos y no permiten acceso libre en `INTERNAL_AUDIT`.
 - Todo acceso elevado tiene campos minimos de registro.
 
