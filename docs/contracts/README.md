@@ -88,7 +88,7 @@ Estos contratos quedan aceptados como base documental de trazabilidad, auditoria
 - `TraceObject.retrieval_runs[]` usa resumen sanitizado; no embebe `RetrievalRun` operativo completo, URLs crudas de discovery, fuentes abiertas o fuentes rechazadas, mensajes libres de error, warning codes libres ni warnings libres.
 - `ModelCall` y `ToolCall` guardan hashes y codigos de error; no guardan prompts, salidas, documentos ni mensajes completos.
 - `CitationAudit` contiene resultados por cita y fallas bloqueantes; `passed` no admite fallas bloqueantes.
-- `AnswerVersion` referencia contrato/render snapshot y hash; no embebe respuesta completa sensible.
+- `AnswerVersion` referencia `AnswerContract` para respuestas sustantivas y `abstention_render_ref` para `total_abstention`/`blocked`; no crea EvidencePack sintetico ni embebe respuesta completa sensible.
 - `CostReport` registra consumo observado y no presupuestos comerciales.
 
 ## Schemas minimos esperados

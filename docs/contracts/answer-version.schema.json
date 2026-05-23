@@ -15,6 +15,7 @@
     "answer_id",
     "answer_version",
     "previous_answer_version",
+    "response_outcome",
     "answer_hash",
     "trace_id",
     "answer_contract_ref",
@@ -42,6 +43,14 @@
       ],
       "minimum": 1
     },
+    "response_outcome": {
+      "enum": [
+        "answered",
+        "partial_abstention",
+        "total_abstention",
+        "blocked"
+      ]
+    },
     "answer_hash": {
       "type": "string",
       "minLength": 1
@@ -51,7 +60,17 @@
       "minLength": 1
     },
     "answer_contract_ref": {
-      "type": "string",
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "abstention_render_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
       "minLength": 1
     },
     "rendered_answer_snapshot_id": {
@@ -132,6 +151,61 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "response_outcome": {
+            "enum": [
+              "answered",
+              "partial_abstention"
+            ]
+          }
+        },
+        "required": [
+          "response_outcome"
+        ]
+      },
+      "then": {
+        "properties": {
+          "answer_contract_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "abstention_render_ref": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "response_outcome": {
+            "enum": [
+              "total_abstention",
+              "blocked"
+            ]
+          }
+        },
+        "required": [
+          "response_outcome"
+        ]
+      },
+      "then": {
+        "required": [
+          "abstention_render_ref"
+        ],
+        "properties": {
+          "answer_contract_ref": {
+            "type": "null"
+          },
+          "abstention_render_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
     }
   ],
   "examples": [
@@ -140,6 +214,7 @@
       "answer_id": "ans_001",
       "answer_version": 1,
       "previous_answer_version": null,
+      "response_outcome": "answered",
       "answer_hash": "sha256:answer001",
       "trace_id": "tr_001",
       "answer_contract_ref": "ans_001:v1",
@@ -153,6 +228,7 @@
       "answer_id": "ans_001",
       "answer_version": 2,
       "previous_answer_version": 1,
+      "response_outcome": "answered",
       "answer_hash": "sha256:answer002",
       "trace_id": "tr_002",
       "answer_contract_ref": "ans_001:v2",
@@ -160,6 +236,21 @@
       "version_reason": "citation_repaired",
       "created_at": "2026-05-22T00:05:00Z",
       "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_abstention_001",
+      "answer_id": "ans_002",
+      "answer_version": 1,
+      "previous_answer_version": null,
+      "response_outcome": "total_abstention",
+      "answer_hash": "sha256:abstention-answer-001",
+      "trace_id": "tr_abstention_001",
+      "answer_contract_ref": null,
+      "abstention_render_ref": "abstention_render_001",
+      "rendered_answer_snapshot_id": null,
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
     }
   ],
   "x-invalid-examples": [
@@ -168,6 +259,7 @@
       "answer_id": "ans_001",
       "answer_version": 1,
       "previous_answer_version": 1,
+      "response_outcome": "answered",
       "answer_hash": "sha256:answer003",
       "trace_id": "tr_003",
       "answer_contract_ref": "ans_001:v1",
@@ -180,6 +272,7 @@
       "answer_id": "ans_001",
       "answer_version": 2,
       "previous_answer_version": null,
+      "response_outcome": "answered",
       "answer_hash": "sha256:answer004",
       "trace_id": "tr_004",
       "answer_contract_ref": "ans_001:v2",
@@ -192,6 +285,7 @@
       "answer_id": "ans_001",
       "answer_version": 2,
       "previous_answer_version": 1,
+      "response_outcome": "answered",
       "answer_hash": "sha256:answer005",
       "trace_id": "tr_005",
       "answer_contract_ref": "ans_001:v2",
@@ -201,6 +295,32 @@
       "version_reason": "citation_repaired",
       "created_at": "2026-05-22T00:00:00Z",
       "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_006",
+      "answer_id": "ans_006",
+      "answer_version": 1,
+      "previous_answer_version": null,
+      "response_outcome": "answered",
+      "answer_hash": "sha256:answer006",
+      "trace_id": "tr_006",
+      "answer_contract_ref": null,
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
+    },
+    {
+      "answer_version_id": "av_007",
+      "answer_id": "ans_007",
+      "answer_version": 1,
+      "previous_answer_version": null,
+      "response_outcome": "total_abstention",
+      "answer_hash": "sha256:answer007",
+      "trace_id": "tr_007",
+      "answer_contract_ref": null,
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
     }
   ],
   "x-policy-invalid-examples": [
@@ -209,6 +329,7 @@
       "answer_id": "ans_001",
       "answer_version": 2,
       "previous_answer_version": 2,
+      "response_outcome": "answered",
       "answer_hash": "sha256:answer-policy-prev-001",
       "trace_id": "tr_001",
       "answer_contract_ref": "ans_001:v2",
@@ -340,6 +461,7 @@
         "answer_id": "different_answer",
         "answer_version": 2,
         "previous_answer_version": 1,
+        "response_outcome": "answered",
         "answer_hash": "sha256:answer002",
         "trace_id": "different_trace",
         "answer_contract_ref": "third_answer:v7",
@@ -535,6 +657,7 @@
         "answer_id": "ans_content_001",
         "answer_version": 1,
         "previous_answer_version": null,
+        "response_outcome": "answered",
         "answer_hash": "sha256:answer-content-001",
         "trace_id": "tr_content_001",
         "answer_contract_ref": "ans_content_001:v1",
@@ -727,6 +850,7 @@
         "answer_id": "ans_content_002",
         "answer_version": 1,
         "previous_answer_version": null,
+        "response_outcome": "answered",
         "answer_hash": "sha256:answer-content-002",
         "trace_id": "tr_content_002",
         "answer_contract_ref": "ans_content_002:v1",

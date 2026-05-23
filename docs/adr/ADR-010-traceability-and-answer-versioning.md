@@ -71,6 +71,7 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 - Trace visibility levels.
 - Hashes y minimizacion.
 - Retrieval runs embebidos como resumen sanitizado, sin URLs crudas, resultados discovery completos, mensajes libres de error, warning codes libres ni warnings libres.
+- Abstenciones totales y bloqueos versionados mediante `abstention_render_ref`, sin inventar EvidencePack sintetico.
 - Redaccion de logs.
 - Ownership/tenant en trazas.
 - Politica de retencion.

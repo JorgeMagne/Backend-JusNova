@@ -1252,12 +1252,12 @@
       "warnings": []
     },
     {
-      "trace_id": "tr_002",
+      "trace_id": "tr_abstention_001",
       "organization_id": "org_001",
       "actor_ref": "system",
       "actor_type": "system",
       "answer_id": "ans_002",
-      "answer_version_ref": "av_002",
+      "answer_version_ref": "av_abstention_001",
       "answer_version": 1,
       "conversation_id": "conv_002",
       "case_id": null,
