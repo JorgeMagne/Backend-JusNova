@@ -65,15 +65,14 @@
       "minLength": 1
     },
     "reason_code": {
+      "description": "Debe usar el mismo vocabulario que TraceObject.abstention_reason y coincidir con ese campo por validador cross-contract.",
       "enum": [
         "no_evidence",
-        "insufficient_evidence",
         "unsupported_critical_claim",
-        "unresolved_conflict",
+        "conflict_unresolved",
+        "missing_user_info",
+        "insufficient_budget",
         "validity_not_confirmed",
-        "missing_case_data",
-        "user_requested_unsupported_assertion",
-        "provider_or_source_unavailable",
         "policy_blocked"
       ]
     },
@@ -85,6 +84,7 @@
       ]
     },
     "source_trace_refs": {
+      "description": "Referencias usadas para reconstruir la abstencion o bloqueo. Deben ser subconjuntos de TraceObject.evidence_pack_ids, TraceObject.claims[].claim_id, TraceObject.citation_audit.results/blocking_failures citation refs, TraceObject.sources_used[] y TraceObject.sources_rejected[].source_ref por validador cross-contract.",
       "type": "object",
       "required": [
         "evidence_pack_ids",
@@ -254,6 +254,335 @@
       },
       "created_at": "2026-05-22T00:00:00Z",
       "created_by_ref": "system"
+    },
+    {
+      "abstention_render_id": "abstention_render_reason_alias",
+      "trace_id": "tr_abstention_001",
+      "answer_id": "ans_002",
+      "answer_version": 1,
+      "response_outcome": "total_abstention",
+      "render_hash": "sha256:abstention-answer-001",
+      "render_storage_ref": "render_abstention_001",
+      "reason_code": "unresolved_conflict",
+      "redaction_profile": "USER_SUMMARY_SAFE",
+      "source_trace_refs": {
+        "evidence_pack_ids": [],
+        "claim_ids": [],
+        "citation_refs": [],
+        "source_refs": []
+      },
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
+    }
+  ],
+  "x-cross-contract-policy-invalid-examples": [
+    {
+      "description": "TraceObject, AnswerVersion y AbstentionRender validan por separado, pero la razon versionada no coincide con la razon trazada.",
+      "trace_object": {
+        "trace_id": "tr_abstention_001",
+        "organization_id": "org_001",
+        "actor_ref": "system",
+        "actor_type": "system",
+        "answer_id": "ans_002",
+        "answer_version_ref": "av_abstention_001",
+        "answer_version": 1,
+        "conversation_id": "conv_002",
+        "case_id": null,
+        "response_outcome": "total_abstention",
+        "abstention_reason": "no_evidence",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [],
+        "sources_used": [],
+        "sources_rejected": [],
+        "claims": [],
+        "citation_audit": {
+          "citation_audit_id": "ca_002",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "needs_review",
+          "results": [],
+          "blocking_failures": [],
+          "warnings": [
+            "No hubo evidencia suficiente para respuesta sustantiva."
+          ],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_002",
+          "currency": "NONE",
+          "is_estimated": false,
+          "billing_source": "not_billable",
+          "model_input_tokens": 0,
+          "model_output_tokens": 0,
+          "tool_calls": 0,
+          "provider_estimated_costs": [],
+          "estimated_total_cost": 0
+        },
+        "latency_ms": {
+          "total": 100,
+          "model_total": 0,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 0,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": [
+          "No hay evidencia suficiente."
+        ]
+      },
+      "answer_version": {
+        "answer_version_id": "av_abstention_001",
+        "answer_id": "ans_002",
+        "answer_version": 1,
+        "previous_answer_version": null,
+        "response_outcome": "total_abstention",
+        "answer_hash": "sha256:abstention-answer-001",
+        "trace_id": "tr_abstention_001",
+        "answer_contract_ref": null,
+        "abstention_render_ref": "abstention_render_001",
+        "rendered_answer_snapshot_id": null,
+        "version_reason": "initial_answer",
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "system"
+      },
+      "abstention_render": {
+        "abstention_render_id": "abstention_render_001",
+        "trace_id": "tr_abstention_001",
+        "answer_id": "ans_002",
+        "answer_version": 1,
+        "response_outcome": "total_abstention",
+        "render_hash": "sha256:abstention-answer-001",
+        "render_storage_ref": "render_abstention_001",
+        "rendered_answer_snapshot_id": null,
+        "reason_code": "policy_blocked",
+        "redaction_profile": "USER_SUMMARY_SAFE",
+        "source_trace_refs": {
+          "evidence_pack_ids": [],
+          "claim_ids": [],
+          "citation_refs": [],
+          "source_refs": []
+        },
+        "warning_codes": [
+          "policy_blocked"
+        ],
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "system"
+      },
+      "policy_errors": [
+        "AbstentionRender.reason_code != TraceObject.abstention_reason"
+      ]
+    },
+    {
+      "description": "TraceObject, AnswerVersion y AbstentionRender validan por separado, pero AnswerVersion.answer_hash no coincide con AbstentionRender.render_hash.",
+      "trace_object": {
+        "trace_id": "tr_abstention_001",
+        "organization_id": "org_001",
+        "actor_ref": "system",
+        "actor_type": "system",
+        "answer_id": "ans_002",
+        "answer_version_ref": "av_abstention_001",
+        "answer_version": 1,
+        "conversation_id": "conv_002",
+        "case_id": null,
+        "response_outcome": "total_abstention",
+        "abstention_reason": "no_evidence",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [],
+        "sources_used": [],
+        "sources_rejected": [],
+        "claims": [],
+        "citation_audit": {
+          "citation_audit_id": "ca_002",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "needs_review",
+          "results": [],
+          "blocking_failures": [],
+          "warnings": [
+            "No hubo evidencia suficiente para respuesta sustantiva."
+          ],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_002",
+          "currency": "NONE",
+          "is_estimated": false,
+          "billing_source": "not_billable",
+          "model_input_tokens": 0,
+          "model_output_tokens": 0,
+          "tool_calls": 0,
+          "provider_estimated_costs": [],
+          "estimated_total_cost": 0
+        },
+        "latency_ms": {
+          "total": 100,
+          "model_total": 0,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 0,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": [
+          "No hay evidencia suficiente."
+        ]
+      },
+      "answer_version": {
+        "answer_version_id": "av_abstention_001",
+        "answer_id": "ans_002",
+        "answer_version": 1,
+        "previous_answer_version": null,
+        "response_outcome": "total_abstention",
+        "answer_hash": "sha256:abstention-answer-001",
+        "trace_id": "tr_abstention_001",
+        "answer_contract_ref": null,
+        "abstention_render_ref": "abstention_render_001",
+        "rendered_answer_snapshot_id": null,
+        "version_reason": "initial_answer",
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "system"
+      },
+      "abstention_render": {
+        "abstention_render_id": "abstention_render_001",
+        "trace_id": "tr_abstention_001",
+        "answer_id": "ans_002",
+        "answer_version": 1,
+        "response_outcome": "total_abstention",
+        "render_hash": "sha256:different-render-hash",
+        "render_storage_ref": "render_abstention_001",
+        "rendered_answer_snapshot_id": null,
+        "reason_code": "no_evidence",
+        "redaction_profile": "USER_SUMMARY_SAFE",
+        "source_trace_refs": {
+          "evidence_pack_ids": [],
+          "claim_ids": [],
+          "citation_refs": [],
+          "source_refs": []
+        },
+        "warning_codes": [
+          "no_evidence_found"
+        ],
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "system"
+      },
+      "policy_errors": [
+        "AnswerVersion.answer_hash != AbstentionRender.render_hash"
+      ]
+    },
+    {
+      "description": "TraceObject, AnswerVersion y AbstentionRender validan por separado, pero source_trace_refs apunta a evidencia, claims, citas y fuentes inexistentes en TraceObject.",
+      "trace_object": {
+        "trace_id": "tr_abstention_001",
+        "organization_id": "org_001",
+        "actor_ref": "system",
+        "actor_type": "system",
+        "answer_id": "ans_002",
+        "answer_version_ref": "av_abstention_001",
+        "answer_version": 1,
+        "conversation_id": "conv_002",
+        "case_id": null,
+        "response_outcome": "total_abstention",
+        "abstention_reason": "no_evidence",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [],
+        "sources_used": [],
+        "sources_rejected": [],
+        "claims": [],
+        "citation_audit": {
+          "citation_audit_id": "ca_002",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "needs_review",
+          "results": [],
+          "blocking_failures": [],
+          "warnings": [
+            "No hubo evidencia suficiente para respuesta sustantiva."
+          ],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_002",
+          "currency": "NONE",
+          "is_estimated": false,
+          "billing_source": "not_billable",
+          "model_input_tokens": 0,
+          "model_output_tokens": 0,
+          "tool_calls": 0,
+          "provider_estimated_costs": [],
+          "estimated_total_cost": 0
+        },
+        "latency_ms": {
+          "total": 100,
+          "model_total": 0,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 0,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": [
+          "No hay evidencia suficiente."
+        ]
+      },
+      "answer_version": {
+        "answer_version_id": "av_abstention_001",
+        "answer_id": "ans_002",
+        "answer_version": 1,
+        "previous_answer_version": null,
+        "response_outcome": "total_abstention",
+        "answer_hash": "sha256:abstention-answer-001",
+        "trace_id": "tr_abstention_001",
+        "answer_contract_ref": null,
+        "abstention_render_ref": "abstention_render_001",
+        "rendered_answer_snapshot_id": null,
+        "version_reason": "initial_answer",
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "system"
+      },
+      "abstention_render": {
+        "abstention_render_id": "abstention_render_001",
+        "trace_id": "tr_abstention_001",
+        "answer_id": "ans_002",
+        "answer_version": 1,
+        "response_outcome": "total_abstention",
+        "render_hash": "sha256:abstention-answer-001",
+        "render_storage_ref": "render_abstention_001",
+        "rendered_answer_snapshot_id": null,
+        "reason_code": "no_evidence",
+        "redaction_profile": "USER_SUMMARY_SAFE",
+        "source_trace_refs": {
+          "evidence_pack_ids": [
+            "ep_fake"
+          ],
+          "claim_ids": [
+            "cl_fake"
+          ],
+          "citation_refs": [
+            "C99"
+          ],
+          "source_refs": [
+            "F99"
+          ]
+        },
+        "warning_codes": [
+          "no_evidence_found"
+        ],
+        "created_at": "2026-05-22T00:00:00Z",
+        "created_by_ref": "system"
+      },
+      "policy_errors": [
+        "AbstentionRender.source_trace_refs.evidence_pack_ids is not subset of TraceObject.evidence_pack_ids",
+        "AbstentionRender.source_trace_refs.claim_ids is not subset of TraceObject.claims[].claim_id",
+        "AbstentionRender.source_trace_refs.citation_refs is not subset of TraceObject.citation_audit citation refs",
+        "AbstentionRender.source_trace_refs.source_refs is not subset of TraceObject source refs"
+      ]
     }
   ]
 }
