@@ -55,7 +55,7 @@ No define retencion final, permisos productivos completos ni proceso de incident
 28. `TraceObject.cost.model_input_tokens` debe ser igual a la suma de `model_calls[].token_usage.input_tokens`.
 29. `TraceObject.cost.model_output_tokens` debe ser igual a la suma de `model_calls[].token_usage.output_tokens`.
 30. `TraceObject.cost.tool_calls` debe ser igual a la cantidad de elementos en `tool_calls[]`; si en 0.8 se requiere distinguir llamadas facturables, se agregara un campo separado.
-31. `CostReport.estimated_total_cost` debe coincidir con la suma de `provider_estimated_costs[].estimated_cost` bajo la politica de redondeo definida por implementacion; con `currency = NONE` debe ser `0`.
+31. `CostReport.estimated_total_cost` debe coincidir con la suma de `provider_estimated_costs[].estimated_cost`, `tool_calls[].cost_units.estimated_cost` y `retrieval_runs[].estimated_cost` bajo la politica de redondeo definida por implementacion.
 32. Cada `ModelCall`, `ToolCall` y `RetrievalRun` debe cumplir `completed_at >= started_at`.
 33. `latency_ms.total` representa duracion wall-clock de la traza y no puede ser menor que ningun componente: `model_total`, `tool_total`, `retrieval_total`, `citation_audit`, `persistence` o `queue`.
 34. Un componente de latencia positivo con `latency_ms.total = 0` es inconsistente y debe rechazarse.
@@ -65,7 +65,8 @@ No define retencion final, permisos productivos completos ni proceso de incident
 38. `latency_ms.total` no puede ser menor que la mayor duracion derivada de cualquier `ModelCall`, `ToolCall` o `RetrievalRun`.
 39. Dentro de un `TraceObject`, `model_calls[].model_call_id`, `tool_calls[].tool_call_id`, `retrieval_runs[].retrieval_run_id` y `claims[].claim_id` deben ser unicos.
 40. Dentro de `citation_audit.results[]`, la clave `(claim_id, citation_ref, passage_ref, source_ref)` debe ser unica.
-41. Las reglas 27 a 40 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
+41. Si `CostReport.currency = NONE`, entonces `provider_estimated_costs[]`, `tool_calls[].cost_units.estimated_cost`, `retrieval_runs[].estimated_cost` y `estimated_total_cost` deben ser `0`.
+42. Las reglas 27 a 41 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
 
 ## Reglas asistidas por IA
 
@@ -107,7 +108,7 @@ El motivo debe ser concreto: soporte de usuario, investigacion de incidente, eva
 - `model-call.schema.json` y `tool-call.schema.json` no almacenan material crudo.
 - `citation-audit.schema.json` audita cita, claim, pasaje y fuente por referencia.
 - `citation_audit.overall_status = passed` cubre todos los claims citados y todas las fuentes usadas de la traza.
-- `cost-report.schema.json` debe cuadrar con `model_calls[]` y `tool_calls[]` de la misma traza.
+- `cost-report.schema.json` debe cuadrar con `model_calls[]`, `tool_calls[]`, `retrieval_runs[]` y estimaciones de proveedor de la misma traza.
 - `model-call.schema.json` debe cuadrar `token_usage.total_tokens` con sus tokens de entrada y salida.
 - `latency_ms` y timestamps de llamadas o retrieval runs no pueden expresar duraciones negativas o totales imposibles.
 - Los IDs internos de `TraceObject` y las claves de `citation_audit.results[]` no pueden duplicarse.

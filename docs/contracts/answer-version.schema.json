@@ -202,5 +202,37 @@
       "created_at": "2026-05-22T00:00:00Z",
       "created_by_ref": "actor_hash_001"
     }
+  ],
+  "x-cross-contract-policy-invalid-examples": [
+    {
+      "description": "Los tres contratos validan por separado, pero sus identidades no corresponden a la misma respuesta versionada.",
+      "trace_object": {
+        "trace_id": "tr_001",
+        "answer_id": "ans_001",
+        "answer_version_ref": "av_001",
+        "answer_version": 1
+      },
+      "answer_version": {
+        "answer_version_id": "different_av",
+        "answer_id": "different_answer",
+        "answer_version": 2,
+        "trace_id": "different_trace",
+        "answer_contract_ref": "third_answer:v7"
+      },
+      "answer_contract": {
+        "trace_id": "third_trace",
+        "answer_id": "third_answer",
+        "answer_version": 7
+      },
+      "policy_errors": [
+        "TraceObject.answer_version_ref != AnswerVersion.answer_version_id",
+        "TraceObject.answer_id != AnswerVersion.answer_id",
+        "TraceObject.answer_version != AnswerVersion.answer_version",
+        "TraceObject.trace_id != AnswerVersion.trace_id",
+        "AnswerContract.trace_id != TraceObject.trace_id",
+        "AnswerContract.answer_id != TraceObject.answer_id",
+        "AnswerContract.answer_version != TraceObject.answer_version"
+      ]
+    }
   ]
 }

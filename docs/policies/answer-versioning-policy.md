@@ -41,6 +41,11 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 14. Si se corrige un claim, se crea nueva version con `version_reason = claim_corrected`.
 15. Una version no puede apuntar a un `TraceObject` inexistente.
 16. Una version no puede declararse final si su `TraceObject.citation_audit.overall_status` contradice el resultado publicado.
+17. `TraceObject.answer_version_ref` debe ser igual a `AnswerVersion.answer_version_id`.
+18. `TraceObject.trace_id`, `TraceObject.answer_id` y `TraceObject.answer_version` deben ser iguales a `AnswerVersion.trace_id`, `AnswerVersion.answer_id` y `AnswerVersion.answer_version`.
+19. `AnswerContract.trace_id`, `AnswerContract.answer_id` y `AnswerContract.answer_version` deben ser iguales a los campos equivalentes de `TraceObject` y `AnswerVersion`.
+20. `AnswerVersion.answer_contract_ref` debe resolver al `AnswerContract` correspondiente; no puede apuntar a otro `answer_id`, otra version o otra traza.
+21. Las reglas 17 a 20 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
 
 ## Reglas asistidas por IA
 
@@ -57,12 +62,14 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 - `answer-version.schema.json` rechaza una version 2 o superior sin `previous_answer_version`.
 - La politica declara que `previous_answer_version < answer_version` es regla obligatoria de implementacion futura.
 - La politica impide guardar respuesta completa sensible dentro del contrato de version.
+- La politica exige identidad consistente entre `TraceObject`, `AnswerVersion` y `AnswerContract`.
 
 ## Relacion con contratos
 
 - Implementa `answer-version.schema.json`.
 - Depende de `trace-object.schema.json` para reconstruccion.
 - Complementa `answer-contract.schema.json`, `citation-audit.schema.json`, `citation-policy.md`, `abstention-policy.md` y `trace-visibility-policy.md`.
+- Define reglas de identidad cruzada que deben validarse al persistir o publicar una respuesta final.
 
 ## Momento de revision
 
