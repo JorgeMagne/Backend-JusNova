@@ -2183,6 +2183,124 @@
       "warnings": [
         "Schema-valid but policy-invalid: completed_at precedes started_at and latency components exceed total."
       ]
+    },
+    {
+      "trace_id": "tr_policy_004",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_policy_004",
+      "answer_version_ref": "av_policy_004",
+      "answer_version": 1,
+      "conversation_id": "conv_policy_004",
+      "response_outcome": "answered",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_policy_004",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:input-policy-004",
+          "output_hash": "sha256:output-policy-004",
+          "token_usage": {
+            "input_tokens": 10,
+            "output_tokens": 20,
+            "total_tokens": 30
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:01Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [
+        {
+          "retrieval_run_id": "rr_policy_004",
+          "query_id": "q_policy_004",
+          "retrieval_plan_id": "rp_policy_004",
+          "status": "failed",
+          "providers_used": [],
+          "adapter_calls": [],
+          "discovery_results": [],
+          "sources_opened": [],
+          "sources_rejected": [],
+          "error": {
+            "error_code": "provider_timeout",
+            "message": "Busqueda fallida con tiempos imposibles."
+          },
+          "latency_ms": 100,
+          "estimated_cost": 0,
+          "warnings": [],
+          "started_at": "2026-05-22T00:00:10Z",
+          "completed_at": "2026-05-22T00:00:00Z"
+        }
+      ],
+      "evidence_pack_ids": [
+        "ep_004"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_004",
+          "text": "Claim publicado con retrieval temporalmente imposible.",
+          "claim_type": "norma",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_policy_004",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_004",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_policy_004",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 10,
+        "model_output_tokens": 20,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 1000,
+        "model_total": 1000,
+        "tool_total": 0,
+        "retrieval_total": 100,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [
+        "Schema-valid but policy-invalid: retrieval_run.completed_at precedes retrieval_run.started_at."
+      ]
     }
   ]
 }

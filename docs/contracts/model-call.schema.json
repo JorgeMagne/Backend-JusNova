@@ -333,5 +333,25 @@
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success"
     }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "model_call_id": "mc_policy_001",
+      "purpose": "answer_generation",
+      "provider": "openai",
+      "model": "gpt-5",
+      "prompt_version": "answer-generation-v1",
+      "input_hash": "sha256:input-policy-001",
+      "output_hash": "sha256:output-policy-001",
+      "token_usage": {
+        "input_tokens": 1200,
+        "output_tokens": 700,
+        "total_tokens": 0
+      },
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:03Z",
+      "status": "success",
+      "error_code": null
+    }
   ]
 }
