@@ -402,7 +402,15 @@
               }
             }
           }
-        ]
+        ],
+        "properties": {
+          "claims": {
+            "maxItems": 0
+          },
+          "sources_used": {
+            "maxItems": 0
+          }
+        }
       }
     },
     {
@@ -430,7 +438,22 @@
               }
             }
           }
-        ]
+        ],
+        "properties": {
+          "claims": {
+            "items": {
+              "properties": {
+                "verification_status": {
+                  "enum": [
+                    "failed",
+                    "needs_review",
+                    "blocked"
+                  ]
+                }
+              }
+            }
+          }
+        }
       }
     },
     {
@@ -1062,6 +1085,151 @@
       },
       "cost": {
         "cost_report_id": "cr_009",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_012",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_012",
+      "answer_version_ref": "av_012",
+      "answer_version": 1,
+      "conversation_id": "conv_012",
+      "response_outcome": "total_abstention",
+      "abstention_reason": "no_evidence",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim no publicable.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_012",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "needs_review",
+        "results": [],
+        "blocking_failures": [],
+        "warnings": [
+          "No hubo evidencia suficiente para respuesta sustantiva."
+        ],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_012",
+        "currency": "NONE",
+        "is_estimated": false,
+        "billing_source": "not_billable",
+        "model_input_tokens": 0,
+        "model_output_tokens": 0,
+        "tool_calls": 0,
+        "provider_estimated_costs": [],
+        "estimated_total_cost": 0
+      },
+      "latency_ms": {
+        "total": 100,
+        "model_total": 0,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 0,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": []
+    },
+    {
+      "trace_id": "tr_013",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_013",
+      "answer_version_ref": "av_013",
+      "answer_version": 1,
+      "conversation_id": "conv_013",
+      "response_outcome": "blocked",
+      "abstention_reason": "policy_blocked",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [],
+      "sources_used": [],
+      "sources_rejected": [],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "Claim bloqueado pero marcado passed.",
+          "claim_type": "otro",
+          "criticality": "medium",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_013",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "blocked",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "unsupported",
+            "support_assessment": "unsupported",
+            "severity": "blocking"
+          }
+        ],
+        "blocking_failures": [
+          {
+            "failure_code": "unsupported_claim",
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "severity": "blocking"
+          }
+        ],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_013",
         "currency": "NONE",
         "is_estimated": false,
         "billing_source": "not_billable",
