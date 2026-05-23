@@ -254,6 +254,76 @@
           }
         ]
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_type": {
+            "const": "norma"
+          }
+        },
+        "required": [
+          "source_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "validity_status": {
+            "enum": [
+              "VIGENCIA_CONFIRMADA",
+              "VIGENCIA_NO_CONFIRMADA",
+              "POSIBLEMENTE_MODIFICADA",
+              "DEROGADA_CONFIRMADA",
+              "CONFLICTIVA"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "validity_status": {
+            "const": "VIGENCIA_CONFIRMADA"
+          }
+        },
+        "required": [
+          "validity_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "tier": {
+            "enum": [
+              "TIER1_CANONICO",
+              "TIER1_OFICIAL",
+              "TIER1_STRUCTURED"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tier": {
+            "enum": [
+              "TIER2_CONFIABLE",
+              "TIER3_SECUNDARIO"
+            ]
+          }
+        },
+        "required": [
+          "tier"
+        ]
+      },
+      "then": {
+        "properties": {
+          "warnings": {
+            "minItems": 1
+          }
+        }
+      }
     }
   ],
   "examples": [
@@ -363,6 +433,50 @@
       "url": "https://www.example.com/blog",
       "snapshot_id": null,
       "snapshot_unavailable_reason": "user_private_document_not_snapshotted",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": null,
+      "validity_status": "NO_APLICA",
+      "warnings": [],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F6",
+      "source_type": "norma",
+      "tier": "TIER1_CANONICO",
+      "title": "Norma con vigencia no aplicable",
+      "issuer": "Gaceta Oficial de Bolivia",
+      "url": "https://www.example.gob.bo/norma/ley",
+      "snapshot_id": "snap_006",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": "2024-01-01",
+      "validity_status": "NO_APLICA",
+      "warnings": [],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F7",
+      "source_type": "norma",
+      "tier": "TIER3_SECUNDARIO",
+      "title": "Blog que afirma vigencia normativa",
+      "issuer": null,
+      "url": "https://www.example.com/blog-ley",
+      "snapshot_id": "snap_007",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": null,
+      "validity_status": "VIGENCIA_CONFIRMADA",
+      "warnings": [
+        "Fuente secundaria no puede confirmar vigencia."
+      ],
+      "metadata": {}
+    },
+    {
+      "source_ref": "F8",
+      "source_type": "web",
+      "tier": "TIER3_SECUNDARIO",
+      "title": "Fuente secundaria sin advertencia",
+      "issuer": null,
+      "url": "https://www.example.com/blog",
+      "snapshot_id": "snap_008",
       "retrieved_at": "2026-05-22T00:00:00Z",
       "published_at": null,
       "validity_status": "NO_APLICA",

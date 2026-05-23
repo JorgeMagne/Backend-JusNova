@@ -260,6 +260,51 @@
     {
       "if": {
         "properties": {
+          "validity_status": {
+            "const": "VIGENCIA_CONFIRMADA"
+          }
+        },
+        "required": [
+          "validity_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "tier": {
+            "enum": [
+              "TIER1_CANONICO",
+              "TIER1_OFICIAL",
+              "TIER1_STRUCTURED"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "tier": {
+            "enum": [
+              "TIER2_CONFIABLE",
+              "TIER3_SECUNDARIO"
+            ]
+          }
+        },
+        "required": [
+          "tier"
+        ]
+      },
+      "then": {
+        "properties": {
+          "warnings": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
           "extraction_status": {
             "const": "extracted"
           }
@@ -602,6 +647,45 @@
       "warnings": [
         "La razon privada de no snapshot solo aplica a USER_DOCUMENT."
       ]
+    },
+    {
+      "result_id": "lsr_011",
+      "title": "Norma secundaria marcada como vigente",
+      "url": "https://www.example.com/blog-ley",
+      "tier": "TIER3_SECUNDARIO",
+      "source_type": "norma",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.2,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "validity_status": "VIGENCIA_CONFIRMADA",
+      "warnings": [
+        "Fuente secundaria no puede confirmar vigencia."
+      ]
+    },
+    {
+      "result_id": "lsr_012",
+      "title": "Resultado secundario sin advertencia",
+      "url": "https://www.example.com/blog",
+      "tier": "TIER3_SECUNDARIO",
+      "source_type": "web",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.2,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "warnings": []
     }
   ]
 }

@@ -138,8 +138,8 @@ Estos contratos quedan aceptados como contratos documentales del JusNova Live Le
 
 | Contrato | Estado | Ajuste |
 |---|---|---|
-| Evidence Source | Accepted | `snapshot_unavailable_reason` y reglas de snapshot para fuentes usadas. |
-| Legal Search Result | Accepted | Enum compartido de razon de snapshot y restriccion de razon privada a `USER_DOCUMENT`. |
+| Evidence Source | Accepted | `snapshot_unavailable_reason`, reglas de snapshot, vigencia no aplicable para norma bloqueada y warnings obligatorios en TIER2/TIER3. |
+| Legal Search Result | Accepted | Enum compartido de razon de snapshot, restriccion de razon privada a `USER_DOCUMENT`, vigencia confirmada solo en TIER1 y warnings obligatorios en TIER2/TIER3. |
 
 ## Dependencias posteriores preservadas
 

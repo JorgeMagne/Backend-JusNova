@@ -63,6 +63,9 @@ Estos contratos quedan aceptados como base documental del JusNova Live Legal Sea
 - `snapshot_unavailable_reason` usa enum compartido con `legal-search-result.schema.json`.
 - `user_private_document_not_snapshotted` solo aplica a `USER_DOCUMENT` o `documento_usuario`.
 - Una fuente usada sin snapshot ni razon cerrada no puede entrar al Evidence Pack final.
+- `source_type = norma` no puede usar `validity_status = NO_APLICA`.
+- `VIGENCIA_CONFIRMADA` requiere fuente `TIER1_CANONICO`, `TIER1_OFICIAL` o `TIER1_STRUCTURED`.
+- `TIER2_CONFIABLE` y `TIER3_SECUNDARIO` requieren advertencia en contratos de fuente y resultado.
 
 ## Schemas minimos esperados
 
