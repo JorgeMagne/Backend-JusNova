@@ -67,7 +67,8 @@ No define retencion final, permisos productivos completos ni proceso de incident
 40. Dentro de un `TraceObject`, `model_calls[].model_call_id`, `tool_calls[].tool_call_id`, `retrieval_runs[].retrieval_run_id` y `claims[].claim_id` deben ser unicos.
 41. Dentro de `citation_audit.results[]`, la clave `(claim_id, citation_ref, passage_ref, source_ref)` debe ser unica.
 42. Si `CostReport.currency = NONE`, entonces `provider_estimated_costs[]`, `tool_calls[].cost_units.estimated_cost`, `retrieval_runs[].estimated_cost` y `estimated_total_cost` deben ser `0`.
-43. Las reglas 28 a 42 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
+43. Todo campo `input_hash`, `output_hash`, `answer_hash`, `render_hash` o `url_hash` debe usar formato `sha256:` seguido de 64 caracteres hexadecimales; ningun hash puede contener texto crudo, URL cruda, prompt, documento, mensaje o salida completa.
+44. Las reglas 28 a 43 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
 
 ## Reglas asistidas por IA
 

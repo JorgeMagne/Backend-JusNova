@@ -35,14 +35,16 @@
     },
     "input_hash": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
     },
     "output_hash": {
       "type": [
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
     },
     "status": {
       "enum": [
@@ -127,7 +129,8 @@
         "properties": {
           "output_hash": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^sha256:[A-Fa-f0-9]{64}$"
           },
           "error_code": {
             "type": "null"
@@ -249,8 +252,8 @@
       "tool_call_id": "tc_001",
       "tool_name": "LiveLegalSearchEngine",
       "purpose": "legal_search",
-      "input_hash": "sha256:tool_input_001",
-      "output_hash": "sha256:tool_output_001",
+      "input_hash": "sha256:43dddbfba1d912b232d89ad1cf2891ae2d8a77efd4f23bbe85b229f09a8a7ab0",
+      "output_hash": "sha256:93b223657af45cd9b655cc79833a3effb5048953d82c2b4feea932e3c2080389",
       "status": "success",
       "error_code": null,
       "started_at": "2026-05-22T00:00:00Z",
@@ -268,8 +271,8 @@
       "tool_call_id": "tc_002",
       "tool_name": "LiveLegalSearchEngine",
       "purpose": "legal_search",
-      "input_hash": "sha256:tool_input_002",
-      "output_hash": "sha256:tool_output_002",
+      "input_hash": "sha256:b3ab208ef10581a1c7d8bebf6ee950da142f3cca9ccb1be58be6aadfdcc3273a",
+      "output_hash": "sha256:ef6274300b6cb857c64557f500065af07bc0a9472340ecf00512ef3b732e4c41",
       "status": "success",
       "error_code": "tool_error",
       "started_at": "2026-05-22T00:00:00Z",
@@ -285,7 +288,7 @@
       "tool_call_id": "tc_003",
       "tool_name": "LiveLegalSearchEngine",
       "purpose": "legal_search",
-      "input_hash": "sha256:tool_input_003",
+      "input_hash": "sha256:80f5177a219f46e54dc0fa4e924a748cbc0bc2f44b738273e0a359c1959e93a9",
       "status": "rate_limited",
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:08Z",
@@ -300,10 +303,27 @@
       "tool_call_id": "tc_004",
       "tool_name": "LiveLegalSearchEngine",
       "purpose": "legal_search",
-      "input_hash": "sha256:tool_input_004",
-      "output_hash": "sha256:tool_output_004",
+      "input_hash": "sha256:e764c6e5651c81debc37fc49eeaa856f7d426c90491df54c51e0b213c86ffc54",
+      "output_hash": "sha256:af95f1d014fcff8314342b691fbe453ed2984edc643e34afca8eae18f72633d5",
       "status": "cancelled",
       "error_code": "cancelled_by_user",
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:08Z",
+      "cost_units": {
+        "requests": 2,
+        "pages": 0,
+        "tokens": 0,
+        "estimated_cost": 0.04
+      }
+    },
+    {
+      "tool_call_id": "tc_hash_raw_001",
+      "tool_name": "LiveLegalSearchEngine",
+      "purpose": "legal_search",
+      "input_hash": "sha256:43dddbfba1d912b232d89ad1cf2891ae2d8a77efd4f23bbe85b229f09a8a7ab0",
+      "output_hash": "salida completa de herramienta usada como hash",
+      "status": "success",
+      "error_code": null,
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:08Z",
       "cost_units": {

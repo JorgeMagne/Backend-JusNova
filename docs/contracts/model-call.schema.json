@@ -53,14 +53,16 @@
     },
     "input_hash": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
     },
     "output_hash": {
       "type": [
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
     },
     "token_usage": {
       "type": "object",
@@ -139,7 +141,8 @@
         "properties": {
           "output_hash": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^sha256:[A-Fa-f0-9]{64}$"
           },
           "error_code": {
             "type": "null"
@@ -239,8 +242,8 @@
       "provider": "openai",
       "model": "gpt-5",
       "prompt_version": "answer-generation-v1",
-      "input_hash": "sha256:input001",
-      "output_hash": "sha256:output001",
+      "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+      "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
       "token_usage": {
         "input_tokens": 1200,
         "output_tokens": 700,
@@ -257,7 +260,7 @@
       "provider": "openai",
       "model": "gpt-5",
       "prompt_version": "retrieval-planning-v1",
-      "input_hash": "sha256:input002",
+      "input_hash": "sha256:9f15c70e606b23a0c1ff7550e1ab67b5a442ed4758f9b08fe1e42711b82fd258",
       "output_hash": null,
       "token_usage": {
         "input_tokens": 500,
@@ -277,7 +280,7 @@
       "provider": "openai",
       "model": "gpt-5",
       "prompt_version": "answer-generation-v1",
-      "input_hash": "sha256:input003",
+      "input_hash": "sha256:a87dbac42e90ca281db20b8aa382b0a8daac5e72aafe009ec40939092fb01d36",
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success",
@@ -289,8 +292,8 @@
       "provider": "openai",
       "model": "gpt-5",
       "prompt_version": "answer-generation-v1",
-      "input_hash": "sha256:input004",
-      "output_hash": "sha256:output004",
+      "input_hash": "sha256:76f3966f2c6c6fd0069be0051e082fe956a5a3cac3977ff52ee031afb0422a7c",
+      "output_hash": "sha256:9a559c9ddc6efb0b5afb41da38bef7ee0ec6e1a979bd6dd3d1339570b15eb31b",
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success",
@@ -302,7 +305,7 @@
       "provider": "openai",
       "model": "gpt-5",
       "prompt_version": "answer-generation-v1",
-      "input_hash": "sha256:input005",
+      "input_hash": "sha256:56389b93c4775d163d9c2b984f3d1c6a23045d0ff9eb0acffb4a41546585a0b2",
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "timeout"
@@ -313,8 +316,8 @@
       "provider": "openai",
       "model": "gpt-5",
       "prompt_version": "answer-generation-v1",
-      "input_hash": "sha256:input006",
-      "output_hash": "sha256:should_not_exist",
+      "input_hash": "sha256:176fb5234695ce960eda41c234979004d4ecf435580acf2f3169658a2f006f29",
+      "output_hash": "sha256:e6114c3b1d71117af262a724a3154a5f4da7552f0e9709bf2a447b83148f9a9b",
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "error",
@@ -326,12 +329,30 @@
       "provider": "openai",
       "model": "gpt-5",
       "prompt_version": "answer-generation-v1",
-      "input_hash": "sha256:input007",
-      "output_hash": "sha256:output007",
+      "input_hash": "sha256:acd1309f00c36e4190dfba9fc44107d304fd89fb27bec1b4d74216b93b1f1fa8",
+      "output_hash": "sha256:39558b7bc8827643ee57ac3fd0a3272df690afacb9e6c131a5cb8432a824bd31",
       "raw_prompt": "texto sensible no permitido",
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success"
+    },
+    {
+      "model_call_id": "mc_hash_raw_001",
+      "purpose": "answer_generation",
+      "provider": "openai",
+      "model": "gpt-5",
+      "prompt_version": "answer-generation-v1",
+      "input_hash": "prompt completo del usuario usado como hash",
+      "output_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "token_usage": {
+        "input_tokens": 1200,
+        "output_tokens": 700,
+        "total_tokens": 1900
+      },
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:03Z",
+      "status": "success",
+      "error_code": null
     }
   ],
   "x-policy-invalid-examples": [
@@ -341,8 +362,8 @@
       "provider": "openai",
       "model": "gpt-5",
       "prompt_version": "answer-generation-v1",
-      "input_hash": "sha256:input-policy-001",
-      "output_hash": "sha256:output-policy-001",
+      "input_hash": "sha256:b79a7246f48375134c31f593358d86f145a10a59ee5c0d6a88b20b4b3cea271b",
+      "output_hash": "sha256:f62364c87424d16f69ff0283290d55d6f7a4a95ccdcc436f1b4c6c556d36976d",
       "token_usage": {
         "input_tokens": 1200,
         "output_tokens": 700,
