@@ -285,6 +285,40 @@
           }
         ]
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "results": {
+            "contains": {
+              "properties": {
+                "severity": {
+                  "const": "blocking"
+                }
+              },
+              "required": [
+                "severity"
+              ]
+            }
+          }
+        },
+        "required": [
+          "results"
+        ]
+      },
+      "then": {
+        "properties": {
+          "overall_status": {
+            "enum": [
+              "failed",
+              "blocked"
+            ]
+          },
+          "blocking_failures": {
+            "minItems": 1
+          }
+        }
+      }
     }
   ],
   "examples": [
@@ -429,6 +463,27 @@
       "results": [],
       "blocking_failures": [],
       "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "citation_audit_id": "ca_009",
+      "auditor_version": "citation-auditor-v1",
+      "overall_status": "needs_review",
+      "results": [
+        {
+          "citation_ref": "C9",
+          "claim_id": "cl_009",
+          "passage_ref": "F9:P1",
+          "source_ref": "F9",
+          "status": "unsupported",
+          "support_assessment": "unsupported",
+          "severity": "blocking"
+        }
+      ],
+      "blocking_failures": [],
+      "warnings": [
+        "Hallazgo bloqueante no puede quedar como simple revision."
+      ],
       "created_at": "2026-05-22T00:00:00Z"
     }
   ]
