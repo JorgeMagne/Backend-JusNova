@@ -96,11 +96,61 @@
       },
       "then": {
         "properties": {
+          "billing_source": {
+            "const": "not_billable"
+          },
           "provider_estimated_costs": {
             "maxItems": 0
           },
           "estimated_total_cost": {
             "const": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "billing_source": {
+            "enum": [
+              "provider_estimate",
+              "internal_estimate"
+            ]
+          }
+        },
+        "required": [
+          "billing_source"
+        ]
+      },
+      "then": {
+        "properties": {
+          "currency": {
+            "enum": [
+              "USD",
+              "BOB"
+            ]
+          },
+          "is_estimated": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "billing_source": {
+            "const": "provider_estimate"
+          }
+        },
+        "required": [
+          "billing_source"
+        ]
+      },
+      "then": {
+        "properties": {
+          "provider_estimated_costs": {
+            "minItems": 1
           }
         }
       }
@@ -120,6 +170,9 @@
         "properties": {
           "currency": {
             "const": "NONE"
+          },
+          "is_estimated": {
+            "const": false
           },
           "provider_estimated_costs": {
             "maxItems": 0
@@ -214,6 +267,28 @@
       "billing_source": "not_billable",
       "model_input_tokens": 0,
       "model_output_tokens": 0,
+      "tool_calls": 0,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0
+    },
+    {
+      "cost_report_id": "cr_008",
+      "currency": "NONE",
+      "is_estimated": true,
+      "billing_source": "provider_estimate",
+      "model_input_tokens": 1,
+      "model_output_tokens": 1,
+      "tool_calls": 0,
+      "provider_estimated_costs": [],
+      "estimated_total_cost": 0
+    },
+    {
+      "cost_report_id": "cr_009",
+      "currency": "USD",
+      "is_estimated": true,
+      "billing_source": "provider_estimate",
+      "model_input_tokens": 1,
+      "model_output_tokens": 1,
       "tool_calls": 0,
       "provider_estimated_costs": [],
       "estimated_total_cost": 0
