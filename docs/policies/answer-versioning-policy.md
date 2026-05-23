@@ -46,11 +46,13 @@ No implementa persistencia, UI de historial, permisos finales ni retencion compl
 19. `AnswerContract.trace_id`, `AnswerContract.answer_id` y `AnswerContract.answer_version` deben ser iguales a los campos equivalentes de `TraceObject` y `AnswerVersion`.
 20. `AnswerVersion.answer_contract_ref` debe resolver al `AnswerContract` correspondiente; no puede apuntar a otro `answer_id`, otra version o otra traza.
 21. `AnswerContract.evidence_pack_id` debe existir dentro de `TraceObject.evidence_pack_ids[]`.
-22. Los claims publicados en `AnswerContract.claims[]` deben corresponder exactamente por `claim_id` a los claims publicados en `TraceObject.claims[]`.
+22. Los claims publicados en `AnswerContract.claims[]` deben corresponder por equivalencia canonica completa a los claims publicados en `TraceObject.claims[]`; no basta coincidir en `claim_id`.
 23. `AnswerContract.sources_used[]` debe ser el mismo conjunto que `TraceObject.sources_used[]`.
-24. Cada `AnswerContract.citations[]` debe estar cubierta por `TraceObject.citation_audit.results[]` con el mismo `citation_ref`, `passage_ref`, `source_ref` y un `claim_id` soportado.
-25. Una respuesta publicada no puede considerarse reconstruible si `AnswerContract` usa evidence pack, claims, citas o fuentes que no aparecen en el `TraceObject` correspondiente.
-26. La regla 4 y las reglas 17 a 25 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
+24. Para cada claim publicado, la equivalencia canonica incluye `claim_id`, `text`, `claim_type`, `criticality`, `support_level`, conjunto de `citations[]`, `verification_status` y `requires_human_review`.
+25. Cada `AnswerContract.citations[]` debe estar cubierta por `TraceObject.citation_audit.results[]` con el mismo `citation_ref`, `passage_ref`, `source_ref`, `status = valid` y claims soportados equivalentes.
+26. Para cada cita publicada, `AnswerContract.citations[].status` debe ser `valid` y el conjunto `supports_claim_ids[]` debe coincidir con los `claim_id` auditados en `TraceObject.citation_audit.results[]` para la misma cita/pasaje/fuente.
+27. Una respuesta publicada no puede considerarse reconstruible si `AnswerContract` usa evidence pack, claims, citas o fuentes que no aparecen en el `TraceObject` correspondiente, o si reutiliza IDs con contenido juridico distinto.
+28. La regla 4 y las reglas 17 a 27 requieren validador custom o constraint de persistencia; no pueden verificarse con cada JSON Schema aislado.
 
 ## Reglas asistidas por IA
 
