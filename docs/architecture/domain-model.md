@@ -105,6 +105,8 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | Conversation -> Case | `0..1` | Una conversacion puede no estar asociada a caso. |
 | Case -> Document | `0..n` | Un caso puede empezar sin documentos. |
 | Document -> Case | `0..1` | Un documento puede existir antes de asociarse a caso. |
+| Document -> StorageObject | `0..n` | Un documento shell/upload intent puede tener objeto privado antes de crear version. |
+| StorageObject -> Document | `n..1` | Todo `sto_*` privado pertenece a un `Document`; no existen storage objects huerfanos. |
 | Case -> CaseMemory | `0..1` | La memoria puede crearse tras el caso. |
 | CaseMemory -> Case | `1..1` | No existe memoria sin caso. |
 | Document -> DocumentVersion | `0..n` | `POST /v1/documents` puede crear shell/upload intent sin version. |
@@ -117,15 +119,15 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | DocumentEvidence -> DocumentChunk | `0..1` | Puede derivarse de chunk o de extraccion directa. |
 | DocumentEvidence -> PromptInjectionRisk | `0..n` | `[]` significa evaluado sin riesgos. |
 | DocumentVersion -> StorageObject | `0..n` | Version documental puede tener objeto original y artefactos privados derivados. |
-| StorageObject -> DocumentVersion | `0..1` | Storage publico de fuentes se modela por `SourceSnapshot`, no por este recurso raw privado. |
+| StorageObject -> DocumentVersion | `0..1` | Opcional hasta que exista `document_version_id`; el parent `Document` sigue siendo obligatorio. |
 | DocumentVersion -> OcrArtifact | `0..n` | Version puede no estar procesada o tener OCR por pagina/fragmento. |
 | DocumentPage -> OcrArtifact | `0..n` | OCR puede estar asociado a pagina especifica. |
 | OcrArtifact -> DocumentVersion | `n..1` | Todo OCR privado deriva de una version documental tenant-scoped. |
 | OcrArtifact -> DocumentPage | `0..1` | OCR multipagina o fragmentario puede no ser pagina unica. |
 | DocumentEvidence -> Embedding | `0..n` | Embeddings derivados de evidencia documental heredan su clasificacion. |
 | CaseMemory -> Embedding | `0..n` | Embeddings derivados de memoria heredan `CASE_MEMORY_CONFIDENTIAL`. |
-| Embedding -> DocumentEvidence | `0..1` | Embedding documental apunta a un fragmento citable cuando aplique. |
-| Embedding -> CaseMemory | `0..1` | Embedding de memoria apunta al caso/memoria cuando aplique. |
+| Embedding -> DocumentEvidence | `0..1`, XOR `CaseMemory` | Si `document_evidence_id` existe, no puede existir parent de memoria. |
+| Embedding -> CaseMemory | `0..1`, XOR `DocumentEvidence` | Si `case_id`/memoria existe, no puede existir parent documental; todo embedding tiene exactamente un parent. |
 | SourceRegistryEntry -> SourceSnapshot | `0..n` | Una fuente puede registrarse antes de snapshots. |
 | SourceSnapshot -> SourceRegistryEntry | `0..1` | Snapshots privados pueden existir fuera del registry publico global. |
 | RetrievalRun -> EvidencePack | `0..n` | Runs fallidos pueden no producir pack. |
@@ -185,9 +187,9 @@ Todo artefacto derivado hereda la mayor sensibilidad (`sensitivity_rank`) de sus
 
 ## Artefactos raw addressable
 
-- `StorageObject` representa objeto privado addressable por `RawAccessEvent.storage_object`; objetos publicos de fuentes se modelan por `SourceSnapshot`.
+- `StorageObject` representa objeto privado addressable por `RawAccessEvent.storage_object`; siempre apunta a `Document`, puede apuntar tambien a `DocumentVersion` cuando existe version, y objetos publicos de fuentes se modelan por `SourceSnapshot`.
 - `OcrArtifact` representa OCR privado por version, pagina o fragmento; el OCR completo no se copia a trazas, logs, errores ni provider audit.
-- `Embedding` debe derivar de una fuente contractual unica en 0.11: `DocumentEvidence` o `CaseMemory`; si necesita ambas, se crean artefactos separados.
+- `Embedding` debe derivar de una fuente contractual unica en 0.11: exactamente uno de `document_evidence_id` o `case_id`/`CaseMemory`; si necesita ambas fuentes, se crean artefactos separados.
 - `CitationAudit` y `CostReport` permanecen como value objects embebidos en `TraceObject` salvo que Fase 1 los materialice con `organization_id`, `trace_id` y constraint de unicidad contra el `TraceObject` owner.
 
 ## Reglas de verdad juridica
