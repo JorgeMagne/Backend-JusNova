@@ -4,6 +4,7 @@
 **Fecha:** 2026-05-22  
 **Responsable:** Codex / JusNova Chief Backend Architect  
 **Decision relacionada:** ADR-001 - High-Assurance Modular Core + Distributed Execution Layer
+**Enmiendas:** Subfase 0.11 - domain model, API boundary and entity ownership matrix
 
 ## Proposito
 
@@ -13,6 +14,8 @@ Este documento define que vive dentro del core, que vive en workers y bajo que c
 
 | Modulo | Responsabilidad | No debe hacer |
 |---|---|---|
+| API Gateway / Request Boundary Module | Autenticacion de request, tenant context, path/body validation, stream coordination y `ErrorEnvelope`. | Saltarse tenancy, devolver payloads raw o convertir un run en progreso en `TraceObject` valido. |
+| Identity / Membership Module | Organizaciones, usuarios internos, membresias, tenant context y actor refs. | Exponer `user_id` crudo en contratos de auditoria o reemplazar `actor_ref` pseudonimo. |
 | Conversation Module | Conversaciones, mensajes, runs y streaming coordinado. | Ejecutar OCR, crawling o indexacion pesada. |
 | Case Memory Module | Memoria estructurada de caso, hechos, pendientes y fuentes historicas. | Tratar memoria como verdad juridica. |
 | Legal Orchestration Module | Clasificacion, planificacion, coordinacion de tools, respuesta y abstencion. | Llamar SDKs externos directamente. |
@@ -23,8 +26,10 @@ Este documento define que vive dentro del core, que vive en workers y bajo que c
 | Citation Auditor Module | Validar cita -> pasaje -> fuente y claims criticos. | Depender solo de evaluacion generativa. |
 | Claim Verification Module | Verificar soporte, criticidad, bloqueo y repair controlado. | Agregar nuevos claims durante repair. |
 | Document Registry Module | Documentos, versiones, paginas, ownership y estado de procesamiento. | Procesar OCR largo inline. |
+| Plan / Subscription Module | Planes, suscripciones, creditos de investigacion y estado comercial no juridico. | Usar informacion comercial como evidencia o fuente juridica. |
 | Cost Governor Module | Budgets, creditos, limites por plan y decisiones de degradacion controlada. | Reducir veracidad o citacion para ahorrar. |
 | Usage Ledger Module | Eventos de uso, costos estimados, tokens, fetches, OCR y creditos. | Ser fuente de verdad juridica. |
+| Error Handling Module | Catalogo de errores, `safe_message_code`, sanitizacion de mensajes y metadata cerrada. | Interpolar contenido de usuario, documentos, provider payloads o stack traces. |
 | Security / Tenancy Module | Organizaciones, usuarios, permisos, isolation, data classification. | Delegar seguridad a prompts. |
 | Audit / Trace Module | TraceObject, model calls, tool calls, answer versions y hashes. | Guardar documentos completos en logs generales. |
 
@@ -48,6 +53,10 @@ Este documento define que vive dentro del core, que vive en workers y bajo que c
 - Redis no guarda verdad transaccional.
 - OpenSearch no reemplaza PostgreSQL.
 - Evidence Cache no reemplaza Source Registry ni Validity Resolver.
+- La capa API no puede omitir tenancy ni devolver `CaseMemory`, documentos, OCR, trazas o provider payloads crudos.
+- Workers documentales pueden producir estado, fragmentos y evidencia documental, pero no escriben respuestas juridicas finales directamente.
+- Usage Ledger, planes, suscripciones y creditos no son evidencia juridica.
+- `ErrorEnvelope` es la unica forma aceptada para errores HTTP no 2xx en el API draft.
 
 ## Criterios de extraccion futura a servicio independiente
 
@@ -73,4 +82,3 @@ Un modulo puede extraerse solo si cumple al menos cuatro criterios:
 ## Regla de estabilidad
 
 Antes de extraer un microservicio, debe existir ADR nuevo con metrica operativa que justifique la extraccion.
-

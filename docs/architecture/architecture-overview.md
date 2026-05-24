@@ -3,8 +3,8 @@
 **Estado documental:** Accepted
 **Fecha:** 2026-05-24
 **Responsable:** Codex / JusNova Chief Backend Architect
-**Decision relacionada:** ADR-001 - High-Assurance Modular Core + Distributed Execution Layer; ADR-011 - Security, Privacy and Provider Boundaries
-**Enmiendas:** Subfase 0.10 - provider registry, data classification and raw access boundaries
+**Decision relacionada:** ADR-001 - High-Assurance Modular Core + Distributed Execution Layer; ADR-002 - Stack Backend And Infrastructure; ADR-011 - Security, Privacy and Provider Boundaries
+**Enmiendas:** Subfase 0.10 - provider registry, data classification and raw access boundaries; Subfase 0.11 - conceptual domain model, entity ownership and API draft boundaries
 
 ## Proposito
 
@@ -20,6 +20,8 @@ Frontend Next.js / React
         v
 API Gateway / Backend Core FastAPI
         |
+        |-- API Gateway / Request Boundary Module
+        |-- Identity / Membership Module
         |-- Conversation Module
         |-- Case Memory Module
         |-- Legal Orchestration Module
@@ -30,8 +32,10 @@ API Gateway / Backend Core FastAPI
         |-- Citation Auditor Module
         |-- Claim Verification Module
         |-- Document Registry Module
+        |-- Plan / Subscription Module
         |-- Cost Governor Module
         |-- Usage Ledger Module
+        |-- Error Handling Module
         |-- Security / Tenancy Module
         |-- Audit / Trace Module
         |
@@ -72,6 +76,17 @@ External Controlled Providers
 ## Core backend
 
 El core contiene reglas transaccionales, contratos juridicos, seguridad, trazabilidad, costos, orquestacion de respuestas y persistencia. El core no debe depender directamente de SDKs de proveedores externos; usa interfaces internas.
+
+## Modelo conceptual y API draft
+
+Subfase 0.11 agrega documentos conceptuales para que Fase 1 pueda crear migraciones iniciales y endpoints sin inventar estructura:
+
+- `domain-model.md` define entidades, IDs, relaciones, cardinalidades y reglas de refs locales.
+- `entity-ownership-matrix.md` define tenant, owner, clasificacion, raw access aplicable y comportamiento de borrado por entidad.
+- `api-draft-v0.md` define endpoints minimos, visibilidad, ciclo de vida de runs y uso obligatorio de `ErrorEnvelope`.
+- `error-envelope.schema.json` define errores seguros, codigos cerrados, metadata tipada y restricciones contra contenido sensible.
+
+Estos documentos son contractuales/conceptuales; no implementan migraciones, routers, OpenAPI formal, auth runtime ni workers.
 
 ## Worker layer
 
@@ -131,4 +146,4 @@ El core no debe producir una respuesta juridica critica si no existe uno de esto
 
 ## Relacion con ADR-001
 
-ADR-001 acepta esta arquitectura como base. `module-boundaries.md` define limites concretos de modulos, workers y criterios de extraccion futura.
+ADR-001 acepta esta arquitectura como base. `module-boundaries.md` define limites concretos de modulos, workers y criterios de extraccion futura. Subfase 0.11 ancla esos limites al modelo de dominio, la matriz de ownership y el API draft que Fase 1 debe respetar.

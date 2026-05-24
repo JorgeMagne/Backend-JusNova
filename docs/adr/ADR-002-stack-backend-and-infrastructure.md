@@ -49,6 +49,7 @@ Python ofrece el ecosistema mas fuerte para IA, OCR, PDF, retrieval y evaluacion
 ## Dependencias posteriores
 
 - Fase 1 debe crear settings, migraciones, logging y health checks.
+- Fase 1 debe usar `domain-model.md`, `entity-ownership-matrix.md`, `api-draft-v0.md` y `error-envelope.schema.json` como base de migraciones iniciales y endpoints.
 - Fase 1 debe definir `StorageProvider` sin fijar un proveedor unico.
 - Fase 1 debe preparar docker compose o equivalente local para PostgreSQL, Redis y OpenSearch.
 - Fases posteriores revisaran Temporal y busqueda hibrida con metricas.
@@ -81,6 +82,7 @@ Python ofrece el ecosistema mas fuerte para IA, OCR, PDF, retrieval y evaluacion
 - Redis no es fuente de verdad.
 - OpenSearch no se trata como solucion permanente sin evaluacion.
 - La adopcion de Kubernetes requiere metrica operacional, no preferencia.
+- El API draft y `ErrorEnvelope` quedan documentados antes de crear routers productivos.
 
 ## Momento de revision
 
@@ -89,4 +91,3 @@ Revisar al cerrar Fase 1, antes de beta, y cuando las metricas de retrieval, lat
 ## Consecuencias
 
 Fase 1 debe iniciar con FastAPI, Pydantic, PostgreSQL, Redis, OpenSearch, storage abstracto y observabilidad basica.
-

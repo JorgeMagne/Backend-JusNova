@@ -175,6 +175,23 @@ Estos contratos quedan aceptados como base documental de seguridad, privacidad, 
 - `TraceObject.prompt_injection_risks[]` agrega riesgos de evidencia/retrieval usados por la respuesta.
 - Ningun contrato 0.10 guarda documentos completos, OCR completo, prompts completos, mensajes completos, HTML bruto ni salidas completas.
 
+## Contratos aceptados en Subfase 0.11
+
+Estos contratos quedan aceptados como base documental del modelo conceptual y del API draft minimo. Esta aceptacion no implementa runtime, routers, OpenAPI formal, migraciones, DB ni servicios.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Error Envelope | Accepted | `error-envelope.schema.json` |
+
+## Reglas especificas de Subfase 0.11
+
+- `ErrorEnvelope` es obligatorio para respuestas HTTP no 2xx en el API draft.
+- `ErrorEnvelope.error_code` y `safe_message_code` usan enums cerrados y mapping deterministico.
+- `ErrorEnvelope.message` es texto seguro, acotado y no debe interpolar contenido de usuario, documento, provider o stack trace.
+- `ErrorEnvelope.metadata` es objeto cerrado; refs locales `F#`, `D#`, `F#:P#` y `D#:P#` solo pueden aparecer con contexto padre resoluble.
+- Un `run_id` en progreso usa forma `tr_*`, pero no es `TraceObject` schema-valid hasta que exista `answer_id` y `answer_version_ref`.
+- `domain-model.md`, `entity-ownership-matrix.md` y `api-draft-v0.md` gobiernan relaciones conceptuales, ownership y visibilidad de endpoints para Fase 1.
+
 ## Schemas minimos esperados
 
 ```txt

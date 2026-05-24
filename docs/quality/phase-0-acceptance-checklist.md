@@ -45,6 +45,10 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Prompt Injection Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/prompt-injection-policy.md` |
 | Data Classification aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/schemas/data-classification.yaml` |
 | Provider Registry aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/schemas/provider-registry.yaml` |
+| Modelo conceptual de dominio aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/domain-model.md` |
+| Matriz de ownership por entidad aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/entity-ownership-matrix.md` |
+| API draft v0 aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/api-draft-v0.md` |
+| Error Envelope aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/error-envelope.schema.json` |
 | Evaluation Plan v0 aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/quality/evaluation-plan-v0.md` |
 | Beta Readiness Gates definidos | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/quality/beta-readiness-gates.md` |
 | Market Readiness Gates definidos | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/quality/market-readiness-gates.md` |
@@ -232,4 +236,21 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | `provider-policy.md`, `provider-interfaces.md` y `architecture-overview.md` comparten las 11 familias canonicas | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/provider-policy.md`, `docs/contracts/provider-interfaces.md`, `docs/architecture/architecture-overview.md` |
 | `prompt-injection-policy.md` trata documentos, HTML, snippets y OCR como datos no confiables | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/prompt-injection-policy.md` |
 | `security-checklist-phase-1.md` creado para handoff minimo de seguridad | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/security-checklist-phase-1.md` |
+| Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.11
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| `domain-model.md` creado con entidades, IDs globales, refs locales y relaciones/cardinalidades | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/domain-model.md` |
+| Cardinalidades permiten shells para Conversation, Document, Answer, Subscription y ResearchCredit | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/domain-model.md` |
+| `run_id=tr_*` en progreso no se trata como `TraceObject` valido hasta finalizacion | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/domain-model.md`, `docs/architecture/api-draft-v0.md` |
+| `entity-ownership-matrix.md` cubre toda entidad y no expande `RawAccessEvent.resource_type` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/entity-ownership-matrix.md` |
+| Entidades sin raw access 0.10 explicitan `No aplica` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/entity-ownership-matrix.md` |
+| `api-draft-v0.md` no expone memoria, documentos, OCR, trazas ni payloads de provider crudos | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/api-draft-v0.md` |
+| `/cases/{case_id}/memory` devuelve `CaseMemorySafeSummary`, no `CaseMemory` crudo | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/api-draft-v0.md` |
+| `/documents/{document_id}` devuelve metadata/status sin binario, OCR completo ni signed URL | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/api-draft-v0.md` |
+| Stream final incluye `answer_id`, `answer_version_ref` y `run_id` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/api-draft-v0.md` |
+| `error-envelope.schema.json` creado, cerrado y con mapping `error_code -> safe_message_code` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/error-envelope.schema.json` |
+| `module-boundaries.md` y `architecture-overview.md` registran enmienda 0.11 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/module-boundaries.md`, `docs/architecture/architecture-overview.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |

@@ -17,12 +17,14 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-001 | Tareas en workers. | ADR-001: Limites aprobados; `architecture-overview.md`; `module-boundaries.md`. | Accepted | Fases posteriores workers/workflows. | OCR/retrieval bloquean core. |
 | ADR-001 | Criterios para extraer microservicios futuros. | `module-boundaries.md`: Criterios de extraccion futura. | Accepted | ADR nuevo ante extraccion. | Servicios prematuros o inconsistentes. |
 | ADR-001 | Diagrama y limites modulares. | `architecture-overview.md`; `module-boundaries.md`. | Accepted | Ninguna para decision. | ADR sin respaldo visual/operativo. |
+| ADR-001 | Modelo conceptual y cardinalidades para Fase 1. | `domain-model.md`; `entity-ownership-matrix.md`. | Accepted | Fase 1 migraciones iniciales. | Tablas y relaciones inventadas o incompatibles. |
 | ADR-002 | Python/FastAPI/Pydantic sobre NestJS. | ADR-002: Contexto, Decision, Justificacion. | Accepted | Fase 1 scaffold. | Stack no alineado a IA/OCR/retrieval. |
 | ADR-002 | OpenSearch cubre lexical/filtros/vector inicial evaluable. | ADR-002: Decision, Justificacion. | Accepted | Fase 1 OpenSearch; Fase 12 evals. | Base de busqueda prematura o insuficiente. |
 | ADR-002 | Base vectorial dedicada no obligatoria en lanzamiento. | ADR-002: Opciones consideradas, No afirma todavia. | Accepted | Revisar tras metricas retrieval. | Dependencia extra sin evidencia. |
 | ADR-002 | Redis no es fuente de verdad. | ADR-002: Decision; `architecture-overview.md`. | Accepted | Fase 1 cache/locks. | Perdida de datos transaccionales. |
 | ADR-002 | Object storage obligatorio. | ADR-002: Decision, Justificacion. | Accepted | Fase 1 StorageProvider. | PDFs/snapshots en base transaccional. |
 | ADR-002 | Condicion para adoptar Kubernetes. | ADR-002: No afirma todavia, Criterios de aceptacion, Revision. | Accepted | Metricas operativas futuras. | Plataforma sobredimensionada. |
+| ADR-002 | API draft y envelope de errores antes de routers productivos. | `api-draft-v0.md`; `error-envelope.schema.json`. | Accepted | Fase 1 API skeleton y OpenAPI formal posterior. | Endpoints o errores incompatibles con seguridad y contratos. |
 | ADR-003 | Que significa busqueda juridica viva. | ADR-003: Decision, Justificacion, Componentes aprobados; `docs/policies/legal-search-policy.md`. | Accepted | Fase 4 implementacion. | Busqueda generica sin estructura juridica. |
 | ADR-003 | Que fuentes consulta. | ADR-003: Contexto; ADR-009 fuentes iniciales; `docs/policies/source-routing-matrix.md`; `docs/policies/source-policy.md`. | Accepted | Fase 5 adapters. | Cobertura Bolivia-first incompleta. |
 | ADR-003 | Que adaptadores existen. | ADR-003: Componentes aprobados; `docs/contracts/provider-interfaces.md`. | Accepted | Fase 5 adapters. | Portales oficiales no modelados. |
@@ -93,6 +95,7 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-011 | Retencion/eliminacion. | ADR-011: Reglas aprobadas; `privacy-security-policy.md`; `document-security-policy.md`. | Accepted | Fase 1 deletion/tombstone implementation. | Datos retenidos sin politica. |
 | ADR-011 | Acceso raw/elevado. | `raw-access-event.schema.json`; `privacy-security-policy.md`; `trace-visibility-policy.md`. | Accepted | Fase 1 access workflow and approvals. | Soporte o auditoria acceden a material crudo sin control. |
 | ADR-011 | Data classification. | `data-classification.yaml`; `provider-policy.md`; `privacy-security-policy.md`. | Accepted | Fase 1 classification propagation. | Payloads derivados sin sensibilidad definida. |
+| ADR-011 | Ownership por entidad y vistas seguras de API. | `entity-ownership-matrix.md`; `api-draft-v0.md`; `error-envelope.schema.json`. | Accepted | Fase 1 tenancy enforcement y API skeleton. | Entidades privadas sin tenant o endpoints con payloads crudos. |
 | ADR-012 | Metricas iniciales. | ADR-012: Metricas iniciales. | Accepted | Subfase 0.12. | Calidad subjetiva. |
 | ADR-012 | Dataset inicial minimo. | ADR-012: Dependencias posteriores. | Accepted | Subfase 0.12 dataset spec. | Evals sin cobertura. |
 | ADR-012 | Golden cases. | ADR-012: Decision, Mitigaciones. | Accepted | Subfase 0.12. | Regresiones no detectadas. |

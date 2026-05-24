@@ -65,8 +65,8 @@ Estos ADRs quedan aceptados como decisiones arquitectonicas. Esta lista no impli
 
 | ADR | Decision | Estado | Dependencias posteriores |
 |---|---|---|---|
-| ADR-001 | High-Assurance Modular Core + Distributed Execution Layer | Accepted | Fase 1 estructura modular; workers por fases. |
-| ADR-002 | Stack Backend And Infrastructure | Accepted | Fase 1 scaffold, settings, DB, Redis, OpenSearch, observabilidad. |
+| ADR-001 | High-Assurance Modular Core + Distributed Execution Layer | Accepted | Subfase 0.11 domain model/ownership accepted; Fase 1 estructura modular; workers por fases. |
+| ADR-002 | Stack Backend And Infrastructure | Accepted | Subfase 0.11 API draft/ErrorEnvelope accepted; Fase 1 scaffold, settings, DB, Redis, OpenSearch, observabilidad. |
 | ADR-003 | JusNova Live Legal Search Engine | Accepted | Subfase 0.5 contratos; Fases 4-8 implementacion. |
 | ADR-004 | Launch Without Own Legal RAG | Accepted | Subfase 0.6 no-rag policy accepted; Fase 8 cache/snapshots. |
 | ADR-005 | AI Provider And Model Policy | Accepted | Fase 1 ModelProvider; Subfase 0.10 provider policy. |
@@ -75,7 +75,7 @@ Estos ADRs quedan aceptados como decisiones arquitectonicas. Esta lista no impli
 | ADR-008 | Cost Governor And Commercial Budgets | Accepted | Subfase 0.8 budgets/contracts/policies accepted; Fase 1 CostGovernor/UsageLedger. |
 | ADR-009 | Source Registry And Validity Policy | Accepted | Subfase 0.6 source/validity/conflict/uncertainty policies accepted; Fase 4/5 registry/adapters. |
 | ADR-010 | Traceability And Answer Versioning | Accepted | Subfase 0.7 trace/audit/version schemas accepted; Subfase 0.9 message refs accepted; Fase 3 versionado basico. |
-| ADR-011 | Security, Privacy And Provider Boundaries | Accepted | Subfase 0.9 document security minima; Subfase 0.10 policies; Fase 1 ownership. |
+| ADR-011 | Security, Privacy And Provider Boundaries | Accepted | Subfase 0.9 document security minima; Subfase 0.10 policies; Subfase 0.11 ownership matrix/API safe views; Fase 1 ownership. |
 | ADR-012 | Evaluation And Quality Gates | Accepted | Subfase 0.12 eval plan, dataset and gates. |
 
 ## Canon de numeracion ADR
@@ -243,8 +243,22 @@ Estos contratos quedan aceptados como contratos documentales de seguridad, priva
 | Trace Visibility Policy Security Amendment | Accepted | `docs/policies/trace-visibility-policy.md` |
 | Security Checklist Phase 1 | Accepted | `docs/quality/security-checklist-phase-1.md` |
 
+## Arquitectura y contratos aceptados en Subfase 0.11
+
+Estos documentos quedan aceptados como base conceptual para migraciones iniciales, ownership y endpoints de Fase 1. Esta lista no implica que existan runtime, routers, migraciones, DB ni OpenAPI formal.
+
+| Entregable | Estado | Archivo |
+|---|---|---|
+| Domain Model | Accepted | `docs/architecture/domain-model.md` |
+| Entity Ownership Matrix | Accepted | `docs/architecture/entity-ownership-matrix.md` |
+| API Draft v0 | Accepted | `docs/architecture/api-draft-v0.md` |
+| Error Envelope | Accepted | `docs/contracts/error-envelope.schema.json` |
+| Module Boundaries Amendment | Accepted | `docs/architecture/module-boundaries.md` |
+| Architecture Overview Amendment | Accepted | `docs/architecture/architecture-overview.md` |
+
 ## Dependencias posteriores preservadas
 
+- Runtime de API, routers, OpenAPI formal, migraciones y servicios queda delegado a Fase 1.
 - Source Registry schema completo queda delegado a subfases posteriores y Fase 4.
 - Runtime de auth, permisos finales, retention automation, SIEM, storage real, provider SDKs y enforcement productivo quedan delegados a Fase 1 y fases posteriores.
 - Runtime de conversacion, storage documental, OCR worker, busqueda documental y memoria persistente quedan delegados a Fase 1 y fases posteriores.
