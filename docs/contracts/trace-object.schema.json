@@ -97,7 +97,7 @@
     },
     "cost_budget_version": {
       "type": "string",
-      "minLength": 1
+      "pattern": "^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$"
     },
     "plan_code": {
       "enum": [

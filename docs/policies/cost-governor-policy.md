@@ -44,10 +44,12 @@ El Cost Governor puede limitar profundidad. No puede debilitar la verdad documen
 21. Cualquier exencion futura requiere enum cerrado y nueva policy o ADR.
 22. Si `event_scope = execution`, `UsageEvent` debe registrar `complexity`, `cost_budget_ref` y `cost_budget_version`.
 23. Si `event_scope = organization_period`, `UsageEvent` no puede aparentar pertenecer a una consulta: `complexity`, `cost_budget_ref` y `cost_budget_version` deben estar ausentes o ser `null`.
-24. `storage_mb_day` solo se registra como `organization_period`.
-25. `document_processed` puede registrarse como `execution` o `organization_period`.
-26. `research_credit_used` no se agrega en v0; la cantidad debe ser exactamente el costo de credito de la complejidad.
-27. Si una afirmacion critica queda sin evidencia suficiente por budget agotado, la salida debe ser abstencion parcial, abstencion total, bloqueo o Modo Investigacion.
+24. Si `event_scope = execution`, `UsageEvent` debe tener al menos una referencia cerrada de ejecucion: `conversation_id`, `trace_id`, `answer_id`, `retrieval_run_id`, `cost_report_id`, `model_call_id` o `tool_call_id`.
+25. Los eventos `model_input_tokens` y `model_output_tokens` deben registrar `model_call_id`.
+26. `storage_mb_day` solo se registra como `organization_period`.
+27. `document_processed` puede registrarse como `execution` o `organization_period`.
+28. `research_credit_used` no se agrega en v0; la cantidad debe ser exactamente el costo de credito de la complejidad.
+29. Si una afirmacion critica queda sin evidencia suficiente por budget agotado, la salida debe ser abstencion parcial, abstencion total, bloqueo o Modo Investigacion.
 
 ## Reglas asistidas por IA
 

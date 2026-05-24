@@ -35,9 +35,18 @@
     "actor_ref": {
       "type": "string",
       "minLength": 1,
-      "not": {
-        "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
-      }
+      "allOf": [
+        {
+          "not": {
+            "pattern": "[^@\\s]+@[^@\\s]+\\.[^@\\s]+"
+          }
+        },
+        {
+          "not": {
+            "pattern": "^\\+?[0-9][0-9\\s-]{5,}$"
+          }
+        }
+      ]
     },
     "actor_type": {
       "enum": [
@@ -209,6 +218,85 @@
           "complexity",
           "cost_budget_ref",
           "cost_budget_version"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "conversation_id"
+            ],
+            "properties": {
+              "conversation_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "trace_id"
+            ],
+            "properties": {
+              "trace_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "answer_id"
+            ],
+            "properties": {
+              "answer_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "retrieval_run_id"
+            ],
+            "properties": {
+              "retrieval_run_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "cost_report_id"
+            ],
+            "properties": {
+              "cost_report_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "model_call_id"
+            ],
+            "properties": {
+              "model_call_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "tool_call_id"
+            ],
+            "properties": {
+              "tool_call_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
         ],
         "properties": {
           "complexity": {
@@ -386,7 +474,31 @@
           "quantity": {
             "type": "integer"
           }
-        }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "trace_id"
+            ],
+            "properties": {
+              "trace_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          {
+            "required": [
+              "answer_id"
+            ],
+            "properties": {
+              "answer_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        ]
       }
     },
     {
@@ -544,8 +656,15 @@
           },
           "quantity": {
             "type": "integer"
+          },
+          "model_call_id": {
+            "type": "string",
+            "minLength": 1
           }
-        }
+        },
+        "required": [
+          "model_call_id"
+        ]
       }
     },
     {
@@ -651,6 +770,24 @@
       "trace_id": "tr_002",
       "answer_id": "ans_002",
       "created_at": "2026-05-24T00:00:00Z"
+    },
+    {
+      "usage_event_id": "ue_tokens_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "plan_code": "PROFESIONAL",
+      "billing_period": "2026-05",
+      "event_scope": "execution",
+      "event_type": "model_input_tokens",
+      "unit": "token",
+      "quantity": 1200,
+      "complexity": "SIMPLE",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "trace_id": "tr_001",
+      "model_call_id": "mc_001",
+      "created_at": "2026-05-24T00:00:00Z"
     }
   ],
   "x-invalid-examples": [
@@ -692,6 +829,27 @@
       }
     },
     {
+      "description": "actor_ref no puede ser un identificador numerico crudo.",
+      "value": {
+        "usage_event_id": "ue_numeric_actor",
+        "organization_id": "org_001",
+        "actor_ref": "1234567",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "standard_query",
+        "unit": "query",
+        "quantity": 1,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "trace_id": "tr_001",
+        "answer_id": "ans_001",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
       "description": "user_id crudo y metadata libre no pertenecen al ledger 0.8.",
       "value": {
         "usage_event_id": "ue_user_id",
@@ -727,6 +885,25 @@
         "event_type": "standard_query",
         "unit": "query",
         "quantity": 1,
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "execution requiere al menos una referencia ejecutable.",
+      "value": {
+        "usage_event_id": "ue_execution_unanchored",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "standard_query",
+        "unit": "query",
+        "quantity": 1,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
         "created_at": "2026-05-24T00:00:00Z"
       }
     },
@@ -821,6 +998,25 @@
       }
     },
     {
+      "description": "research_credit_used debe anclarse por trace_id o answer_id.",
+      "value": {
+        "usage_event_id": "ue_credit_unanchored",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PRO_PLUS",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "research_credit_used",
+        "unit": "credit",
+        "quantity": 1,
+        "complexity": "COMPLEJO",
+        "cost_budget_ref": "cb_pro_plus_complejo_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
       "description": "COMPLEJO cuesta exactamente un credito en v0.",
       "value": {
         "usage_event_id": "ue_credit_complex_two",
@@ -874,6 +1070,26 @@
         "complexity": "MEDIO",
         "cost_budget_ref": "cb_profesional_medio_v080",
         "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "Eventos de tokens deben apuntar al model_call_id.",
+      "value": {
+        "usage_event_id": "ue_tokens_no_model_call",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "model_input_tokens",
+        "unit": "token",
+        "quantity": 1200,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "trace_id": "tr_001",
         "created_at": "2026-05-24T00:00:00Z"
       }
     },
