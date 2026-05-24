@@ -907,6 +907,104 @@
           }
         ]
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "timeout"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ],
+        "properties": {
+          "error_code": {
+            "const": "timeout"
+          }
+        }
+      },
+      "$comment": "status_error_code_timeout"
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "rate_limited"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ],
+        "properties": {
+          "error_code": {
+            "const": "rate_limited"
+          }
+        }
+      },
+      "$comment": "status_error_code_rate_limited"
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "cancelled"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ],
+        "properties": {
+          "error_code": {
+            "enum": [
+              "cancelled_by_user",
+              "cancelled_by_system"
+            ]
+          }
+        }
+      },
+      "$comment": "status_error_code_cancelled"
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "error"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ],
+        "properties": {
+          "error_code": {
+            "enum": [
+              "provider_error",
+              "unmapped_error"
+            ]
+          }
+        }
+      },
+      "$comment": "status_error_code_error"
     }
   ],
   "examples": [
@@ -1333,6 +1431,106 @@
       "started_at": "2026-05-24T12:00:00Z",
       "completed_at": "2026-05-24T12:00:30Z",
       "status": "timeout",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "error_code": "timeout",
+      "output_hash": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_timeout_wrong_error_code",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "started_at": "2026-05-24T12:00:00Z",
+      "completed_at": "2026-05-24T12:00:30Z",
+      "status": "timeout",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "error_code": "provider_error",
+      "output_hash": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_rate_limited_wrong_error_code",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "started_at": "2026-05-24T12:00:00Z",
+      "completed_at": "2026-05-24T12:00:30Z",
+      "status": "rate_limited",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "error_code": "provider_error",
+      "output_hash": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_cancelled_wrong_error_code",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "started_at": "2026-05-24T12:00:00Z",
+      "completed_at": "2026-05-24T12:00:30Z",
+      "status": "cancelled",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "error_code": "provider_error",
+      "output_hash": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_error_wrong_error_code",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "started_at": "2026-05-24T12:00:00Z",
+      "completed_at": "2026-05-24T12:00:30Z",
+      "status": "error",
       "training_use_allowed": false,
       "policy_decision": "allowed",
       "error_code": "timeout",

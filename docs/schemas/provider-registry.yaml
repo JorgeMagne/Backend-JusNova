@@ -225,6 +225,9 @@ provider_registry:
         - CASE_MEMORY_CONFIDENTIAL
         - DOCUMENT_EVIDENCE_CONFIDENTIAL
       data_returned_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - CASE_MEMORY_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
         - PROVIDER_OPERATIONAL_METADATA
       stores_customer_data: false
       training_use_allowed: false
@@ -367,6 +370,9 @@ provider_registry:
         - DOCUMENT_EVIDENCE_CONFIDENTIAL
       data_returned_classes:
         - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
         - PROVIDER_OPERATIONAL_METADATA
       stores_customer_data: false
       training_use_allowed: false

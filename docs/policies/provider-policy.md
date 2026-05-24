@@ -102,7 +102,8 @@ Todo provider permitido en v0.10 debe declararse en `docs/schemas/provider-regis
 8. `external_call=true` exige `region_or_residency`, `feature_flag` y `training_use_allowed=false`.
 9. `policy_decision=blocked_by_feature_flag` exige `feature_flag`.
 10. `policy_decision=blocked_by_kill_switch` exige `kill_switch`.
-11. `ModelCall.provider = openai` representa proveedor externo en v0.10; debe usar `external_provider_call=true` y `provider_call_audit_id` no nulo.
+11. `ProviderCallAudit.status=timeout` exige `error_code=timeout`; `rate_limited` exige `error_code=rate_limited`; `cancelled` exige `cancelled_by_user|cancelled_by_system`; `error` exige `provider_error|unmapped_error`.
+12. `ModelCall.provider = openai` representa proveedor externo en v0.10; debe usar `external_provider_call=true` y `provider_call_audit_id` no nulo.
 
 ## Comportamiento ante incumplimiento
 
