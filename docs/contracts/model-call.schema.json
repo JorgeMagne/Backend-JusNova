@@ -31,7 +31,8 @@
   "properties": {
     "model_call_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^mc_[A-Za-z0-9_-]+$"
     },
     "organization_id": {
       "type": "string",
@@ -515,6 +516,27 @@
       "error_code": null,
       "external_provider_call": true,
       "provider_call_audit_id": "pca_mc_001"
+    },
+    {
+      "model_call_id": "model_001",
+      "purpose": "answer_generation",
+      "provider": "openai",
+      "model": "gpt-5",
+      "prompt_version": "answer-generation-v1",
+      "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+      "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+      "token_usage": {
+        "input_tokens": 1200,
+        "output_tokens": 700,
+        "total_tokens": 1900
+      },
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:03Z",
+      "status": "success",
+      "error_code": null,
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_001",
+      "organization_id": "org_001"
     }
   ],
   "x-policy-invalid-examples": [

@@ -34,7 +34,8 @@
   "properties": {
     "retrieval_run_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^rr_[A-Za-z0-9_-]+$"
     },
     "organization_id": {
       "type": "string",
@@ -1030,6 +1031,47 @@
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:24Z",
       "prompt_injection_risks": []
+    },
+    {
+      "retrieval_run_id": "run_001",
+      "query_id": "q_legal_001",
+      "retrieval_plan_id": "rp_001",
+      "status": "completed_with_evidence",
+      "providers_used": [
+        "TCPAdapter",
+        "OpenAIWebSearchDiscoveryProvider"
+      ],
+      "adapter_calls": [
+        {
+          "adapter_name": "TCPAdapter",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "discovery_results": [],
+      "sources_opened": [
+        "https://jurisprudencia.tcpbolivia.bo/Fichas/Ficha/12345"
+      ],
+      "sources_rejected": [],
+      "evidence_pack_id": "ep_001",
+      "quality": {
+        "overall": "MEDIUM",
+        "coverage": 0.72,
+        "authority": 0.91,
+        "citation_readiness": 0.84,
+        "validity_risk": "MEDIUM",
+        "conflicts_detected": false,
+        "warnings": [
+          "Vigencia no confirmada."
+        ]
+      },
+      "latency_ms": 24120,
+      "estimated_cost": 0.08,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:24Z",
+      "prompt_injection_risks": [],
+      "organization_id": "org_001"
     }
   ]
 }

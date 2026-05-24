@@ -31,6 +31,10 @@ provider_registry:
         - CASE_MEMORY_CONFIDENTIAL
         - DOCUMENT_EVIDENCE_CONFIDENTIAL
       data_returned_classes:
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - USER_MESSAGE_CONFIDENTIAL
+        - CASE_MEMORY_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
         - PROVIDER_OPERATIONAL_METADATA
       stores_customer_data: false
       training_use_allowed: false

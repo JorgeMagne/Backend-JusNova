@@ -29,7 +29,8 @@
   "properties": {
     "tool_call_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^tc_[A-Za-z0-9_-]+$"
     },
     "organization_id": {
       "type": "string",
@@ -465,6 +466,26 @@
       },
       "external_provider_call": false,
       "provider_call_audit_id": null
+    },
+    {
+      "tool_call_id": "tool_001",
+      "tool_name": "LiveLegalSearchEngine",
+      "purpose": "legal_search",
+      "input_hash": "sha256:43dddbfba1d912b232d89ad1cf2891ae2d8a77efd4f23bbe85b229f09a8a7ab0",
+      "output_hash": "sha256:93b223657af45cd9b655cc79833a3effb5048953d82c2b4feea932e3c2080389",
+      "status": "success",
+      "error_code": null,
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:08Z",
+      "cost_units": {
+        "requests": 2,
+        "pages": 0,
+        "tokens": 0,
+        "estimated_cost": 0.04
+      },
+      "external_provider_call": false,
+      "provider_call_audit_id": null,
+      "organization_id": "org_001"
     }
   ],
   "x-policy-invalid-examples": [

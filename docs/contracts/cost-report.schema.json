@@ -24,7 +24,8 @@
   "properties": {
     "cost_report_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^cr_[A-Za-z0-9_-]+$"
     },
     "currency": {
       "enum": [
@@ -292,6 +293,22 @@
       "tool_calls": 0,
       "provider_estimated_costs": [],
       "estimated_total_cost": 0
+    },
+    {
+      "cost_report_id": "cost_001",
+      "currency": "USD",
+      "is_estimated": true,
+      "billing_source": "provider_estimate",
+      "model_input_tokens": 1800,
+      "model_output_tokens": 900,
+      "tool_calls": 3,
+      "provider_estimated_costs": [
+        {
+          "provider": "openai",
+          "estimated_cost": 0.08
+        }
+      ],
+      "estimated_total_cost": 0.08
     }
   ]
 }

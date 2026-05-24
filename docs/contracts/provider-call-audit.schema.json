@@ -256,6 +256,9 @@
           },
           "error_code": {
             "type": "null"
+          },
+          "attempted_data_classes": {
+            "minItems": 1
           }
         }
       }
@@ -289,6 +292,15 @@
               "allowed",
               "redacted"
             ]
+          },
+          "data_sent_classes": {
+            "minItems": 1
+          },
+          "attempted_data_classes": {
+            "minItems": 1
+          },
+          "data_returned_classes": {
+            "maxItems": 0
           }
         }
       }
@@ -367,6 +379,534 @@
           "kill_switch"
         ]
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "success",
+              "error",
+              "timeout",
+              "rate_limited",
+              "cancelled"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "PUBLIC_LEGAL_SOURCE"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "PUBLIC_LEGAL_SOURCE"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "PUBLIC_LEGAL_SOURCE"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "PUBLIC_LEGAL_SOURCE"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "PUBLIC_LEGAL_QUERY"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "PUBLIC_LEGAL_QUERY"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "PUBLIC_LEGAL_QUERY"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "PUBLIC_LEGAL_QUERY"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "PROVIDER_OPERATIONAL_METADATA"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "PROVIDER_OPERATIONAL_METADATA"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "PROVIDER_OPERATIONAL_METADATA"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "PROVIDER_OPERATIONAL_METADATA"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "BILLING_USAGE"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "BILLING_USAGE"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "BILLING_USAGE"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "BILLING_USAGE"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "INTERNAL_TRACE_RESTRICTED"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "INTERNAL_TRACE_RESTRICTED"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "INTERNAL_TRACE_RESTRICTED"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "INTERNAL_TRACE_RESTRICTED"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "SECURITY_AUDIT_RESTRICTED"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "SECURITY_AUDIT_RESTRICTED"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "SECURITY_AUDIT_RESTRICTED"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "SECURITY_AUDIT_RESTRICTED"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "DERIVED_LEGAL_QUERY_RESTRICTED"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "DERIVED_LEGAL_QUERY_RESTRICTED"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "DERIVED_LEGAL_QUERY_RESTRICTED"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "DERIVED_LEGAL_QUERY_RESTRICTED"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "USER_MESSAGE_CONFIDENTIAL"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "USER_MESSAGE_CONFIDENTIAL"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "USER_MESSAGE_CONFIDENTIAL"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "USER_MESSAGE_CONFIDENTIAL"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "CASE_MEMORY_CONFIDENTIAL"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "CASE_MEMORY_CONFIDENTIAL"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "CASE_MEMORY_CONFIDENTIAL"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "CASE_MEMORY_CONFIDENTIAL"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "DOCUMENT_EVIDENCE_CONFIDENTIAL"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "DOCUMENT_EVIDENCE_CONFIDENTIAL"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "DOCUMENT_EVIDENCE_CONFIDENTIAL"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "DOCUMENT_EVIDENCE_CONFIDENTIAL"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "USER_DOCUMENT_CONFIDENTIAL"
+                  }
+                }
+              },
+              "required": [
+                "attempted_data_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "USER_DOCUMENT_CONFIDENTIAL"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "data_sent_classes": {
+                  "contains": {
+                    "const": "USER_DOCUMENT_CONFIDENTIAL"
+                  }
+                }
+              },
+              "required": [
+                "data_sent_classes"
+              ]
+            },
+            "then": {
+              "properties": {
+                "attempted_data_classes": {
+                  "contains": {
+                    "const": "USER_DOCUMENT_CONFIDENTIAL"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
     }
   ],
   "examples": [
@@ -380,6 +920,7 @@
         "PUBLIC_LEGAL_SOURCE"
       ],
       "data_returned_classes": [
+        "DERIVED_LEGAL_QUERY_RESTRICTED",
         "PROVIDER_OPERATIONAL_METADATA"
       ],
       "attempted_data_classes": [
@@ -748,6 +1289,57 @@
       "region_or_residency": "configured_by_deployment",
       "feature_flag": "provider.openai_model.enabled",
       "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_attempted_mismatch_success",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_QUERY"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_QUERY",
+        "DERIVED_LEGAL_QUERY_RESTRICTED"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "redacted",
+      "error_code": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_timeout_attempted_sent_mismatch",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [],
+      "data_returned_classes": [],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "started_at": "2026-05-24T12:00:00Z",
+      "completed_at": "2026-05-24T12:00:30Z",
+      "status": "timeout",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "error_code": "timeout",
+      "output_hash": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
     }
   ],
   "x-policy-invalid-examples": [
@@ -840,34 +1432,6 @@
       ],
       "attempted_data_classes": [
         "USER_DOCUMENT_CONFIDENTIAL"
-      ],
-      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-      "started_at": "2026-05-24T10:00:00Z",
-      "completed_at": "2026-05-24T10:00:02Z",
-      "status": "success",
-      "training_use_allowed": false,
-      "policy_decision": "redacted",
-      "error_code": null,
-      "region_or_residency": "configured_by_deployment",
-      "feature_flag": "provider.openai_model.enabled",
-      "model_call_id": "mc_001"
-    },
-    {
-      "provider_call_audit_id": "pca_policy_attempted_mismatch_success",
-      "organization_id": "org_001",
-      "provider_family": "ModelProvider",
-      "provider_name": "openai_model_provider",
-      "external_call": true,
-      "data_sent_classes": [
-        "PUBLIC_LEGAL_QUERY"
-      ],
-      "data_returned_classes": [
-        "PROVIDER_OPERATIONAL_METADATA"
-      ],
-      "attempted_data_classes": [
-        "PUBLIC_LEGAL_QUERY",
-        "DERIVED_LEGAL_QUERY_RESTRICTED"
       ],
       "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",

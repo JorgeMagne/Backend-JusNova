@@ -95,13 +95,14 @@ Todo provider permitido en v0.10 debe declararse en `docs/schemas/provider-regis
 1. `ProviderCallAudit.provider_name` debe resolver a un provider del registry.
 2. `ProviderCallAudit.provider_family` debe coincidir con el registry.
 3. `ProviderCallAudit.data_sent_classes[]` debe ser subset de `data_received_classes[]` del provider.
-4. `ProviderCallAudit.data_returned_classes[]` debe ser subset de `data_returned_classes[]` del provider.
+4. `ProviderCallAudit.data_returned_classes[]` describe el payload devuelto por el provider, no solo metadata operacional; debe heredar la clase de mayor sensibilidad del contenido devuelto y ser subset de `data_returned_classes[]` del provider.
 5. `ProviderCallAudit.status=policy_blocked` significa que no se envio payload al provider.
-6. `attempted_data_classes[]` puede violar allowlist solo cuando `status=policy_blocked`; nunca puede contener clases desconocidas.
-7. `external_call=true` exige `region_or_residency`, `feature_flag` y `training_use_allowed=false`.
-8. `policy_decision=blocked_by_feature_flag` exige `feature_flag`.
-9. `policy_decision=blocked_by_kill_switch` exige `kill_switch`.
-10. `ModelCall.provider = openai` representa proveedor externo en v0.10; debe usar `external_provider_call=true` y `provider_call_audit_id` no nulo.
+6. Para `status=success|error|timeout|rate_limited|cancelled`, `attempted_data_classes[]` y `data_sent_classes[]` deben representar el mismo set de clases.
+7. `attempted_data_classes[]` puede violar allowlist solo cuando `status=policy_blocked`; nunca puede contener clases desconocidas.
+8. `external_call=true` exige `region_or_residency`, `feature_flag` y `training_use_allowed=false`.
+9. `policy_decision=blocked_by_feature_flag` exige `feature_flag`.
+10. `policy_decision=blocked_by_kill_switch` exige `kill_switch`.
+11. `ModelCall.provider = openai` representa proveedor externo en v0.10; debe usar `external_provider_call=true` y `provider_call_audit_id` no nulo.
 
 ## Comportamiento ante incumplimiento
 
