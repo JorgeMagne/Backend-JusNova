@@ -30,6 +30,9 @@ Esta matriz fija ownership, clasificacion y direccionamiento de acceso raw para 
 | DocumentPage | `dpg_*` | Si | `organization_id` | `USER_DOCUMENT_CONFIDENTIAL` | No aplica | Borrar/tombstone con documento | Artefacto de procesamiento. |
 | DocumentChunk | `chk_*` | Si | `organization_id` | `USER_DOCUMENT_CONFIDENTIAL` | No aplica | Borrar/tombstone con documento | Artefacto no minimizado; no citable por si solo. |
 | DocumentEvidence | `de_*` | Si | `organization_id` | `DOCUMENT_EVIDENCE_CONFIDENTIAL` | `document_evidence` | Borrar/tombstone con version documental | Requiere `prompt_injection_risks[]`. |
+| StorageObject | `sto_*` | Si | `organization_id` | `USER_DOCUMENT_CONFIDENTIAL` | `storage_object` | Borrar/tombstone con documento, OCR, indices y snapshots privados derivados | Objeto privado en storage no adivinable; snapshots publicos se modelan como `SourceSnapshot`, no aqui. |
+| OcrArtifact | `ocr_*` | Si | `organization_id` | `USER_DOCUMENT_CONFIDENTIAL` | `ocr_artifact` | Borrar/tombstone con version documental o pagina origen | OCR completo no se copia a trazas, logs ni provider audit. |
+| Embedding | `emb_*` | Si | `organization_id` | `DOCUMENT_EVIDENCE_CONFIDENTIAL` o `CASE_MEMORY_CONFIDENTIAL` | `embedding` | Borrar/tombstone con evidencia, documento o memoria origen | Vector derivado; hereda mayor sensibilidad de su input. |
 | SourceRegistryEntry | `src_*` | Condicional | Global o `organization_id` | `PUBLIC_LEGAL_SOURCE` o heredada | No aplica | Global: versionar; tenant: tombstone | Global solo si publico sin enriquecimiento de usuario. |
 | SourceSnapshot | `snap_*` | Condicional | Global o `organization_id` | `PUBLIC_LEGAL_SOURCE` o heredada | No aplica | Retener segun fuente; privados se borran/tombstonean | Tenant si contiene datos user/case/document. |
 | RetrievalRun | `rr_*` | Si | `organization_id` | `INTERNAL_TRACE_RESTRICTED` | `retrieval_run` | Retener segun trazabilidad | Puede contener refs sensibles, no raw discovery payload. |
@@ -40,7 +43,7 @@ Esta matriz fija ownership, clasificacion y direccionamiento de acceso raw para 
 | AnswerVersion | `av_*` | Si | `organization_id` | `INTERNAL_TRACE_RESTRICTED` | No aplica | Inmutable salvo superseded metadata | No raw-access-addressable en 0.11. |
 | Claim | `cl_*` | Si | `organization_id` | `INTERNAL_TRACE_RESTRICTED` | No aplica | Retener con answer version | Claims criticos requieren soporte por policy. |
 | Citation | `(answer_version_ref, citation_ref)` | Si | `organization_id` | `INTERNAL_TRACE_RESTRICTED` | No aplica | Retener con answer version | `C#` es local a version. |
-| CitationAudit | `ca_*` | Si | `organization_id` | `INTERNAL_TRACE_RESTRICTED` | No aplica | Retener con TraceObject | Owner primario `trace_id`. |
+| CitationAudit | `citation_audit_id` embebido | Si | Heredado de `TraceObject.organization_id` | `INTERNAL_TRACE_RESTRICTED` | No aplica | Retener embebido con TraceObject | 0.11 lo trata como value object; tabla standalone futura requiere `trace_id` y tenant explicitos. |
 | TraceObject | `tr_*` | Si | `organization_id` | `INTERNAL_TRACE_RESTRICTED` | `trace` | Retener por auditoria; no raw content | Solo existe al finalizar respuesta/abstencion/bloqueo. |
 | ModelCall | `mc_*` | Si | `organization_id` | `INTERNAL_TRACE_RESTRICTED` | `model_call` | Retener hash/metadata | Externo requiere `ProviderCallAudit`. |
 | ToolCall | `tc_*` | Si | `organization_id` | `INTERNAL_TRACE_RESTRICTED` | `tool_call` | Retener hash/metadata | Externo requiere `ProviderCallAudit`. |
@@ -52,6 +55,6 @@ Esta matriz fija ownership, clasificacion y direccionamiento de acceso raw para 
 | Subscription | `sub_*` | Si | `organization_id` | `BILLING_USAGE` | No aplica | Retener/tombstone comercial | Puede existir sin uso. |
 | ResearchCredit | `rc_*` | Si | `organization_id` | `BILLING_USAGE` | No aplica | Retener movimientos | Puede existir sin consumo. |
 | CostBudget | `cb_*` | No | Policy/catalogo | `BILLING_USAGE` | No aplica | Versionar policy | Budget efectivo se referencia desde traza/usage. |
-| CostReport | `cr_*` | Si | `organization_id` | `BILLING_USAGE` | No aplica | Retener con traza/costo | No es presupuesto comercial. |
+| CostReport | `cr_*` embebido | Si | Heredado de `TraceObject.organization_id` | `BILLING_USAGE` | No aplica | Retener embebido con TraceObject | No crear tabla aislada sin `trace_id` y tenant; no es presupuesto comercial. |
 | EvaluationCase | `eval_case_*` | Condicional | Global o `organization_id` | Hereda de dataset/input | No aplica | Global: versionar; tenant: tombstone/anonymize | Tenant si deriva de usuario/caso/documento. |
 | EvaluationRun | `eval_run_*` | Condicional | Global o `organization_id` | Hereda de casos evaluados | No aplica | Retener metricas; tenant: sanitizar | Tenant si cualquier input es tenant-scoped. |

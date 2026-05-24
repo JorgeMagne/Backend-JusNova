@@ -23,6 +23,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 6. `RawAccessEvent.resource_type` no se amplia en 0.11.
 7. Un `run_id` en progreso usa patron `tr_*`, pero no es un `TraceObject` valido hasta que exista `answer_id` y `answer_version_ref`.
 8. Refs locales como `F#`, `D#`, `F#:P#`, `D#:P#` y `C#` no son IDs globales.
+9. `StorageObject`, `OcrArtifact` y `Embedding` son entidades conceptuales porque 0.10 ya permite auditarlas por `RawAccessEvent`; esto no amplia el enum de raw access.
 
 ## Entidades conceptuales
 
@@ -31,6 +32,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | Identity/Tenancy | `Organization`, `User`, `Membership` |
 | Conversation/Case | `Conversation`, `Message`, `Case`, `CaseMemory` |
 | Documents | `Document`, `DocumentVersion`, `DocumentPage`, `DocumentChunk`, `DocumentEvidence` |
+| Storage/Derived Artifacts | `StorageObject`, `OcrArtifact`, `Embedding` |
 | Sources/Retrieval | `SourceRegistryEntry`, `SourceSnapshot`, `RetrievalRun` |
 | Evidence/Answer | `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Answer`, `AnswerVersion`, `Claim`, `Citation`, `CitationAudit` |
 | Audit/Security | `TraceObject`, `ModelCall`, `ToolCall`, `ProviderCallAudit`, `RawAccessEvent`, `PromptInjectionRisk` |
@@ -53,6 +55,9 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | DocumentPage | `^dpg_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | DocumentChunk | `^chk_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | DocumentEvidence | `^de_[A-Za-z0-9_-]+$` | `document-evidence.schema.json` |
+| StorageObject | `^sto_[A-Za-z0-9_-]+$` | `raw-access-event.schema.json` resource ref |
+| OcrArtifact | `^ocr_[A-Za-z0-9_-]+$` | `raw-access-event.schema.json` resource ref |
+| Embedding | `^emb_[A-Za-z0-9_-]+$` | `raw-access-event.schema.json` resource ref |
 | SourceRegistryEntry | `^src_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | SourceSnapshot | `^snap_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | RetrievalRun | `^rr_[A-Za-z0-9_-]+$` | `retrieval-run.schema.json` |
@@ -60,7 +65,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | Answer | `^ans_[A-Za-z0-9_-]+$` | `answer-contract.schema.json` |
 | AnswerVersion | `^av_[A-Za-z0-9_-]+$` | `answer-version.schema.json` |
 | Claim | `^cl_[A-Za-z0-9_-]+$` | `claim.schema.json` |
-| CitationAudit | `^ca_[A-Za-z0-9_-]+$` | 0.11 conceptual, `citation-audit.schema.json` shape |
+| CitationAudit | `citation_audit_id` de value object embebido; ejemplos usan `ca_*` | `citation-audit.schema.json` embebido en `TraceObject` |
 | TraceObject | `^tr_[A-Za-z0-9_-]+$` | `trace-object.schema.json` |
 | ModelCall | `^mc_[A-Za-z0-9_-]+$` | `model-call.schema.json` |
 | ToolCall | `^tc_[A-Za-z0-9_-]+$` | `tool-call.schema.json` |
@@ -72,7 +77,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | Subscription | `^sub_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | ResearchCredit | `^rc_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | CostBudget | `^cb_[A-Za-z0-9_-]+$` | `cost-budget.schema.json` |
-| CostReport | `^cr_[A-Za-z0-9_-]+$` | `cost-report.schema.json` |
+| CostReport | `^cr_[A-Za-z0-9_-]+$` como value object embebido | `cost-report.schema.json` embebido en `TraceObject` |
 | EvaluationCase | `^eval_case_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | EvaluationRun | `^eval_run_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 
@@ -111,6 +116,16 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | DocumentChunk -> DocumentEvidence | `0..n` | Solo algunos chunks generan evidencia citable. |
 | DocumentEvidence -> DocumentChunk | `0..1` | Puede derivarse de chunk o de extraccion directa. |
 | DocumentEvidence -> PromptInjectionRisk | `0..n` | `[]` significa evaluado sin riesgos. |
+| DocumentVersion -> StorageObject | `0..n` | Version documental puede tener objeto original y artefactos privados derivados. |
+| StorageObject -> DocumentVersion | `0..1` | Storage publico de fuentes se modela por `SourceSnapshot`, no por este recurso raw privado. |
+| DocumentVersion -> OcrArtifact | `0..n` | Version puede no estar procesada o tener OCR por pagina/fragmento. |
+| DocumentPage -> OcrArtifact | `0..n` | OCR puede estar asociado a pagina especifica. |
+| OcrArtifact -> DocumentVersion | `n..1` | Todo OCR privado deriva de una version documental tenant-scoped. |
+| OcrArtifact -> DocumentPage | `0..1` | OCR multipagina o fragmentario puede no ser pagina unica. |
+| DocumentEvidence -> Embedding | `0..n` | Embeddings derivados de evidencia documental heredan su clasificacion. |
+| CaseMemory -> Embedding | `0..n` | Embeddings derivados de memoria heredan `CASE_MEMORY_CONFIDENTIAL`. |
+| Embedding -> DocumentEvidence | `0..1` | Embedding documental apunta a un fragmento citable cuando aplique. |
+| Embedding -> CaseMemory | `0..1` | Embedding de memoria apunta al caso/memoria cuando aplique. |
 | SourceRegistryEntry -> SourceSnapshot | `0..n` | Una fuente puede registrarse antes de snapshots. |
 | SourceSnapshot -> SourceRegistryEntry | `0..1` | Snapshots privados pueden existir fuera del registry publico global. |
 | RetrievalRun -> EvidencePack | `0..n` | Runs fallidos pueden no producir pack. |
@@ -125,8 +140,8 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | AnswerVersion -> Claim | `0..n` | Abstenciones/bloqueos pueden no publicar claims. |
 | Claim -> Citation | `0..n` | Claims no soportados o no criticos pueden no tener citas; claims criticos soportados requieren cita valida por policy. |
 | Citation -> Claim | `n..1` cuando soporta claim | Una cita de soporte apunta a claim. |
-| CitationAudit -> TraceObject | `n..1` | Owner primario: `TraceObject.trace_id`. |
-| CitationAudit -> AnswerVersion | `n..1` por referencia | Audita una version de respuesta. |
+| TraceObject -> CitationAudit | `1..1` embebido | `citation_audit` es value object dentro de `TraceObject`; tabla standalone futura requiere `organization_id` y `trace_id`. |
+| CitationAudit -> AnswerVersion | Por el `answer_version_ref` del `TraceObject` contenedor | 0.11 no lo persiste como tabla standalone. |
 | TraceObject -> ModelCall | `0..n` | Algunas respuestas pueden no requerir llamada de modelo. |
 | TraceObject -> ToolCall | `0..n` | Algunas respuestas pueden no usar tools. |
 | TraceObject -> RetrievalRun | `0..n` | Abstenciones o respuestas documentales pueden no usar retrieval vivo. |
@@ -145,8 +160,8 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | ResearchCredit -> UsageEvent | `0..n` | Credito puede existir sin consumo. |
 | UsageEvent -> ResearchCredit | `0..1` | Solo eventos de credito consumido referencian credito. |
 | CostBudget -> TraceObject | `0..n` | Budget puede existir antes de trazas. |
-| TraceObject -> CostReport | `1..1` al finalizar | Trace final contiene exactamente un costo observado. |
-| CostReport -> TraceObject | `0..1` hasta finalizacion; `1..1` tras traza final | Un reporte observado no debe alimentar multiples trazas. |
+| TraceObject -> CostReport | `1..1` embebido al finalizar | `cost` es value object dentro de `TraceObject`. |
+| CostReport -> TraceObject | Embebido en exactamente un `TraceObject` final | Tabla standalone futura requiere `organization_id` y `trace_id`; no inferir tabla aislada desde 0.11. |
 | EvaluationCase -> EvaluationRun | `0..n` | Caso eval puede no ejecutarse aun. |
 | EvaluationRun -> EvaluationCase | `n..1` para single-case o `n..m` para suite documentada | Suite runs deben registrar lista de casos. |
 
@@ -167,6 +182,13 @@ Si la ejecucion falla antes de crear respuesta/version, el `run_id` queda como r
 | EvaluationRun | Ejecuta solo casos globales sinteticos/publicos. | Cualquier input es tenant-scoped o user-derived. |
 
 Todo artefacto derivado hereda la mayor sensibilidad (`sensitivity_rank`) de sus entradas.
+
+## Artefactos raw addressable
+
+- `StorageObject` representa objeto privado addressable por `RawAccessEvent.storage_object`; objetos publicos de fuentes se modelan por `SourceSnapshot`.
+- `OcrArtifact` representa OCR privado por version, pagina o fragmento; el OCR completo no se copia a trazas, logs, errores ni provider audit.
+- `Embedding` debe derivar de una fuente contractual unica en 0.11: `DocumentEvidence` o `CaseMemory`; si necesita ambas, se crean artefactos separados.
+- `CitationAudit` y `CostReport` permanecen como value objects embebidos en `TraceObject` salvo que Fase 1 los materialice con `organization_id`, `trace_id` y constraint de unicidad contra el `TraceObject` owner.
 
 ## Reglas de verdad juridica
 
