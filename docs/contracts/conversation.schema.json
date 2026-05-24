@@ -179,11 +179,85 @@
       "owner_actor_ref": "actor_hash_abogado_001",
       "owner_actor_type": "user",
       "case_id": "case_001",
-      "title": "Titulo usado indebidamente como si fuera fuente juridica en una respuesta.",
+      "title": "Proceso civil",
       "status": "active",
       "created_at": "2026-05-24T10:10:00Z",
       "updated_at": "2026-05-24T10:00:00Z",
       "deleted_at": null
+    },
+    {
+      "conversation_id": "conv_deleted_time_policy_invalid",
+      "organization_id": "org_001",
+      "owner_actor_ref": "actor_hash_abogado_001",
+      "owner_actor_type": "user",
+      "case_id": "case_001",
+      "title": "Proceso civil",
+      "status": "deleted",
+      "created_at": "2026-05-24T10:00:00Z",
+      "updated_at": "2026-05-24T10:20:00Z",
+      "deleted_at": "2026-05-24T09:59:00Z"
+    }
+  ],
+  "x-cross-contract-policy-invalid-examples": [
+    {
+      "conversation": {
+        "conversation_id": "conv_title_evidence_policy_invalid",
+        "organization_id": "org_001",
+        "owner_actor_ref": "actor_hash_abogado_001",
+        "owner_actor_type": "user",
+        "case_id": "case_001",
+        "title": "Notificacion practicada el 20 de mayo de 2026",
+        "status": "active",
+        "created_at": "2026-05-24T10:00:00Z",
+        "updated_at": "2026-05-24T10:00:00Z",
+        "deleted_at": null
+      },
+      "answer_contract": {
+        "answer_id": "ans_title_evidence_policy_invalid",
+        "answer_version": 1,
+        "trace_id": "tr_title_evidence_policy_invalid",
+        "evidence_pack_id": "ep_001",
+        "jurisdiction": "BO",
+        "sections": {
+          "conclusion_operativa": {
+            "title": "Conclusion operativa",
+            "content": "Se toma como hecho probado el titulo de la conversacion, sin evidencia documental."
+          },
+          "hechos_considerados": {
+            "title": "Hechos considerados",
+            "content": "Titulo de conversacion usado indebidamente como memoria probatoria."
+          },
+          "fundamento_normativo": {
+            "title": "Fundamento normativo",
+            "content": ""
+          },
+          "jurisprudencia_relevante": {
+            "title": "Jurisprudencia relevante",
+            "content": ""
+          },
+          "analisis_aplicado": {
+            "title": "Analisis aplicado",
+            "content": ""
+          },
+          "incertidumbres_vigencia_conflictos": {
+            "title": "Incertidumbres, vigencia y conflictos",
+            "content": ""
+          },
+          "recomendacion_profesional": {
+            "title": "Recomendacion profesional",
+            "content": ""
+          },
+          "fuentes_utilizadas": {
+            "title": "Fuentes utilizadas",
+            "content": ""
+          }
+        },
+        "claims": [],
+        "citations": [],
+        "sources_used": [],
+        "warnings": [],
+        "created_at": "2026-05-24T10:00:00Z"
+      }
     }
   ]
 }

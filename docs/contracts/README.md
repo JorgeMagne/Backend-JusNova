@@ -131,12 +131,15 @@ Estos contratos quedan aceptados como base documental de conversacion, mensajes,
 ## Reglas especificas de Subfase 0.9
 
 - `Conversation` usa `owner_actor_ref` y `owner_actor_type`, no `user_id` crudo.
+- `Conversation` requiere validador custom para `updated_at >= created_at` y, si existe `deleted_at`, `deleted_at >= created_at` y `deleted_at >= updated_at`.
 - `Message` puede guardar contenido conversacional como registro primario, pero `TraceObject` solo guarda `input_message_ids` y `output_message_id`.
 - `Message.attachments[]` en 0.9 solo representa documentos ya procesados.
 - `CaseMemory` separa hechos afirmados por usuario, hechos soportados por documentos, preguntas abiertas, riesgos y contradicciones.
 - `CaseMemory` no es verdad juridica, fuente normativa ni confirmacion de vigencia.
+- `CaseMemory` requiere IDs internos unicos para hechos, preguntas, riesgos, partes, fechas y contradicciones mediante validador custom cuando JSON Schema no puede expresarlo por propiedad.
 - `DocumentEvidence` representa fragmentos `D#:P#`, no documentos completos.
 - `DocumentEvidence` exige tenant, version documental, hashes, locator, metodo de extraccion, confianza y warnings.
+- `DocumentEvidence.locator.page` debe coincidir con `DocumentEvidence.page` mediante validador custom.
 - Los hashes de `Message` y `DocumentEvidence` se calculan sobre bytes UTF-8 exactos persistidos.
 - Seguridad documental completa, retencion, permisos y prompt injection policy quedan para Subfase 0.10.
 

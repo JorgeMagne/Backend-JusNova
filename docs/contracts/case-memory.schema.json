@@ -660,6 +660,88 @@
       "risk_flags": [],
       "contradictions": [],
       "updated_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "case_id": "case_policy_duplicate_fact_id",
+      "organization_id": "org_001",
+      "jurisdiction": "BO",
+      "memory_version": 1,
+      "legal_areas": [],
+      "procedural_stage_code": "unknown",
+      "procedural_stage_label": null,
+      "parties": [],
+      "dates": [],
+      "facts_asserted_by_user": [
+        {
+          "fact_id": "fact_dup_001",
+          "text": "El usuario afirma una version de los hechos.",
+          "asserted_by_type": "user",
+          "asserted_by_ref": "actor_hash_abogado_001",
+          "asserted_at": "2026-05-24T10:00:00Z",
+          "status": "active",
+          "confidence": 0.6
+        }
+      ],
+      "facts_supported_by_documents": [
+        {
+          "fact_id": "fact_dup_001",
+          "text": "El documento representa otro hecho con el mismo identificador.",
+          "document_id": "doc_001",
+          "document_version_id": "docv_001",
+          "passage_refs": [
+            "D1:P1"
+          ]
+        }
+      ],
+      "open_legal_questions": [],
+      "source_history": [
+        "D1:P1"
+      ],
+      "risk_flags": [],
+      "contradictions": [],
+      "updated_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "case_id": "case_policy_duplicate_structural_ids",
+      "organization_id": "org_001",
+      "jurisdiction": "BO",
+      "memory_version": 1,
+      "legal_areas": [],
+      "procedural_stage_code": "unknown",
+      "procedural_stage_label": null,
+      "parties": [
+        {
+          "party_id": "party_dup_001",
+          "role": "client",
+          "display_ref": "party_ref_cliente_001"
+        },
+        {
+          "party_id": "party_dup_001",
+          "role": "opposing_party",
+          "display_ref": "party_ref_contraparte_001"
+        }
+      ],
+      "dates": [],
+      "facts_asserted_by_user": [],
+      "facts_supported_by_documents": [],
+      "open_legal_questions": [
+        {
+          "question_id": "question_dup_001",
+          "text": "Primera pregunta abierta.",
+          "status": "open",
+          "created_at": "2026-05-24T10:00:00Z"
+        },
+        {
+          "question_id": "question_dup_001",
+          "text": "Segunda pregunta con el mismo identificador.",
+          "status": "needs_research",
+          "created_at": "2026-05-24T10:01:00Z"
+        }
+      ],
+      "source_history": [],
+      "risk_flags": [],
+      "contradictions": [],
+      "updated_at": "2026-05-24T10:00:00Z"
     }
   ]
 }

@@ -264,7 +264,7 @@
       "passage_ref": "D1:P1",
       "page": 4,
       "text": "La diligencia de notificacion fue practicada el 20 de mayo de 2026.",
-      "text_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "text_hash": "sha256:a510ad78c8409572202ac1c95fb616bfdef313fc3ffbda688a38d9e99c66d848",
       "locator": {
         "page": 4,
         "article": null,
@@ -289,7 +289,7 @@
       "passage_ref": "D2:P1",
       "page": 1,
       "text": "Firma y sello parcialmente legibles.",
-      "text_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "text_hash": "sha256:b9ca8792f50fabdce6ee4984cc20630a3400ef98a9e5678397e14170bd69ffb2",
       "locator": {
         "page": 1,
         "article": null,
@@ -319,7 +319,7 @@
       "passage_ref": "F1:P1",
       "page": 1,
       "text": "Texto.",
-      "text_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "text_hash": "sha256:e9a88509e3111b81b00868be55281e89da932a3f8d9e912f315dfbccbb6d59ed",
       "locator": {
         "page": 1,
         "article": null,
@@ -344,7 +344,7 @@
       "passage_ref": "D1:P1",
       "page": 1,
       "text": "Texto de baja confianza.",
-      "text_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "text_hash": "sha256:5f55d1ed0f0732179b4aec2e8a04301848207ef516b85cc29e6ba093a85c1de7",
       "locator": {
         "page": 1,
         "article": null,
@@ -371,7 +371,7 @@
       "passage_ref": "D1:P1",
       "page": 1,
       "text": "Texto nativo con razon de vision incoherente.",
-      "text_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "text_hash": "sha256:c95b869c227202887d09fab5ad54a473f0472fb2b051175ebb4a0be9c5156eea",
       "locator": {
         "page": 1,
         "article": null,
@@ -396,7 +396,7 @@
       "passage_ref": "D1:P1",
       "page": 1,
       "text": "Texto de baja confianza sin warning.",
-      "text_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "text_hash": "sha256:56d494ec5593ebbc287ff934bf06214bdbc41e08bdded9099c924c765e50787f",
       "locator": {
         "page": 1,
         "article": null,
@@ -425,7 +425,7 @@
       "passage_ref": "D1:P1",
       "page": 1,
       "text": "El prefijo de passage_ref no coincide con source_ref.",
-      "text_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "text_hash": "sha256:74e8773e88e22b490eab67bfd0f607140356422be0b0cf0d2166b19b63edb034",
       "locator": {
         "page": 1,
         "article": null,
@@ -475,9 +475,34 @@
       "passage_ref": "D1:P1",
       "page": 4,
       "text": "El hash de version documental no corresponde al objeto resuelto por document_version_id.",
-      "text_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "text_hash": "sha256:4563b7b8aa912d4b251e2149b7d9779894be0f95f861375c9d06cdf2e7049254",
       "locator": {
         "page": 4,
+        "article": null,
+        "section": "Diligencia de notificacion",
+        "paragraph": 1,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.91,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_policy_locator_page_mismatch",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 4,
+      "text": "El locator apunta a una pagina distinta de la pagina principal.",
+      "text_hash": "sha256:fa22645a94d634ca9b30b4eb110f263c9cef064dfc41fb330ffc78bc4d74a074",
+      "locator": {
+        "page": 5,
         "article": null,
         "section": "Diligencia de notificacion",
         "paragraph": 1,

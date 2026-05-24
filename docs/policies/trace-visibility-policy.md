@@ -79,7 +79,7 @@ No define retencion final, permisos productivos completos ni proceso de incident
 51. La relacion entre `TraceObject` y Usage Ledger debe poder conciliar ejecucion, creditos y budget efectivo sin guardar PII directa.
 52. `TraceObject.input_message_ids[]` y `TraceObject.output_message_id` guardan solo referencias a `Message`, nunca contenido.
 53. Cada `input_message_ids[]` debe resolver a un `Message` existente con el mismo `conversation_id` y `organization_id`.
-54. `output_message_id` debe resolver a un `Message` con `role = assistant`, `message_kind = assistant_final`, mismo `trace_id`, mismo `answer_id` y mismo `answer_version_ref`.
+54. `output_message_id` debe resolver a un `Message` con `role = assistant`, `message_kind = assistant_final`, mismo `conversation_id`, mismo `organization_id`, mismo `trace_id`, mismo `answer_id` y mismo `answer_version_ref`.
 55. `output_message_id` no puede aparecer dentro de `input_message_ids[]`.
 56. `USER_SUMMARY` no muestra IDs internos de mensajes; `SUPPORT_VIEW` puede mostrar IDs de conversacion/mensaje; `INTERNAL_AUDIT` puede ver refs completas.
 57. Las reglas 30 a 56 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.

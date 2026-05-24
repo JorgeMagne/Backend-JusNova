@@ -44,6 +44,8 @@ No implementa motor de memoria, embeddings, recuperacion contextual ni permisos 
 7. `parties[].display_ref` debe ser pseudonimo o alias interno, no nombre completo libre.
 8. `dates[].source_ref` solo puede existir si `source_type = evidence_ref`.
 9. Toda actualizacion de memoria debe incrementar `memory_version`.
+10. `fact_id` debe ser unico en la union de `facts_asserted_by_user[]` y `facts_supported_by_documents[]`; un mismo ID no puede representar dos hechos.
+11. `question_id`, `risk_flag_id`, `party_id`, `date_id` y `contradiction_id` deben ser unicos dentro de su arreglo.
 
 ## Reglas asistidas por IA
 
