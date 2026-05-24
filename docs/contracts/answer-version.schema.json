@@ -63,7 +63,8 @@
     },
     "trace_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^tr_[A-Za-z0-9_-]+$"
     },
     "answer_contract_ref": {
       "type": [
@@ -357,6 +358,20 @@
       "version_reason": "initial_answer",
       "created_at": "2026-05-22T00:00:00Z",
       "created_by_ref": "abogado@example.com"
+    },
+    {
+      "answer_version_id": "av_001",
+      "answer_id": "ans_001",
+      "answer_version": 1,
+      "previous_answer_version": null,
+      "response_outcome": "answered",
+      "answer_hash": "sha256:17a43c7e947da714477613c570263048f6350027857be6ca236132f68f52011a",
+      "trace_id": "trace-001",
+      "answer_contract_ref": "ans_001:v1",
+      "rendered_answer_snapshot_id": null,
+      "version_reason": "initial_answer",
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "actor_hash_001"
     }
   ],
   "x-policy-invalid-examples": [
@@ -620,7 +635,7 @@
         "previous_answer_version": 1,
         "response_outcome": "answered",
         "answer_hash": "sha256:ae39ea48d91cbb1c31f12361e77dc07c982cb1f8af23f5820ca0d3c5b091c0ea",
-        "trace_id": "different_trace",
+        "trace_id": "tr_different_trace",
         "answer_contract_ref": "third_answer:v7",
         "rendered_answer_snapshot_id": "render_snap_001",
         "version_reason": "citation_repaired",
@@ -630,7 +645,7 @@
       "answer_contract": {
         "answer_id": "third_answer",
         "answer_version": 7,
-        "trace_id": "third_trace",
+        "trace_id": "tr_third_trace",
         "evidence_pack_id": "ep_001",
         "jurisdiction": "BO",
         "sections": {

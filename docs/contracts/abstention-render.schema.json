@@ -36,7 +36,8 @@
     },
     "trace_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^tr_[A-Za-z0-9_-]+$"
     },
     "answer_id": {
       "type": "string",
@@ -325,6 +326,29 @@
       ],
       "created_at": "2026-05-22T00:00:00Z",
       "created_by_ref": "abogado@example.com"
+    },
+    {
+      "abstention_render_id": "abstention_render_001",
+      "trace_id": "trace-001",
+      "answer_id": "ans_002",
+      "answer_version": 1,
+      "response_outcome": "total_abstention",
+      "render_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
+      "render_storage_ref": "render_abstention_001",
+      "rendered_answer_snapshot_id": null,
+      "reason_code": "no_evidence",
+      "redaction_profile": "USER_SUMMARY_SAFE",
+      "source_trace_refs": {
+        "evidence_pack_ids": [],
+        "claim_ids": [],
+        "citation_refs": [],
+        "source_refs": []
+      },
+      "warning_codes": [
+        "no_evidence_found"
+      ],
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "system"
     }
   ],
   "x-cross-contract-policy-invalid-examples": [
