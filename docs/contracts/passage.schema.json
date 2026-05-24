@@ -70,9 +70,13 @@
           "minimum": 1
         },
         "coordinates": {
-          "type": [
-            "object",
-            "null"
+          "anyOf": [
+            {
+              "$ref": "#/$defs/bbox_coordinates"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "url_fragment": {
@@ -105,6 +109,37 @@
       "items": {
         "type": "string"
       }
+    }
+  },
+  "$defs": {
+    "bbox_coordinates": {
+      "type": "object",
+      "description": "Bounding box cerrado dentro de la pagina o fragmento renderizado. La unidad concreta se define por el adaptador documental, pero la forma queda fija.",
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false,
@@ -174,6 +209,28 @@
       "locator": {},
       "extraction_method": "pdf_parse",
       "extraction_confidence": 1.2,
+      "warnings": []
+    },
+    {
+      "passage_ref": "F1:P1",
+      "source_ref": "F1",
+      "text": "Pasaje con coordenadas libres no cerradas.",
+      "locator": {
+        "page": 4,
+        "article": null,
+        "section": null,
+        "paragraph": null,
+        "coordinates": {
+          "x": 10,
+          "y": 20,
+          "width": 100,
+          "height": 40,
+          "raw_payload": "no permitido"
+        },
+        "url_fragment": null
+      },
+      "extraction_method": "pdf_parse",
+      "extraction_confidence": 0.9,
       "warnings": []
     }
   ],

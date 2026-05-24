@@ -49,9 +49,9 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-006 | Deteccion de escaneo. | ADR-006: Pipeline aprobado. | Accepted | Fase 9 implementacion. | PDFs imagen sin texto. |
 | ADR-006 | OCR progresivo. | ADR-006: Decision, Mitigaciones. | Accepted | Fase 9 budgets/async. | Costos y latencia altos. |
 | ADR-006 | Limites por plan/modo. | ADR-006: Restricciones; ADR-008. | Accepted | Subfase 0.8/0.9. | OCR sin control de costo. |
-| ADR-006 | Seguridad documental. | ADR-006: PDFs publicos vs privados; Mitigaciones. | Accepted | Subfase 0.10. | Fuga de documentos. |
+| ADR-006 | Seguridad documental minima. | ADR-006: PDFs publicos vs privados; Mitigaciones; `docs/policies/document-security-policy.md`. | Accepted | Subfase 0.10 completa privacidad, retencion, permisos y prompt injection. | Fuga de documentos. |
 | ADR-006 | Prompt injection documental. | ADR-006: Restricciones, Riesgos, Mitigaciones. | Accepted | Subfase 0.10 prompt injection policy. | Documento controla comportamiento. |
-| ADR-006 | Citas [D#:P#]. | ADR-006: Restricciones, Pipeline aprobado. | Accepted | Subfase 0.4/0.9 schemas. | Hechos sin locator. |
+| ADR-006 | Citas [D#:P#]. | ADR-006: Restricciones, Pipeline aprobado; `docs/contracts/document-evidence.schema.json`. | Accepted | Fase 9 implementacion. | Hechos sin locator. |
 | ADR-007 | Estructura visible al abogado. | ADR-007: Estructura visible aprobada. | Accepted | Subfase 0.4 answer contract. | Respuestas inconsistentes. |
 | ADR-007 | Estructura interna de Evidence Pack. | ADR-007: Decision, Dependencias posteriores. | Accepted | Subfase 0.4 evidence schema. | Evidencia no auditable. |
 | ADR-007 | Formato [F#:P#], [D#:P#]. | ADR-007: Restricciones. | Accepted | Subfase 0.4 schemas. | Citas ambiguas. |
@@ -81,6 +81,7 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-010 | Cuando crear nueva version. | ADR-010: Decision, Criterios; `answer-versioning-policy.md`. | Accepted | Fase 3 implementacion. | Cambios invisibles. |
 | ADR-010 | Proteger datos sensibles en trazas. | ADR-010: Riesgos, Mitigaciones; `trace-object.schema.json`; `trace-visibility-policy.md`. | Accepted | Subfase 0.10 privacy policy. | Fuga de datos en trazas. |
 | ADR-010 | TraceObject futuro para respuesta juridica critica. | ADR-010: Decision, Trazabilidad aprobada, Consecuencias; `trace-object.schema.json`. | Accepted | Fase 3. | Respuesta no auditable. |
+| ADR-010 | Referencias conversacionales sin contenido crudo. | ADR-010: Trazabilidad aprobada; `docs/contracts/trace-object.schema.json`; `docs/contracts/message.schema.json`; `docs/policies/trace-visibility-policy.md`. | Accepted | Fase 3/1 persistencia y conversacion. | Trazas sin reconstruccion conversacional o con mensajes completos. |
 | ADR-011 | Tenancy. | ADR-011: Reglas aprobadas. | Accepted | Fase 1 ownership. | Acceso cruzado. |
 | ADR-011 | Roles minimos. | ADR-011: Reglas aprobadas. | Accepted | Fase 11 hardening. | Permisos ambiguos. |
 | ADR-011 | Logs. | ADR-011: Restricciones, Reglas, Mitigaciones. | Accepted | Subfase 0.10. | Datos sensibles en logs. |

@@ -116,6 +116,35 @@ Estos contratos quedan aceptados como base documental del Cost Governor, budgets
 - `TraceObject.actor_ref`, `UsageEvent.actor_ref`, `AnswerVersion.created_by_ref` y `AbstentionRender.created_by_ref` usan identificadores tecnicos cerrados, no PII directa ni nombres libres.
 - `LegalSearchQuery.budget` sigue siendo `search_budget` tecnico interno de busqueda viva.
 
+## Contratos aceptados en Subfase 0.9
+
+Estos contratos quedan aceptados como base documental de conversacion, mensajes, memoria de caso, evidencia documental y OCR. Esta aceptacion no implementa DB, storage, OCR worker, busqueda documental ni memoria persistente.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Conversation | Accepted | `conversation.schema.json` |
+| Message | Accepted | `message.schema.json` |
+| Case Memory | Accepted | `case-memory.schema.json` |
+| Document Evidence | Accepted | `document-evidence.schema.json` |
+| Trace Object Message Reference Amendment | Accepted | `trace-object.schema.json` |
+
+## Reglas especificas de Subfase 0.9
+
+- `Conversation` usa `owner_actor_ref` y `owner_actor_type`, no `user_id` crudo.
+- `Conversation` requiere validador custom para `updated_at >= created_at` y, si existe `deleted_at`, `deleted_at >= created_at` y `deleted_at >= updated_at`.
+- `Message` puede guardar contenido conversacional como registro primario, pero `TraceObject` solo guarda `input_message_ids` y `output_message_id`.
+- `Message.attachments[]` en 0.9 solo representa documentos ya procesados.
+- `Message.attachments[].attachment_id` requiere unicidad por mensaje mediante validador custom.
+- `CaseMemory` separa hechos afirmados por usuario, hechos soportados por documentos, preguntas abiertas, riesgos y contradicciones.
+- `CaseMemory` no es verdad juridica, fuente normativa ni confirmacion de vigencia.
+- `CaseMemory` requiere IDs internos unicos para hechos, preguntas, riesgos, partes, fechas y contradicciones mediante validador custom cuando JSON Schema no puede expresarlo por propiedad.
+- `DocumentEvidence` representa fragmentos `D#:P#`, no documentos completos.
+- `DocumentEvidence` exige tenant, version documental, hashes, locator, metodo de extraccion, confianza y warnings.
+- `DocumentEvidence.locator.page` debe coincidir con `DocumentEvidence.page` mediante validador custom.
+- `Passage.locator.coordinates` y `DocumentEvidence.locator.coordinates` usan bbox cerrado `x`, `y`, `width`, `height`; no aceptan objetos libres.
+- Los hashes de `Message` y `DocumentEvidence` se calculan sobre bytes UTF-8 exactos persistidos.
+- Seguridad documental completa, retencion, permisos y prompt injection policy quedan para Subfase 0.10.
+
 ## Schemas minimos esperados
 
 ```txt

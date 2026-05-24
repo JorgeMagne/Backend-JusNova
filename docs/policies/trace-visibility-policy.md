@@ -4,7 +4,7 @@
 **Fecha:** 2026-05-22
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Subfase 0.7 - Trazabilidad, auditoria y versionado
-**Enmienda:** Subfase 0.8 - Cost Governor, planes y presupuestos
+**Enmiendas:** Subfase 0.8 - Cost Governor, planes y presupuestos; Subfase 0.9 - Conversacion, memoria, documentos y OCR
 
 ## Proposito
 
@@ -20,9 +20,9 @@ No define retencion final, permisos productivos completos ni proceso de incident
 
 | Nivel | Visible para | Incluye | Excluye |
 |---|---|---|---|
-| `USER_SUMMARY` | Usuario final | Fuentes usadas, advertencias, fecha de consulta, nivel de evidencia, resultado de vigencia expresado para usuario | Prompts, salidas completas de modelo, documentos completos, mensajes completos, hashes internos innecesarios, plan interno, budget ref, budget version |
-| `SUPPORT_VIEW` | Soporte autorizado | Errores, latencia, proveedores, consumo tecnico estimado, estado de auditoria, IDs de trazabilidad, plan neutral, complejidad y budget ref | Prompts, documentos completos, mensajes completos, OCR completo, salida completa del modelo, precio mensual |
-| `INTERNAL_AUDIT` | Equipo tecnico autorizado | Hashes, prompt versions, model calls, tool calls, fuentes rechazadas, citation audit, costos observados, relacion completa con Usage Ledger, `cost_budget_ref`, `cost_budget_version`, `plan_code`, `complexity` | Acceso libre a material crudo; por defecto se usan hashes y referencias |
+| `USER_SUMMARY` | Usuario final | Fuentes usadas, advertencias, fecha de consulta, nivel de evidencia, resultado de vigencia expresado para usuario | Prompts, salidas completas de modelo, documentos completos, mensajes completos, IDs internos de mensajes, hashes internos innecesarios, plan interno, budget ref, budget version |
+| `SUPPORT_VIEW` | Soporte autorizado | Errores, latencia, proveedores, consumo tecnico estimado, estado de auditoria, IDs de trazabilidad, IDs de conversacion/mensaje, plan neutral, complejidad y budget ref | Prompts, documentos completos, mensajes completos, OCR completo, salida completa del modelo, precio mensual |
+| `INTERNAL_AUDIT` | Equipo tecnico autorizado | Hashes, prompt versions, model calls, tool calls, fuentes rechazadas, citation audit, costos observados, refs completas de mensajes, relacion completa con Usage Ledger, `cost_budget_ref`, `cost_budget_version`, `plan_code`, `complexity` | Acceso libre a material crudo; por defecto se usan hashes y referencias |
 
 ## Reglas deterministicas
 
@@ -77,7 +77,12 @@ No define retencion final, permisos productivos completos ni proceso de incident
 49. `SUPPORT_VIEW` puede mostrar `plan_code` neutral, `complexity` y `cost_budget_ref`, pero no precio mensual ni condiciones comerciales completas.
 50. `INTERNAL_AUDIT` puede ver `cost_budget_ref`, `cost_budget_version`, `plan_code`, `complexity` y relacion con `UsageEvent`.
 51. La relacion entre `TraceObject` y Usage Ledger debe poder conciliar ejecucion, creditos y budget efectivo sin guardar PII directa.
-52. Las reglas 30 a 51 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
+52. `TraceObject.input_message_ids[]` y `TraceObject.output_message_id` guardan solo referencias a `Message`, nunca contenido.
+53. Cada `input_message_ids[]` debe resolver a un `Message` existente con el mismo `conversation_id` y `organization_id`.
+54. `output_message_id` debe resolver a un `Message` con `role = assistant`, `message_kind = assistant_final`, mismo `conversation_id`, mismo `organization_id`, mismo `trace_id`, mismo `answer_id` y mismo `answer_version_ref`.
+55. `output_message_id` no puede aparecer dentro de `input_message_ids[]`.
+56. `USER_SUMMARY` no muestra IDs internos de mensajes; `SUPPORT_VIEW` puede mostrar IDs de conversacion/mensaje; `INTERNAL_AUDIT` puede ver refs completas.
+57. Las reglas 30 a 56 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
 
 ## Reglas asistidas por IA
 
@@ -93,7 +98,7 @@ No define retencion final, permisos productivos completos ni proceso de incident
 | Prompt completo | No se guarda en contratos 0.7; usar `prompt_version` e `input_hash`. |
 | Salida completa del modelo | No se guarda en contratos 0.7; usar `output_hash` cuando exista. |
 | Documento completo | No se guarda en trazas; usar referencias de documento, pagina, pasaje o hash. |
-| Mensaje completo del usuario | No se guarda en trazas 0.7; usar hash o referencia conversacional. |
+| Mensaje completo del usuario | No se guarda en trazas; usar `input_message_ids`, `output_message_id`, hash o referencia conversacional. |
 | URL sensible | Guardar hash cuando se registre fuente abierta o rechazada dentro de `TraceObject`; URLs operativas crudas quedan fuera de la traza 0.7. |
 | Error tecnico | Guardar `error_code` y `safe_message_code`; el texto humano se genera desde catalogo cerrado en la vista. |
 | Costos y latencias | Guardar valores numericos observados. En Subfase 0.8, `TraceObject` puede guardar plan neutral, complejidad y budget ref; no guarda precio mensual ni `CostBudget` embebido. |
@@ -135,4 +140,4 @@ El motivo debe ser concreto: soporte de usuario, investigacion de incidente, eva
 
 ## Momento de revision
 
-Revisar al cerrar Subfase 0.7, ante enmiendas de budget/plan como Subfase 0.8, al definir permisos de Subfase 0.10, al crear vistas de soporte, y ante cualquier incidente de privacidad, soporte o auditoria.
+Revisar al cerrar Subfase 0.7, ante enmiendas de budget/plan como Subfase 0.8, ante enmiendas conversacionales como Subfase 0.9, al definir permisos de Subfase 0.10, al crear vistas de soporte, y ante cualquier incidente de privacidad, soporte o auditoria.

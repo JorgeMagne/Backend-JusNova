@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-24",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.8 - Cost Governor, planes y presupuestos"
+    "related_decision": "Subfase 0.8 - Cost Governor, planes y presupuestos",
+    "amendments": [
+      "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment"
+    ]
   },
   "required": [
     "cost_budget_id",
@@ -585,7 +588,11 @@
           "persistence": 50,
           "queue": 50
         },
-        "warnings": []
+        "warnings": [],
+        "input_message_ids": [
+          "msg_tr_budget_mismatch_trace_input"
+        ],
+        "output_message_id": "msg_tr_budget_mismatch_trace_output"
       },
       "usage_events": [],
       "expected_policy_failures": [
@@ -727,7 +734,11 @@
           "persistence": 50,
           "queue": 50
         },
-        "warnings": []
+        "warnings": [],
+        "input_message_ids": [
+          "msg_tr_usage_budget_mismatch_input"
+        ],
+        "output_message_id": "msg_tr_usage_budget_mismatch_output"
       },
       "usage_events": [
         {
@@ -893,7 +904,11 @@
           "persistence": 50,
           "queue": 50
         },
-        "warnings": []
+        "warnings": [],
+        "input_message_ids": [
+          "msg_tr_missing_credit_input"
+        ],
+        "output_message_id": "msg_tr_missing_credit_output"
       },
       "usage_events": [],
       "expected_policy_failures": [
@@ -1034,7 +1049,11 @@
           "persistence": 50,
           "queue": 50
         },
-        "warnings": []
+        "warnings": [],
+        "input_message_ids": [
+          "msg_tr_credit_wrong_anchor_input"
+        ],
+        "output_message_id": "msg_tr_credit_wrong_anchor_output"
       },
       "usage_events": [
         {
@@ -1199,7 +1218,11 @@
           "persistence": 50,
           "queue": 50
         },
-        "warnings": []
+        "warnings": [],
+        "input_message_ids": [
+          "msg_tr_credit_quantity_budget_mismatch_input"
+        ],
+        "output_message_id": "msg_tr_credit_quantity_budget_mismatch_output"
       },
       "usage_events": [
         {

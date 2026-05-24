@@ -1,0 +1,848 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/case-memory.schema.json",
+  "title": "CaseMemory",
+  "description": "Memoria estructurada de caso para contexto operativo. No es evidencia juridica, no confirma vigencia y no sustituye EvidencePack, Source, Passage, Claim ni Citation.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-24",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.9 - Conversacion, memoria, documentos y OCR"
+  },
+  "required": [
+    "case_id",
+    "organization_id",
+    "jurisdiction",
+    "memory_version",
+    "legal_areas",
+    "procedural_stage_code",
+    "procedural_stage_label",
+    "parties",
+    "dates",
+    "facts_asserted_by_user",
+    "facts_supported_by_documents",
+    "open_legal_questions",
+    "source_history",
+    "risk_flags",
+    "contradictions",
+    "updated_at"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jurisdiction": {
+      "const": "BO"
+    },
+    "memory_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "legal_areas": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "CIVIL",
+          "PROCESAL_CIVIL",
+          "PENAL",
+          "PROCESAL_PENAL",
+          "LABORAL",
+          "CONSTITUCIONAL",
+          "ADMINISTRATIVO",
+          "TRIBUTARIO",
+          "COMERCIAL",
+          "FAMILIA",
+          "NIÑEZ_ADOLESCENCIA",
+          "AGROAMBIENTAL",
+          "COACTIVO_FISCAL",
+          "CONTENCIOSO_ADMINISTRATIVO",
+          "REGULATORIO_SECTORIAL",
+          "MUNICIPAL_AUTONOMICO",
+          "NOTARIAL_REGISTRAL",
+          "MIGRATORIO",
+          "OTRO"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "procedural_stage_code": {
+      "enum": [
+        "pre_filing",
+        "filing",
+        "admitted",
+        "evidence",
+        "hearing",
+        "appeal",
+        "execution",
+        "closed",
+        "unknown"
+      ]
+    },
+    "procedural_stage_label": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "parties": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/party"
+      }
+    },
+    "dates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/case_date"
+      }
+    },
+    "facts_asserted_by_user": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/user_asserted_fact"
+      }
+    },
+    "facts_supported_by_documents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/document_supported_fact"
+      }
+    },
+    "open_legal_questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/open_legal_question"
+      }
+    },
+    "source_history": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^(F[0-9]+|D[0-9]+|F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$"
+      },
+      "uniqueItems": true
+    },
+    "risk_flags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/risk_flag"
+      }
+    },
+    "contradictions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contradiction"
+      }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "actor_user_ref": {
+      "type": "string",
+      "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+    },
+    "user_asserted_fact": {
+      "type": "object",
+      "required": [
+        "fact_id",
+        "text",
+        "asserted_by_type",
+        "asserted_by_ref",
+        "asserted_at",
+        "status",
+        "confidence"
+      ],
+      "properties": {
+        "fact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1200
+        },
+        "asserted_by_type": {
+          "const": "user"
+        },
+        "asserted_by_ref": {
+          "$ref": "#/$defs/actor_user_ref"
+        },
+        "asserted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "superseded",
+            "disputed",
+            "withdrawn"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "document_supported_fact": {
+      "type": "object",
+      "required": [
+        "fact_id",
+        "text",
+        "document_id",
+        "document_version_id",
+        "passage_refs"
+      ],
+      "properties": {
+        "fact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1200
+        },
+        "document_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "document_version_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "passage_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^D[0-9]+:P[0-9]+$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "open_legal_question": {
+      "type": "object",
+      "required": [
+        "question_id",
+        "text",
+        "status",
+        "created_at"
+      ],
+      "properties": {
+        "question_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1200
+        },
+        "status": {
+          "enum": [
+            "open",
+            "answered",
+            "blocked",
+            "needs_research"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "risk_flag": {
+      "type": "object",
+      "required": [
+        "risk_flag_id",
+        "risk_type",
+        "severity",
+        "description",
+        "created_at"
+      ],
+      "properties": {
+        "risk_flag_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risk_type": {
+          "enum": [
+            "deadline",
+            "missing_document",
+            "conflicting_fact",
+            "low_evidence",
+            "jurisdiction_unclear",
+            "procedural_uncertainty",
+            "document_quality",
+            "other"
+          ]
+        },
+        "severity": {
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "blocking"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 800
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "contradiction": {
+      "type": "object",
+      "required": [
+        "contradiction_id",
+        "description",
+        "fact_refs",
+        "status",
+        "created_at"
+      ],
+      "properties": {
+        "contradiction_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1200
+        },
+        "fact_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 2,
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "open",
+            "resolved",
+            "needs_review"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "party": {
+      "type": "object",
+      "required": [
+        "party_id",
+        "role",
+        "display_ref"
+      ],
+      "properties": {
+        "party_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "enum": [
+            "client",
+            "opposing_party",
+            "court",
+            "authority",
+            "third_party",
+            "unknown"
+          ]
+        },
+        "display_ref": {
+          "type": "string",
+          "pattern": "^(party_ref_[A-Za-z0-9_-]+|actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "case_date": {
+      "type": "object",
+      "required": [
+        "date_id",
+        "date",
+        "date_type",
+        "source_type",
+        "source_ref"
+      ],
+      "properties": {
+        "date_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "date_type": {
+          "enum": [
+            "event",
+            "deadline",
+            "filing",
+            "notification",
+            "hearing",
+            "unknown"
+          ]
+        },
+        "source_type": {
+          "enum": [
+            "user_asserted",
+            "system_inferred",
+            "evidence_ref"
+          ]
+        },
+        "source_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^(F[0-9]+|D[0-9]+|F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "source_type": {
+                "const": "evidence_ref"
+              }
+            },
+            "required": [
+              "source_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "source_ref": {
+                "type": "string",
+                "pattern": "^(F[0-9]+|D[0-9]+|F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "source_ref": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "case_id": "case_001",
+      "organization_id": "org_001",
+      "jurisdiction": "BO",
+      "memory_version": 1,
+      "legal_areas": [
+        "CIVIL",
+        "PROCESAL_CIVIL"
+      ],
+      "procedural_stage_code": "appeal",
+      "procedural_stage_label": "Recurso de casacion",
+      "parties": [
+        {
+          "party_id": "party_001",
+          "role": "client",
+          "display_ref": "party_ref_cliente_001"
+        }
+      ],
+      "dates": [
+        {
+          "date_id": "date_001",
+          "date": "2026-05-20",
+          "date_type": "notification",
+          "source_type": "evidence_ref",
+          "source_ref": "D1:P1"
+        }
+      ],
+      "facts_asserted_by_user": [
+        {
+          "fact_id": "fact_user_001",
+          "text": "El usuario afirma que fue notificado el 20 de mayo de 2026.",
+          "asserted_by_type": "user",
+          "asserted_by_ref": "actor_hash_abogado_001",
+          "asserted_at": "2026-05-24T10:00:00Z",
+          "status": "active",
+          "confidence": 0.6
+        }
+      ],
+      "facts_supported_by_documents": [
+        {
+          "fact_id": "fact_doc_001",
+          "text": "La diligencia documental indica fecha de notificacion 2026-05-20.",
+          "document_id": "doc_001",
+          "document_version_id": "docv_001",
+          "passage_refs": [
+            "D1:P1"
+          ]
+        }
+      ],
+      "open_legal_questions": [
+        {
+          "question_id": "q_001",
+          "text": "Confirmar plazo aplicable desde la notificacion.",
+          "status": "needs_research",
+          "created_at": "2026-05-24T10:05:00Z"
+        }
+      ],
+      "source_history": [
+        "D1",
+        "D1:P1"
+      ],
+      "risk_flags": [
+        {
+          "risk_flag_id": "risk_001",
+          "risk_type": "deadline",
+          "severity": "high",
+          "description": "Posible plazo procesal dependiente de fecha de notificacion.",
+          "created_at": "2026-05-24T10:05:00Z"
+        }
+      ],
+      "contradictions": [],
+      "updated_at": "2026-05-24T10:10:00Z"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "case_id": "case_bad_jurisdiction",
+      "organization_id": "org_001",
+      "jurisdiction": "AR",
+      "memory_version": 1,
+      "legal_areas": [],
+      "procedural_stage_code": "unknown",
+      "procedural_stage_label": null,
+      "parties": [],
+      "dates": [],
+      "facts_asserted_by_user": [],
+      "facts_supported_by_documents": [],
+      "open_legal_questions": [],
+      "source_history": [],
+      "risk_flags": [],
+      "contradictions": [],
+      "updated_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "case_id": "case_bad_fact_free_object",
+      "organization_id": "org_001",
+      "jurisdiction": "BO",
+      "memory_version": 1,
+      "legal_areas": [],
+      "procedural_stage_code": "unknown",
+      "procedural_stage_label": null,
+      "parties": [],
+      "dates": [],
+      "facts_asserted_by_user": [
+        {
+          "text": "Objeto libre sin identificador ni actor."
+        }
+      ],
+      "facts_supported_by_documents": [],
+      "open_legal_questions": [],
+      "source_history": [],
+      "risk_flags": [],
+      "contradictions": [],
+      "updated_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "case_id": "case_bad_url_source",
+      "organization_id": "org_001",
+      "jurisdiction": "BO",
+      "memory_version": 1,
+      "legal_areas": [],
+      "procedural_stage_code": "unknown",
+      "procedural_stage_label": null,
+      "parties": [],
+      "dates": [],
+      "facts_asserted_by_user": [],
+      "facts_supported_by_documents": [],
+      "open_legal_questions": [],
+      "source_history": [
+        "https://example.com/doc.pdf"
+      ],
+      "risk_flags": [],
+      "contradictions": [],
+      "updated_at": "2026-05-24T10:00:00Z"
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "case_id": "case_policy_bad_fact_ref",
+      "organization_id": "org_001",
+      "jurisdiction": "BO",
+      "memory_version": 1,
+      "legal_areas": [],
+      "procedural_stage_code": "unknown",
+      "procedural_stage_label": null,
+      "parties": [],
+      "dates": [],
+      "facts_asserted_by_user": [],
+      "facts_supported_by_documents": [],
+      "open_legal_questions": [],
+      "source_history": [],
+      "risk_flags": [],
+      "contradictions": [
+        {
+          "contradiction_id": "contr_001",
+          "description": "Contradiccion contra hechos que no existen dentro de esta memoria.",
+          "fact_refs": [
+            "fact_missing_1",
+            "fact_missing_2"
+          ],
+          "status": "open",
+          "created_at": "2026-05-24T10:00:00Z"
+        }
+      ],
+      "updated_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "case_id": "case_policy_bad_document_fact",
+      "organization_id": "org_001",
+      "jurisdiction": "BO",
+      "memory_version": 1,
+      "legal_areas": [],
+      "procedural_stage_code": "unknown",
+      "procedural_stage_label": null,
+      "parties": [],
+      "dates": [],
+      "facts_asserted_by_user": [],
+      "facts_supported_by_documents": [
+        {
+          "fact_id": "fact_doc_001",
+          "text": "El pasaje pertenece a otro documento o version documental.",
+          "document_id": "doc_001",
+          "document_version_id": "docv_001",
+          "passage_refs": [
+            "D2:P1"
+          ]
+        }
+      ],
+      "open_legal_questions": [],
+      "source_history": [
+        "D2:P1"
+      ],
+      "risk_flags": [],
+      "contradictions": [],
+      "updated_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "case_id": "case_policy_duplicate_fact_id",
+      "organization_id": "org_001",
+      "jurisdiction": "BO",
+      "memory_version": 1,
+      "legal_areas": [],
+      "procedural_stage_code": "unknown",
+      "procedural_stage_label": null,
+      "parties": [],
+      "dates": [],
+      "facts_asserted_by_user": [
+        {
+          "fact_id": "fact_dup_001",
+          "text": "El usuario afirma una version de los hechos.",
+          "asserted_by_type": "user",
+          "asserted_by_ref": "actor_hash_abogado_001",
+          "asserted_at": "2026-05-24T10:00:00Z",
+          "status": "active",
+          "confidence": 0.6
+        }
+      ],
+      "facts_supported_by_documents": [
+        {
+          "fact_id": "fact_dup_001",
+          "text": "El documento representa otro hecho con el mismo identificador.",
+          "document_id": "doc_001",
+          "document_version_id": "docv_001",
+          "passage_refs": [
+            "D1:P1"
+          ]
+        }
+      ],
+      "open_legal_questions": [],
+      "source_history": [
+        "D1:P1"
+      ],
+      "risk_flags": [],
+      "contradictions": [],
+      "updated_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "case_id": "case_policy_duplicate_structural_ids",
+      "organization_id": "org_001",
+      "jurisdiction": "BO",
+      "memory_version": 1,
+      "legal_areas": [],
+      "procedural_stage_code": "unknown",
+      "procedural_stage_label": null,
+      "parties": [
+        {
+          "party_id": "party_dup_001",
+          "role": "client",
+          "display_ref": "party_ref_cliente_001"
+        },
+        {
+          "party_id": "party_dup_001",
+          "role": "opposing_party",
+          "display_ref": "party_ref_contraparte_001"
+        }
+      ],
+      "dates": [],
+      "facts_asserted_by_user": [],
+      "facts_supported_by_documents": [],
+      "open_legal_questions": [
+        {
+          "question_id": "question_dup_001",
+          "text": "Primera pregunta abierta.",
+          "status": "open",
+          "created_at": "2026-05-24T10:00:00Z"
+        },
+        {
+          "question_id": "question_dup_001",
+          "text": "Segunda pregunta con el mismo identificador.",
+          "status": "needs_research",
+          "created_at": "2026-05-24T10:01:00Z"
+        }
+      ],
+      "source_history": [],
+      "risk_flags": [],
+      "contradictions": [],
+      "updated_at": "2026-05-24T10:00:00Z"
+    }
+  ],
+  "x-cross-contract-policy-invalid-examples": [
+    {
+      "case_memory": {
+        "case_id": "case_cross_document_evidence_tenant_mismatch",
+        "organization_id": "org_001",
+        "jurisdiction": "BO",
+        "memory_version": 1,
+        "legal_areas": [
+          "CIVIL",
+          "PROCESAL_CIVIL"
+        ],
+        "procedural_stage_code": "appeal",
+        "procedural_stage_label": "Recurso de casacion",
+        "parties": [
+          {
+            "party_id": "party_001",
+            "role": "client",
+            "display_ref": "party_ref_cliente_001"
+          }
+        ],
+        "dates": [
+          {
+            "date_id": "date_001",
+            "date": "2026-05-20",
+            "date_type": "notification",
+            "source_type": "evidence_ref",
+            "source_ref": "D1:P1"
+          }
+        ],
+        "facts_asserted_by_user": [
+          {
+            "fact_id": "fact_user_001",
+            "text": "El usuario afirma que fue notificado el 20 de mayo de 2026.",
+            "asserted_by_type": "user",
+            "asserted_by_ref": "actor_hash_abogado_001",
+            "asserted_at": "2026-05-24T10:00:00Z",
+            "status": "active",
+            "confidence": 0.6
+          }
+        ],
+        "facts_supported_by_documents": [
+          {
+            "fact_id": "fact_doc_cross_001",
+            "text": "Hecho documental que apunta a pasaje de otro tenant.",
+            "document_id": "doc_001",
+            "document_version_id": "docv_001",
+            "passage_refs": [
+              "D1:P1"
+            ]
+          }
+        ],
+        "open_legal_questions": [
+          {
+            "question_id": "q_001",
+            "text": "Confirmar plazo aplicable desde la notificacion.",
+            "status": "needs_research",
+            "created_at": "2026-05-24T10:05:00Z"
+          }
+        ],
+        "source_history": [
+          "D1:P1"
+        ],
+        "risk_flags": [
+          {
+            "risk_flag_id": "risk_001",
+            "risk_type": "deadline",
+            "severity": "high",
+            "description": "Posible plazo procesal dependiente de fecha de notificacion.",
+            "created_at": "2026-05-24T10:05:00Z"
+          }
+        ],
+        "contradictions": [],
+        "updated_at": "2026-05-24T10:10:00Z"
+      },
+      "document_evidence": {
+        "organization_id": "org_002",
+        "document_id": "doc_001",
+        "document_version_id": "docv_001",
+        "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_ref": "D1",
+        "passage_ref": "D1:P1",
+        "page": 1,
+        "text": "Fragmento documental de otro tenant.",
+        "text_hash": "sha256:2063d42e453032756e77042eed4f2a14d80b68b4c1137f4725b172fdae124c98",
+        "locator": {
+          "page": 1,
+          "article": null,
+          "section": null,
+          "paragraph": null,
+          "coordinates": null,
+          "url_fragment": null
+        },
+        "extraction_method": "ocr",
+        "vision_escalation_reason": null,
+        "extraction_confidence": 0.9,
+        "warnings": [],
+        "citation_eligible": true,
+        "created_at": "2026-05-24T10:00:00Z"
+      }
+    }
+  ]
+}

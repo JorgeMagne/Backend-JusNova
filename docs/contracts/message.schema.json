@@ -1,0 +1,575 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/message.schema.json",
+  "title": "Message",
+  "description": "Contrato minimo para mensajes persistidos de conversacion. Message puede guardar contenido conversacional, pero TraceObject y logs solo deben referenciarlo por ID/hash.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-24",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.9 - Conversacion, memoria, documentos y OCR"
+  },
+  "required": [
+    "message_id",
+    "conversation_id",
+    "organization_id",
+    "actor_ref",
+    "actor_type",
+    "role",
+    "message_kind",
+    "content",
+    "content_hash",
+    "attachments",
+    "created_at"
+  ],
+  "properties": {
+    "message_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "conversation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor_type": {
+      "enum": [
+        "user",
+        "system",
+        "service"
+      ]
+    },
+    "role": {
+      "enum": [
+        "user",
+        "assistant",
+        "system_status",
+        "tool_status"
+      ]
+    },
+    "message_kind": {
+      "enum": [
+        "user_input",
+        "assistant_final",
+        "assistant_clarification",
+        "system_notice",
+        "tool_progress"
+      ]
+    },
+    "content": {
+      "type": "string",
+      "minLength": 1
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "answer_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "trace_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "answer_version_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/document_attachment"
+      },
+      "uniqueItems": true
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "document_attachment": {
+      "type": "object",
+      "required": [
+        "attachment_id",
+        "attachment_type",
+        "status",
+        "document_id",
+        "document_version_id",
+        "source_ref"
+      ],
+      "properties": {
+        "attachment_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attachment_type": {
+          "const": "document"
+        },
+        "status": {
+          "const": "processed"
+        },
+        "document_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "document_version_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_ref": {
+          "type": "string",
+          "pattern": "^D[0-9]+$"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "user"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "system"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "const": "system"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "service"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^service_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "user"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "then": {
+        "properties": {
+          "message_kind": {
+            "const": "user_input"
+          },
+          "actor_type": {
+            "const": "user"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "assistant"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "then": {
+        "properties": {
+          "message_kind": {
+            "enum": [
+              "assistant_final",
+              "assistant_clarification"
+            ]
+          },
+          "actor_type": {
+            "const": "service"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "system_status"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "then": {
+        "properties": {
+          "message_kind": {
+            "const": "system_notice"
+          },
+          "actor_type": {
+            "enum": [
+              "system",
+              "service"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "role": {
+            "const": "tool_status"
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "then": {
+        "properties": {
+          "message_kind": {
+            "const": "tool_progress"
+          },
+          "actor_type": {
+            "const": "service"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "message_kind": {
+            "const": "assistant_final"
+          }
+        },
+        "required": [
+          "message_kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "answer_id",
+          "trace_id",
+          "answer_version_ref"
+        ],
+        "properties": {
+          "answer_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trace_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answer_version_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "attachments": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "answer_id": {
+            "type": "null"
+          },
+          "trace_id": {
+            "type": "null"
+          },
+          "answer_version_ref": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "message_kind": {
+            "const": "user_input"
+          }
+        },
+        "required": [
+          "message_kind"
+        ]
+      },
+      "else": {
+        "properties": {
+          "attachments": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "message_id": "msg_001",
+      "conversation_id": "conv_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_abogado_001",
+      "actor_type": "user",
+      "role": "user",
+      "message_kind": "user_input",
+      "content": "Necesito revisar este contrato adjunto.",
+      "content_hash": "sha256:dbc1bf03c941004438cffbe3d7e6537fb6cc029e74465ea9bbbf312eff17cd60",
+      "answer_id": null,
+      "trace_id": null,
+      "answer_version_ref": null,
+      "attachments": [
+        {
+          "attachment_id": "att_001",
+          "attachment_type": "document",
+          "status": "processed",
+          "document_id": "doc_001",
+          "document_version_id": "docv_001",
+          "source_ref": "D1"
+        }
+      ],
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "message_id": "msg_002",
+      "conversation_id": "conv_001",
+      "organization_id": "org_001",
+      "actor_ref": "service_answer_generator",
+      "actor_type": "service",
+      "role": "assistant",
+      "message_kind": "assistant_final",
+      "content": "Con la evidencia disponible, corresponde una respuesta parcial.",
+      "content_hash": "sha256:7b89c7f81d14455e86f632c4c800618b7f0dcb35dd95616b0c873b827597603f",
+      "answer_id": "ans_001",
+      "trace_id": "tr_001",
+      "answer_version_ref": "av_001",
+      "attachments": [],
+      "created_at": "2026-05-24T10:00:10Z"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "message_id": "msg_bad_support",
+      "conversation_id": "conv_001",
+      "organization_id": "org_001",
+      "actor_ref": "support_hash_001",
+      "actor_type": "support",
+      "role": "assistant",
+      "message_kind": "assistant_final",
+      "content": "Respuesta final.",
+      "content_hash": "sha256:787d7a4af8e9374d6fe1e327743eeae202acbf2e73acf35ad6abf62e2e87a649",
+      "answer_id": "ans_001",
+      "trace_id": "tr_001",
+      "answer_version_ref": "av_001",
+      "attachments": [],
+      "created_at": "2026-05-24T10:00:10Z"
+    },
+    {
+      "message_id": "msg_bad_answer_ref_on_user",
+      "conversation_id": "conv_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_abogado_001",
+      "actor_type": "user",
+      "role": "user",
+      "message_kind": "user_input",
+      "content": "Pregunta.",
+      "content_hash": "sha256:8236e01112d702611bf6002862eb0be1a084de68afeb4600d1896d2a8e08b16d",
+      "answer_id": "ans_001",
+      "trace_id": null,
+      "answer_version_ref": null,
+      "attachments": [],
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "message_id": "msg_bad_attachment_status",
+      "conversation_id": "conv_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_abogado_001",
+      "actor_type": "user",
+      "role": "user",
+      "message_kind": "user_input",
+      "content": "Adjunto documento.",
+      "content_hash": "sha256:98782ae7be515c2ce504feb707f970c4529b8a67753f89cea2be811d47789104",
+      "answer_id": null,
+      "trace_id": null,
+      "answer_version_ref": null,
+      "attachments": [
+        {
+          "attachment_id": "att_001",
+          "attachment_type": "document",
+          "status": "processing",
+          "document_id": "doc_001",
+          "document_version_id": "docv_001",
+          "source_ref": "D1"
+        }
+      ],
+      "created_at": "2026-05-24T10:00:00Z"
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "message_id": "msg_hash_mismatch",
+      "conversation_id": "conv_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_abogado_001",
+      "actor_type": "user",
+      "role": "user",
+      "message_kind": "user_input",
+      "content": "El hash no corresponde a estos bytes UTF-8 exactos.",
+      "content_hash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "answer_id": null,
+      "trace_id": null,
+      "answer_version_ref": null,
+      "attachments": [],
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "message_id": "msg_duplicate_attachment_id",
+      "conversation_id": "conv_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_abogado_001",
+      "actor_type": "user",
+      "role": "user",
+      "message_kind": "user_input",
+      "content": "Adjunto dos documentos con el mismo attachment_id.",
+      "content_hash": "sha256:6c38d1cad91d46723e67b2452e9874f468ce527c307b86e7166c5174390ab4bf",
+      "answer_id": null,
+      "trace_id": null,
+      "answer_version_ref": null,
+      "attachments": [
+        {
+          "attachment_id": "att_dup_001",
+          "attachment_type": "document",
+          "status": "processed",
+          "document_id": "doc_001",
+          "document_version_id": "docv_001",
+          "source_ref": "D1"
+        },
+        {
+          "attachment_id": "att_dup_001",
+          "attachment_type": "document",
+          "status": "processed",
+          "document_id": "doc_002",
+          "document_version_id": "docv_002",
+          "source_ref": "D2"
+        }
+      ],
+      "created_at": "2026-05-24T10:00:00Z"
+    }
+  ],
+  "x-cross-contract-policy-invalid-examples": [
+    {
+      "message": {
+        "message_id": "msg_attachment_cross_tenant",
+        "conversation_id": "conv_001",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_abogado_001",
+        "actor_type": "user",
+        "role": "user",
+        "message_kind": "user_input",
+        "content": "Adjunto documento procesado.",
+        "content_hash": "sha256:d8d8c3cbc52308b4defa332c8b4fe8e67a3305876c32fc43738981c8999ba80a",
+        "answer_id": null,
+        "trace_id": null,
+        "answer_version_ref": null,
+        "attachments": [
+          {
+            "attachment_id": "att_cross_tenant",
+            "attachment_type": "document",
+            "status": "processed",
+            "document_id": "doc_001",
+            "document_version_id": "docv_001",
+            "source_ref": "D1"
+          }
+        ],
+        "created_at": "2026-05-24T10:00:00Z"
+      },
+      "document_evidence": {
+        "organization_id": "org_002",
+        "document_id": "doc_001",
+        "document_version_id": "docv_001",
+        "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_ref": "D1",
+        "passage_ref": "D1:P1",
+        "page": 1,
+        "text": "Fragmento de otro tenant referenciado por el mensaje.",
+        "text_hash": "sha256:802272e6cc63bd5e61d2e79101cc36bc75380a4ddfab53db8f90c272935dd42c",
+        "locator": {
+          "page": 1,
+          "article": null,
+          "section": null,
+          "paragraph": null,
+          "coordinates": null,
+          "url_fragment": null
+        },
+        "extraction_method": "ocr",
+        "vision_escalation_reason": null,
+        "extraction_confidence": 0.9,
+        "warnings": [],
+        "citation_eligible": true,
+        "created_at": "2026-05-24T10:00:00Z"
+      }
+    }
+  ]
+}

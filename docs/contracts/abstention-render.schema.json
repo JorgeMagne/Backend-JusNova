@@ -9,7 +9,10 @@
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
-    "amended_by": "Subfase 0.8 - Cost Governor, planes y presupuestos"
+    "amendments": [
+      "Subfase 0.8 - Cost Governor, planes y presupuestos",
+      "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment"
+    ]
   },
   "required": [
     "abstention_render_id",
@@ -383,7 +386,11 @@
         "cost_budget_ref": "cb_profesional_simple_v080",
         "cost_budget_version": "cost-budget-v0.8.0",
         "plan_code": "PROFESIONAL",
-        "complexity": "SIMPLE"
+        "complexity": "SIMPLE",
+        "input_message_ids": [
+          "msg_tr_abstention_001_input"
+        ],
+        "output_message_id": "msg_tr_abstention_001_output"
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",
@@ -486,7 +493,11 @@
         "cost_budget_ref": "cb_profesional_simple_v080",
         "cost_budget_version": "cost-budget-v0.8.0",
         "plan_code": "PROFESIONAL",
-        "complexity": "SIMPLE"
+        "complexity": "SIMPLE",
+        "input_message_ids": [
+          "msg_tr_abstention_001_input"
+        ],
+        "output_message_id": "msg_tr_abstention_001_output"
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",
@@ -589,7 +600,11 @@
         "cost_budget_ref": "cb_profesional_simple_v080",
         "cost_budget_version": "cost-budget-v0.8.0",
         "plan_code": "PROFESIONAL",
-        "complexity": "SIMPLE"
+        "complexity": "SIMPLE",
+        "input_message_ids": [
+          "msg_tr_abstention_001_input"
+        ],
+        "output_message_id": "msg_tr_abstention_001_output"
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",

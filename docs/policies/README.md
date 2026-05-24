@@ -57,6 +57,15 @@ Las politicas convierten principios juridicos, tecnicos, comerciales y de seguri
 | Cost Governor Policy | Accepted | `cost-governor-policy.md` |
 | Trace Visibility Policy Amendment | Accepted | `trace-visibility-policy.md` |
 
+## Politicas aceptadas en Subfase 0.9
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| OCR Policy | Accepted | `ocr-policy.md` |
+| Document Security Policy minima | Accepted | `document-security-policy.md` |
+| Memory Policy | Accepted | `memory-policy.md` |
+| Trace Visibility Policy Message Reference Amendment | Accepted | `trace-visibility-policy.md` |
+
 ## Politicas minimas esperadas
 
 ```txt
@@ -71,6 +80,7 @@ memory-policy.md
 non-negotiable-principles.md
 no-rag-launch-policy.md
 ocr-policy.md
+document-security-policy.md
 privacy-security-policy.md
 prompt-injection-policy.md
 provider-policy.md

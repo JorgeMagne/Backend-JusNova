@@ -193,3 +193,20 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | `trace-visibility-policy.md` registra enmienda 0.8 y visibilidad de plan/budget | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/trace-visibility-policy.md` |
 | ADR-008 cierra dependencia documental de budgets y plans | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-008-cost-governor-and-commercial-budgets.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.9
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| `conversation.schema.json` creado, aceptado y validado sin `user_id` crudo | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/conversation.schema.json` |
+| `message.schema.json` creado, aceptado y validado con actor refs, content hash y attachments documentales procesados | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/message.schema.json` |
+| `case-memory.schema.json` creado, aceptado y validado separando memoria de verdad juridica | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/case-memory.schema.json` |
+| `document-evidence.schema.json` creado, aceptado y validado para fragmentos `D#:P#` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/document-evidence.schema.json` |
+| `ocr-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/ocr-policy.md` |
+| `document-security-policy.md` minima creada y aceptada sin reemplazar 0.10 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/document-security-policy.md` |
+| `memory-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/memory-policy.md` |
+| `TraceObject` exige `input_message_ids` y `output_message_id` sin copiar contenido de mensajes | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json` |
+| Fixtures cross-contract con `trace_object` actualizados tras enmienda 0.9 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-version.schema.json`, `docs/contracts/abstention-render.schema.json`, `docs/contracts/cost-budget.schema.json` |
+| `trace-visibility-policy.md` registra visibilidad de refs de mensajes sin contenido | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/trace-visibility-policy.md` |
+| ADR-006 registra document security minima en 0.9 y seguridad completa en 0.10 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-006-document-ocr-policy.md` |
+| Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |

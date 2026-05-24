@@ -1,0 +1,584 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/document-evidence.schema.json",
+  "title": "DocumentEvidence",
+  "description": "Fragmento documental privado o de usuario convertido en evidencia citable por pagina/localizador. No representa norma vigente ni fuente oficial.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-24",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.9 - Conversacion, memoria, documentos y OCR"
+  },
+  "required": [
+    "organization_id",
+    "document_id",
+    "document_version_id",
+    "document_version_hash",
+    "source_ref",
+    "passage_ref",
+    "page",
+    "text",
+    "text_hash",
+    "locator",
+    "extraction_method",
+    "extraction_confidence",
+    "warnings",
+    "citation_eligible",
+    "created_at"
+  ],
+  "properties": {
+    "organization_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "document_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "document_version_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "document_version_hash": {
+      "type": "string",
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "source_ref": {
+      "type": "string",
+      "pattern": "^D[0-9]+$"
+    },
+    "passage_ref": {
+      "type": "string",
+      "pattern": "^D[0-9]+:P[0-9]+$"
+    },
+    "page": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "text_hash": {
+      "type": "string",
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "locator": {
+      "$ref": "#/$defs/locator"
+    },
+    "extraction_method": {
+      "enum": [
+        "native_text",
+        "ocr",
+        "model_vision"
+      ]
+    },
+    "vision_escalation_reason": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "low_ocr_confidence",
+        "signature_or_stamp",
+        "table_or_layout",
+        "handwriting",
+        "critical_fragment",
+        "poor_scan_quality",
+        null
+      ]
+    },
+    "extraction_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "low_confidence",
+          "ocr_noise",
+          "layout_uncertain",
+          "handwriting_detected",
+          "stamp_or_signature",
+          "manual_review_required"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "citation_eligible": {
+      "type": "boolean"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "locator": {
+      "type": "object",
+      "required": [
+        "page",
+        "article",
+        "section",
+        "paragraph",
+        "coordinates",
+        "url_fragment"
+      ],
+      "properties": {
+        "page": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "article": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "section": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "paragraph": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "coordinates": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/bbox_coordinates"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "url_fragment": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "bbox_coordinates": {
+      "type": "object",
+      "description": "Bounding box cerrado dentro de la pagina o fragmento renderizado. La unidad concreta se define por el adaptador documental, pero la forma queda fija y no admite payloads arbitrarios.",
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "citation_eligible": {
+            "const": true
+          }
+        },
+        "required": [
+          "citation_eligible"
+        ]
+      },
+      "then": {
+        "properties": {
+          "extraction_confidence": {
+            "minimum": 0.85
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "extraction_confidence": {
+            "exclusiveMaximum": 0.85
+          }
+        },
+        "required": [
+          "extraction_confidence"
+        ]
+      },
+      "then": {
+        "properties": {
+          "warnings": {
+            "contains": {
+              "enum": [
+                "low_confidence",
+                "manual_review_required"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "extraction_method": {
+            "const": "model_vision"
+          }
+        },
+        "required": [
+          "extraction_method"
+        ]
+      },
+      "then": {
+        "required": [
+          "vision_escalation_reason"
+        ],
+        "properties": {
+          "vision_escalation_reason": {
+            "type": "string",
+            "enum": [
+              "low_ocr_confidence",
+              "signature_or_stamp",
+              "table_or_layout",
+              "handwriting",
+              "critical_fragment",
+              "poor_scan_quality"
+            ]
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "vision_escalation_reason": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_001",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 4,
+      "text": "La diligencia de notificacion fue practicada el 20 de mayo de 2026.",
+      "text_hash": "sha256:a510ad78c8409572202ac1c95fb616bfdef313fc3ffbda688a38d9e99c66d848",
+      "locator": {
+        "page": 4,
+        "article": null,
+        "section": "Diligencia de notificacion",
+        "paragraph": 1,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.91,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_002",
+      "document_version_id": "docv_002",
+      "document_version_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "source_ref": "D2",
+      "passage_ref": "D2:P1",
+      "page": 1,
+      "text": "Firma y sello parcialmente legibles.",
+      "text_hash": "sha256:b9ca8792f50fabdce6ee4984cc20630a3400ef98a9e5678397e14170bd69ffb2",
+      "locator": {
+        "page": 1,
+        "article": null,
+        "section": null,
+        "paragraph": null,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "model_vision",
+      "vision_escalation_reason": "signature_or_stamp",
+      "extraction_confidence": 0.82,
+      "warnings": [
+        "low_confidence",
+        "stamp_or_signature"
+      ],
+      "citation_eligible": false,
+      "created_at": "2026-05-24T10:00:00Z"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_bad_f_ref",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "F1",
+      "passage_ref": "F1:P1",
+      "page": 1,
+      "text": "Texto.",
+      "text_hash": "sha256:e9a88509e3111b81b00868be55281e89da932a3f8d9e912f315dfbccbb6d59ed",
+      "locator": {
+        "page": 1,
+        "article": null,
+        "section": null,
+        "paragraph": null,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.9,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_bad_low_confidence_citable",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 1,
+      "text": "Texto de baja confianza.",
+      "text_hash": "sha256:5f55d1ed0f0732179b4aec2e8a04301848207ef516b85cc29e6ba093a85c1de7",
+      "locator": {
+        "page": 1,
+        "article": null,
+        "section": null,
+        "paragraph": null,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.6,
+      "warnings": [
+        "low_confidence"
+      ],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_bad_vision_reason",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 1,
+      "text": "Texto nativo con razon de vision incoherente.",
+      "text_hash": "sha256:c95b869c227202887d09fab5ad54a473f0472fb2b051175ebb4a0be9c5156eea",
+      "locator": {
+        "page": 1,
+        "article": null,
+        "section": null,
+        "paragraph": null,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "native_text",
+      "vision_escalation_reason": "critical_fragment",
+      "extraction_confidence": 0.95,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_policy_low_confidence_no_warning",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 1,
+      "text": "Texto de baja confianza sin warning.",
+      "text_hash": "sha256:56d494ec5593ebbc287ff934bf06214bdbc41e08bdded9099c924c765e50787f",
+      "locator": {
+        "page": 1,
+        "article": null,
+        "section": null,
+        "paragraph": null,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.4,
+      "warnings": [
+        "ocr_noise"
+      ],
+      "citation_eligible": false,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_bad_open_coordinates",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 1,
+      "text": "Fragmento con coordenadas libres no cerradas.",
+      "text_hash": "sha256:749e510ea0a618851e10828a9dd1511b5edefcd52ede8d994cd8f97a83ade682",
+      "locator": {
+        "page": 1,
+        "article": null,
+        "section": null,
+        "paragraph": null,
+        "coordinates": {
+          "x": 10,
+          "y": 20,
+          "width": 100,
+          "height": 40,
+          "raw_payload": "no permitido"
+        },
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.9,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_policy_bad_ref_match",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D2",
+      "passage_ref": "D1:P1",
+      "page": 1,
+      "text": "El prefijo de passage_ref no coincide con source_ref.",
+      "text_hash": "sha256:74e8773e88e22b490eab67bfd0f607140356422be0b0cf0d2166b19b63edb034",
+      "locator": {
+        "page": 1,
+        "article": null,
+        "section": null,
+        "paragraph": null,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.9,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_policy_bad_hash",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 1,
+      "text": "El hash del texto no corresponde a estos bytes UTF-8 exactos.",
+      "text_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "locator": {
+        "page": 1,
+        "article": null,
+        "section": null,
+        "paragraph": null,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.9,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_policy_bad_document_version_hash",
+      "document_version_id": "docv_999",
+      "document_version_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 4,
+      "text": "El hash de version documental no corresponde al objeto resuelto por document_version_id.",
+      "text_hash": "sha256:4563b7b8aa912d4b251e2149b7d9779894be0f95f861375c9d06cdf2e7049254",
+      "locator": {
+        "page": 4,
+        "article": null,
+        "section": "Diligencia de notificacion",
+        "paragraph": 1,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.91,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_policy_locator_page_mismatch",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 4,
+      "text": "El locator apunta a una pagina distinta de la pagina principal.",
+      "text_hash": "sha256:fa22645a94d634ca9b30b4eb110f263c9cef064dfc41fb330ffc78bc4d74a074",
+      "locator": {
+        "page": 5,
+        "article": null,
+        "section": "Diligencia de notificacion",
+        "paragraph": 1,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.91,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    }
+  ]
+}
