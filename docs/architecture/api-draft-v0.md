@@ -87,9 +87,9 @@ Request:
 | Campo | Regla |
 |---|---|
 | `content` | Texto del mensaje que se persiste como `Message`, no se copia a trazas. |
-| `attachments` | Solo documentos procesados con `attachment_id=att_*`, `document_id=doc_*` y `document_version_id=docv_*`; el cliente no envia `source_ref`. |
+| `attachments` | Solo documentos procesados con `document_id=doc_*` y `document_version_id=docv_*`; el cliente no envia `attachment_id` ni `source_ref`. |
 
-`source_ref` (`D#`) no es input del cliente en este endpoint. Si el `Message` persistido necesita `source_ref` por el contrato 0.9, el backend lo asigna internamente como ref local del adjunto procesado; los refs `D#` de Evidence Packs se asignan despues dentro del `evidence_pack_id` correspondiente y no son IDs globales.
+`attachment_id` y `source_ref` (`D#`) no son input del cliente en este endpoint. Si el `Message` persistido necesita esos campos por el contrato 0.9, el backend asigna `attachment_id=att_*` y `source_ref` internamente como refs locales del adjunto procesado; los refs `D#` de Evidence Packs se asignan despues dentro del `evidence_pack_id` correspondiente y no son IDs globales.
 
 Response:
 
@@ -166,3 +166,25 @@ Todo endpoint debe declarar `ErrorEnvelope` para:
 - policy/prompt injection;
 - evidencia insuficiente;
 - documento pendiente o fallido.
+
+Cada endpoint queda limitado a los siguientes `error_code` de `error-envelope.schema.json`. Fase 1 no debe emitir codigos fuera de la fila aplicable sin enmendar este draft o el contrato de errores.
+
+| Endpoint | `error_code` permitidos |
+|---|---|
+| `POST /v1/conversations` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `conflict`, `rate_limited`, `internal_error` |
+| `GET /v1/conversations/{conversation_id}` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `rate_limited`, `internal_error` |
+| `POST /v1/conversations/{conversation_id}/messages` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `conflict`, `rate_limited`, `payload_too_large`, `document_processing_required`, `budget_exhausted`, `research_credit_required`, `policy_blocked`, `prompt_injection_blocked`, `evidence_insufficient`, `provider_unavailable`, `storage_unavailable`, `timeout`, `internal_error` |
+| `GET /v1/conversations/{conversation_id}/runs/{run_id}/stream` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `document_processing_required`, `document_processing_failed`, `budget_exhausted`, `research_credit_required`, `policy_blocked`, `prompt_injection_blocked`, `unsupported_critical_claim`, `evidence_insufficient`, `provider_unavailable`, `storage_unavailable`, `timeout`, `internal_error` |
+| `POST /v1/cases` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `conflict`, `rate_limited`, `internal_error` |
+| `GET /v1/cases/{case_id}` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `rate_limited`, `internal_error` |
+| `PATCH /v1/cases/{case_id}` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `conflict`, `rate_limited`, `internal_error` |
+| `GET /v1/cases/{case_id}/memory` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `policy_blocked`, `rate_limited`, `internal_error` |
+| `POST /v1/documents` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `conflict`, `rate_limited`, `payload_too_large`, `unsupported_file_type`, `storage_unavailable`, `internal_error` |
+| `GET /v1/documents/{document_id}` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `rate_limited`, `internal_error` |
+| `POST /v1/documents/{document_id}/process` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `conflict`, `rate_limited`, `document_processing_required`, `provider_unavailable`, `storage_unavailable`, `timeout`, `internal_error` |
+| `GET /v1/documents/{document_id}/processing-status` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `rate_limited`, `document_processing_failed`, `timeout`, `internal_error` |
+| `GET /v1/answers/{answer_id}` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `policy_blocked`, `prompt_injection_blocked`, `unsupported_critical_claim`, `evidence_insufficient`, `rate_limited`, `internal_error` |
+| `GET /v1/answers/{answer_id}/sources` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `policy_blocked`, `prompt_injection_blocked`, `evidence_insufficient`, `rate_limited`, `internal_error` |
+| `GET /v1/answers/{answer_id}/trace-summary` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `policy_blocked`, `rate_limited`, `internal_error` |
+| `GET /v1/usage/current` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `rate_limited`, `internal_error` |
+| `GET /v1/research-credits` | `validation_error`, `auth_required`, `forbidden`, `tenant_mismatch`, `not_found`, `rate_limited`, `research_credit_required`, `internal_error` |
