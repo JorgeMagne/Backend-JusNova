@@ -104,7 +104,8 @@ No define retencion final, permisos productivos completos ni proceso de incident
 | Prompt completo | No se guarda en contratos 0.7; usar `prompt_version` e `input_hash`. |
 | Salida completa del modelo | No se guarda en contratos 0.7; usar `output_hash` cuando exista. |
 | Documento completo | No se guarda en trazas; usar referencias de documento, pagina, pasaje o hash. |
-| Mensaje completo del usuario | No se guarda en trazas; usar `input_message_ids`, `output_message_id`, hash o referencia conversacional. |
+| Mensaje completo del usuario | No se guarda en trazas; usar `input_message_ids`, hash o referencia conversacional. |
+| Mensaje final del assistant | No se guarda en trazas; usar `output_message_id`, `answer_id`, `answer_version_ref` y hashes asociados. |
 | URL sensible | Guardar hash cuando se registre fuente abierta o rechazada dentro de `TraceObject`; URLs operativas crudas quedan fuera de la traza 0.7. |
 | Error tecnico | Guardar `error_code` y `safe_message_code`; el texto humano se genera desde catalogo cerrado en la vista. |
 | Costos y latencias | Guardar valores numericos observados. En Subfase 0.8, `TraceObject` puede guardar plan neutral, complejidad y budget ref; no guarda precio mensual ni `CostBudget` embebido. |
