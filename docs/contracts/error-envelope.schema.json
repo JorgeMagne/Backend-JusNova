@@ -183,7 +183,9 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "maxLength": 80,
+            "pattern": "^[A-Za-z0-9_.:-]+$"
           },
           "minItems": 1,
           "uniqueItems": true
@@ -1380,6 +1382,36 @@
       "created_at": "2026-05-24T10:00:00Z",
       "metadata": {
         "allowed_values": []
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Allowed value demasiado largo.",
+      "severity": "error",
+      "request_id": "rq_long_allowed",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "allowed_values": [
+          "valor_seguro_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ]
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Allowed value con texto libre.",
+      "severity": "error",
+      "request_id": "rq_text_allowed",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "allowed_values": [
+          "texto libre copiado del documento"
+        ]
       }
     }
   ],
