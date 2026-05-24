@@ -30,7 +30,7 @@
     "cost_budget_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^cb_[a-z0-9]+(?:_[a-z0-9]+)*_v[0-9]{3}$"
+      "pattern": "^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$"
     },
     "cost_budget_version": {
       "type": "string",
@@ -303,7 +303,7 @@
   ],
   "x-invalid-examples": [
     {
-      "cost_budget_id": "cb_bad_plan_v080",
+      "cost_budget_id": "cb_profesional_simple_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "PROFESIONAL_400",
       "complexity": "SIMPLE",
@@ -319,7 +319,7 @@
       "async_allowed": false
     },
     {
-      "cost_budget_id": "cb_simple_async_v080",
+      "cost_budget_id": "cb_profesional_simple_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "PROFESIONAL",
       "complexity": "SIMPLE",
@@ -335,7 +335,7 @@
       "async_allowed": true
     },
     {
-      "cost_budget_id": "cb_medio_credit_v080",
+      "cost_budget_id": "cb_pro_plus_medio_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "PRO_PLUS",
       "complexity": "MEDIO",
@@ -351,7 +351,7 @@
       "async_allowed": false
     },
     {
-      "cost_budget_id": "cb_complex_no_credit_v080",
+      "cost_budget_id": "cb_estudio_complejo_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "ESTUDIO",
       "complexity": "COMPLEJO",
@@ -367,7 +367,7 @@
       "async_allowed": false
     },
     {
-      "cost_budget_id": "cb_research_sync_v080",
+      "cost_budget_id": "cb_enterprise_investigacion_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "ENTERPRISE",
       "complexity": "INVESTIGACION",
@@ -383,7 +383,7 @@
       "async_allowed": false
     },
     {
-      "cost_budget_id": "cb_simple_drift_v080",
+      "cost_budget_id": "cb_profesional_simple_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "PROFESIONAL",
       "complexity": "SIMPLE",
@@ -399,7 +399,7 @@
       "async_allowed": false
     },
     {
-      "cost_budget_id": "cb_legacy_calls_v080",
+      "cost_budget_id": "cb_profesional_simple_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "PROFESIONAL",
       "complexity": "SIMPLE",
@@ -428,6 +428,24 @@
       "tool_rounds_max": 2,
       "time_budget_ms": 45000,
       "output_tokens_cap": 900,
+      "research_credit_cost": 0,
+      "async_allowed": false
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "cost_budget_id": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PRO_PLUS",
+      "complexity": "MEDIO",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 2,
+      "fetch_urls_max": 6,
+      "ocr_pages_inline_max": 2,
+      "reformulations_max": 1,
+      "tool_rounds_max": 3,
+      "time_budget_ms": 90000,
+      "output_tokens_cap": 1400,
       "research_credit_cost": 0,
       "async_allowed": false
     }

@@ -3,7 +3,7 @@ date: 2026-05-24
 responsible: Codex / JusNova Chief Backend Architect
 related_decision: Subfase 0.8 - Cost Governor, planes y presupuestos
 
-budget_version: cost-budget-v0.8.0
+cost_budget_version: cost-budget-v0.8.0
 
 budgets:
   SIMPLE:

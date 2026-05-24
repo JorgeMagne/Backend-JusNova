@@ -24,7 +24,7 @@ El Cost Governor puede limitar profundidad. No puede debilitar la verdad documen
 1. Toda ejecucion usa un `CostBudget` efectivo identificado por `cost_budget_ref` y `cost_budget_version`.
 2. `TraceObject` guarda solo escalares cerrados de budget: `cost_budget_ref`, `cost_budget_version`, `plan_code` y `complexity`.
 3. `TraceObject` no embebe `CostBudget` completo ni referencia el schema por `$ref`.
-4. El `CostBudget` resuelto por `TraceObject.cost_budget_ref` debe existir y coincidir exactamente con `TraceObject.cost_budget_version`, `TraceObject.plan_code` y `TraceObject.complexity`.
+4. El `CostBudget` resuelto por `TraceObject.cost_budget_ref` debe existir y coincidir exactamente con `TraceObject.cost_budget_version`, `TraceObject.plan_code` y `TraceObject.complexity`; `cost_budget_ref` y `CostBudget.cost_budget_id` usan forma canonica `cb_<plan>_<complexity>_vNNN`, y sus tokens de plan/complejidad deben coincidir con `plan_code` y `complexity`.
 5. Cuando `UsageEvent.cost_budget_ref` no sea `null`, el `CostBudget` resuelto debe existir y coincidir exactamente con `UsageEvent.cost_budget_version`, `UsageEvent.plan_code` y, cuando `event_scope = execution`, `UsageEvent.complexity`.
 6. La igualdad de `cost_budget_ref` contra un `CostBudget` real requiere validador custom; JSON Schema solo valida forma local.
 7. `CostReport` registra consumo observado; `CostBudget` registra limites aplicados.

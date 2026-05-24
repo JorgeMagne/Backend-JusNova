@@ -129,10 +129,10 @@ El motivo debe ser concreto: soporte de usuario, investigacion de incidente, eva
 
 ## Relacion con contratos
 
-- Implementa visibilidad para `trace-object.schema.json`, `model-call.schema.json`, `tool-call.schema.json`, `citation-audit.schema.json`, `answer-version.schema.json` y `cost-report.schema.json`.
+- Implementa visibilidad para `trace-object.schema.json`, `model-call.schema.json`, `tool-call.schema.json`, `citation-audit.schema.json`, `answer-version.schema.json`, `cost-report.schema.json`, `cost-budget.schema.json` y `usage-event.schema.json`.
 - Complementa `privacy-security-policy.md` futura de Subfase 0.10.
 - Complementa `answer-versioning-policy.md` y `citation-policy.md`.
 
 ## Momento de revision
 
-Revisar al cerrar Subfase 0.7, al definir permisos de Subfase 0.10, al crear vistas de soporte, y ante cualquier incidente de privacidad, soporte o auditoria.
+Revisar al cerrar Subfase 0.7, ante enmiendas de budget/plan como Subfase 0.8, al definir permisos de Subfase 0.10, al crear vistas de soporte, y ante cualquier incidente de privacidad, soporte o auditoria.

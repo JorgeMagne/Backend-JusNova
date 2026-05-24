@@ -48,5 +48,6 @@ Cuando una taxonomia exista en esta carpeta, los contratos deben referenciar sus
 ## Reglas especificas de Subfase 0.8
 
 - `budgets.yaml` define perfiles exactos para `SIMPLE`, `MEDIO`, `COMPLEJO` e `INVESTIGACION`.
+- `budgets.yaml` declara `cost_budget_version` para sintetizar instancias `CostBudget` conciliables.
 - Las keys de `budgets.yaml` deben coincidir exactamente con `complexity-levels.yaml`.
 - El vocabulario canonico es `discovery_calls_max`; no se introducen contadores ligados a un proveedor especifico.

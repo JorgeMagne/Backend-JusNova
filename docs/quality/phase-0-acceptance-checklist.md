@@ -189,6 +189,7 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | `cost-governor-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/cost-governor-policy.md` |
 | `TraceObject` exige budget ref, budget version, plan code y complexity | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json` |
 | `TraceObject` no embebe `CostBudget` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json` |
+| Enmiendas 0.8 de referencias tecnicas en contratos 0.7 registradas | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-version.schema.json`, `docs/contracts/abstention-render.schema.json` |
 | `trace-visibility-policy.md` registra enmienda 0.8 y visibilidad de plan/budget | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/trace-visibility-policy.md` |
 | ADR-008 cierra dependencia documental de budgets y plans | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-008-cost-governor-and-commercial-budgets.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |

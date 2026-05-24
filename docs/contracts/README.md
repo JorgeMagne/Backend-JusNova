@@ -102,14 +102,18 @@ Estos contratos quedan aceptados como base documental del Cost Governor, budgets
 | Cost Budget | Accepted | `cost-budget.schema.json` |
 | Usage Event | Accepted | `usage-event.schema.json` |
 | Trace Object Budget Amendment | Accepted | `trace-object.schema.json` |
+| Answer Version Reference Amendment | Accepted | `answer-version.schema.json` |
+| Abstention Render Reference Amendment | Accepted | `abstention-render.schema.json` |
 
 ## Reglas especificas de Subfase 0.8
 
 - `CostBudget` define limites exactos por `SIMPLE`, `MEDIO`, `COMPLEJO` e `INVESTIGACION`.
+- `CostBudget.cost_budget_id` y las referencias `cost_budget_ref` usan forma canonica `cb_<plan>_<complexity>_vNNN` con plan y complejidad canonicos en minusculas.
 - Los budgets internos por complejidad no cambian por plan comercial en v0.
 - `TraceObject` registra `cost_budget_ref`, `cost_budget_version`, `plan_code` y `complexity` como escalares cerrados.
 - `TraceObject` no embebe `CostBudget` ni referencia `cost-budget.schema.json` por `$ref`.
 - `UsageEvent` registra consumo y creditos sin `user_id` crudo ni `metadata` libre.
+- `TraceObject.actor_ref`, `UsageEvent.actor_ref`, `AnswerVersion.created_by_ref` y `AbstentionRender.created_by_ref` usan identificadores tecnicos cerrados, no PII directa ni nombres libres.
 - `LegalSearchQuery.budget` sigue siendo `search_budget` tecnico interno de busqueda viva.
 
 ## Schemas minimos esperados

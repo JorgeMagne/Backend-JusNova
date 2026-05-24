@@ -177,6 +177,8 @@ Estos contratos quedan aceptados como contratos documentales de Cost Governor y 
 | Cost Budget | Accepted | `docs/contracts/cost-budget.schema.json` |
 | Usage Event | Accepted | `docs/contracts/usage-event.schema.json` |
 | Trace Object Budget Amendment | Accepted | `docs/contracts/trace-object.schema.json` |
+| Answer Version Reference Amendment | Accepted | `docs/contracts/answer-version.schema.json` |
+| Abstention Render Reference Amendment | Accepted | `docs/contracts/abstention-render.schema.json` |
 
 ## Politicas aceptadas en Subfase 0.8
 

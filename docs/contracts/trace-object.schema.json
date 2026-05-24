@@ -95,7 +95,7 @@
       "description": "Referencia escalar al CostBudget efectivo. TraceObject no embebe CostBudget completo.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^cb_[a-z0-9]+(?:_[a-z0-9]+)*_v[0-9]{3}$"
+      "pattern": "^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$"
     },
     "cost_budget_version": {
       "type": "string",
