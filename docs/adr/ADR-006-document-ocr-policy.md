@@ -55,8 +55,8 @@ El OCR local reduce exposicion de documentos sensibles, mantiene costos mas pred
 
 ## Dependencias posteriores
 
-- Subfase 0.9 debe crear contratos de document evidence y OCR policy.
-- Subfase 0.10 debe crear document security y prompt injection policy.
+- Subfase 0.9 crea `document-evidence.schema.json`, `ocr-policy.md` y una `document-security-policy.md` minima para ownership, hashes, referencias internas y minimizacion.
+- Subfase 0.10 debe completar privacy/security policy, permisos, retencion, provider boundaries y prompt injection policy.
 - Fase 9 implementara Document Evidence Search y OCR progresivo.
 
 ## No afirma todavia
@@ -82,6 +82,7 @@ El OCR local reduce exposicion de documentos sensibles, mantiene costos mas pred
 
 ## Criterios de aceptacion
 
+- Subfase 0.9 acepta contratos base de conversacion, mensajes, memoria, evidencia documental y OCR.
 - No se usa LLM como OCR primario.
 - No se envian documentos completos a vision salvo caso justificado y trazado.
 - Todo documento procesado conserva hash, version y localizadores.

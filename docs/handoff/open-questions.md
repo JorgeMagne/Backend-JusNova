@@ -31,6 +31,8 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 | OQ-007 | Si una pregunta de Fase 0.3 queda bloqueando aceptacion. | Resolved | Closed | Codex / JusNova Chief Backend Architect | No hay preguntas `Blocking` al cierre de Subfase 0.3. |
 | OQ-008 | Donde vive la razon de no snapshot para una fuente usada. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto por `source.schema.json` con `snapshot_unavailable_reason` en Subfase 0.6. |
 | OQ-009 | Si cache o snapshot confirman vigencia. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `validity-policy.md` y `no-rag-launch-policy.md`. |
+| OQ-010 | Si `Conversation.title` puede usarse como memoria probatoria o fuente juridica. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `conversation.schema.json` y `memory-policy.md` en Subfase 0.9. |
+| OQ-011 | Si seguridad documental completa queda cerrada en 0.9. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto: 0.9 solo define minimo documental; Subfase 0.10 conserva privacy/security, permisos, retencion y prompt injection completos. |
 
 ## Preguntas Blocking
 

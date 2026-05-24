@@ -70,12 +70,12 @@ Estos ADRs quedan aceptados como decisiones arquitectonicas. Esta lista no impli
 | ADR-003 | JusNova Live Legal Search Engine | Accepted | Subfase 0.5 contratos; Fases 4-8 implementacion. |
 | ADR-004 | Launch Without Own Legal RAG | Accepted | Subfase 0.6 no-rag policy accepted; Fase 8 cache/snapshots. |
 | ADR-005 | AI Provider And Model Policy | Accepted | Fase 1 ModelProvider; Subfase 0.10 provider policy. |
-| ADR-006 | Document OCR Policy | Accepted | Subfase 0.9/0.10 policies; Fase 9 implementacion. |
+| ADR-006 | Document OCR Policy | Accepted | Subfase 0.9 document/OCR contracts and policies accepted; Subfase 0.10 completa seguridad; Fase 9 implementacion. |
 | ADR-007 | Evidence, Answer, Citation And Claim Contracts | Accepted | Subfase 0.4 schemas; Subfase 0.7 citation audit contract; Fase 2 auditor. |
 | ADR-008 | Cost Governor And Commercial Budgets | Accepted | Subfase 0.8 budgets/contracts/policies accepted; Fase 1 CostGovernor/UsageLedger. |
 | ADR-009 | Source Registry And Validity Policy | Accepted | Subfase 0.6 source/validity/conflict/uncertainty policies accepted; Fase 4/5 registry/adapters. |
-| ADR-010 | Traceability And Answer Versioning | Accepted | Subfase 0.7 trace/audit/version schemas and policies accepted; Fase 3 versionado basico. |
-| ADR-011 | Security, Privacy And Provider Boundaries | Accepted | Subfase 0.10 policies; Fase 1 ownership. |
+| ADR-010 | Traceability And Answer Versioning | Accepted | Subfase 0.7 trace/audit/version schemas accepted; Subfase 0.9 message refs accepted; Fase 3 versionado basico. |
+| ADR-011 | Security, Privacy And Provider Boundaries | Accepted | Subfase 0.9 document security minima; Subfase 0.10 policies; Fase 1 ownership. |
 | ADR-012 | Evaluation And Quality Gates | Accepted | Subfase 0.12 eval plan, dataset and gates. |
 
 ## Canon de numeracion ADR
@@ -188,9 +188,31 @@ Estos contratos quedan aceptados como contratos documentales de Cost Governor y 
 | Cost Governor Policy | Accepted | `docs/policies/cost-governor-policy.md` |
 | Trace Visibility Policy Amendment | Accepted | `docs/policies/trace-visibility-policy.md` |
 
+## Contratos aceptados en Subfase 0.9
+
+Estos contratos quedan aceptados como contratos documentales de conversacion, mensajes, memoria de caso, evidencia documental y OCR. Esta lista no implica que DB, storage, OCR worker, busqueda documental ni memoria persistente ya esten implementados.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Conversation | Accepted | `docs/contracts/conversation.schema.json` |
+| Message | Accepted | `docs/contracts/message.schema.json` |
+| Case Memory | Accepted | `docs/contracts/case-memory.schema.json` |
+| Document Evidence | Accepted | `docs/contracts/document-evidence.schema.json` |
+| Trace Object Message Reference Amendment | Accepted | `docs/contracts/trace-object.schema.json` |
+
+## Politicas aceptadas en Subfase 0.9
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| OCR Policy | Accepted | `docs/policies/ocr-policy.md` |
+| Document Security Policy minima | Accepted | `docs/policies/document-security-policy.md` |
+| Memory Policy | Accepted | `docs/policies/memory-policy.md` |
+| Trace Visibility Policy Message Reference Amendment | Accepted | `docs/policies/trace-visibility-policy.md` |
+
 ## Dependencias posteriores preservadas
 
 - Source Registry schema completo queda delegado a subfases posteriores y Fase 4.
-- Privacy/security policy, retencion, permisos finales y acceso a material crudo quedan delegados a Subfase 0.10.
+- Privacy/security policy completa, retencion, permisos finales, provider boundaries, prompt injection policy y acceso a material crudo quedan delegados a Subfase 0.10.
+- Runtime de conversacion, storage documental, OCR worker, busqueda documental y memoria persistente quedan delegados a Fase 1 y fases posteriores.
 - Runtime de CostGovernor, billing y UsageLedger quedan delegados a Fase 1; los contratos y policies documentales quedaron aceptados en Subfase 0.8.
 - Fase 0 global permanece en `Draft` hasta completar 0.1 a 0.14.

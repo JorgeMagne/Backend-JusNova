@@ -50,6 +50,7 @@ La seguridad es estructural en datos, storage, logs, providers y prompts. No pue
 
 ## Dependencias posteriores
 
+- Subfase 0.9 crea una `document-security-policy.md` minima para documentos, mensajes y evidencia documental sin cerrar permisos, retencion ni controles completos.
 - Subfase 0.10 debe crear privacy/security policy, provider policy, prompt injection policy, data classification y security checklist.
 - Fase 1 debe crear estructura de ownership en modelos base.
 - Fase 11 implementara hardening completo.
@@ -78,6 +79,7 @@ La seguridad es estructural en datos, storage, logs, providers y prompts. No pue
 
 ## Criterios de aceptacion
 
+- Subfase 0.9 modela `organization_id`, hashes y refs internas para conversacion, mensajes, memoria y evidencia documental.
 - Subfase 0.10 crea checklist de seguridad de Fase 1.
 - No se permite logging de documentos completos.
 - Toda salida a proveedor externo se registra.
@@ -90,4 +92,3 @@ Revisar al cerrar Subfase 0.10, al completar Fase 1, antes de beta y ante cualqu
 ## Consecuencias
 
 Fase 1 debe modelar ownership, settings, secrets, logs y provider boundaries desde el primer commit funcional.
-

@@ -46,11 +46,13 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 - Cost report.
 - Latency report.
 - Warnings.
+- Referencias a mensajes de entrada y mensaje final mediante IDs, sin contenido de mensajes.
 
 ## Dependencias posteriores
 
 - Subfase 0.7 creo `trace-object.schema.json`, `model-call.schema.json`, `tool-call.schema.json`, `citation-audit.schema.json`, `answer-version.schema.json`, `abstention-render.schema.json` y `cost-report.schema.json`.
 - Subfase 0.7 creo `answer-versioning-policy.md` y `trace-visibility-policy.md`.
+- Subfase 0.9 enmienda `TraceObject` con `input_message_ids` y `output_message_id` para reconstruir conversacion sin copiar mensajes completos.
 - Subfase 0.10 debe alinear privacy/security policy.
 - Fase 3 implementara versionado basico de respuestas.
 
@@ -72,6 +74,7 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 - Hashes y minimizacion.
 - Retrieval runs embebidos como resumen sanitizado, sin URLs crudas, resultados discovery completos, mensajes libres de error, warning codes libres ni warnings libres.
 - Abstenciones totales y bloqueos versionados mediante `abstention_render_ref` hacia `abstention-render.schema.json`, sin inventar EvidencePack sintetico.
+- Mensajes conversacionales se referencian por ID y hash; `TraceObject` no guarda `Message.content`.
 - Redaccion de logs.
 - Ownership/tenant en trazas.
 - Politica de retencion.
@@ -82,6 +85,7 @@ TraceObject permite reproducibilidad, soporte, evaluacion, seguridad y mejora co
 - Subfase 0.7 aprueba `model-call.schema.json`, `tool-call.schema.json` y `citation-audit.schema.json`.
 - Subfase 0.7 aprueba `answer-version.schema.json` y `abstention-render.schema.json`.
 - Subfase 0.7 aprueba `answer-versioning-policy.md` y `trace-visibility-policy.md`.
+- Subfase 0.9 registra referencias conversacionales en `TraceObject` y visibilidad sin mensajes completos.
 - Logs y privacidad quedan alineados a nivel contractual; controles finales quedan para Subfase 0.10.
 - Nueva version se crea ante cambio de evidencia, claim, cita o respuesta.
 

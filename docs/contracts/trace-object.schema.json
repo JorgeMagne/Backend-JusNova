@@ -9,7 +9,10 @@
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
-    "amended_by": "Subfase 0.8 - Cost Governor, planes y presupuestos"
+    "amendments": [
+      "Subfase 0.8 - Cost Governor, planes y presupuestos",
+      "Subfase 0.9 - Conversacion, memoria, documentos y OCR"
+    ]
   },
   "required": [
     "trace_id",
@@ -20,6 +23,8 @@
     "answer_version_ref",
     "answer_version",
     "conversation_id",
+    "input_message_ids",
+    "output_message_id",
     "response_outcome",
     "cost_budget_ref",
     "cost_budget_version",
@@ -73,6 +78,21 @@
       "minimum": 1
     },
     "conversation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input_message_ids": {
+      "description": "IDs de mensajes de entrada usados para reconstruir la respuesta. No contiene contenido de mensajes.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "output_message_id": {
+      "description": "ID del mensaje assistant_final emitido para esta respuesta. No contiene contenido del mensaje.",
       "type": "string",
       "minLength": 1
     },
@@ -1373,7 +1393,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_001_input"
+      ],
+      "output_message_id": "msg_tr_001_output"
     },
     {
       "trace_id": "tr_abstention_001",
@@ -1432,7 +1456,11 @@
       },
       "warnings": [
         "No hay evidencia suficiente."
-      ]
+      ],
+      "input_message_ids": [
+        "msg_tr_abstention_001_input"
+      ],
+      "output_message_id": "msg_tr_abstention_001_output"
     }
   ],
   "x-invalid-examples": [
@@ -1479,7 +1507,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_003_input"
+      ],
+      "output_message_id": "msg_tr_003_output"
     },
     {
       "trace_id": "tr_004",
@@ -1542,7 +1574,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_004_input"
+      ],
+      "output_message_id": "msg_tr_004_output"
     },
     {
       "trace_id": "tr_004b",
@@ -1599,7 +1635,11 @@
       },
       "warnings": [
         "Schema-invalid: total_abstention requiere abstention_reason aunque haya warning visible."
-      ]
+      ],
+      "input_message_ids": [
+        "msg_tr_004b_input"
+      ],
+      "output_message_id": "msg_tr_004b_output"
     },
     {
       "trace_id": "tr_005",
@@ -1671,7 +1711,11 @@
       },
       "warnings": [
         "Schema-invalid: blocked requiere abstention_reason aunque haya warning visible."
-      ]
+      ],
+      "input_message_ids": [
+        "msg_tr_005_input"
+      ],
+      "output_message_id": "msg_tr_005_output"
     },
     {
       "trace_id": "tr_006",
@@ -1737,7 +1781,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_006_input"
+      ],
+      "output_message_id": "msg_tr_006_output"
     },
     {
       "trace_id": "tr_007",
@@ -1814,7 +1862,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_007_input"
+      ],
+      "output_message_id": "msg_tr_007_output"
     },
     {
       "trace_id": "tr_008",
@@ -1880,7 +1932,11 @@
         "queue": 50,
         "document_text": "texto sensible no permitido"
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_008_input"
+      ],
+      "output_message_id": "msg_tr_008_output"
     },
     {
       "trace_id": "tr_009",
@@ -1944,7 +2000,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_009_input"
+      ],
+      "output_message_id": "msg_tr_009_output"
     },
     {
       "trace_id": "tr_012",
@@ -2013,7 +2073,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_012_input"
+      ],
+      "output_message_id": "msg_tr_012_output"
     },
     {
       "trace_id": "tr_013",
@@ -2097,7 +2161,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_013_input"
+      ],
+      "output_message_id": "msg_tr_013_output"
     },
     {
       "trace_id": "tr_014",
@@ -2158,7 +2226,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_014_input"
+      ],
+      "output_message_id": "msg_tr_014_output"
     },
     {
       "trace_id": "tr_010",
@@ -2264,7 +2336,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_010_input"
+      ],
+      "output_message_id": "msg_tr_010_output"
     },
     {
       "trace_id": "tr_011",
@@ -2363,7 +2439,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_011_input"
+      ],
+      "output_message_id": "msg_tr_011_output"
     },
     {
       "trace_id": "tr_014",
@@ -2462,7 +2542,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_014_input"
+      ],
+      "output_message_id": "msg_tr_014_output"
     },
     {
       "trace_id": "tr_015",
@@ -2562,7 +2646,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_015_input"
+      ],
+      "output_message_id": "msg_tr_015_output"
     },
     {
       "trace_id": "tr_016",
@@ -2661,7 +2749,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_016_input"
+      ],
+      "output_message_id": "msg_tr_016_output"
     },
     {
       "trace_id": "tr_017",
@@ -2760,7 +2852,11 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_017_input"
+      ],
+      "output_message_id": "msg_tr_017_output"
     },
     {
       "trace_id": "tr_018",
@@ -2903,7 +2999,11 @@
         "persistence": 0,
         "queue": 0
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_018_input"
+      ],
+      "output_message_id": "msg_tr_018_output"
     },
     {
       "trace_id": "tr_019",
@@ -3015,7 +3115,11 @@
         "persistence": 0,
         "queue": 0
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_019_input"
+      ],
+      "output_message_id": "msg_tr_019_output"
     },
     {
       "trace_id": "tr_url_hash_raw_001",
@@ -3133,7 +3237,495 @@
         "persistence": 50,
         "queue": 50
       },
-      "warnings": []
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_url_hash_raw_001_input"
+      ],
+      "output_message_id": "msg_tr_url_hash_raw_001_output"
+    },
+    {
+      "trace_id": "tr_missing_input_message_ids",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_tr_missing_input_message_ids",
+      "answer_version_ref": "av_tr_missing_input_message_ids",
+      "answer_version": 1,
+      "conversation_id": "conv_tr_missing_input_message_ids",
+      "case_id": null,
+      "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_001",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+          "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+          "token_usage": {
+            "input_tokens": 1200,
+            "output_tokens": 700,
+            "total_tokens": 1900
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:03Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [
+        {
+          "source_ref": null,
+          "result_id": "lsr_002",
+          "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+          "reason": "low_authority",
+          "tier": "TIER3_SECUNDARIO",
+          "source_type": "web",
+          "rejected_at": "2026-05-22T00:00:00Z",
+          "warning_codes": [
+            "tier3_not_primary"
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+          "claim_type": "procedimiento",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_001",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_001",
+        "currency": "USD",
+        "is_estimated": true,
+        "billing_source": "provider_estimate",
+        "model_input_tokens": 1200,
+        "model_output_tokens": 700,
+        "tool_calls": 0,
+        "provider_estimated_costs": [
+          {
+            "provider": "openai",
+            "estimated_cost": 0.08
+          }
+        ],
+        "estimated_total_cost": 0.08
+      },
+      "latency_ms": {
+        "total": 3200,
+        "model_total": 3000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [],
+      "output_message_id": "msg_tr_001_output"
+    },
+    {
+      "trace_id": "tr_empty_input_message_ids",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_tr_empty_input_message_ids",
+      "answer_version_ref": "av_tr_empty_input_message_ids",
+      "answer_version": 1,
+      "conversation_id": "conv_tr_empty_input_message_ids",
+      "case_id": null,
+      "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_001",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+          "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+          "token_usage": {
+            "input_tokens": 1200,
+            "output_tokens": 700,
+            "total_tokens": 1900
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:03Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [
+        {
+          "source_ref": null,
+          "result_id": "lsr_002",
+          "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+          "reason": "low_authority",
+          "tier": "TIER3_SECUNDARIO",
+          "source_type": "web",
+          "rejected_at": "2026-05-22T00:00:00Z",
+          "warning_codes": [
+            "tier3_not_primary"
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+          "claim_type": "procedimiento",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_001",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_001",
+        "currency": "USD",
+        "is_estimated": true,
+        "billing_source": "provider_estimate",
+        "model_input_tokens": 1200,
+        "model_output_tokens": 700,
+        "tool_calls": 0,
+        "provider_estimated_costs": [
+          {
+            "provider": "openai",
+            "estimated_cost": 0.08
+          }
+        ],
+        "estimated_total_cost": 0.08
+      },
+      "latency_ms": {
+        "total": 3200,
+        "model_total": 3000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [],
+      "input_message_ids": [],
+      "output_message_id": "msg_tr_001_output"
+    },
+    {
+      "trace_id": "tr_duplicate_input_message_ids",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_tr_duplicate_input_message_ids",
+      "answer_version_ref": "av_tr_duplicate_input_message_ids",
+      "answer_version": 1,
+      "conversation_id": "conv_tr_duplicate_input_message_ids",
+      "case_id": null,
+      "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_001",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+          "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+          "token_usage": {
+            "input_tokens": 1200,
+            "output_tokens": 700,
+            "total_tokens": 1900
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:03Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [
+        {
+          "source_ref": null,
+          "result_id": "lsr_002",
+          "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+          "reason": "low_authority",
+          "tier": "TIER3_SECUNDARIO",
+          "source_type": "web",
+          "rejected_at": "2026-05-22T00:00:00Z",
+          "warning_codes": [
+            "tier3_not_primary"
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+          "claim_type": "procedimiento",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_001",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_001",
+        "currency": "USD",
+        "is_estimated": true,
+        "billing_source": "provider_estimate",
+        "model_input_tokens": 1200,
+        "model_output_tokens": 700,
+        "tool_calls": 0,
+        "provider_estimated_costs": [
+          {
+            "provider": "openai",
+            "estimated_cost": 0.08
+          }
+        ],
+        "estimated_total_cost": 0.08
+      },
+      "latency_ms": {
+        "total": 3200,
+        "model_total": 3000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [],
+      "input_message_ids": [
+        "msg_dup",
+        "msg_dup"
+      ],
+      "output_message_id": "msg_tr_001_output"
+    },
+    {
+      "trace_id": "tr_empty_output_message_id",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_tr_empty_output_message_id",
+      "answer_version_ref": "av_tr_empty_output_message_id",
+      "answer_version": 1,
+      "conversation_id": "conv_tr_empty_output_message_id",
+      "case_id": null,
+      "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_001",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+          "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+          "token_usage": {
+            "input_tokens": 1200,
+            "output_tokens": 700,
+            "total_tokens": 1900
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:03Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [
+        {
+          "source_ref": null,
+          "result_id": "lsr_002",
+          "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+          "reason": "low_authority",
+          "tier": "TIER3_SECUNDARIO",
+          "source_type": "web",
+          "rejected_at": "2026-05-22T00:00:00Z",
+          "warning_codes": [
+            "tier3_not_primary"
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+          "claim_type": "procedimiento",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_001",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_001",
+        "currency": "USD",
+        "is_estimated": true,
+        "billing_source": "provider_estimate",
+        "model_input_tokens": 1200,
+        "model_output_tokens": 700,
+        "tool_calls": 0,
+        "provider_estimated_costs": [
+          {
+            "provider": "openai",
+            "estimated_cost": 0.08
+          }
+        ],
+        "estimated_total_cost": 0.08
+      },
+      "latency_ms": {
+        "total": 3200,
+        "model_total": 3000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_001_input"
+      ],
+      "output_message_id": ""
     }
   ],
   "x-policy-invalid-examples": [
@@ -3236,7 +3828,11 @@
       },
       "warnings": [
         "Schema-valid but policy-invalid: C99 and F99 are not covered by citation_audit.results."
-      ]
+      ],
+      "input_message_ids": [
+        "msg_tr_policy_001_input"
+      ],
+      "output_message_id": "msg_tr_policy_001_output"
     },
     {
       "trace_id": "tr_policy_002",
@@ -3355,7 +3951,11 @@
       },
       "warnings": [
         "Schema-valid but policy-invalid: CostReport does not aggregate model_calls and tool_calls."
-      ]
+      ],
+      "input_message_ids": [
+        "msg_tr_policy_002_input"
+      ],
+      "output_message_id": "msg_tr_policy_002_output"
     },
     {
       "trace_id": "tr_policy_003",
@@ -3456,7 +4056,11 @@
       },
       "warnings": [
         "Schema-valid but policy-invalid: completed_at precedes started_at and latency components exceed total."
-      ]
+      ],
+      "input_message_ids": [
+        "msg_tr_policy_003_input"
+      ],
+      "output_message_id": "msg_tr_policy_003_output"
     },
     {
       "trace_id": "tr_policy_004",
@@ -3576,7 +4180,11 @@
       },
       "warnings": [
         "Schema-valid but policy-invalid: retrieval_run.completed_at precedes retrieval_run.started_at."
-      ]
+      ],
+      "input_message_ids": [
+        "msg_tr_policy_004_input"
+      ],
+      "output_message_id": "msg_tr_policy_004_output"
     },
     {
       "trace_id": "tr_policy_005",
@@ -3677,7 +4285,11 @@
       },
       "warnings": [
         "Schema-valid but policy-invalid: model call duration is 10000ms while model_total and total are 1000ms."
-      ]
+      ],
+      "input_message_ids": [
+        "msg_tr_policy_005_input"
+      ],
+      "output_message_id": "msg_tr_policy_005_output"
     },
     {
       "trace_id": "tr_policy_006",
@@ -3799,7 +4411,11 @@
       },
       "warnings": [
         "Schema-valid but policy-invalid: duplicate claim_id and duplicate citation audit result key."
-      ]
+      ],
+      "input_message_ids": [
+        "msg_tr_policy_006_input"
+      ],
+      "output_message_id": "msg_tr_policy_006_output"
     },
     {
       "trace_id": "tr_policy_007",
@@ -3937,7 +4553,255 @@
       },
       "warnings": [
         "Schema-valid but policy-invalid: local tool and retrieval estimated costs are positive while CostReport is NONE/0."
-      ]
+      ],
+      "input_message_ids": [
+        "msg_tr_policy_007_input"
+      ],
+      "output_message_id": "msg_tr_policy_007_output"
+    },
+    {
+      "trace_id": "tr_output_in_input_messages",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_tr_output_in_input_messages",
+      "answer_version_ref": "av_tr_output_in_input_messages",
+      "answer_version": 1,
+      "conversation_id": "conv_tr_output_in_input_messages",
+      "case_id": null,
+      "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_001",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+          "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+          "token_usage": {
+            "input_tokens": 1200,
+            "output_tokens": 700,
+            "total_tokens": 1900
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:03Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [
+        {
+          "source_ref": null,
+          "result_id": "lsr_002",
+          "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+          "reason": "low_authority",
+          "tier": "TIER3_SECUNDARIO",
+          "source_type": "web",
+          "rejected_at": "2026-05-22T00:00:00Z",
+          "warning_codes": [
+            "tier3_not_primary"
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+          "claim_type": "procedimiento",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_001",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_001",
+        "currency": "USD",
+        "is_estimated": true,
+        "billing_source": "provider_estimate",
+        "model_input_tokens": 1200,
+        "model_output_tokens": 700,
+        "tool_calls": 0,
+        "provider_estimated_costs": [
+          {
+            "provider": "openai",
+            "estimated_cost": 0.08
+          }
+        ],
+        "estimated_total_cost": 0.08
+      },
+      "latency_ms": {
+        "total": 3200,
+        "model_total": 3000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [],
+      "input_message_ids": [
+        "msg_tr_output_in_input_messages_output"
+      ],
+      "output_message_id": "msg_tr_output_in_input_messages_output"
+    },
+    {
+      "trace_id": "tr_input_message_other_conversation",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "answer_id": "ans_tr_input_message_other_conversation",
+      "answer_version_ref": "av_tr_input_message_other_conversation",
+      "answer_version": 1,
+      "conversation_id": "conv_tr_input_message_other_conversation",
+      "case_id": null,
+      "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-22T00:00:00Z",
+      "model_calls": [
+        {
+          "model_call_id": "mc_001",
+          "purpose": "answer_generation",
+          "provider": "openai",
+          "model": "gpt-5",
+          "prompt_version": "answer-generation-v1",
+          "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+          "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+          "token_usage": {
+            "input_tokens": 1200,
+            "output_tokens": 700,
+            "total_tokens": 1900
+          },
+          "started_at": "2026-05-22T00:00:00Z",
+          "completed_at": "2026-05-22T00:00:03Z",
+          "status": "success",
+          "error_code": null
+        }
+      ],
+      "tool_calls": [],
+      "retrieval_runs": [],
+      "evidence_pack_ids": [
+        "ep_001"
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "sources_rejected": [
+        {
+          "source_ref": null,
+          "result_id": "lsr_002",
+          "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+          "reason": "low_authority",
+          "tier": "TIER3_SECUNDARIO",
+          "source_type": "web",
+          "rejected_at": "2026-05-22T00:00:00Z",
+          "warning_codes": [
+            "tier3_not_primary"
+          ]
+        }
+      ],
+      "claims": [
+        {
+          "claim_id": "cl_001",
+          "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+          "claim_type": "procedimiento",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citation_audit": {
+        "citation_audit_id": "ca_001",
+        "auditor_version": "citation-auditor-v1",
+        "overall_status": "passed",
+        "results": [
+          {
+            "citation_ref": "C1",
+            "claim_id": "cl_001",
+            "passage_ref": "F1:P1",
+            "source_ref": "F1",
+            "status": "valid",
+            "support_assessment": "direct",
+            "severity": "low"
+          }
+        ],
+        "blocking_failures": [],
+        "warnings": [],
+        "created_at": "2026-05-22T00:00:00Z"
+      },
+      "cost": {
+        "cost_report_id": "cr_001",
+        "currency": "USD",
+        "is_estimated": true,
+        "billing_source": "provider_estimate",
+        "model_input_tokens": 1200,
+        "model_output_tokens": 700,
+        "tool_calls": 0,
+        "provider_estimated_costs": [
+          {
+            "provider": "openai",
+            "estimated_cost": 0.08
+          }
+        ],
+        "estimated_total_cost": 0.08
+      },
+      "latency_ms": {
+        "total": 3200,
+        "model_total": 3000,
+        "tool_total": 0,
+        "retrieval_total": 0,
+        "citation_audit": 100,
+        "persistence": 50,
+        "queue": 50
+      },
+      "warnings": [],
+      "input_message_ids": [
+        "msg_from_other_conversation"
+      ],
+      "output_message_id": "msg_tr_input_message_other_conversation_output"
     }
   ]
 }
