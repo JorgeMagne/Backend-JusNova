@@ -134,6 +134,7 @@ Estos contratos quedan aceptados como base documental de conversacion, mensajes,
 - `Conversation` requiere validador custom para `updated_at >= created_at` y, si existe `deleted_at`, `deleted_at >= created_at` y `deleted_at >= updated_at`.
 - `Message` puede guardar contenido conversacional como registro primario, pero `TraceObject` solo guarda `input_message_ids` y `output_message_id`.
 - `Message.attachments[]` en 0.9 solo representa documentos ya procesados.
+- `Message.attachments[].attachment_id` requiere unicidad por mensaje mediante validador custom.
 - `CaseMemory` separa hechos afirmados por usuario, hechos soportados por documentos, preguntas abiertas, riesgos y contradicciones.
 - `CaseMemory` no es verdad juridica, fuente normativa ni confirmacion de vigencia.
 - `CaseMemory` requiere IDs internos unicos para hechos, preguntas, riesgos, partes, fechas y contradicciones mediante validador custom cuando JSON Schema no puede expresarlo por propiedad.

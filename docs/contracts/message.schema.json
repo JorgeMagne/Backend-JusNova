@@ -483,6 +483,39 @@
       "answer_version_ref": null,
       "attachments": [],
       "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "message_id": "msg_duplicate_attachment_id",
+      "conversation_id": "conv_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_abogado_001",
+      "actor_type": "user",
+      "role": "user",
+      "message_kind": "user_input",
+      "content": "Adjunto dos documentos con el mismo attachment_id.",
+      "content_hash": "sha256:6c38d1cad91d46723e67b2452e9874f468ce527c307b86e7166c5174390ab4bf",
+      "answer_id": null,
+      "trace_id": null,
+      "answer_version_ref": null,
+      "attachments": [
+        {
+          "attachment_id": "att_dup_001",
+          "attachment_type": "document",
+          "status": "processed",
+          "document_id": "doc_001",
+          "document_version_id": "docv_001",
+          "source_ref": "D1"
+        },
+        {
+          "attachment_id": "att_dup_001",
+          "attachment_type": "document",
+          "status": "processed",
+          "document_id": "doc_002",
+          "document_version_id": "docv_002",
+          "source_ref": "D2"
+        }
+      ],
+      "created_at": "2026-05-24T10:00:00Z"
     }
   ],
   "x-cross-contract-policy-invalid-examples": [

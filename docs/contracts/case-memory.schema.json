@@ -743,5 +743,106 @@
       "contradictions": [],
       "updated_at": "2026-05-24T10:00:00Z"
     }
+  ],
+  "x-cross-contract-policy-invalid-examples": [
+    {
+      "case_memory": {
+        "case_id": "case_cross_document_evidence_tenant_mismatch",
+        "organization_id": "org_001",
+        "jurisdiction": "BO",
+        "memory_version": 1,
+        "legal_areas": [
+          "CIVIL",
+          "PROCESAL_CIVIL"
+        ],
+        "procedural_stage_code": "appeal",
+        "procedural_stage_label": "Recurso de casacion",
+        "parties": [
+          {
+            "party_id": "party_001",
+            "role": "client",
+            "display_ref": "party_ref_cliente_001"
+          }
+        ],
+        "dates": [
+          {
+            "date_id": "date_001",
+            "date": "2026-05-20",
+            "date_type": "notification",
+            "source_type": "evidence_ref",
+            "source_ref": "D1:P1"
+          }
+        ],
+        "facts_asserted_by_user": [
+          {
+            "fact_id": "fact_user_001",
+            "text": "El usuario afirma que fue notificado el 20 de mayo de 2026.",
+            "asserted_by_type": "user",
+            "asserted_by_ref": "actor_hash_abogado_001",
+            "asserted_at": "2026-05-24T10:00:00Z",
+            "status": "active",
+            "confidence": 0.6
+          }
+        ],
+        "facts_supported_by_documents": [
+          {
+            "fact_id": "fact_doc_cross_001",
+            "text": "Hecho documental que apunta a pasaje de otro tenant.",
+            "document_id": "doc_001",
+            "document_version_id": "docv_001",
+            "passage_refs": [
+              "D1:P1"
+            ]
+          }
+        ],
+        "open_legal_questions": [
+          {
+            "question_id": "q_001",
+            "text": "Confirmar plazo aplicable desde la notificacion.",
+            "status": "needs_research",
+            "created_at": "2026-05-24T10:05:00Z"
+          }
+        ],
+        "source_history": [
+          "D1:P1"
+        ],
+        "risk_flags": [
+          {
+            "risk_flag_id": "risk_001",
+            "risk_type": "deadline",
+            "severity": "high",
+            "description": "Posible plazo procesal dependiente de fecha de notificacion.",
+            "created_at": "2026-05-24T10:05:00Z"
+          }
+        ],
+        "contradictions": [],
+        "updated_at": "2026-05-24T10:10:00Z"
+      },
+      "document_evidence": {
+        "organization_id": "org_002",
+        "document_id": "doc_001",
+        "document_version_id": "docv_001",
+        "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_ref": "D1",
+        "passage_ref": "D1:P1",
+        "page": 1,
+        "text": "Fragmento documental de otro tenant.",
+        "text_hash": "sha256:2063d42e453032756e77042eed4f2a14d80b68b4c1137f4725b172fdae124c98",
+        "locator": {
+          "page": 1,
+          "article": null,
+          "section": null,
+          "paragraph": null,
+          "coordinates": null,
+          "url_fragment": null
+        },
+        "extraction_method": "ocr",
+        "vision_escalation_reason": null,
+        "extraction_confidence": 0.9,
+        "warnings": [],
+        "citation_eligible": true,
+        "created_at": "2026-05-24T10:00:00Z"
+      }
+    }
   ]
 }

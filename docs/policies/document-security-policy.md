@@ -44,6 +44,7 @@ No reemplaza la privacy/security policy completa, provider policy, data classifi
 8. `Message.content_hash` debe ser el hash `sha256` de los bytes UTF-8 exactos persistidos en `Message.content`.
 9. `document_version_hash` debe coincidir con la version documental resuelta.
 10. Cada `Message.attachments[]` debe resolver a documento/version/source_ref del mismo `organization_id` del `Message`; no se permite adjuntar por referencia documentos de otro tenant.
+11. `Message.attachments[].attachment_id` debe ser unico dentro del mensaje; un identificador no puede apuntar a dos documentos, versiones o `source_ref` distintos.
 
 ## Reglas asistidas por IA
 
