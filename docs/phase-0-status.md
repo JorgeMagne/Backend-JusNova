@@ -25,7 +25,7 @@ Las decisiones fuera de `docs/` no son vinculantes para implementacion. Cualquie
 | 0.5 | Contrato del Live Legal Search Engine | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.6 | Fuentes, vigencia, conflicto e incertidumbre | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.7 | Trazabilidad, auditoria y versionado | Accepted | Codex / JusNova Chief Backend Architect |
-| 0.8 | Cost Governor, planes y presupuestos | Draft | Codex / JusNova Chief Backend Architect |
+| 0.8 | Cost Governor, planes y presupuestos | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.9 | Conversacion, memoria, documentos y OCR | Draft | Codex / JusNova Chief Backend Architect |
 | 0.10 | Seguridad, privacidad y proveedores externos | Draft | Codex / JusNova Chief Backend Architect |
 | 0.11 | Modelo de datos conceptual y APIs draft | Draft | Codex / JusNova Chief Backend Architect |

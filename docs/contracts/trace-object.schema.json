@@ -8,7 +8,8 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
+    "amended_by": "Subfase 0.8 - Cost Governor, planes y presupuestos"
   },
   "required": [
     "trace_id",
@@ -20,6 +21,10 @@
     "answer_version",
     "conversation_id",
     "response_outcome",
+    "cost_budget_ref",
+    "cost_budget_version",
+    "plan_code",
+    "complexity",
     "created_at",
     "model_calls",
     "tool_calls",
@@ -44,7 +49,8 @@
     },
     "actor_ref": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
     },
     "actor_type": {
       "enum": [
@@ -83,6 +89,32 @@
         "partial_abstention",
         "total_abstention",
         "blocked"
+      ]
+    },
+    "cost_budget_ref": {
+      "description": "Referencia escalar al CostBudget efectivo. TraceObject no embebe CostBudget completo.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$"
+    },
+    "cost_budget_version": {
+      "type": "string",
+      "pattern": "^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "plan_code": {
+      "enum": [
+        "PROFESIONAL",
+        "PRO_PLUS",
+        "ESTUDIO",
+        "ENTERPRISE"
+      ]
+    },
+    "complexity": {
+      "enum": [
+        "SIMPLE",
+        "MEDIO",
+        "COMPLEJO",
+        "INVESTIGACION"
       ]
     },
     "abstention_reason": {
@@ -874,6 +906,82 @@
     {
       "if": {
         "properties": {
+          "actor_type": {
+            "const": "user"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "support"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^(support_hash_[A-Za-z0-9_-]+|actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "service"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^service_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "system"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "const": "system"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
           "response_outcome": {
             "const": "answered"
           }
@@ -1160,6 +1268,10 @@
       "conversation_id": "conv_001",
       "case_id": null,
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -1274,6 +1386,10 @@
       "conversation_id": "conv_002",
       "case_id": null,
       "response_outcome": "total_abstention",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "abstention_reason": "no_evidence",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
@@ -1329,6 +1445,10 @@
       "answer_version": 1,
       "conversation_id": "conv_003",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
       "tool_calls": [],
@@ -1371,6 +1491,10 @@
       "answer_version": 1,
       "conversation_id": "conv_004",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
       "tool_calls": [],
@@ -1430,6 +1554,10 @@
       "answer_version": 1,
       "conversation_id": "conv_004b",
       "response_outcome": "total_abstention",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
       "tool_calls": [],
@@ -1483,6 +1611,10 @@
       "answer_version": 1,
       "conversation_id": "conv_005",
       "response_outcome": "blocked",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
       "tool_calls": [],
@@ -1551,6 +1683,10 @@
       "answer_version": 1,
       "conversation_id": "conv_006",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
       "tool_calls": [],
@@ -1613,6 +1749,10 @@
       "answer_version": 1,
       "conversation_id": "conv_007",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
       "tool_calls": [],
@@ -1686,6 +1826,10 @@
       "answer_version": 1,
       "conversation_id": "conv_008",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
       "tool_calls": [],
@@ -1748,6 +1892,10 @@
       "answer_version": 1,
       "conversation_id": "conv_009",
       "response_outcome": "blocked",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "abstention_reason": "policy_blocked",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
@@ -1808,6 +1956,10 @@
       "answer_version": 1,
       "conversation_id": "conv_012",
       "response_outcome": "total_abstention",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "abstention_reason": "no_evidence",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
@@ -1873,6 +2025,10 @@
       "answer_version": 1,
       "conversation_id": "conv_013",
       "response_outcome": "blocked",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "abstention_reason": "policy_blocked",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
@@ -1953,6 +2109,10 @@
       "answer_version": 1,
       "conversation_id": "conv_014",
       "response_outcome": "blocked",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "abstention_reason": "policy_blocked",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [],
@@ -2010,6 +2170,10 @@
       "answer_version": 1,
       "conversation_id": "conv_010",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -2112,6 +2276,10 @@
       "answer_version": 1,
       "conversation_id": "conv_011",
       "response_outcome": "partial_abstention",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -2207,6 +2375,10 @@
       "answer_version": 1,
       "conversation_id": "conv_014",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -2302,6 +2474,10 @@
       "answer_version": 1,
       "conversation_id": "conv_015",
       "response_outcome": "partial_abstention",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "abstention_reason": "unsupported_critical_claim",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
@@ -2398,6 +2574,10 @@
       "answer_version": 1,
       "conversation_id": "conv_016",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -2493,6 +2673,10 @@
       "answer_version": 1,
       "conversation_id": "conv_017",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -2588,6 +2772,10 @@
       "answer_version": 1,
       "conversation_id": "conv_018",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -2727,6 +2915,10 @@
       "answer_version": 1,
       "conversation_id": "conv_019",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -2836,6 +3028,10 @@
       "conversation_id": "conv_001",
       "case_id": null,
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -2951,6 +3147,10 @@
       "answer_version": 1,
       "conversation_id": "conv_policy_001",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -3048,6 +3248,10 @@
       "answer_version": 1,
       "conversation_id": "conv_policy_002",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -3163,6 +3367,10 @@
       "answer_version": 1,
       "conversation_id": "conv_policy_003",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -3260,6 +3468,10 @@
       "answer_version": 1,
       "conversation_id": "conv_policy_004",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -3376,6 +3588,10 @@
       "answer_version": 1,
       "conversation_id": "conv_policy_005",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -3473,6 +3689,10 @@
       "answer_version": 1,
       "conversation_id": "conv_policy_006",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {
@@ -3591,6 +3811,10 @@
       "answer_version": 1,
       "conversation_id": "conv_policy_007",
       "response_outcome": "answered",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
       "created_at": "2026-05-22T00:00:00Z",
       "model_calls": [
         {

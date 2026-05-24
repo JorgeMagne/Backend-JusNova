@@ -1,0 +1,1236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/cost-budget.schema.json",
+  "title": "CostBudget",
+  "description": "Presupuesto operativo aplicado por el Cost Governor. Define limites tecnicos por complejidad y plan neutral; no representa costo observado ni facturacion.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-24",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.8 - Cost Governor, planes y presupuestos"
+  },
+  "required": [
+    "cost_budget_id",
+    "cost_budget_version",
+    "plan_code",
+    "complexity",
+    "created_at",
+    "discovery_calls_max",
+    "fetch_urls_max",
+    "ocr_pages_inline_max",
+    "reformulations_max",
+    "tool_rounds_max",
+    "time_budget_ms",
+    "output_tokens_cap",
+    "research_credit_cost",
+    "async_allowed"
+  ],
+  "properties": {
+    "cost_budget_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$"
+    },
+    "cost_budget_version": {
+      "type": "string",
+      "pattern": "^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "plan_code": {
+      "enum": [
+        "PROFESIONAL",
+        "PRO_PLUS",
+        "ESTUDIO",
+        "ENTERPRISE"
+      ]
+    },
+    "complexity": {
+      "enum": [
+        "SIMPLE",
+        "MEDIO",
+        "COMPLEJO",
+        "INVESTIGACION"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "discovery_calls_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fetch_urls_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ocr_pages_inline_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reformulations_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tool_rounds_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_budget_ms": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "output_tokens_cap": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "research_credit_cost": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "async_allowed": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "complexity": {
+            "const": "SIMPLE"
+          }
+        },
+        "required": [
+          "complexity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "discovery_calls_max": {
+            "const": 1
+          },
+          "fetch_urls_max": {
+            "const": 3
+          },
+          "ocr_pages_inline_max": {
+            "const": 0
+          },
+          "reformulations_max": {
+            "const": 0
+          },
+          "tool_rounds_max": {
+            "const": 2
+          },
+          "time_budget_ms": {
+            "const": 45000
+          },
+          "output_tokens_cap": {
+            "const": 900
+          },
+          "research_credit_cost": {
+            "const": 0
+          },
+          "async_allowed": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "complexity": {
+            "const": "MEDIO"
+          }
+        },
+        "required": [
+          "complexity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "discovery_calls_max": {
+            "const": 2
+          },
+          "fetch_urls_max": {
+            "const": 6
+          },
+          "ocr_pages_inline_max": {
+            "const": 2
+          },
+          "reformulations_max": {
+            "const": 1
+          },
+          "tool_rounds_max": {
+            "const": 3
+          },
+          "time_budget_ms": {
+            "const": 90000
+          },
+          "output_tokens_cap": {
+            "const": 1400
+          },
+          "research_credit_cost": {
+            "const": 0
+          },
+          "async_allowed": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "complexity": {
+            "const": "COMPLEJO"
+          }
+        },
+        "required": [
+          "complexity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "discovery_calls_max": {
+            "const": 4
+          },
+          "fetch_urls_max": {
+            "const": 10
+          },
+          "ocr_pages_inline_max": {
+            "const": 10
+          },
+          "reformulations_max": {
+            "const": 2
+          },
+          "tool_rounds_max": {
+            "const": 4
+          },
+          "time_budget_ms": {
+            "const": 180000
+          },
+          "output_tokens_cap": {
+            "const": 2200
+          },
+          "research_credit_cost": {
+            "const": 1
+          },
+          "async_allowed": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "complexity": {
+            "const": "INVESTIGACION"
+          }
+        },
+        "required": [
+          "complexity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "discovery_calls_max": {
+            "const": 8
+          },
+          "fetch_urls_max": {
+            "const": 20
+          },
+          "ocr_pages_inline_max": {
+            "const": 20
+          },
+          "reformulations_max": {
+            "const": 3
+          },
+          "tool_rounds_max": {
+            "const": 6
+          },
+          "time_budget_ms": {
+            "const": 300000
+          },
+          "output_tokens_cap": {
+            "const": 4000
+          },
+          "research_credit_cost": {
+            "const": 2
+          },
+          "async_allowed": {
+            "const": true
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "cost_budget_id": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 1,
+      "fetch_urls_max": 3,
+      "ocr_pages_inline_max": 0,
+      "reformulations_max": 0,
+      "tool_rounds_max": 2,
+      "time_budget_ms": 45000,
+      "output_tokens_cap": 900,
+      "research_credit_cost": 0,
+      "async_allowed": false
+    },
+    {
+      "cost_budget_id": "cb_estudio_investigacion_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "ESTUDIO",
+      "complexity": "INVESTIGACION",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 8,
+      "fetch_urls_max": 20,
+      "ocr_pages_inline_max": 20,
+      "reformulations_max": 3,
+      "tool_rounds_max": 6,
+      "time_budget_ms": 300000,
+      "output_tokens_cap": 4000,
+      "research_credit_cost": 2,
+      "async_allowed": true
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "cost_budget_id": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL_400",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 1,
+      "fetch_urls_max": 3,
+      "ocr_pages_inline_max": 0,
+      "reformulations_max": 0,
+      "tool_rounds_max": 2,
+      "time_budget_ms": 45000,
+      "output_tokens_cap": 900,
+      "research_credit_cost": 0,
+      "async_allowed": false
+    },
+    {
+      "cost_budget_id": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 1,
+      "fetch_urls_max": 3,
+      "ocr_pages_inline_max": 0,
+      "reformulations_max": 0,
+      "tool_rounds_max": 2,
+      "time_budget_ms": 45000,
+      "output_tokens_cap": 900,
+      "research_credit_cost": 0,
+      "async_allowed": true
+    },
+    {
+      "cost_budget_id": "cb_pro_plus_medio_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PRO_PLUS",
+      "complexity": "MEDIO",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 2,
+      "fetch_urls_max": 6,
+      "ocr_pages_inline_max": 2,
+      "reformulations_max": 1,
+      "tool_rounds_max": 3,
+      "time_budget_ms": 90000,
+      "output_tokens_cap": 1400,
+      "research_credit_cost": 1,
+      "async_allowed": false
+    },
+    {
+      "cost_budget_id": "cb_estudio_complejo_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "ESTUDIO",
+      "complexity": "COMPLEJO",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 4,
+      "fetch_urls_max": 10,
+      "ocr_pages_inline_max": 10,
+      "reformulations_max": 2,
+      "tool_rounds_max": 4,
+      "time_budget_ms": 180000,
+      "output_tokens_cap": 2200,
+      "research_credit_cost": 0,
+      "async_allowed": false
+    },
+    {
+      "cost_budget_id": "cb_enterprise_investigacion_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "ENTERPRISE",
+      "complexity": "INVESTIGACION",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 8,
+      "fetch_urls_max": 20,
+      "ocr_pages_inline_max": 20,
+      "reformulations_max": 3,
+      "tool_rounds_max": 6,
+      "time_budget_ms": 300000,
+      "output_tokens_cap": 4000,
+      "research_credit_cost": 2,
+      "async_allowed": false
+    },
+    {
+      "cost_budget_id": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 1,
+      "fetch_urls_max": 4,
+      "ocr_pages_inline_max": 0,
+      "reformulations_max": 0,
+      "tool_rounds_max": 2,
+      "time_budget_ms": 45000,
+      "output_tokens_cap": 900,
+      "research_credit_cost": 0,
+      "async_allowed": false
+    },
+    {
+      "cost_budget_id": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 1,
+      "fetch_urls_max": 3,
+      "ocr_pages_inline_max": 0,
+      "reformulations_max": 0,
+      "tool_rounds_max": 2,
+      "time_budget_ms": 45000,
+      "output_tokens_cap": 900,
+      "research_credit_cost": 0,
+      "async_allowed": false,
+      "legacy_provider_calls": 1
+    },
+    {
+      "cost_budget_id": "https://example.com/private-budget",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 1,
+      "fetch_urls_max": 3,
+      "ocr_pages_inline_max": 0,
+      "reformulations_max": 0,
+      "tool_rounds_max": 2,
+      "time_budget_ms": 45000,
+      "output_tokens_cap": 900,
+      "research_credit_cost": 0,
+      "async_allowed": false
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "cost_budget_id": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PRO_PLUS",
+      "complexity": "MEDIO",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 2,
+      "fetch_urls_max": 6,
+      "ocr_pages_inline_max": 2,
+      "reformulations_max": 1,
+      "tool_rounds_max": 3,
+      "time_budget_ms": 90000,
+      "output_tokens_cap": 1400,
+      "research_credit_cost": 0,
+      "async_allowed": false
+    }
+  ],
+  "x-cross-contract-policy-invalid-examples": [
+    {
+      "description": "TraceObject COMPLEJO apunta a un CostBudget SIMPLE con mismo plan y version; los contratos validan por separado, pero el budget resuelto no coincide con la complejidad trazada.",
+      "cost_budget": {
+        "cost_budget_id": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 1,
+        "fetch_urls_max": 3,
+        "ocr_pages_inline_max": 0,
+        "reformulations_max": 0,
+        "tool_rounds_max": 2,
+        "time_budget_ms": 45000,
+        "output_tokens_cap": 900,
+        "research_credit_cost": 0,
+        "async_allowed": false
+      },
+      "trace_object": {
+        "trace_id": "tr_budget_mismatch_trace",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_budget_mismatch_trace",
+        "answer_version_ref": "av_budget_mismatch_trace",
+        "answer_version": 1,
+        "conversation_id": "conv_budget_mismatch_trace",
+        "case_id": null,
+        "response_outcome": "answered",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "COMPLEJO",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_001",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+            "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+            "token_usage": {
+              "input_tokens": 1200,
+              "output_tokens": 700,
+              "total_tokens": 1900
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:03Z",
+            "status": "success",
+            "error_code": null
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [
+          "ep_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [
+          {
+            "source_ref": null,
+            "result_id": "lsr_002",
+            "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+            "reason": "low_authority",
+            "tier": "TIER3_SECUNDARIO",
+            "source_type": "web",
+            "rejected_at": "2026-05-22T00:00:00Z",
+            "warning_codes": [
+              "tier3_not_primary"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_001",
+          "currency": "USD",
+          "is_estimated": true,
+          "billing_source": "provider_estimate",
+          "model_input_tokens": 1200,
+          "model_output_tokens": 700,
+          "tool_calls": 0,
+          "provider_estimated_costs": [
+            {
+              "provider": "openai",
+              "estimated_cost": 0.08
+            }
+          ],
+          "estimated_total_cost": 0.08
+        },
+        "latency_ms": {
+          "total": 3200,
+          "model_total": 3000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": []
+      },
+      "usage_events": [],
+      "expected_policy_failures": [
+        "trace_cost_budget_complexity_mismatch",
+        "missing_research_credit_event_for_complex_execution"
+      ]
+    },
+    {
+      "description": "UsageEvent research_credit_used COMPLEJO apunta a un CostBudget SIMPLE y a una traza SIMPLE valida; el evento valida localmente, pero no concilia con el budget ni con la ejecucion publicada.",
+      "cost_budget": {
+        "cost_budget_id": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 1,
+        "fetch_urls_max": 3,
+        "ocr_pages_inline_max": 0,
+        "reformulations_max": 0,
+        "tool_rounds_max": 2,
+        "time_budget_ms": 45000,
+        "output_tokens_cap": 900,
+        "research_credit_cost": 0,
+        "async_allowed": false
+      },
+      "trace_object": {
+        "trace_id": "tr_usage_budget_mismatch",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_usage_budget_mismatch",
+        "answer_version_ref": "av_usage_budget_mismatch",
+        "answer_version": 1,
+        "conversation_id": "conv_usage_budget_mismatch",
+        "case_id": null,
+        "response_outcome": "answered",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_001",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+            "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+            "token_usage": {
+              "input_tokens": 1200,
+              "output_tokens": 700,
+              "total_tokens": 1900
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:03Z",
+            "status": "success",
+            "error_code": null
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [
+          "ep_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [
+          {
+            "source_ref": null,
+            "result_id": "lsr_002",
+            "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+            "reason": "low_authority",
+            "tier": "TIER3_SECUNDARIO",
+            "source_type": "web",
+            "rejected_at": "2026-05-22T00:00:00Z",
+            "warning_codes": [
+              "tier3_not_primary"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_001",
+          "currency": "USD",
+          "is_estimated": true,
+          "billing_source": "provider_estimate",
+          "model_input_tokens": 1200,
+          "model_output_tokens": 700,
+          "tool_calls": 0,
+          "provider_estimated_costs": [
+            {
+              "provider": "openai",
+              "estimated_cost": 0.08
+            }
+          ],
+          "estimated_total_cost": 0.08
+        },
+        "latency_ms": {
+          "total": 3200,
+          "model_total": 3000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": []
+      },
+      "usage_events": [
+        {
+          "usage_event_id": "ue_usage_budget_mismatch",
+          "organization_id": "org_001",
+          "actor_ref": "actor_hash_001",
+          "actor_type": "user",
+          "plan_code": "PROFESIONAL",
+          "billing_period": "2026-05",
+          "event_scope": "execution",
+          "event_type": "research_credit_used",
+          "unit": "credit",
+          "quantity": 1,
+          "complexity": "COMPLEJO",
+          "cost_budget_ref": "cb_profesional_simple_v080",
+          "cost_budget_version": "cost-budget-v0.8.0",
+          "trace_id": "tr_usage_budget_mismatch",
+          "answer_id": null,
+          "retrieval_run_id": null,
+          "cost_report_id": null,
+          "model_call_id": null,
+          "tool_call_id": null,
+          "conversation_id": null,
+          "created_at": "2026-05-24T00:01:00Z"
+        }
+      ],
+      "expected_policy_failures": [
+        "usage_event_cost_budget_complexity_mismatch",
+        "research_credit_quantity_mismatch_with_resolved_budget"
+      ]
+    },
+    {
+      "description": "TraceObject COMPLEJO publicado no tiene UsageEvent research_credit_used conciliado por trace_id o answer_id.",
+      "cost_budget": {
+        "cost_budget_id": "cb_profesional_complejo_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "COMPLEJO",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 4,
+        "fetch_urls_max": 10,
+        "ocr_pages_inline_max": 10,
+        "reformulations_max": 2,
+        "tool_rounds_max": 4,
+        "time_budget_ms": 180000,
+        "output_tokens_cap": 2200,
+        "research_credit_cost": 1,
+        "async_allowed": false
+      },
+      "trace_object": {
+        "trace_id": "tr_missing_credit",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_missing_credit",
+        "answer_version_ref": "av_missing_credit",
+        "answer_version": 1,
+        "conversation_id": "conv_missing_credit",
+        "case_id": null,
+        "response_outcome": "answered",
+        "cost_budget_ref": "cb_profesional_complejo_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "COMPLEJO",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_001",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+            "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+            "token_usage": {
+              "input_tokens": 1200,
+              "output_tokens": 700,
+              "total_tokens": 1900
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:03Z",
+            "status": "success",
+            "error_code": null
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [
+          "ep_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [
+          {
+            "source_ref": null,
+            "result_id": "lsr_002",
+            "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+            "reason": "low_authority",
+            "tier": "TIER3_SECUNDARIO",
+            "source_type": "web",
+            "rejected_at": "2026-05-22T00:00:00Z",
+            "warning_codes": [
+              "tier3_not_primary"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_001",
+          "currency": "USD",
+          "is_estimated": true,
+          "billing_source": "provider_estimate",
+          "model_input_tokens": 1200,
+          "model_output_tokens": 700,
+          "tool_calls": 0,
+          "provider_estimated_costs": [
+            {
+              "provider": "openai",
+              "estimated_cost": 0.08
+            }
+          ],
+          "estimated_total_cost": 0.08
+        },
+        "latency_ms": {
+          "total": 3200,
+          "model_total": 3000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": []
+      },
+      "usage_events": [],
+      "expected_policy_failures": [
+        "missing_research_credit_event_for_complex_execution"
+      ]
+    },
+    {
+      "description": "TraceObject COMPLEJO tiene UsageEvent research_credit_used correcto en cantidad y budget, pero anclado a otro trace_id y answer_id.",
+      "cost_budget": {
+        "cost_budget_id": "cb_profesional_complejo_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "COMPLEJO",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 4,
+        "fetch_urls_max": 10,
+        "ocr_pages_inline_max": 10,
+        "reformulations_max": 2,
+        "tool_rounds_max": 4,
+        "time_budget_ms": 180000,
+        "output_tokens_cap": 2200,
+        "research_credit_cost": 1,
+        "async_allowed": false
+      },
+      "trace_object": {
+        "trace_id": "tr_credit_wrong_anchor",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_credit_wrong_anchor",
+        "answer_version_ref": "av_credit_wrong_anchor",
+        "answer_version": 1,
+        "conversation_id": "conv_credit_wrong_anchor",
+        "case_id": null,
+        "response_outcome": "answered",
+        "cost_budget_ref": "cb_profesional_complejo_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "COMPLEJO",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_001",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+            "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+            "token_usage": {
+              "input_tokens": 1200,
+              "output_tokens": 700,
+              "total_tokens": 1900
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:03Z",
+            "status": "success",
+            "error_code": null
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [
+          "ep_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [
+          {
+            "source_ref": null,
+            "result_id": "lsr_002",
+            "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+            "reason": "low_authority",
+            "tier": "TIER3_SECUNDARIO",
+            "source_type": "web",
+            "rejected_at": "2026-05-22T00:00:00Z",
+            "warning_codes": [
+              "tier3_not_primary"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_001",
+          "currency": "USD",
+          "is_estimated": true,
+          "billing_source": "provider_estimate",
+          "model_input_tokens": 1200,
+          "model_output_tokens": 700,
+          "tool_calls": 0,
+          "provider_estimated_costs": [
+            {
+              "provider": "openai",
+              "estimated_cost": 0.08
+            }
+          ],
+          "estimated_total_cost": 0.08
+        },
+        "latency_ms": {
+          "total": 3200,
+          "model_total": 3000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": []
+      },
+      "usage_events": [
+        {
+          "usage_event_id": "ue_credit_wrong_anchor",
+          "organization_id": "org_001",
+          "actor_ref": "actor_hash_001",
+          "actor_type": "user",
+          "plan_code": "PROFESIONAL",
+          "billing_period": "2026-05",
+          "event_scope": "execution",
+          "event_type": "research_credit_used",
+          "unit": "credit",
+          "quantity": 1,
+          "complexity": "COMPLEJO",
+          "cost_budget_ref": "cb_profesional_complejo_v080",
+          "cost_budget_version": "cost-budget-v0.8.0",
+          "trace_id": "tr_other_execution",
+          "answer_id": "ans_other_execution",
+          "retrieval_run_id": null,
+          "cost_report_id": null,
+          "model_call_id": null,
+          "tool_call_id": null,
+          "conversation_id": null,
+          "created_at": "2026-05-24T00:01:00Z"
+        }
+      ],
+      "expected_policy_failures": [
+        "research_credit_event_not_linked_to_trace_or_answer"
+      ]
+    },
+    {
+      "description": "UsageEvent research_credit_used COMPLEJO registra cantidad valida para COMPLEJO, pero apunta a un CostBudget INVESTIGACION con costo de credito 2.",
+      "cost_budget": {
+        "cost_budget_id": "cb_profesional_investigacion_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "INVESTIGACION",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 8,
+        "fetch_urls_max": 20,
+        "ocr_pages_inline_max": 20,
+        "reformulations_max": 3,
+        "tool_rounds_max": 6,
+        "time_budget_ms": 300000,
+        "output_tokens_cap": 4000,
+        "research_credit_cost": 2,
+        "async_allowed": true
+      },
+      "trace_object": {
+        "trace_id": "tr_credit_quantity_budget_mismatch",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_credit_quantity_budget_mismatch",
+        "answer_version_ref": "av_credit_quantity_budget_mismatch",
+        "answer_version": 1,
+        "conversation_id": "conv_credit_quantity_budget_mismatch",
+        "case_id": null,
+        "response_outcome": "answered",
+        "cost_budget_ref": "cb_profesional_investigacion_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "COMPLEJO",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_001",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+            "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+            "token_usage": {
+              "input_tokens": 1200,
+              "output_tokens": 700,
+              "total_tokens": 1900
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:03Z",
+            "status": "success",
+            "error_code": null
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [],
+        "evidence_pack_ids": [
+          "ep_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [
+          {
+            "source_ref": null,
+            "result_id": "lsr_002",
+            "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+            "reason": "low_authority",
+            "tier": "TIER3_SECUNDARIO",
+            "source_type": "web",
+            "rejected_at": "2026-05-22T00:00:00Z",
+            "warning_codes": [
+              "tier3_not_primary"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_001",
+          "currency": "USD",
+          "is_estimated": true,
+          "billing_source": "provider_estimate",
+          "model_input_tokens": 1200,
+          "model_output_tokens": 700,
+          "tool_calls": 0,
+          "provider_estimated_costs": [
+            {
+              "provider": "openai",
+              "estimated_cost": 0.08
+            }
+          ],
+          "estimated_total_cost": 0.08
+        },
+        "latency_ms": {
+          "total": 3200,
+          "model_total": 3000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": []
+      },
+      "usage_events": [
+        {
+          "usage_event_id": "ue_credit_quantity_budget_mismatch",
+          "organization_id": "org_001",
+          "actor_ref": "actor_hash_001",
+          "actor_type": "user",
+          "plan_code": "PROFESIONAL",
+          "billing_period": "2026-05",
+          "event_scope": "execution",
+          "event_type": "research_credit_used",
+          "unit": "credit",
+          "quantity": 1,
+          "complexity": "COMPLEJO",
+          "cost_budget_ref": "cb_profesional_investigacion_v080",
+          "cost_budget_version": "cost-budget-v0.8.0",
+          "trace_id": "tr_credit_quantity_budget_mismatch",
+          "answer_id": "ans_credit_quantity_budget_mismatch",
+          "retrieval_run_id": null,
+          "cost_report_id": null,
+          "model_call_id": null,
+          "tool_call_id": null,
+          "conversation_id": null,
+          "created_at": "2026-05-24T00:01:00Z"
+        }
+      ],
+      "expected_policy_failures": [
+        "trace_cost_budget_complexity_mismatch",
+        "usage_event_cost_budget_complexity_mismatch",
+        "research_credit_quantity_mismatch_with_resolved_budget"
+      ]
+    }
+  ]
+}

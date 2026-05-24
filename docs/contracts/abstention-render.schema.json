@@ -8,7 +8,8 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
+    "amended_by": "Subfase 0.8 - Cost Governor, planes y presupuestos"
   },
   "required": [
     "abstention_render_id",
@@ -149,7 +150,8 @@
     },
     "created_by_ref": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
     }
   },
   "additionalProperties": false,
@@ -296,6 +298,29 @@
       ],
       "created_at": "2026-05-22T00:00:00Z",
       "created_by_ref": "system"
+    },
+    {
+      "abstention_render_id": "abstention_render_bad_created_by_ref",
+      "trace_id": "tr_abstention_001",
+      "answer_id": "ans_002",
+      "answer_version": 1,
+      "response_outcome": "total_abstention",
+      "render_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
+      "render_storage_ref": "render_abstention_001",
+      "rendered_answer_snapshot_id": null,
+      "reason_code": "no_evidence",
+      "redaction_profile": "USER_SUMMARY_SAFE",
+      "source_trace_refs": {
+        "evidence_pack_ids": [],
+        "claim_ids": [],
+        "citation_refs": [],
+        "source_refs": []
+      },
+      "warning_codes": [
+        "no_evidence_found"
+      ],
+      "created_at": "2026-05-22T00:00:00Z",
+      "created_by_ref": "abogado@example.com"
     }
   ],
   "x-cross-contract-policy-invalid-examples": [
@@ -354,7 +379,11 @@
         },
         "warnings": [
           "No hay evidencia suficiente."
-        ]
+        ],
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE"
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",
@@ -453,7 +482,11 @@
         },
         "warnings": [
           "No hay evidencia suficiente."
-        ]
+        ],
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE"
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",
@@ -552,7 +585,11 @@
         },
         "warnings": [
           "No hay evidencia suficiente."
-        ]
+        ],
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE"
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",
