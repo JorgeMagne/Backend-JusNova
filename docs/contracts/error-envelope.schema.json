@@ -185,7 +185,7 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 80,
-            "pattern": "^[A-Za-z0-9_.:-]+$"
+            "pattern": "^[A-Za-z0-9_.:/+-]+$"
           },
           "minItems": 1,
           "uniqueItems": true
@@ -1433,6 +1433,21 @@
       "metadata": {
         "allowed_values": [
           "texto libre copiado del documento"
+        ]
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Allowed value con query MIME no permitida.",
+      "severity": "error",
+      "request_id": "rq_query_allowed",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "allowed_values": [
+          "application/pdf?raw=document"
         ]
       }
     }

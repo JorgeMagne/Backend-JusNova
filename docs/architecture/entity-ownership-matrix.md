@@ -54,7 +54,13 @@ Esta matriz fija ownership, clasificacion y direccionamiento de acceso raw para 
 | Plan | `plan_*` | No | Catalogo comercial | `BILLING_USAGE` | No aplica | Versionar catalogo | Plan global neutral; pricing policy separada. |
 | Subscription | `sub_*` | Si | `organization_id` | `BILLING_USAGE` | No aplica | Retener/tombstone comercial | Puede existir sin uso. |
 | ResearchCredit | `rc_*` | Si | `organization_id` | `BILLING_USAGE` | No aplica | Retener movimientos | Puede existir sin consumo. |
-| CostBudget | `cb_*` | No | Policy/catalogo | `BILLING_USAGE` | No aplica | Versionar policy | Budget efectivo se referencia desde traza/usage. |
+| CostBudget | `cb_<plan>_<complexity>_vNNN` | No | Policy/catalogo | `BILLING_USAGE` | No aplica | Versionar policy | Debe cumplir `cost-budget.schema.json`: `cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_vNNN`. |
 | CostReport | `cr_*` embebido | Si | Heredado de `TraceObject.organization_id` | `BILLING_USAGE` | No aplica | Retener embebido con TraceObject | No crear tabla aislada sin `trace_id` y tenant; no es presupuesto comercial. |
 | EvaluationCase | `eval_case_*` | Condicional | Global o `organization_id` | Hereda de dataset/input | No aplica | Global: versionar; tenant: tombstone/anonymize | Tenant si deriva de usuario/caso/documento. |
 | EvaluationRun | `eval_run_*` | Condicional | Global o `organization_id` | Hereda de casos evaluados | No aplica | Retener metricas; tenant: sanitizar | Tenant si cualquier input es tenant-scoped. |
+
+## Excepcion de trazas sanitizadas
+
+`TraceObject`, `ModelCall`, `ToolCall` y `RetrievalRun` mantienen clasificacion `INTERNAL_TRACE_RESTRICTED` porque sus contratos aceptados solo permiten refs, hashes, contadores, codigos cerrados y metadata minimizada. Esa clasificacion no autoriza copiar mensajes, documentos, OCR, HTML, prompts, model outputs ni provider payloads completos.
+
+Si Fase 1 introduce una variante no sanitizada de cualquiera de esos recursos, debe modelarla como raw/elevated access bajo `RawAccessEvent`, asignarle la clasificacion heredada de mayor sensibilidad de sus inputs y enmendar el contrato correspondiente antes de persistirla.

@@ -189,6 +189,7 @@ Estos contratos quedan aceptados como base documental del modelo conceptual y de
 - `ErrorEnvelope.error_code` y `safe_message_code` usan enums cerrados y mapping deterministico.
 - `ErrorEnvelope.message` es texto seguro, acotado y no debe interpolar contenido de usuario, documento, provider o stack trace.
 - `ErrorEnvelope.metadata` es objeto cerrado; refs locales `F#`, `D#`, `F#:P#` y `D#:P#` solo pueden aparecer con contexto padre resoluble, y `parent_resource_type`/`parent_resource_ref` no pueden aparecer sin `resource_type`/`resource_ref`.
+- `ErrorEnvelope.metadata.allowed_values[]` acepta codigos seguros y MIME types como `application/pdf`; no acepta espacios, query strings, comillas ni texto libre.
 - `ErrorEnvelope.created_at` requiere `format: date-time`, patron RFC3339 basico y validacion CI con `ajv-formats`/format assertions para rechazar fechas calendario imposibles.
 - Un `run_id` en progreso usa forma `tr_*`, pero no es `TraceObject` schema-valid hasta que exista `answer_id` y `answer_version_ref`.
 - `domain-model.md`, `entity-ownership-matrix.md` y `api-draft-v0.md` gobiernan relaciones conceptuales, ownership y visibilidad de endpoints para Fase 1.

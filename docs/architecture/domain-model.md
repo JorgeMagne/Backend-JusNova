@@ -76,7 +76,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | Plan | `^plan_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | Subscription | `^sub_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | ResearchCredit | `^rc_[A-Za-z0-9_-]+$` | 0.11 conceptual |
-| CostBudget | `^cb_[A-Za-z0-9_-]+$` | `cost-budget.schema.json` |
+| CostBudget | `^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$` | `cost-budget.schema.json` |
 | CostReport | `^cr_[A-Za-z0-9_-]+$` como value object embebido | `cost-report.schema.json` embebido en `TraceObject` |
 | EvaluationCase | `^eval_case_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | EvaluationRun | `^eval_run_[A-Za-z0-9_-]+$` | 0.11 conceptual |
@@ -190,6 +190,7 @@ Todo artefacto derivado hereda la mayor sensibilidad (`sensitivity_rank`) de sus
 - `StorageObject` representa objeto privado addressable por `RawAccessEvent.storage_object`; siempre apunta a `Document`, puede apuntar tambien a `DocumentVersion` cuando existe version, y objetos publicos de fuentes se modelan por `SourceSnapshot`.
 - `OcrArtifact` representa OCR privado por version, pagina o fragmento; el OCR completo no se copia a trazas, logs, errores ni provider audit.
 - `Embedding` debe derivar de una fuente contractual unica en 0.11: exactamente uno de `document_evidence_id` o `case_id`/`CaseMemory`; si necesita ambas fuentes, se crean artefactos separados.
+- `TraceObject`, `ModelCall`, `ToolCall` y `RetrievalRun` son resumenes sanitizados metadata-only; por eso usan `INTERNAL_TRACE_RESTRICTED` en la matriz aunque sus inputs puedan ser mas sensibles. Variantes raw deben pasar por `RawAccessEvent` y por una enmienda contractual.
 - `CitationAudit` y `CostReport` permanecen como value objects embebidos en `TraceObject` salvo que Fase 1 los materialice con `organization_id`, `trace_id` y constraint de unicidad contra el `TraceObject` owner.
 
 ## Reglas de verdad juridica
