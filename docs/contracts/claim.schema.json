@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
   },
   "required": [
     "claim_id",
@@ -23,7 +26,8 @@
   "properties": {
     "claim_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^cl_[A-Za-z0-9_-]+$"
     },
     "text": {
       "type": "string",

@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
   },
   "required": [
     "answer_id",
@@ -26,7 +29,8 @@
   "properties": {
     "answer_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+$"
     },
     "answer_version": {
       "type": "integer",
@@ -39,7 +43,8 @@
     },
     "evidence_pack_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ep_[A-Za-z0-9_-]+$"
     },
     "jurisdiction": {
       "type": "string",

@@ -12,7 +12,8 @@
     "amendments": [
       "Subfase 0.8 - Cost Governor, planes y presupuestos",
       "Subfase 0.9 - Conversacion, memoria, documentos y OCR",
-      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
     ]
   },
   "required": [
@@ -70,11 +71,13 @@
     },
     "answer_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+$"
     },
     "answer_version_ref": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^av_[A-Za-z0-9_-]+$"
     },
     "answer_version": {
       "type": "integer",
@@ -181,7 +184,8 @@
       "type": "array",
       "items": {
         "type": "string",
-        "minLength": 1
+        "minLength": 1,
+        "pattern": "^ep_[A-Za-z0-9_-]+$"
       },
       "uniqueItems": true
     },
@@ -322,7 +326,8 @@
         },
         "evidence_pack_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^ep_[A-Za-z0-9_-]+$"
         },
         "no_evidence_reason": {
           "enum": [
