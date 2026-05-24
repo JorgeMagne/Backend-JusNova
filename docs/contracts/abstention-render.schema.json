@@ -8,7 +8,8 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
+    "amended_by": "Subfase 0.8 - Cost Governor, planes y presupuestos"
   },
   "required": [
     "abstention_render_id",
@@ -378,7 +379,11 @@
         },
         "warnings": [
           "No hay evidencia suficiente."
-        ]
+        ],
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE"
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",
@@ -477,7 +482,11 @@
         },
         "warnings": [
           "No hay evidencia suficiente."
-        ]
+        ],
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE"
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",
@@ -576,7 +585,11 @@
         },
         "warnings": [
           "No hay evidencia suficiente."
-        ]
+        ],
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE"
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",
