@@ -29,7 +29,8 @@
     "warnings",
     "citation_eligible",
     "created_at",
-    "document_evidence_id"
+    "document_evidence_id",
+    "prompt_injection_risks"
   ],
   "properties": {
     "document_evidence_id": {
@@ -534,6 +535,32 @@
       "citation_eligible": true,
       "created_at": "2026-05-24T10:00:00Z",
       "prompt_injection_risks": []
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_missing_prompt_risks",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 4,
+      "text": "La diligencia de notificacion fue practicada el 20 de mayo de 2026.",
+      "text_hash": "sha256:a510ad78c8409572202ac1c95fb616bfdef313fc3ffbda688a38d9e99c66d848",
+      "locator": {
+        "page": 4,
+        "article": null,
+        "section": "Diligencia de notificacion",
+        "paragraph": 1,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.91,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_missing_prompt_risks"
     },
     {
       "organization_id": "org_001",

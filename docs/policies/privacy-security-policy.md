@@ -25,6 +25,7 @@ Aplica a conversaciones, mensajes, documentos, OCR, evidencia documental, memori
 8. Eliminar documento privado implica borrar o tombstonear objeto original, OCR, fragmentos, embeddings, indices, snapshots privados y derivados.
 9. `TraceObject` y `AnswerVersion` pueden conservar hashes, refs y marcas de eliminacion para auditoria; no conservan contenido raw.
 10. Todo acceso raw o elevado se registra con `RawAccessEvent`.
+11. Todo payload o artefacto derivado hereda la clasificacion con mayor `sensitivity_rank` de sus entradas, incluyendo summaries, snapshots, embeddings, trazas, indices, queries reformuladas, provider payloads y cualquier derivado persistido.
 
 ## Matriz de visibilidad
 
@@ -47,6 +48,7 @@ Aplica a conversaciones, mensajes, documentos, OCR, evidencia documental, memori
 6. Si `resource_type != document_evidence`, `document_id`, `document_version_id` y `passage_ref` deben estar ausentes o ser `null`.
 7. Cualquier log que contenga `raw_prompt`, `raw_output`, `document_text`, `full_document`, `ocr_full_text`, `html_raw`, `user_message` o mensaje completo falla revision de seguridad salvo que aparezca como ejemplo invalido.
 8. `provider_registry.training_use_allowed` y `ProviderCallAudit.training_use_allowed` deben ser `false` en v0.10.
+9. La herencia de clasificacion por `sensitivity_rank` se calcula antes de redaccion o minimizacion; la redaccion puede reducir el payload, pero no permite declarar una clase menos sensible sin regla contractual explicita.
 
 ## Comportamiento ante incumplimiento
 
@@ -60,6 +62,7 @@ Aplica a conversaciones, mensajes, documentos, OCR, evidencia documental, memori
 - `raw-access-event.schema.json` define auditoria raw/elevada.
 - `provider-call-audit.schema.json` define auditoria de proveedores.
 - `data-classification.yaml` define clases y reglas por provider family.
+- `data-classification.yaml` define el orden de sensibilidad usado para herencia de clasificacion en derivados.
 - `document-evidence.schema.json`, `message.schema.json`, `trace-object.schema.json` y `usage-event.schema.json` no deben almacenar material raw fuera de su responsabilidad primaria.
 
 ## Criterios de aceptacion

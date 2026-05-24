@@ -48,6 +48,7 @@ La seguridad es estructural en datos, storage, logs, providers y prompts. No pue
 - Prompt injection policy para documentos y fuentes externas.
 - Retencion y eliminacion documentadas.
 - Data classification con ranks de sensibilidad y reglas por familia de provider.
+- Herencia obligatoria de clasificacion: todo payload o artefacto derivado conserva la clase con mayor `sensitivity_rank` de sus entradas salvo regla contractual explicita.
 - Provider registry con feature flags, kill switches, allowlists de clases y `training_use_allowed = false`.
 - `ProviderCallAudit` para toda llamada externa.
 - `RawAccessEvent` para acceso raw/elevado; `support_operator` queda fuera de ese contrato.

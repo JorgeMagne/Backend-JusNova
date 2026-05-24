@@ -48,7 +48,7 @@ Se complementa con `privacy-security-policy.md`, `provider-policy.md`, `data-cla
 9. `document_version_hash` debe coincidir con la version documental resuelta.
 10. Cada `Message.attachments[]` debe resolver a documento/version/source_ref del mismo `organization_id` del `Message`; no se permite adjuntar por referencia documentos de otro tenant.
 11. `Message.attachments[].attachment_id` debe ser unico dentro del mensaje; un identificador no puede apuntar a dos documentos, versiones o `source_ref` distintos.
-12. `DocumentEvidence.prompt_injection_risks[]` usa `prompt-injection-risk.schema.json` y no texto libre.
+12. `DocumentEvidence.prompt_injection_risks[]` es obligatorio, usa `prompt-injection-risk.schema.json` y no texto libre; `[]` significa evaluado sin riesgos detectados.
 13. Si un fragmento documental se envia a un provider externo, esa llamada debe quedar en `ProviderCallAudit` con clases de datos permitidas por `data-classification.yaml` y `provider-registry.yaml`.
 
 ## Reglas asistidas por IA

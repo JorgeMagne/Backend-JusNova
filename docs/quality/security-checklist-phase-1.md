@@ -19,6 +19,7 @@ Checklist minimo para que Fase 1 implemente datos, logs, storage, providers y wo
 - [ ] Uploads rechazados usan estados/codigos cerrados.
 - [ ] Borrado documental cubre original, OCR, fragmentos, embeddings, indices, snapshots privados y derivados.
 - [ ] Logs no contienen documentos completos, OCR completo, HTML bruto, prompts completos, mensajes completos ni salidas completas.
+- [ ] Summaries, snapshots, embeddings, trazas, indices, queries reformuladas y otros derivados heredan la clase con mayor `sensitivity_rank` de sus entradas.
 - [ ] `USER_SUMMARY`, `SUPPORT_VIEW`, `INTERNAL_AUDIT` y `RAW_INCIDENT_ACCESS` estan separados.
 - [ ] `SUPPORT_VIEW` no puede ver raw prompts, documentos, mensajes ni model outputs.
 - [ ] Todo raw/elevated access crea `RawAccessEvent`.

@@ -37,7 +37,7 @@ Aplica a fuentes publicas, documentos privados, OCR, HTML externo, snippets de b
 ## Reglas deterministicas
 
 1. Todo riesgo detectado debe usar `prompt-injection-risk.schema.json`.
-2. `DocumentEvidence.prompt_injection_risks[]` registra riesgos en documentos/OCR/model vision.
+2. `DocumentEvidence.prompt_injection_risks[]` es obligatorio y registra riesgos en documentos/OCR/model vision; `[]` significa evaluado sin riesgos detectados.
 3. `RetrievalRun.prompt_injection_risks[]` registra riesgos detectados durante discovery, fetch o extraction.
 4. `TraceObject.retrieval_runs[].prompt_injection_risks[]` conserva riesgos en summaries sanitizados.
 5. `TraceObject.prompt_injection_risks[]` agrega todos los riesgos usados por la respuesta salvo exclusion auditada con `handling=excluded_from_evidence`.

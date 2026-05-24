@@ -65,6 +65,7 @@ Cuando una taxonomia exista en esta carpeta, los contratos deben referenciar sus
 - `data-classification.yaml` define `sensitivity_order`, `sensitivity_rank`, visibilidad por defecto, logging raw y reglas por familia de provider.
 - Las keys de `sensitivity_order` y `data_classification` deben coincidir exactamente, sin extras ni faltantes.
 - Los ranks de sensibilidad son unicos y avanzan de 10 en 10 segun el orden declarado.
+- Todo payload o artefacto derivado hereda la clase con mayor `sensitivity_rank` entre sus entradas; esto aplica a summaries, snapshots, embeddings, trazas, indices, queries reformuladas, provider payloads y derivados persistidos.
 - Cada clase declara reglas para las 11 familias canonicas de provider.
 - `provider-registry.yaml` declara providers permitidos, feature flags, kill switches, clases recibidas/devueltas, region, logs operativos y `training_use_allowed = false`.
 - Un provider no puede declarar clases prohibidas por `provider_family_rules`.
