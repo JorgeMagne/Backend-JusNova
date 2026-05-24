@@ -44,6 +44,7 @@ No implementa OCR worker, storage, permisos finales, retencion completa ni promp
 8. `DocumentEvidence.text_hash` debe ser el hash `sha256` de los bytes UTF-8 exactos persistidos en `text`.
 9. `DocumentEvidence.document_version_hash` debe coincidir con la version documental resuelta por `document_version_id`.
 10. `DocumentEvidence.locator.page` debe coincidir con `page`.
+11. `DocumentEvidence.locator.coordinates`, cuando exista, debe usar bbox cerrado `x`, `y`, `width`, `height`; no se permiten objetos de coordenadas con payloads arbitrarios.
 
 ## Reglas asistidas por IA
 

@@ -141,6 +141,7 @@ Estos contratos quedan aceptados como base documental de conversacion, mensajes,
 - `DocumentEvidence` representa fragmentos `D#:P#`, no documentos completos.
 - `DocumentEvidence` exige tenant, version documental, hashes, locator, metodo de extraccion, confianza y warnings.
 - `DocumentEvidence.locator.page` debe coincidir con `DocumentEvidence.page` mediante validador custom.
+- `Passage.locator.coordinates` y `DocumentEvidence.locator.coordinates` usan bbox cerrado `x`, `y`, `width`, `height`; no aceptan objetos libres.
 - Los hashes de `Message` y `DocumentEvidence` se calculan sobre bytes UTF-8 exactos persistidos.
 - Seguridad documental completa, retencion, permisos y prompt injection policy quedan para Subfase 0.10.
 
