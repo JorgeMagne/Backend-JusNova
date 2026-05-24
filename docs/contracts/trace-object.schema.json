@@ -49,7 +49,8 @@
     },
     "actor_ref": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
     },
     "actor_type": {
       "enum": [
@@ -93,7 +94,8 @@
     "cost_budget_ref": {
       "description": "Referencia escalar al CostBudget efectivo. TraceObject no embebe CostBudget completo.",
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^cb_[a-z0-9]+(?:_[a-z0-9]+)*_v[0-9]{3}$"
     },
     "cost_budget_version": {
       "type": "string",
@@ -901,6 +903,82 @@
   },
   "additionalProperties": false,
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "user"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "support"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^(support_hash_[A-Za-z0-9_-]+|actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "service"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^service_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "system"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "const": "system"
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {

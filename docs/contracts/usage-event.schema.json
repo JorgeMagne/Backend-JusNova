@@ -35,6 +35,7 @@
     "actor_ref": {
       "type": "string",
       "minLength": 1,
+      "pattern": "^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$",
       "allOf": [
         {
           "not": {
@@ -118,7 +119,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^cb_[a-z0-9]+(?:_[a-z0-9]+)*_v[0-9]{3}$"
     },
     "cost_budget_version": {
       "type": [
@@ -202,6 +204,82 @@
     ]
   },
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "user"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "support"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^(support_hash_[A-Za-z0-9_-]+|actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "service"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^service_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "system"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "const": "system"
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {
@@ -309,7 +387,8 @@
           },
           "cost_budget_ref": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^cb_[a-z0-9]+(?:_[a-z0-9]+)*_v[0-9]{3}$"
           },
           "cost_budget_version": {
             "type": "string",
@@ -1212,6 +1291,86 @@
       "cost_budget_ref": "cb_pro_plus_complejo_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "trace_id": "tr_complex_quantity_two",
+      "created_at": "2026-05-24T00:00:00Z"
+    },
+    {
+      "usage_event_id": "ue_actor_name",
+      "organization_id": "org_001",
+      "actor_ref": "Jorge Magne",
+      "actor_type": "user",
+      "plan_code": "PROFESIONAL",
+      "billing_period": "2026-05",
+      "event_scope": "execution",
+      "event_type": "standard_query",
+      "unit": "query",
+      "quantity": 1,
+      "complexity": "SIMPLE",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "trace_id": "tr_001",
+      "answer_id": "ans_001",
+      "estimated_cost": 0,
+      "currency": "NONE",
+      "created_at": "2026-05-24T00:00:00Z"
+    },
+    {
+      "usage_event_id": "ue_actor_legal_id",
+      "organization_id": "org_001",
+      "actor_ref": "1234567-1A",
+      "actor_type": "user",
+      "plan_code": "PROFESIONAL",
+      "billing_period": "2026-05",
+      "event_scope": "execution",
+      "event_type": "standard_query",
+      "unit": "query",
+      "quantity": 1,
+      "complexity": "SIMPLE",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "trace_id": "tr_001",
+      "answer_id": "ans_001",
+      "estimated_cost": 0,
+      "currency": "NONE",
+      "created_at": "2026-05-24T00:00:00Z"
+    },
+    {
+      "usage_event_id": "ue_budget_ref_url",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "plan_code": "PROFESIONAL",
+      "billing_period": "2026-05",
+      "event_scope": "execution",
+      "event_type": "standard_query",
+      "unit": "query",
+      "quantity": 1,
+      "complexity": "SIMPLE",
+      "cost_budget_ref": "https://example.com/private-budget",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "trace_id": "tr_001",
+      "answer_id": "ans_001",
+      "estimated_cost": 0,
+      "currency": "NONE",
+      "created_at": "2026-05-24T00:00:00Z"
+    },
+    {
+      "usage_event_id": "ue_user_service_actor_ref",
+      "organization_id": "org_001",
+      "actor_ref": "service_usage_ledger",
+      "actor_type": "user",
+      "plan_code": "PROFESIONAL",
+      "billing_period": "2026-05",
+      "event_scope": "execution",
+      "event_type": "standard_query",
+      "unit": "query",
+      "quantity": 1,
+      "complexity": "SIMPLE",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "trace_id": "tr_001",
+      "answer_id": "ans_001",
+      "estimated_cost": 0,
+      "currency": "NONE",
       "created_at": "2026-05-24T00:00:00Z"
     }
   ]

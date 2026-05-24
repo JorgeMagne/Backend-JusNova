@@ -29,7 +29,8 @@
   "properties": {
     "cost_budget_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^cb_[a-z0-9]+(?:_[a-z0-9]+)*_v[0-9]{3}$"
     },
     "cost_budget_version": {
       "type": "string",
@@ -302,7 +303,7 @@
   ],
   "x-invalid-examples": [
     {
-      "cost_budget_id": "cb_bad_plan",
+      "cost_budget_id": "cb_bad_plan_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "PROFESIONAL_400",
       "complexity": "SIMPLE",
@@ -318,7 +319,7 @@
       "async_allowed": false
     },
     {
-      "cost_budget_id": "cb_simple_async",
+      "cost_budget_id": "cb_simple_async_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "PROFESIONAL",
       "complexity": "SIMPLE",
@@ -334,7 +335,7 @@
       "async_allowed": true
     },
     {
-      "cost_budget_id": "cb_medio_credit",
+      "cost_budget_id": "cb_medio_credit_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "PRO_PLUS",
       "complexity": "MEDIO",
@@ -350,7 +351,7 @@
       "async_allowed": false
     },
     {
-      "cost_budget_id": "cb_complex_no_credit",
+      "cost_budget_id": "cb_complex_no_credit_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "ESTUDIO",
       "complexity": "COMPLEJO",
@@ -366,7 +367,7 @@
       "async_allowed": false
     },
     {
-      "cost_budget_id": "cb_research_sync",
+      "cost_budget_id": "cb_research_sync_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "ENTERPRISE",
       "complexity": "INVESTIGACION",
@@ -382,7 +383,7 @@
       "async_allowed": false
     },
     {
-      "cost_budget_id": "cb_simple_drift",
+      "cost_budget_id": "cb_simple_drift_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "PROFESIONAL",
       "complexity": "SIMPLE",
@@ -398,7 +399,7 @@
       "async_allowed": false
     },
     {
-      "cost_budget_id": "cb_legacy_calls",
+      "cost_budget_id": "cb_legacy_calls_v080",
       "cost_budget_version": "cost-budget-v0.8.0",
       "plan_code": "PROFESIONAL",
       "complexity": "SIMPLE",
@@ -413,6 +414,22 @@
       "research_credit_cost": 0,
       "async_allowed": false,
       "legacy_provider_calls": 1
+    },
+    {
+      "cost_budget_id": "https://example.com/private-budget",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 1,
+      "fetch_urls_max": 3,
+      "ocr_pages_inline_max": 0,
+      "reformulations_max": 0,
+      "tool_rounds_max": 2,
+      "time_budget_ms": 45000,
+      "output_tokens_cap": 900,
+      "research_credit_cost": 0,
+      "async_allowed": false
     }
   ],
   "x-cross-contract-policy-invalid-examples": [
