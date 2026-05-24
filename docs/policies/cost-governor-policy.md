@@ -43,7 +43,7 @@ El Cost Governor puede limitar profundidad. No puede debilitar la verdad documen
 20. En 0.8 no existen exenciones de creditos.
 21. Cualquier exencion futura requiere enum cerrado y nueva policy o ADR.
 22. Si `event_scope = execution`, `UsageEvent` debe registrar `complexity`, `cost_budget_ref` y `cost_budget_version`.
-23. Si `event_scope = organization_period`, `UsageEvent` no puede aparentar pertenecer a una consulta: `complexity`, `cost_budget_ref` y `cost_budget_version` deben estar ausentes o ser `null`.
+23. Si `event_scope = organization_period`, `UsageEvent` no puede aparentar pertenecer a una consulta: `complexity`, `cost_budget_ref`, `cost_budget_version` y refs de ejecucion deben estar ausentes o ser `null`.
 24. Si `event_scope = execution`, `UsageEvent` debe tener al menos una referencia cerrada de ejecucion: `conversation_id`, `trace_id`, `answer_id`, `retrieval_run_id`, `cost_report_id`, `model_call_id` o `tool_call_id`.
 25. Los eventos `model_input_tokens` y `model_output_tokens` deben registrar `model_call_id`.
 26. `storage_mb_day` solo se registra como `organization_period`.
