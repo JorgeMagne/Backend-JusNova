@@ -87,7 +87,9 @@ Request:
 | Campo | Regla |
 |---|---|
 | `content` | Texto del mensaje que se persiste como `Message`, no se copia a trazas. |
-| `attachments` | Solo documentos procesados con `document_id=doc_*`, `document_version_id=docv_*` y `source_ref=D#` en 0.11. |
+| `attachments` | Solo documentos procesados con `attachment_id=att_*`, `document_id=doc_*` y `document_version_id=docv_*`; el cliente no envia `source_ref`. |
+
+`source_ref` (`D#`) no es input del cliente en este endpoint. Si el `Message` persistido necesita `source_ref` por el contrato 0.9, el backend lo asigna internamente como ref local del adjunto procesado; los refs `D#` de Evidence Packs se asignan despues dentro del `evidence_pack_id` correspondiente y no son IDs globales.
 
 Response:
 

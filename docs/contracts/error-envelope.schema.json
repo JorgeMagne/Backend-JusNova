@@ -200,10 +200,14 @@
           "resource_type"
         ],
         "parent_resource_type": [
-          "parent_resource_ref"
+          "parent_resource_ref",
+          "resource_type",
+          "resource_ref"
         ],
         "parent_resource_ref": [
-          "parent_resource_type"
+          "parent_resource_type",
+          "resource_type",
+          "resource_ref"
         ]
       },
       "allOf": [
@@ -239,7 +243,9 @@
           },
           "then": {
             "required": [
-              "parent_resource_ref"
+              "parent_resource_ref",
+              "resource_type",
+              "resource_ref"
             ]
           }
         },
@@ -251,7 +257,9 @@
           },
           "then": {
             "required": [
-              "parent_resource_type"
+              "parent_resource_type",
+              "resource_type",
+              "resource_ref"
             ]
           }
         },
@@ -1369,6 +1377,20 @@
         "resource_type": "passage",
         "resource_ref": "D1:P1",
         "parent_resource_type": "evidence_pack"
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Parent context sin recurso hijo.",
+      "severity": "error",
+      "request_id": "rq_parent_only",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "parent_resource_type": "answer_version",
+        "parent_resource_ref": "av_001"
       }
     },
     {
