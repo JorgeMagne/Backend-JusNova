@@ -42,7 +42,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^case_[A-Za-z0-9_-]+$"
     },
     "title": {
       "type": [

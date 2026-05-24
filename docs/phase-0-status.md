@@ -1,13 +1,13 @@
 # Fase 0 - Status
 
-**Estado documental:** Draft  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Draft
+**Fecha:** 2026-05-22
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Fase 0 - Consolidacion tecnica, contratos y gobierno del sistema
 
 ## Estado general
 
-Fase 0 esta en ejecucion. La subfase 0.0 crea el marco documental donde viviran las decisiones, contratos, politicas, taxonomias, riesgos, preguntas abiertas y handoff a Fase 1.
+Fase 0 esta en ejecucion y su estado global permanece `Draft`. Las subfases aceptadas son vinculantes dentro de su alcance, pero no convierten la Fase 0 completa en `Accepted`.
 
 ## Regla vinculante
 
@@ -27,7 +27,7 @@ Las decisiones fuera de `docs/` no son vinculantes para implementacion. Cualquie
 | 0.7 | Trazabilidad, auditoria y versionado | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.8 | Cost Governor, planes y presupuestos | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.9 | Conversacion, memoria, documentos y OCR | Accepted | Codex / JusNova Chief Backend Architect |
-| 0.10 | Seguridad, privacidad y proveedores externos | Draft | Codex / JusNova Chief Backend Architect |
+| 0.10 | Seguridad, privacidad y proveedores externos | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.11 | Modelo de datos conceptual y APIs draft | Draft | Codex / JusNova Chief Backend Architect |
 | 0.12 | Evaluacion inicial y quality gates | Draft | Codex / JusNova Chief Backend Architect |
 | 0.13 | Plan de Fase 1, backlog y handoff | Draft | Codex / JusNova Chief Backend Architect |

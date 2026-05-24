@@ -1,8 +1,8 @@
 # Open Questions
 
-**Estado documental:** Draft  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Draft
+**Fecha:** 2026-05-22
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Registro de dudas abiertas de Fase 0
 
 ## Regla
@@ -32,7 +32,9 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 | OQ-008 | Donde vive la razon de no snapshot para una fuente usada. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto por `source.schema.json` con `snapshot_unavailable_reason` en Subfase 0.6. |
 | OQ-009 | Si cache o snapshot confirman vigencia. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `validity-policy.md` y `no-rag-launch-policy.md`. |
 | OQ-010 | Si `Conversation.title` puede usarse como memoria probatoria o fuente juridica. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `conversation.schema.json` y `memory-policy.md` en Subfase 0.9. |
-| OQ-011 | Si seguridad documental completa queda cerrada en 0.9. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto: 0.9 solo define minimo documental; Subfase 0.10 conserva privacy/security, permisos, retencion y prompt injection completos. |
+| OQ-011 | Si seguridad documental completa queda cerrada en 0.9. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto: 0.9 solo define minimo documental; Subfase 0.10 acepta privacy/security, provider boundaries, raw access y prompt injection contracts. |
+| OQ-012 | Si soporte general puede acceder a prompts, documentos, mensajes o salidas raw. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `privacy-security-policy.md`, `trace-visibility-policy.md` y `raw-access-event.schema.json`; soporte normal usa `SUPPORT_VIEW` redacted y `support_operator` no existe en `RawAccessEvent`. |
+| OQ-013 | Si llamadas externas de provider pueden quedar sin auditoria. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `provider-call-audit.schema.json`, `model-call.schema.json`, `tool-call.schema.json` y `provider-policy.md`. |
 
 ## Preguntas Blocking
 

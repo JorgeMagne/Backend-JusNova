@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-24",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.9 - Conversacion, memoria, documentos y OCR"
+    "related_decision": "Subfase 0.9 - Conversacion, memoria, documentos y OCR",
+    "amendments": [
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+    ]
   },
   "required": [
     "organization_id",
@@ -25,20 +28,28 @@
     "extraction_confidence",
     "warnings",
     "citation_eligible",
-    "created_at"
+    "created_at",
+    "document_evidence_id",
+    "prompt_injection_risks"
   ],
   "properties": {
+    "document_evidence_id": {
+      "type": "string",
+      "pattern": "^de_[A-Za-z0-9_-]+$"
+    },
     "organization_id": {
       "type": "string",
       "minLength": 1
     },
     "document_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^doc_[A-Za-z0-9_-]+$"
     },
     "document_version_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^docv_[A-Za-z0-9_-]+$"
     },
     "document_version_hash": {
       "type": "string",
@@ -115,6 +126,13 @@
     "created_at": {
       "type": "string",
       "format": "date-time"
+    },
+    "prompt_injection_risks": {
+      "type": "array",
+      "items": {
+        "$ref": "./prompt-injection-risk.schema.json"
+      },
+      "uniqueItems": true
     }
   },
   "$defs": {
@@ -311,7 +329,9 @@
       "extraction_confidence": 0.91,
       "warnings": [],
       "citation_eligible": true,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_001",
+      "prompt_injection_risks": []
     },
     {
       "organization_id": "org_001",
@@ -339,7 +359,9 @@
         "stamp_or_signature"
       ],
       "citation_eligible": false,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_002",
+      "prompt_injection_risks": []
     }
   ],
   "x-invalid-examples": [
@@ -366,7 +388,9 @@
       "extraction_confidence": 0.9,
       "warnings": [],
       "citation_eligible": true,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_bad_f_ref",
+      "prompt_injection_risks": []
     },
     {
       "organization_id": "org_001",
@@ -393,7 +417,9 @@
         "low_confidence"
       ],
       "citation_eligible": true,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_bad_low_confidence_citable",
+      "prompt_injection_risks": []
     },
     {
       "organization_id": "org_001",
@@ -418,7 +444,9 @@
       "extraction_confidence": 0.95,
       "warnings": [],
       "citation_eligible": true,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_bad_vision_reason",
+      "prompt_injection_risks": []
     },
     {
       "organization_id": "org_001",
@@ -445,7 +473,9 @@
         "ocr_noise"
       ],
       "citation_eligible": false,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_policy_low_confidence_no_warning",
+      "prompt_injection_risks": []
     },
     {
       "organization_id": "org_001",
@@ -476,7 +506,142 @@
       "extraction_confidence": 0.9,
       "warnings": [],
       "citation_eligible": true,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_bad_open_coordinates",
+      "prompt_injection_risks": []
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_missing_de_id",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 4,
+      "text": "La diligencia de notificacion fue practicada el 20 de mayo de 2026.",
+      "text_hash": "sha256:a510ad78c8409572202ac1c95fb616bfdef313fc3ffbda688a38d9e99c66d848",
+      "locator": {
+        "page": 4,
+        "article": null,
+        "section": "Diligencia de notificacion",
+        "paragraph": 1,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.91,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "prompt_injection_risks": []
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_missing_prompt_risks",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 4,
+      "text": "La diligencia de notificacion fue practicada el 20 de mayo de 2026.",
+      "text_hash": "sha256:a510ad78c8409572202ac1c95fb616bfdef313fc3ffbda688a38d9e99c66d848",
+      "locator": {
+        "page": 4,
+        "article": null,
+        "section": "Diligencia de notificacion",
+        "paragraph": 1,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.91,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_missing_prompt_risks"
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "document-001",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 4,
+      "text": "La diligencia de notificacion fue practicada el 20 de mayo de 2026.",
+      "text_hash": "sha256:a510ad78c8409572202ac1c95fb616bfdef313fc3ffbda688a38d9e99c66d848",
+      "locator": {
+        "page": 4,
+        "article": null,
+        "section": "Diligencia de notificacion",
+        "paragraph": 1,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.91,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_001",
+      "prompt_injection_risks": []
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_001",
+      "document_version_id": "version-001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 4,
+      "text": "La diligencia de notificacion fue practicada el 20 de mayo de 2026.",
+      "text_hash": "sha256:a510ad78c8409572202ac1c95fb616bfdef313fc3ffbda688a38d9e99c66d848",
+      "locator": {
+        "page": 4,
+        "article": null,
+        "section": "Diligencia de notificacion",
+        "paragraph": 1,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.91,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_001",
+      "prompt_injection_risks": []
+    },
+    {
+      "organization_id": "org_001",
+      "document_id": "doc_001",
+      "document_version_id": "docv_001",
+      "document_version_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "source_ref": "D1",
+      "passage_ref": "D1:P1",
+      "page": 4,
+      "text": "La diligencia de notificacion fue practicada el 20 de mayo de 2026.",
+      "text_hash": "sha256:a510ad78c8409572202ac1c95fb616bfdef313fc3ffbda688a38d9e99c66d848",
+      "locator": {
+        "page": 4,
+        "article": null,
+        "section": "Diligencia de notificacion",
+        "paragraph": 1,
+        "coordinates": null,
+        "url_fragment": null
+      },
+      "extraction_method": "ocr",
+      "vision_escalation_reason": null,
+      "extraction_confidence": 0.91,
+      "warnings": [],
+      "citation_eligible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "evidence-001",
+      "prompt_injection_risks": []
     }
   ],
   "x-policy-invalid-examples": [
@@ -503,7 +668,9 @@
       "extraction_confidence": 0.9,
       "warnings": [],
       "citation_eligible": true,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_policy_bad_ref_match",
+      "prompt_injection_risks": []
     },
     {
       "organization_id": "org_001",
@@ -528,7 +695,9 @@
       "extraction_confidence": 0.9,
       "warnings": [],
       "citation_eligible": true,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_policy_bad_hash",
+      "prompt_injection_risks": []
     },
     {
       "organization_id": "org_001",
@@ -553,7 +722,9 @@
       "extraction_confidence": 0.91,
       "warnings": [],
       "citation_eligible": true,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_policy_bad_document_version_hash",
+      "prompt_injection_risks": []
     },
     {
       "organization_id": "org_001",
@@ -578,7 +749,9 @@
       "extraction_confidence": 0.91,
       "warnings": [],
       "citation_eligible": true,
-      "created_at": "2026-05-24T10:00:00Z"
+      "created_at": "2026-05-24T10:00:00Z",
+      "document_evidence_id": "de_doc_policy_locator_page_mismatch",
+      "prompt_injection_risks": []
     }
   ]
 }

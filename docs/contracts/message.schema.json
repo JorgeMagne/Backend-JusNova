@@ -26,7 +26,8 @@
   "properties": {
     "message_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^msg_[A-Za-z0-9_-]+$"
     },
     "conversation_id": {
       "type": "string",
@@ -84,7 +85,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^tr_[A-Za-z0-9_-]+$"
     },
     "answer_version_ref": {
       "type": [
@@ -129,11 +131,13 @@
         },
         "document_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^doc_[A-Za-z0-9_-]+$"
         },
         "document_version_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^docv_[A-Za-z0-9_-]+$"
         },
         "source_ref": {
           "type": "string",
@@ -320,7 +324,8 @@
           },
           "trace_id": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^tr_[A-Za-z0-9_-]+$"
           },
           "answer_version_ref": {
             "type": "string",
@@ -465,6 +470,47 @@
         }
       ],
       "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "message_id": "message-001",
+      "conversation_id": "conv_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_abogado_001",
+      "actor_type": "user",
+      "role": "user",
+      "message_kind": "user_input",
+      "content": "Necesito revisar este contrato adjunto.",
+      "content_hash": "sha256:dbc1bf03c941004438cffbe3d7e6537fb6cc029e74465ea9bbbf312eff17cd60",
+      "answer_id": null,
+      "trace_id": null,
+      "answer_version_ref": null,
+      "attachments": [
+        {
+          "attachment_id": "att_001",
+          "attachment_type": "document",
+          "status": "processed",
+          "document_id": "doc_001",
+          "document_version_id": "docv_001",
+          "source_ref": "D1"
+        }
+      ],
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "message_id": "msg_bad_trace_id_prefix",
+      "conversation_id": "conv_001",
+      "organization_id": "org_001",
+      "actor_ref": "service_answer_generator",
+      "actor_type": "service",
+      "role": "assistant",
+      "message_kind": "assistant_final",
+      "content": "Con la evidencia disponible, corresponde una respuesta parcial.",
+      "content_hash": "sha256:7b89c7f81d14455e86f632c4c800618b7f0dcb35dd95616b0c873b827597603f",
+      "answer_id": "ans_001",
+      "trace_id": "trace-001",
+      "answer_version_ref": "av_001",
+      "attachments": [],
+      "created_at": "2026-05-24T10:00:10Z"
     }
   ],
   "x-policy-invalid-examples": [
@@ -568,7 +614,9 @@
         "extraction_confidence": 0.9,
         "warnings": [],
         "citation_eligible": true,
-        "created_at": "2026-05-24T10:00:00Z"
+        "created_at": "2026-05-24T10:00:00Z",
+        "document_evidence_id": "de_cross_policy_001",
+        "prompt_injection_risks": []
       }
     }
   ]

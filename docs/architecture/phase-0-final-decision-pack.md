@@ -1,8 +1,8 @@
 # Fase 0 - Final Decision Pack
 
-**Estado documental:** Draft  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Draft
+**Fecha:** 2026-05-22
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Cierre y congelamiento de Fase 0
 
 ## Proposito
@@ -209,10 +209,44 @@ Estos contratos quedan aceptados como contratos documentales de conversacion, me
 | Memory Policy | Accepted | `docs/policies/memory-policy.md` |
 | Trace Visibility Policy Message Reference Amendment | Accepted | `docs/policies/trace-visibility-policy.md` |
 
+## Taxonomias aceptadas en Subfase 0.10
+
+| Taxonomia | Estado | Archivo |
+|---|---|---|
+| Data Classification | Accepted | `docs/schemas/data-classification.yaml` |
+| Provider Registry | Accepted | `docs/schemas/provider-registry.yaml` |
+
+## Contratos aceptados en Subfase 0.10
+
+Estos contratos quedan aceptados como contratos documentales de seguridad, privacidad, boundaries de proveedores, auditoria de llamadas externas, auditoria raw y prompt injection. Esta lista no implica que auth, storage, provider SDKs, SIEM, DB ni permisos runtime ya esten implementados.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Provider Call Audit | Accepted | `docs/contracts/provider-call-audit.schema.json` |
+| Raw Access Event | Accepted | `docs/contracts/raw-access-event.schema.json` |
+| Prompt Injection Risk | Accepted | `docs/contracts/prompt-injection-risk.schema.json` |
+| Document Evidence Security Amendment | Accepted | `docs/contracts/document-evidence.schema.json` |
+| Legal Search Query Classification Amendment | Accepted | `docs/contracts/legal-search-query.schema.json` |
+| Model Call Provider Audit Amendment | Accepted | `docs/contracts/model-call.schema.json` |
+| Tool Call Provider Audit Amendment | Accepted | `docs/contracts/tool-call.schema.json` |
+| Retrieval Run Prompt Injection Amendment | Accepted | `docs/contracts/retrieval-run.schema.json` |
+| Trace Object Security Amendment | Accepted | `docs/contracts/trace-object.schema.json` |
+
+## Politicas aceptadas en Subfase 0.10
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Privacy Security Policy | Accepted | `docs/policies/privacy-security-policy.md` |
+| Provider Policy | Accepted | `docs/policies/provider-policy.md` |
+| Prompt Injection Policy | Accepted | `docs/policies/prompt-injection-policy.md` |
+| Document Security Policy Amendment | Accepted | `docs/policies/document-security-policy.md` |
+| Trace Visibility Policy Security Amendment | Accepted | `docs/policies/trace-visibility-policy.md` |
+| Security Checklist Phase 1 | Accepted | `docs/quality/security-checklist-phase-1.md` |
+
 ## Dependencias posteriores preservadas
 
 - Source Registry schema completo queda delegado a subfases posteriores y Fase 4.
-- Privacy/security policy completa, retencion, permisos finales, provider boundaries, prompt injection policy y acceso a material crudo quedan delegados a Subfase 0.10.
+- Runtime de auth, permisos finales, retention automation, SIEM, storage real, provider SDKs y enforcement productivo quedan delegados a Fase 1 y fases posteriores.
 - Runtime de conversacion, storage documental, OCR worker, busqueda documental y memoria persistente quedan delegados a Fase 1 y fases posteriores.
 - Runtime de CostGovernor, billing y UsageLedger quedan delegados a Fase 1; los contratos y policies documentales quedaron aceptados en Subfase 0.8.
 - Fase 0 global permanece en `Draft` hasta completar 0.1 a 0.14.

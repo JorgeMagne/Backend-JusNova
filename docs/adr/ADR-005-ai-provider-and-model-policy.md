@@ -1,9 +1,9 @@
 # ADR-005 - AI Provider And Model Policy
 
-**Estado:** Accepted  
-**Estado documental:** Accepted  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado:** Accepted
+**Estado documental:** Accepted
+**Fecha:** 2026-05-24
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Proveedor IA inicial y encapsulamiento de modelos
 
 ## Contexto
@@ -30,7 +30,7 @@ Acoplar el core a un SDK concreto o permitir que tareas criticas dependan solo d
 
 ## Decision
 
-OpenAI sera el proveedor IA principal inicial, encapsulado detras de `ModelProvider`.
+OpenAI sera el proveedor IA principal inicial, encapsulado detras de `ModelProvider` y sujeto a `provider-registry.yaml`, `data-classification.yaml` y `ProviderCallAudit`.
 
 ## Justificacion
 
@@ -58,10 +58,13 @@ OpenAI cubre razonamiento, structured outputs, tool use, vision selectiva y web 
 - File ownership.
 - Trace persistence.
 - Provider logging.
+- Provider registry.
+- Data classification.
+- Raw access approval.
 
 ## Dependencias posteriores
 
-- Subfase 0.10 debe completar provider policy.
+- Subfase 0.10 acepta provider policy, provider registry, provider call audit y clasificacion de datos.
 - Fase 1 debe crear `ModelProvider` stub y prompt version registry.
 - Fases posteriores deben medir modelos con evals.
 
@@ -82,6 +85,8 @@ OpenAI cubre razonamiento, structured outputs, tool use, vision selectiva y web 
 ## Mitigaciones
 
 - Provider interface.
+- Provider registry con feature flag y kill switch.
+- `ProviderCallAudit` para llamadas externas.
 - Prompt versions.
 - Data minimization.
 - Trace de model calls.
@@ -93,6 +98,8 @@ OpenAI cubre razonamiento, structured outputs, tool use, vision selectiva y web 
 - Existe interfaz `ModelProvider` en Fase 1.
 - Ningun modulo core se acopla al SDK concreto.
 - Hay politica de datos para proveedores.
+- Toda llamada externa de modelo tiene `ProviderCallAudit`.
+- `training_use_allowed = false` es obligatorio en registry y audit.
 - Hay criterios de evaluacion antes de cambiar modelo.
 
 ## Momento de revision
@@ -102,4 +109,3 @@ Revisar al implementar Fase 1, antes de beta, y cuando costo por respuesta, late
 ## Consecuencias
 
 El proveedor IA es reemplazable por diseno. Las reglas juridicas criticas viven en contratos, validadores y auditoria, no solo en prompts.
-

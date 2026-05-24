@@ -86,4 +86,4 @@ No implementa motor de memoria, embeddings, recuperacion contextual ni permisos 
 
 ## Momento de revision
 
-Revisar al implementar memoria persistente, al definir embeddings o recuperacion contextual, al cerrar Subfase 0.10 y cuando se agreguen nuevas jurisdicciones.
+Revisar al implementar memoria persistente, al definir embeddings o recuperacion contextual, al cambiar privacy-security/provider boundaries y cuando se agreguen nuevas jurisdicciones.

@@ -8,10 +8,14 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
+    "amendments": [
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+    ]
   },
   "required": [
     "model_call_id",
+    "organization_id",
     "purpose",
     "provider",
     "model",
@@ -20,10 +24,17 @@
     "token_usage",
     "started_at",
     "completed_at",
-    "status"
+    "status",
+    "external_provider_call",
+    "provider_call_audit_id"
   ],
   "properties": {
     "model_call_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^mc_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
       "type": "string",
       "minLength": 1
     },
@@ -120,6 +131,16 @@
         "policy_blocked",
         null
       ]
+    },
+    "external_provider_call": {
+      "type": "boolean"
+    },
+    "provider_call_audit_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^pca_[A-Za-z0-9_-]+$"
     }
   },
   "additionalProperties": false,
@@ -234,6 +255,45 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "external_provider_call": {
+            "const": true
+          }
+        },
+        "required": [
+          "external_provider_call"
+        ]
+      },
+      "then": {
+        "properties": {
+          "provider_call_audit_id": {
+            "type": "string",
+            "pattern": "^pca_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "external_provider_call": {
+            "const": false
+          }
+        },
+        "required": [
+          "external_provider_call"
+        ]
+      },
+      "then": {
+        "properties": {
+          "provider_call_audit_id": {
+            "type": "null"
+          }
+        }
+      }
     }
   ],
   "examples": [
@@ -253,7 +313,10 @@
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success",
-      "error_code": null
+      "error_code": null,
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_001",
+      "organization_id": "org_001"
     },
     {
       "model_call_id": "mc_002",
@@ -271,7 +334,10 @@
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:01Z",
       "status": "error",
-      "error_code": "rate_limited"
+      "error_code": "rate_limited",
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_002",
+      "organization_id": "org_001"
     }
   ],
   "x-invalid-examples": [
@@ -285,7 +351,10 @@
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success",
-      "error_code": null
+      "error_code": null,
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_003",
+      "organization_id": "org_001"
     },
     {
       "model_call_id": "mc_004",
@@ -298,7 +367,10 @@
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success",
-      "error_code": "provider_error"
+      "error_code": "provider_error",
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_004",
+      "organization_id": "org_001"
     },
     {
       "model_call_id": "mc_005",
@@ -309,7 +381,10 @@
       "input_hash": "sha256:56389b93c4775d163d9c2b984f3d1c6a23045d0ff9eb0acffb4a41546585a0b2",
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
-      "status": "timeout"
+      "status": "timeout",
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_005",
+      "organization_id": "org_001"
     },
     {
       "model_call_id": "mc_006",
@@ -322,7 +397,10 @@
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "error",
-      "error_code": "provider_error"
+      "error_code": "provider_error",
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_006",
+      "organization_id": "org_001"
     },
     {
       "model_call_id": "mc_007",
@@ -335,7 +413,10 @@
       "raw_prompt": "texto sensible no permitido",
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
-      "status": "success"
+      "status": "success",
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_007",
+      "organization_id": "org_001"
     },
     {
       "model_call_id": "mc_token_usage_missing_001",
@@ -348,7 +429,10 @@
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success",
-      "error_code": null
+      "error_code": null,
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_token_usage_missing_001",
+      "organization_id": "org_001"
     },
     {
       "model_call_id": "mc_hash_raw_001",
@@ -366,7 +450,93 @@
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success",
-      "error_code": null
+      "error_code": null,
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_hash_raw_001",
+      "organization_id": "org_001"
+    },
+    {
+      "model_call_id": "mc_external_true_missing_audit",
+      "purpose": "answer_generation",
+      "provider": "openai",
+      "model": "gpt-5",
+      "prompt_version": "answer-generation-v1",
+      "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+      "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+      "token_usage": {
+        "input_tokens": 1200,
+        "output_tokens": 700,
+        "total_tokens": 1900
+      },
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:03Z",
+      "status": "success",
+      "error_code": null,
+      "external_provider_call": true,
+      "provider_call_audit_id": null,
+      "organization_id": "org_001"
+    },
+    {
+      "model_call_id": "mc_external_false_with_audit",
+      "purpose": "answer_generation",
+      "provider": "openai",
+      "model": "gpt-5",
+      "prompt_version": "answer-generation-v1",
+      "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+      "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+      "token_usage": {
+        "input_tokens": 1200,
+        "output_tokens": 700,
+        "total_tokens": 1900
+      },
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:03Z",
+      "status": "success",
+      "error_code": null,
+      "external_provider_call": false,
+      "provider_call_audit_id": "pca_should_not_exist",
+      "organization_id": "org_001"
+    },
+    {
+      "model_call_id": "mc_missing_organization_id",
+      "purpose": "answer_generation",
+      "provider": "openai",
+      "model": "gpt-5",
+      "prompt_version": "answer-generation-v1",
+      "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+      "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+      "token_usage": {
+        "input_tokens": 1200,
+        "output_tokens": 700,
+        "total_tokens": 1900
+      },
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:03Z",
+      "status": "success",
+      "error_code": null,
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_001"
+    },
+    {
+      "model_call_id": "model_001",
+      "purpose": "answer_generation",
+      "provider": "openai",
+      "model": "gpt-5",
+      "prompt_version": "answer-generation-v1",
+      "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+      "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+      "token_usage": {
+        "input_tokens": 1200,
+        "output_tokens": 700,
+        "total_tokens": 1900
+      },
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:03Z",
+      "status": "success",
+      "error_code": null,
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_001",
+      "organization_id": "org_001"
     }
   ],
   "x-policy-invalid-examples": [
@@ -386,7 +556,52 @@
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:03Z",
       "status": "success",
-      "error_code": null
+      "error_code": null,
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_mc_policy_001",
+      "organization_id": "org_001"
+    },
+    {
+      "model_call_id": "mc_external_true_unknown_audit_ref",
+      "purpose": "answer_generation",
+      "provider": "openai",
+      "model": "gpt-5",
+      "prompt_version": "answer-generation-v1",
+      "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+      "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+      "token_usage": {
+        "input_tokens": 1200,
+        "output_tokens": 700,
+        "total_tokens": 1900
+      },
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:03Z",
+      "status": "success",
+      "error_code": null,
+      "external_provider_call": true,
+      "provider_call_audit_id": "pca_unknown",
+      "organization_id": "org_001"
+    },
+    {
+      "model_call_id": "mc_policy_openai_external_false",
+      "purpose": "answer_generation",
+      "provider": "openai",
+      "model": "gpt-5",
+      "prompt_version": "answer-generation-v1",
+      "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+      "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+      "token_usage": {
+        "input_tokens": 1200,
+        "output_tokens": 700,
+        "total_tokens": 1900
+      },
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:03Z",
+      "status": "success",
+      "error_code": null,
+      "external_provider_call": false,
+      "provider_call_audit_id": null,
+      "organization_id": "org_001"
     }
   ]
 }

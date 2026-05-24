@@ -13,7 +13,7 @@ Definir cuando una respuesta juridica cambia de version y prohibir sobrescritura
 
 Aplica a respuestas juridicas finales, respuestas parcialmente abstentas, reparaciones de cita, actualizaciones de evidencia, revalidaciones de vigencia, correcciones por feedback, exportaciones formales y cambios de claims.
 
-No implementa persistencia, UI de historial, permisos finales ni retencion completa; esos puntos se cierran en fases posteriores y en Subfase 0.10.
+No implementa persistencia, UI de historial, permisos finales ni retencion completa. Subfase 0.10 define contratos documentales de seguridad/privacy/raw access; enforcement runtime queda para Fase 1 o fases posteriores.
 
 ## Definiciones
 

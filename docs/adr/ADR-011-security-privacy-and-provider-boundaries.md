@@ -1,9 +1,9 @@
 # ADR-011 - Security, Privacy And Provider Boundaries
 
-**Estado:** Accepted  
-**Estado documental:** Accepted  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado:** Accepted
+**Estado documental:** Accepted
+**Fecha:** 2026-05-24
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Seguridad, privacidad y limites de proveedores
 
 ## Contexto
@@ -30,7 +30,7 @@ Agregar seguridad despues obligaria a rehacer datos, storage, logs y flujos de p
 
 ## Decision
 
-El diseno asumira documentos sensibles, secreto profesional y separacion por organizacion desde el inicio.
+El diseno asumira documentos sensibles, secreto profesional y separacion por organizacion desde el inicio. Subfase 0.10 acepta clasificacion de datos, registry de providers, auditoria de llamadas externas, auditoria de acceso raw, contrato de riesgos de prompt injection y checklist minimo de seguridad para Fase 1.
 
 ## Justificacion
 
@@ -47,13 +47,20 @@ La seguridad es estructural en datos, storage, logs, providers y prompts. No pue
 - Registro de salidas a proveedores.
 - Prompt injection policy para documentos y fuentes externas.
 - Retencion y eliminacion documentadas.
+- Data classification con ranks de sensibilidad y reglas por familia de provider.
+- Herencia obligatoria de clasificacion: todo payload o artefacto derivado conserva la clase con mayor `sensitivity_rank` de sus entradas salvo regla contractual explicita.
+- Provider registry con feature flags, kill switches, allowlists de clases y `training_use_allowed = false`.
+- `ProviderCallAudit` para toda llamada externa.
+- `RawAccessEvent` para acceso raw/elevado; `support_operator` queda fuera de ese contrato.
+- `PromptInjectionRisk` como contrato compartido entre documentos, retrieval y trazas.
 
 ## Dependencias posteriores
 
 - Subfase 0.9 crea una `document-security-policy.md` minima para documentos, mensajes y evidencia documental sin cerrar permisos, retencion ni controles completos.
-- Subfase 0.10 debe crear privacy/security policy, provider policy, prompt injection policy, data classification y security checklist.
+- Subfase 0.10 acepta privacy/security policy, provider policy, prompt injection policy, data classification, provider registry, `ProviderCallAudit`, `RawAccessEvent`, `PromptInjectionRisk` y security checklist.
 - Fase 1 debe crear estructura de ownership en modelos base.
-- Fase 11 implementara hardening completo.
+- Fase 1 debe implementar enforcement runtime, storage privado, secrets/config validation, provider adapters y raw access workflows.
+- Fase 11 implementara hardening completo si el roadmap mantiene esa etapa.
 
 ## No afirma todavia
 
@@ -81,13 +88,15 @@ La seguridad es estructural en datos, storage, logs, providers y prompts. No pue
 
 - Subfase 0.9 modela `organization_id`, hashes y refs internas para conversacion, mensajes, memoria y evidencia documental.
 - Subfase 0.10 crea checklist de seguridad de Fase 1.
+- `data-classification.yaml` y `provider-registry.yaml` quedan aceptados.
+- `provider-call-audit.schema.json`, `raw-access-event.schema.json` y `prompt-injection-risk.schema.json` quedan aceptados.
 - No se permite logging de documentos completos.
 - Toda salida a proveedor externo se registra.
 - Documentos y HTML se tratan como datos no confiables.
 
 ## Momento de revision
 
-Revisar al cerrar Subfase 0.10, al completar Fase 1, antes de beta y ante cualquier cambio de proveedor, storage, logging o modelo de tenancy.
+Revisar al completar Fase 1, antes de beta y ante cualquier cambio de proveedor, storage, logging, raw access, clasificacion de datos o modelo de tenancy.
 
 ## Consecuencias
 

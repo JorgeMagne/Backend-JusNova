@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/prompt-injection-risk.schema.json",
+  "title": "PromptInjectionRisk",
+  "description": "Riesgo cerrado de prompt injection detectado en evidencia, documentos, mensajes o retrieval. No almacena texto crudo malicioso.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-24",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+  },
+  "required": [
+    "risk_code",
+    "detected_in_ref",
+    "classification",
+    "severity",
+    "detected_at",
+    "handling"
+  ],
+  "properties": {
+    "risk_code": {
+      "enum": [
+        "instruction_override_attempt",
+        "system_prompt_extraction",
+        "tool_use_instruction",
+        "credential_or_secret_request",
+        "citation_manipulation",
+        "data_exfiltration_request",
+        "html_script_or_hidden_text",
+        "external_link_instruction"
+      ]
+    },
+    "detected_in_ref": {
+      "type": "string",
+      "anyOf": [
+        {
+          "pattern": "^D[0-9]+:P[0-9]+$"
+        },
+        {
+          "pattern": "^F[0-9]+:P[0-9]+$"
+        },
+        {
+          "pattern": "^msg_[A-Za-z0-9_-]+$"
+        },
+        {
+          "pattern": "^rr_[A-Za-z0-9_-]+$"
+        },
+        {
+          "pattern": "^url_hash:sha256:[A-Fa-f0-9]{64}$"
+        },
+        {
+          "pattern": "^source_hash:sha256:[A-Fa-f0-9]{64}$"
+        }
+      ]
+    },
+    "classification": {
+      "enum": [
+        "PUBLIC_LEGAL_SOURCE",
+        "USER_DOCUMENT_CONFIDENTIAL",
+        "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+        "USER_MESSAGE_CONFIDENTIAL",
+        "CASE_MEMORY_CONFIDENTIAL",
+        "DERIVED_LEGAL_QUERY_RESTRICTED",
+        "PUBLIC_LEGAL_QUERY",
+        "INTERNAL_TRACE_RESTRICTED",
+        "BILLING_USAGE",
+        "PROVIDER_OPERATIONAL_METADATA",
+        "SECURITY_AUDIT_RESTRICTED"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "blocking"
+      ]
+    },
+    "detected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "handling": {
+      "enum": [
+        "ignored_as_instruction",
+        "used_as_evidence_only",
+        "excluded_from_evidence",
+        "requires_review",
+        "blocked"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "detected_in_ref": {
+            "pattern": "^D[0-9]+:P[0-9]+$"
+          }
+        },
+        "required": [
+          "detected_in_ref"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "DOCUMENT_EVIDENCE_CONFIDENTIAL"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "detected_in_ref": {
+            "pattern": "^F[0-9]+:P[0-9]+$"
+          }
+        },
+        "required": [
+          "detected_in_ref"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "PUBLIC_LEGAL_SOURCE"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "detected_in_ref": {
+            "pattern": "^msg_[A-Za-z0-9_-]+$"
+          }
+        },
+        "required": [
+          "detected_in_ref"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "USER_MESSAGE_CONFIDENTIAL"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "detected_in_ref": {
+            "pattern": "^rr_[A-Za-z0-9_-]+$"
+          }
+        },
+        "required": [
+          "detected_in_ref"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "INTERNAL_TRACE_RESTRICTED"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "detected_in_ref": {
+            "pattern": "^(url_hash|source_hash):sha256:[A-Fa-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "detected_in_ref"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "enum": [
+              "PUBLIC_LEGAL_SOURCE",
+              "INTERNAL_TRACE_RESTRICTED"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "risk_code": "instruction_override_attempt",
+      "detected_in_ref": "F1:P1",
+      "classification": "PUBLIC_LEGAL_SOURCE",
+      "severity": "medium",
+      "detected_at": "2026-05-24T10:00:00Z",
+      "handling": "ignored_as_instruction"
+    },
+    {
+      "risk_code": "tool_use_instruction",
+      "detected_in_ref": "D1:P1",
+      "classification": "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+      "severity": "blocking",
+      "detected_at": "2026-05-24T10:00:00Z",
+      "handling": "blocked"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "risk_code": "ignore_everything",
+      "detected_in_ref": "F1:P1",
+      "classification": "PUBLIC_LEGAL_SOURCE",
+      "severity": "medium",
+      "detected_at": "2026-05-24T10:00:00Z",
+      "handling": "ignored_as_instruction"
+    },
+    {
+      "risk_code": "instruction_override_attempt",
+      "detected_in_ref": "https://example.com/raw",
+      "classification": "PUBLIC_LEGAL_SOURCE",
+      "severity": "medium",
+      "detected_at": "2026-05-24T10:00:00Z",
+      "handling": "ignored_as_instruction"
+    },
+    {
+      "risk_code": "instruction_override_attempt",
+      "detected_in_ref": "D1:P1",
+      "classification": "PUBLIC_LEGAL_SOURCE",
+      "severity": "medium",
+      "detected_at": "2026-05-24T10:00:00Z",
+      "handling": "ignored_as_instruction"
+    },
+    {
+      "risk_code": "instruction_override_attempt",
+      "detected_in_ref": "F1:P1",
+      "classification": "PUBLIC_LEGAL_SOURCE",
+      "severity": "critical",
+      "detected_at": "2026-05-24T10:00:00Z",
+      "handling": "ignored_as_instruction"
+    },
+    {
+      "risk_code": "instruction_override_attempt",
+      "detected_in_ref": "F1:P1",
+      "classification": "PUBLIC_LEGAL_SOURCE",
+      "severity": "medium",
+      "detected_at": "2026-05-24T10:00:00Z",
+      "handling": "ignored"
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "risk_code": "instruction_override_attempt",
+      "detected_in_ref": "F1:P1",
+      "classification": "PUBLIC_LEGAL_SOURCE",
+      "severity": "blocking",
+      "detected_at": "2026-05-24T10:00:00Z",
+      "handling": "used_as_evidence_only"
+    }
+  ]
+}

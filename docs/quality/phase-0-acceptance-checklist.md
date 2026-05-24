@@ -1,8 +1,8 @@
 # Fase 0 - Acceptance Checklist
 
-**Estado documental:** Draft  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Draft
+**Fecha:** 2026-05-22
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Gates de cierre de Fase 0
 
 ## Proposito
@@ -40,8 +40,11 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | `budgets.yaml` aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/schemas/budgets.yaml` |
 | Plan base 400 Bs reflejado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/commercial-plans-v0.md` |
 | TraceObject aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json` |
-| Provider Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/provider-policy.md` |
-| Security/Privacy Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/privacy-security-policy.md` |
+| Provider Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/provider-policy.md` |
+| Security/Privacy Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/privacy-security-policy.md` |
+| Prompt Injection Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/prompt-injection-policy.md` |
+| Data Classification aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/schemas/data-classification.yaml` |
+| Provider Registry aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/schemas/provider-registry.yaml` |
 | Evaluation Plan v0 aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/quality/evaluation-plan-v0.md` |
 | Beta Readiness Gates definidos | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/quality/beta-readiness-gates.md` |
 | Market Readiness Gates definidos | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/quality/market-readiness-gates.md` |
@@ -209,4 +212,24 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Fixtures cross-contract con `trace_object` actualizados tras enmienda 0.9 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-version.schema.json`, `docs/contracts/abstention-render.schema.json`, `docs/contracts/cost-budget.schema.json` |
 | `trace-visibility-policy.md` registra visibilidad de refs de mensajes sin contenido | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/trace-visibility-policy.md` |
 | ADR-006 registra document security minima en 0.9 y seguridad completa en 0.10 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-006-document-ocr-policy.md` |
+| Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.10
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| `data-classification.yaml` creado con ranks, visibilidad y reglas por provider family | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/schemas/data-classification.yaml` |
+| `provider-registry.yaml` creado con providers canonicos, feature flags, kill switches y no training use | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/schemas/provider-registry.yaml` |
+| `provider-call-audit.schema.json` creado y aceptado con `x-policy-invalid-examples` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/provider-call-audit.schema.json` |
+| `raw-access-event.schema.json` creado y aceptado sin `support_operator` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/raw-access-event.schema.json` |
+| `prompt-injection-risk.schema.json` creado como contrato compartido | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/prompt-injection-risk.schema.json` |
+| `LegalSearchQuery` exige `query_classification` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-query.schema.json` |
+| `ModelCall` y `ToolCall` exigen `external_provider_call` y `provider_call_audit_id` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/model-call.schema.json`, `docs/contracts/tool-call.schema.json` |
+| `DocumentEvidence` exige `document_evidence_id` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/document-evidence.schema.json` |
+| `DocumentEvidence.prompt_injection_risks[]` es requerido y `[]` significa evaluado sin riesgos detectados | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/document-evidence.schema.json`, `docs/policies/document-security-policy.md`, `docs/policies/prompt-injection-policy.md` |
+| `RetrievalRun` y `TraceObject` registran `prompt_injection_risks[]` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/retrieval-run.schema.json`, `docs/contracts/trace-object.schema.json` |
+| `privacy-security-policy.md` define matriz de visibilidad por actor | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/privacy-security-policy.md` |
+| `provider-policy.md`, `provider-interfaces.md` y `architecture-overview.md` comparten las 11 familias canonicas | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/provider-policy.md`, `docs/contracts/provider-interfaces.md`, `docs/architecture/architecture-overview.md` |
+| `prompt-injection-policy.md` trata documentos, HTML, snippets y OCR como datos no confiables | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/prompt-injection-policy.md` |
+| `security-checklist-phase-1.md` creado para handoff minimo de seguridad | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/security-checklist-phase-1.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |

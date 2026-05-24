@@ -1,13 +1,14 @@
 # Provider Interfaces - Live Legal Search
 
 **Estado documental:** Accepted
-**Fecha:** 2026-05-22
+**Fecha:** 2026-05-24
 **Responsable:** Codex / JusNova Chief Backend Architect
-**Decision relacionada:** Subfase 0.5 - Live Legal Search Engine Contract
+**Decision relacionada:** Subfase 0.5 - Live Legal Search Engine Contract; Subfase 0.10 - Security, Privacy and Provider Boundaries
+**Enmiendas:** Subfase 0.10 - provider registry, provider audit and canonical provider families
 
 ## Proposito
 
-Definir las interfaces documentales que Fase 4 implementara para discovery, adaptadores oficiales, fetch, extraccion, snapshots y ranking. El core no debe importar SDKs concretos de proveedores.
+Definir las interfaces documentales que Fase 4 implementara para modelos, discovery, adaptadores oficiales, fetch, extraccion, OCR, embeddings, storage, workflow, snapshots y ranking. El core no debe importar SDKs concretos de proveedores.
 
 ## Reglas
 
@@ -16,24 +17,49 @@ Definir las interfaces documentales que Fase 4 implementara para discovery, adap
 3. OpenAI Web Search se modela como discovery opcional con `web_search`, no como fuente final ni como cita final.
 4. JusNova debe hacer fetch, extraction y snapshot propio antes de construir Evidence Pack.
 5. Los presupuestos usados aqui son `SearchBudget` o `RetrievalBudget`; el presupuesto comercial del Cost Governor se define en Subfase 0.8.
+6. Toda llamada externa a provider debe crear `ProviderCallAudit`.
+7. Todo provider debe estar declarado en `provider-registry.yaml`, con `training_use_allowed = false`.
+8. Ningun provider puede recibir clases de datos fuera de su allowlist y de `data-classification.yaml`.
+9. `SourceFetcher` es alias historico de `FetchProvider`; `EvidenceExtractor` es alias historico de `ExtractionProvider`.
 
 ## Interfaces
 
 ```python
 class ProviderMetadata:
     name: str
-    provider_type: str
+    provider_family: str
     enabled_feature_flag: str
+    kill_switch: str
     default_timeout_ms: int
     retry_policy: "RetryPolicy"
     error_mapping: dict[str, str]
-    data_received: list[str]
+    data_received_classes: list[str]
+    data_returned_classes: list[str]
+    external_call: bool
+    training_use_allowed: bool
+    region_or_residency: str
 ```
 
 ```python
 class BaseProvider:
     metadata: ProviderMetadata
 ```
+
+## Familias canonicas
+
+La lista canonica debe coincidir exactamente con `provider-policy.md`, `provider-registry.yaml` y `architecture-overview.md`.
+
+- `ModelProvider`
+- `SearchDiscoveryProvider`
+- `OfficialSourceAdapter`
+- `FetchProvider`
+- `ExtractionProvider`
+- `OCRProvider`
+- `EmbeddingProvider`
+- `StorageProvider`
+- `WorkflowProvider`
+- `SnapshotProvider`
+- `LegalRankingProvider`
 
 ```python
 class SearchBudget:
@@ -59,6 +85,17 @@ class SearchDiscoveryProvider(BaseProvider):
 ```
 
 ```python
+class ModelProvider(BaseProvider):
+    def generate(
+        self,
+        prompt_version: str,
+        bounded_context_refs: list[str],
+        timeout_ms: int,
+    ) -> "ModelProviderResult":
+        ...
+```
+
+```python
 class OfficialSourceAdapter(BaseProvider):
     source_name: str
     supported_entity_types: list[str]
@@ -78,7 +115,7 @@ class OfficialSourceAdapter(BaseProvider):
 ```
 
 ```python
-class SourceFetcher(BaseProvider):
+class FetchProvider(BaseProvider):
     def fetch(
         self,
         url: str,
@@ -88,12 +125,51 @@ class SourceFetcher(BaseProvider):
 ```
 
 ```python
-class EvidenceExtractor(BaseProvider):
+class ExtractionProvider(BaseProvider):
     def extract(
         self,
         fetched_source: "FetchedSource",
         query: "LegalSearchQuery",
     ) -> list["EvidencePassage"]:
+        ...
+```
+
+```python
+class OCRProvider(BaseProvider):
+    def extract_text(
+        self,
+        document_ref: str,
+        page: int,
+    ) -> list["DocumentEvidence"]:
+        ...
+```
+
+```python
+class EmbeddingProvider(BaseProvider):
+    def embed(
+        self,
+        fragment_refs: list[str],
+    ) -> "EmbeddingBatchResult":
+        ...
+```
+
+```python
+class StorageProvider(BaseProvider):
+    def put_private_object(
+        self,
+        object_ref: str,
+        classification: str,
+    ) -> "StoredObjectRef":
+        ...
+```
+
+```python
+class WorkflowProvider(BaseProvider):
+    def enqueue(
+        self,
+        workflow_name: str,
+        payload_ref: str,
+    ) -> "WorkflowRunRef":
         ...
 ```
 
@@ -132,9 +208,20 @@ class LegalRankingProvider(BaseProvider):
 | SearchDiscoveryProvider | SerpAPIDiscoveryProviderCandidate | Opcional |
 | SearchDiscoveryProvider | ManualCuratedRoutesProvider | Opcional |
 
+## Alias historicos
+
+Texto canonico para validadores documentales: SourceFetcher = FetchProvider; EvidenceExtractor = ExtractionProvider.
+
+| Alias historico | Familia canonica |
+|---|---|
+| `SourceFetcher` | `FetchProvider` |
+| `EvidenceExtractor` | `ExtractionProvider` |
+
 ## Criterios de aceptacion
 
 - El core puede cambiar o apagar providers sin cambiar contratos internos.
 - Ningun SDK externo aparece como dependencia directa del core.
 - Las citas finales no provienen del provider de discovery; provienen de pasajes extraidos y auditables.
 - Los errores de provider se registran como parte de `RetrievalRun`.
+- Las llamadas externas se concilian con `ProviderCallAudit`.
+- La familia y el nombre de provider de cada llamada resuelven contra `provider-registry.yaml`.

@@ -8,24 +8,39 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract",
+    "amendments": [
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+    ]
   },
   "required": [
     "query_id",
+    "organization_id",
     "raw_query",
     "jurisdiction",
     "intents",
     "required_source_types",
-    "budget"
+    "budget",
+    "query_classification"
   ],
   "properties": {
     "query_id": {
       "type": "string",
       "minLength": 1
     },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1
+    },
     "raw_query": {
       "type": "string",
       "minLength": 1
+    },
+    "query_classification": {
+      "enum": [
+        "PUBLIC_LEGAL_QUERY",
+        "DERIVED_LEGAL_QUERY_RESTRICTED"
+      ]
     },
     "normalized_query": {
       "type": "string"
@@ -270,7 +285,9 @@
         "max_results_per_provider": 10,
         "tool_rounds_max": 3,
         "timeout_ms": 90000
-      }
+      },
+      "query_classification": "PUBLIC_LEGAL_QUERY",
+      "organization_id": "org_001"
     }
   ],
   "x-invalid-examples": [
@@ -291,7 +308,9 @@
         "max_results_per_provider": 10,
         "tool_rounds_max": 3,
         "timeout_ms": 90000
-      }
+      },
+      "query_classification": "PUBLIC_LEGAL_QUERY",
+      "organization_id": "org_001"
     },
     {
       "query_id": "q_meta_001",
@@ -308,7 +327,9 @@
         "max_results_per_provider": 0,
         "tool_rounds_max": 0,
         "timeout_ms": 1000
-      }
+      },
+      "query_classification": "PUBLIC_LEGAL_QUERY",
+      "organization_id": "org_001"
     },
     {
       "query_id": "q_legal_003",
@@ -327,7 +348,9 @@
         "max_results_per_provider": 10,
         "tool_rounds_max": 1,
         "timeout_ms": 90000
-      }
+      },
+      "query_classification": "PUBLIC_LEGAL_QUERY",
+      "organization_id": "org_001"
     },
     {
       "query_id": "q_legal_004",
@@ -346,7 +369,289 @@
         "max_results_per_provider": 0,
         "tool_rounds_max": 0,
         "timeout_ms": 1000
+      },
+      "query_classification": "PUBLIC_LEGAL_QUERY",
+      "organization_id": "org_001"
+    },
+    {
+      "query_id": "q_bad_classification_billing_usage",
+      "raw_query": "Busca jurisprudencia del TCP sobre accion de amparo por debido proceso.",
+      "normalized_query": "jurisprudencia tcp accion de amparo debido proceso",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "CONSTITUCIONAL"
+      ],
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "required_source_types": [
+        "jurisprudencia"
+      ],
+      "entities": [
+        {
+          "entity_id": "ent_001",
+          "entity_type": "institucion",
+          "value": "Tribunal Constitucional Plurinacional",
+          "number": null,
+          "year": null,
+          "authority": "TCP",
+          "confidence": 0.95,
+          "needs_disambiguation": false
+        }
+      ],
+      "date_constraints": {
+        "from": null,
+        "to": null,
+        "as_of": "2026-05-22"
+      },
+      "must_verify_validity": false,
+      "allowed_domains": [
+        "tcpbolivia.bo"
+      ],
+      "blocked_domains": [],
+      "budget": {
+        "discovery_calls_max": 2,
+        "source_fetches_max": 6,
+        "official_adapter_calls_max": 2,
+        "max_results_per_provider": 10,
+        "tool_rounds_max": 3,
+        "timeout_ms": 90000
+      },
+      "query_classification": "BILLING_USAGE",
+      "organization_id": "org_001"
+    },
+    {
+      "query_id": "q_bad_public_doc_analysis",
+      "raw_query": "Busca jurisprudencia del TCP sobre accion de amparo por debido proceso.",
+      "normalized_query": "jurisprudencia tcp accion de amparo debido proceso",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "CONSTITUCIONAL"
+      ],
+      "intents": [
+        "DOC_ANALYSIS"
+      ],
+      "required_source_types": [
+        "documento_usuario"
+      ],
+      "entities": [
+        {
+          "entity_id": "ent_001",
+          "entity_type": "institucion",
+          "value": "Tribunal Constitucional Plurinacional",
+          "number": null,
+          "year": null,
+          "authority": "TCP",
+          "confidence": 0.95,
+          "needs_disambiguation": false
+        }
+      ],
+      "date_constraints": {
+        "from": null,
+        "to": null,
+        "as_of": "2026-05-22"
+      },
+      "must_verify_validity": false,
+      "allowed_domains": [
+        "tcpbolivia.bo"
+      ],
+      "blocked_domains": [],
+      "budget": {
+        "discovery_calls_max": 2,
+        "source_fetches_max": 6,
+        "official_adapter_calls_max": 2,
+        "max_results_per_provider": 10,
+        "tool_rounds_max": 3,
+        "timeout_ms": 90000
+      },
+      "query_classification": "PUBLIC_LEGAL_QUERY",
+      "organization_id": "org_001"
+    },
+    {
+      "query_id": "q_bad_public_user_document_source",
+      "raw_query": "Busca jurisprudencia del TCP sobre accion de amparo por debido proceso.",
+      "normalized_query": "jurisprudencia tcp accion de amparo debido proceso",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "CONSTITUCIONAL"
+      ],
+      "intents": [
+        "NORMATIVA"
+      ],
+      "required_source_types": [
+        "documento_usuario"
+      ],
+      "entities": [
+        {
+          "entity_id": "ent_001",
+          "entity_type": "institucion",
+          "value": "Tribunal Constitucional Plurinacional",
+          "number": null,
+          "year": null,
+          "authority": "TCP",
+          "confidence": 0.95,
+          "needs_disambiguation": false
+        }
+      ],
+      "date_constraints": {
+        "from": null,
+        "to": null,
+        "as_of": "2026-05-22"
+      },
+      "must_verify_validity": false,
+      "allowed_domains": [
+        "tcpbolivia.bo"
+      ],
+      "blocked_domains": [],
+      "budget": {
+        "discovery_calls_max": 2,
+        "source_fetches_max": 6,
+        "official_adapter_calls_max": 2,
+        "max_results_per_provider": 10,
+        "tool_rounds_max": 3,
+        "timeout_ms": 90000
+      },
+      "query_classification": "PUBLIC_LEGAL_QUERY",
+      "organization_id": "org_001"
+    },
+    {
+      "query_id": "q_missing_organization_id",
+      "raw_query": "Busca jurisprudencia del TCP sobre accion de amparo por debido proceso.",
+      "normalized_query": "jurisprudencia tcp accion de amparo debido proceso",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "CONSTITUCIONAL"
+      ],
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "required_source_types": [
+        "jurisprudencia"
+      ],
+      "entities": [
+        {
+          "entity_id": "ent_001",
+          "entity_type": "institucion",
+          "value": "Tribunal Constitucional Plurinacional",
+          "number": null,
+          "year": null,
+          "authority": "TCP",
+          "confidence": 0.95,
+          "needs_disambiguation": false
+        }
+      ],
+      "date_constraints": {
+        "from": null,
+        "to": null,
+        "as_of": "2026-05-22"
+      },
+      "must_verify_validity": false,
+      "allowed_domains": [
+        "tcpbolivia.bo"
+      ],
+      "blocked_domains": [],
+      "budget": {
+        "discovery_calls_max": 2,
+        "source_fetches_max": 6,
+        "official_adapter_calls_max": 2,
+        "max_results_per_provider": 10,
+        "tool_rounds_max": 3,
+        "timeout_ms": 90000
+      },
+      "query_classification": "PUBLIC_LEGAL_QUERY"
+    }
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "query_classification": {
+            "const": "PUBLIC_LEGAL_QUERY"
+          }
+        },
+        "required": [
+          "query_classification"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "properties": {
+                "intents": {
+                  "contains": {
+                    "const": "DOC_ANALYSIS"
+                  }
+                }
+              },
+              "required": [
+                "intents"
+              ]
+            },
+            {
+              "properties": {
+                "required_source_types": {
+                  "contains": {
+                    "const": "documento_usuario"
+                  }
+                }
+              },
+              "required": [
+                "required_source_types"
+              ]
+            }
+          ]
+        }
       }
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "query_id": "q_policy_client_facts_public_classification",
+      "raw_query": "Mi cliente fue despedido el 2026-05-10 despues de denunciar acoso; busca jurisprudencia aplicable.",
+      "normalized_query": "despido despues de denuncia acoso jurisprudencia aplicable",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "CONSTITUCIONAL"
+      ],
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "required_source_types": [
+        "jurisprudencia"
+      ],
+      "entities": [
+        {
+          "entity_id": "ent_001",
+          "entity_type": "institucion",
+          "value": "Tribunal Constitucional Plurinacional",
+          "number": null,
+          "year": null,
+          "authority": "TCP",
+          "confidence": 0.95,
+          "needs_disambiguation": false
+        }
+      ],
+      "date_constraints": {
+        "from": null,
+        "to": null,
+        "as_of": "2026-05-22"
+      },
+      "must_verify_validity": false,
+      "allowed_domains": [
+        "tcpbolivia.bo"
+      ],
+      "blocked_domains": [],
+      "budget": {
+        "discovery_calls_max": 2,
+        "source_fetches_max": 6,
+        "official_adapter_calls_max": 2,
+        "max_results_per_provider": 10,
+        "tool_rounds_max": 3,
+        "timeout_ms": 90000
+      },
+      "query_classification": "PUBLIC_LEGAL_QUERY",
+      "organization_id": "org_001"
     }
   ]
 }

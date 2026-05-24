@@ -1,0 +1,409 @@
+document_status: Accepted
+date: 2026-05-24
+responsible: JusNova Architecture
+related_decision: ADR-011
+provider_registry:
+  version: provider-registry-v0.10.0
+  providers:
+    - provider_name: openai_model_provider
+      provider_family: ModelProvider
+      feature_flag: provider.openai_model.enabled
+      kill_switch: provider.openai_model.kill_switch
+      timeout_ms: 30000
+      retry_policy:
+        max_attempts: 1
+        backoff: exponential
+        retry_on:
+          - timeout
+          - rate_limited
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: true
+      data_received_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - USER_MESSAGE_CONFIDENTIAL
+        - CASE_MEMORY_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+      data_returned_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - USER_MESSAGE_CONFIDENTIAL
+        - CASE_MEMORY_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+        - PROVIDER_OPERATIONAL_METADATA
+      stores_customer_data: false
+      training_use_allowed: false
+      region_or_residency: configured_by_deployment
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: operational
+    - provider_name: openai_web_search_discovery
+      provider_family: SearchDiscoveryProvider
+      feature_flag: provider.openai_web_search.enabled
+      kill_switch: provider.openai_web_search.kill_switch
+      timeout_ms: 30000
+      retry_policy:
+        max_attempts: 1
+        backoff: exponential
+        retry_on:
+          - timeout
+          - rate_limited
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: true
+      data_received_classes:
+        - PUBLIC_LEGAL_QUERY
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+      data_returned_classes:
+        - PUBLIC_LEGAL_QUERY
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - PUBLIC_LEGAL_SOURCE
+        - PROVIDER_OPERATIONAL_METADATA
+      stores_customer_data: false
+      training_use_allowed: false
+      region_or_residency: configured_by_deployment
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: operational
+    - provider_name: official_source_adapter_registry
+      provider_family: OfficialSourceAdapter
+      feature_flag: provider.official_source_adapter.enabled
+      kill_switch: provider.official_source_adapter.kill_switch
+      timeout_ms: 30000
+      retry_policy:
+        max_attempts: 1
+        backoff: fixed
+        retry_on:
+          - timeout
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: false
+      data_received_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+      data_returned_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - PROVIDER_OPERATIONAL_METADATA
+      stores_customer_data: false
+      training_use_allowed: false
+      region_or_residency: local_or_configured
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: operational
+    - provider_name: source_fetch_provider
+      provider_family: FetchProvider
+      feature_flag: provider.source_fetch.enabled
+      kill_switch: provider.source_fetch.kill_switch
+      timeout_ms: 30000
+      retry_policy:
+        max_attempts: 1
+        backoff: fixed
+        retry_on:
+          - timeout
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: false
+      data_received_classes:
+        - PUBLIC_LEGAL_SOURCE
+      data_returned_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PROVIDER_OPERATIONAL_METADATA
+      stores_customer_data: false
+      training_use_allowed: false
+      region_or_residency: local_or_configured
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: operational
+    - provider_name: evidence_extraction_provider
+      provider_family: ExtractionProvider
+      feature_flag: provider.evidence_extraction.enabled
+      kill_switch: provider.evidence_extraction.kill_switch
+      timeout_ms: 30000
+      retry_policy:
+        max_attempts: 1
+        backoff: fixed
+        retry_on:
+          - timeout
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: false
+      data_received_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - USER_DOCUMENT_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+      data_returned_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+        - PROVIDER_OPERATIONAL_METADATA
+      stores_customer_data: false
+      training_use_allowed: false
+      region_or_residency: local_or_configured
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: operational
+    - provider_name: local_ocr_provider
+      provider_family: OCRProvider
+      feature_flag: provider.local_ocr.enabled
+      kill_switch: provider.local_ocr.kill_switch
+      timeout_ms: 60000
+      retry_policy:
+        max_attempts: 1
+        backoff: none
+        retry_on:
+          - timeout
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: false
+      data_received_classes:
+        - USER_DOCUMENT_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+      data_returned_classes:
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+        - PROVIDER_OPERATIONAL_METADATA
+      stores_customer_data: false
+      training_use_allowed: false
+      region_or_residency: local
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: operational
+    - provider_name: embedding_provider
+      provider_family: EmbeddingProvider
+      feature_flag: provider.embedding.enabled
+      kill_switch: provider.embedding.kill_switch
+      timeout_ms: 30000
+      retry_policy:
+        max_attempts: 1
+        backoff: exponential
+        retry_on:
+          - timeout
+          - rate_limited
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: true
+      data_received_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - CASE_MEMORY_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+      data_returned_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - CASE_MEMORY_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+        - PROVIDER_OPERATIONAL_METADATA
+      stores_customer_data: false
+      training_use_allowed: false
+      region_or_residency: configured_by_deployment
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: operational
+    - provider_name: private_storage_provider
+      provider_family: StorageProvider
+      feature_flag: provider.private_storage.enabled
+      kill_switch: provider.private_storage.kill_switch
+      timeout_ms: 30000
+      retry_policy:
+        max_attempts: 1
+        backoff: fixed
+        retry_on:
+          - timeout
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: true
+      data_received_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - PROVIDER_OPERATIONAL_METADATA
+        - BILLING_USAGE
+        - INTERNAL_TRACE_RESTRICTED
+        - SECURITY_AUDIT_RESTRICTED
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - USER_MESSAGE_CONFIDENTIAL
+        - CASE_MEMORY_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+        - USER_DOCUMENT_CONFIDENTIAL
+      data_returned_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - PROVIDER_OPERATIONAL_METADATA
+        - BILLING_USAGE
+        - INTERNAL_TRACE_RESTRICTED
+        - SECURITY_AUDIT_RESTRICTED
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - USER_MESSAGE_CONFIDENTIAL
+        - CASE_MEMORY_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+        - USER_DOCUMENT_CONFIDENTIAL
+      stores_customer_data: true
+      training_use_allowed: false
+      region_or_residency: configured_by_deployment
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: security_audit
+    - provider_name: workflow_provider
+      provider_family: WorkflowProvider
+      feature_flag: provider.workflow.enabled
+      kill_switch: provider.workflow.kill_switch
+      timeout_ms: 30000
+      retry_policy:
+        max_attempts: 1
+        backoff: fixed
+        retry_on:
+          - timeout
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: true
+      data_received_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - PROVIDER_OPERATIONAL_METADATA
+        - BILLING_USAGE
+        - INTERNAL_TRACE_RESTRICTED
+        - SECURITY_AUDIT_RESTRICTED
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - USER_MESSAGE_CONFIDENTIAL
+        - CASE_MEMORY_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+        - USER_DOCUMENT_CONFIDENTIAL
+      data_returned_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - PROVIDER_OPERATIONAL_METADATA
+        - BILLING_USAGE
+        - INTERNAL_TRACE_RESTRICTED
+        - SECURITY_AUDIT_RESTRICTED
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - USER_MESSAGE_CONFIDENTIAL
+        - CASE_MEMORY_CONFIDENTIAL
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+        - USER_DOCUMENT_CONFIDENTIAL
+      stores_customer_data: false
+      training_use_allowed: false
+      region_or_residency: local_or_configured
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: operational
+    - provider_name: snapshot_provider
+      provider_family: SnapshotProvider
+      feature_flag: provider.snapshot.enabled
+      kill_switch: provider.snapshot.kill_switch
+      timeout_ms: 30000
+      retry_policy:
+        max_attempts: 1
+        backoff: fixed
+        retry_on:
+          - timeout
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: false
+      data_received_classes:
+        - PUBLIC_LEGAL_SOURCE
+      data_returned_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PROVIDER_OPERATIONAL_METADATA
+      stores_customer_data: false
+      training_use_allowed: false
+      region_or_residency: local_or_configured
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: operational
+    - provider_name: legal_ranking_provider
+      provider_family: LegalRankingProvider
+      feature_flag: provider.legal_ranking.enabled
+      kill_switch: provider.legal_ranking.kill_switch
+      timeout_ms: 30000
+      retry_policy:
+        max_attempts: 1
+        backoff: fixed
+        retry_on:
+          - timeout
+          - provider_error
+      error_mapping:
+        timeout: timeout
+        rate_limited: rate_limited
+        provider_error: provider_error
+        cancelled: cancelled_by_system
+      cost_tracking: false
+      data_received_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+      data_returned_classes:
+        - PUBLIC_LEGAL_SOURCE
+        - PUBLIC_LEGAL_QUERY
+        - DERIVED_LEGAL_QUERY_RESTRICTED
+        - DOCUMENT_EVIDENCE_CONFIDENTIAL
+        - PROVIDER_OPERATIONAL_METADATA
+      stores_customer_data: false
+      training_use_allowed: false
+      region_or_residency: local_or_configured
+      subprocessors: []
+      operational_logs:
+        stores_payload: false
+        stores_hashes: true
+        retention_class: operational

@@ -1,0 +1,215 @@
+document_status: Accepted
+date: 2026-05-24
+responsible: JusNova Architecture
+related_decision: ADR-011
+sensitivity_order:
+  - PUBLIC_LEGAL_SOURCE
+  - PUBLIC_LEGAL_QUERY
+  - PROVIDER_OPERATIONAL_METADATA
+  - BILLING_USAGE
+  - INTERNAL_TRACE_RESTRICTED
+  - SECURITY_AUDIT_RESTRICTED
+  - DERIVED_LEGAL_QUERY_RESTRICTED
+  - USER_MESSAGE_CONFIDENTIAL
+  - CASE_MEMORY_CONFIDENTIAL
+  - DOCUMENT_EVIDENCE_CONFIDENTIAL
+  - USER_DOCUMENT_CONFIDENTIAL
+data_classification:
+  PUBLIC_LEGAL_SOURCE:
+    description: Fuente juridica publica recuperada o verificada desde internet, gacetas, tribunales, entidades oficiales u otras fuentes publicas.
+    sensitivity_rank: 10
+    default_visibility: USER_SUMMARY
+    raw_logging_allowed: false
+    retention_notes: Puede retenerse como referencia publica o snapshot segun politica de fuentes; no convierte documentos de usuario en publicos.
+    provider_family_rules:
+      ModelProvider: restricted
+      SearchDiscoveryProvider: allowed
+      OfficialSourceAdapter: allowed
+      FetchProvider: allowed
+      ExtractionProvider: allowed
+      OCRProvider: forbidden
+      EmbeddingProvider: restricted
+      StorageProvider: restricted
+      WorkflowProvider: restricted
+      SnapshotProvider: allowed
+      LegalRankingProvider: allowed
+  PUBLIC_LEGAL_QUERY:
+    description: Consulta juridica abstracta sin hechos de cliente, documentos privados, memoria de caso ni mensajes sensibles.
+    sensitivity_rank: 20
+    default_visibility: SUPPORT_VIEW
+    raw_logging_allowed: false
+    retention_notes: Puede registrarse de forma minimizada para diagnostico de busqueda publica.
+    provider_family_rules:
+      ModelProvider: restricted
+      SearchDiscoveryProvider: allowed
+      OfficialSourceAdapter: allowed
+      FetchProvider: forbidden
+      ExtractionProvider: forbidden
+      OCRProvider: forbidden
+      EmbeddingProvider: forbidden
+      StorageProvider: restricted
+      WorkflowProvider: restricted
+      SnapshotProvider: forbidden
+      LegalRankingProvider: restricted
+  PROVIDER_OPERATIONAL_METADATA:
+    description: Metadatos operativos de proveedor como latencia, estado, costos, feature flags y errores mapeados sin payload crudo.
+    sensitivity_rank: 30
+    default_visibility: INTERNAL_AUDIT
+    raw_logging_allowed: false
+    retention_notes: Retencion operacional limitada; no debe contener payload de usuario ni documentos.
+    provider_family_rules:
+      ModelProvider: restricted
+      SearchDiscoveryProvider: restricted
+      OfficialSourceAdapter: restricted
+      FetchProvider: restricted
+      ExtractionProvider: restricted
+      OCRProvider: restricted
+      EmbeddingProvider: restricted
+      StorageProvider: restricted
+      WorkflowProvider: allowed
+      SnapshotProvider: restricted
+      LegalRankingProvider: restricted
+  BILLING_USAGE:
+    description: Datos de plan, consumo, creditos, costos estimados y ledger de uso.
+    sensitivity_rank: 40
+    default_visibility: SUPPORT_VIEW
+    raw_logging_allowed: false
+    retention_notes: Retencion alineada con facturacion y conciliacion; no debe incluir contenido legal privado.
+    provider_family_rules:
+      ModelProvider: forbidden
+      SearchDiscoveryProvider: forbidden
+      OfficialSourceAdapter: forbidden
+      FetchProvider: forbidden
+      ExtractionProvider: forbidden
+      OCRProvider: forbidden
+      EmbeddingProvider: forbidden
+      StorageProvider: restricted
+      WorkflowProvider: restricted
+      SnapshotProvider: forbidden
+      LegalRankingProvider: forbidden
+  INTERNAL_TRACE_RESTRICTED:
+    description: Trazas internas con hashes, refs, proveedores, descartes, advertencias y auditorias sin payload crudo.
+    sensitivity_rank: 50
+    default_visibility: INTERNAL_AUDIT
+    raw_logging_allowed: false
+    retention_notes: Retencion de auditoria legal y tecnica con minimizacion; raw access separado.
+    provider_family_rules:
+      ModelProvider: forbidden
+      SearchDiscoveryProvider: forbidden
+      OfficialSourceAdapter: forbidden
+      FetchProvider: forbidden
+      ExtractionProvider: forbidden
+      OCRProvider: forbidden
+      EmbeddingProvider: forbidden
+      StorageProvider: restricted
+      WorkflowProvider: restricted
+      SnapshotProvider: forbidden
+      LegalRankingProvider: forbidden
+  SECURITY_AUDIT_RESTRICTED:
+    description: Eventos de acceso elevado, investigacion, seguridad e incidente.
+    sensitivity_rank: 60
+    default_visibility: RAW_INCIDENT_ACCESS
+    raw_logging_allowed: false
+    retention_notes: Retencion de seguridad con controles reforzados y acceso auditado.
+    provider_family_rules:
+      ModelProvider: forbidden
+      SearchDiscoveryProvider: forbidden
+      OfficialSourceAdapter: forbidden
+      FetchProvider: forbidden
+      ExtractionProvider: forbidden
+      OCRProvider: forbidden
+      EmbeddingProvider: forbidden
+      StorageProvider: restricted
+      WorkflowProvider: restricted
+      SnapshotProvider: forbidden
+      LegalRankingProvider: forbidden
+  DERIVED_LEGAL_QUERY_RESTRICTED:
+    description: Consulta, reformulacion o plan de busqueda derivado de hechos del usuario, documentos, memoria o mensajes.
+    sensitivity_rank: 70
+    default_visibility: INTERNAL_AUDIT
+    raw_logging_allowed: false
+    retention_notes: Debe minimizarse antes de salir a proveedores y conservar solo hashes/refs cuando sea posible.
+    provider_family_rules:
+      ModelProvider: restricted
+      SearchDiscoveryProvider: restricted
+      OfficialSourceAdapter: restricted
+      FetchProvider: forbidden
+      ExtractionProvider: forbidden
+      OCRProvider: forbidden
+      EmbeddingProvider: forbidden
+      StorageProvider: restricted
+      WorkflowProvider: restricted
+      SnapshotProvider: forbidden
+      LegalRankingProvider: restricted
+  USER_MESSAGE_CONFIDENTIAL:
+    description: Mensaje de usuario con posible informacion sensible, estrategia o secreto profesional.
+    sensitivity_rank: 80
+    default_visibility: NO_DIRECT_VISIBILITY
+    raw_logging_allowed: false
+    retention_notes: No se copia a trazas, costos ni providers salvo minimizacion y autorizacion por flujo.
+    provider_family_rules:
+      ModelProvider: restricted
+      SearchDiscoveryProvider: forbidden
+      OfficialSourceAdapter: forbidden
+      FetchProvider: forbidden
+      ExtractionProvider: forbidden
+      OCRProvider: forbidden
+      EmbeddingProvider: forbidden
+      StorageProvider: restricted
+      WorkflowProvider: restricted
+      SnapshotProvider: forbidden
+      LegalRankingProvider: forbidden
+  CASE_MEMORY_CONFIDENTIAL:
+    description: Memoria de caso, hechos afirmados, contradicciones, preguntas abiertas y contexto persistido.
+    sensitivity_rank: 90
+    default_visibility: NO_DIRECT_VISIBILITY
+    raw_logging_allowed: false
+    retention_notes: Contexto interno de caso; no prueba juridica y no se envia completo a proveedores.
+    provider_family_rules:
+      ModelProvider: restricted
+      SearchDiscoveryProvider: forbidden
+      OfficialSourceAdapter: forbidden
+      FetchProvider: forbidden
+      ExtractionProvider: forbidden
+      OCRProvider: forbidden
+      EmbeddingProvider: restricted
+      StorageProvider: restricted
+      WorkflowProvider: restricted
+      SnapshotProvider: forbidden
+      LegalRankingProvider: forbidden
+  DOCUMENT_EVIDENCE_CONFIDENTIAL:
+    description: Fragmento documental privado citable, localizable y derivado de documento de usuario.
+    sensitivity_rank: 100
+    default_visibility: NO_DIRECT_VISIBILITY
+    raw_logging_allowed: false
+    retention_notes: Se conserva como fragmento citable minimo; acceso raw requiere auditoria.
+    provider_family_rules:
+      ModelProvider: restricted
+      SearchDiscoveryProvider: forbidden
+      OfficialSourceAdapter: forbidden
+      FetchProvider: forbidden
+      ExtractionProvider: restricted
+      OCRProvider: restricted
+      EmbeddingProvider: restricted
+      StorageProvider: restricted
+      WorkflowProvider: restricted
+      SnapshotProvider: forbidden
+      LegalRankingProvider: restricted
+  USER_DOCUMENT_CONFIDENTIAL:
+    description: Documento privado subido por usuario, binario original, OCR completo o artefacto documental completo.
+    sensitivity_rank: 110
+    default_visibility: NO_DIRECT_VISIBILITY
+    raw_logging_allowed: false
+    retention_notes: Debe vivir en storage privado; borrado/tombstone debe cubrir derivados.
+    provider_family_rules:
+      ModelProvider: forbidden
+      SearchDiscoveryProvider: forbidden
+      OfficialSourceAdapter: forbidden
+      FetchProvider: forbidden
+      ExtractionProvider: restricted
+      OCRProvider: restricted
+      EmbeddingProvider: forbidden
+      StorageProvider: allowed
+      WorkflowProvider: restricted
+      SnapshotProvider: forbidden
+      LegalRankingProvider: forbidden
