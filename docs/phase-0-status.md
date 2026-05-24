@@ -7,7 +7,7 @@
 
 ## Estado general
 
-Fase 0 esta en ejecucion. La subfase 0.0 crea el marco documental donde viviran las decisiones, contratos, politicas, taxonomias, riesgos, preguntas abiertas y handoff a Fase 1.
+Fase 0 esta en ejecucion y su estado global permanece `Draft`. Las subfases aceptadas son vinculantes dentro de su alcance, pero no convierten la Fase 0 completa en `Accepted`.
 
 ## Regla vinculante
 
