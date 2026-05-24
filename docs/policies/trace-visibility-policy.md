@@ -14,7 +14,7 @@ Definir que partes de una traza puede ver cada actor y como se protegen datos se
 
 Aplica a visualizacion de trazas, soporte, auditoria interna, reconstruccion de respuestas, revision de fallos de citacion y diagnostico tecnico.
 
-No define retencion final, permisos productivos completos ni proceso de incidente con acceso a material crudo; esos controles se cierran en Subfase 0.10.
+Subfase 0.10 define los contratos documentales de raw access, provider audit, prompt injection y privacy/security. Retencion final, permisos productivos completos y workflows runtime de incidente quedan para Fase 1 o fases posteriores.
 
 ## Niveles de visibilidad
 
@@ -155,4 +155,4 @@ El motivo debe ser concreto y cerrado. `support_operator` no puede abrir `RawAcc
 
 ## Momento de revision
 
-Revisar al cerrar Subfase 0.7, ante enmiendas de budget/plan como Subfase 0.8, ante enmiendas conversacionales como Subfase 0.9, al definir permisos de Subfase 0.10, al crear vistas de soporte, y ante cualquier incidente de privacidad, soporte o auditoria.
+Revisar ante cambios de budget/plan, conversation/message refs, permisos productivos, vistas de soporte, raw access workflows y cualquier incidente de privacidad, soporte o auditoria.

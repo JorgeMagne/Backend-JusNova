@@ -96,7 +96,7 @@ La seguridad es estructural en datos, storage, logs, providers y prompts. No pue
 
 ## Momento de revision
 
-Revisar al cerrar Subfase 0.10, al completar Fase 1, antes de beta y ante cualquier cambio de proveedor, storage, logging o modelo de tenancy.
+Revisar al completar Fase 1, antes de beta y ante cualquier cambio de proveedor, storage, logging, raw access, clasificacion de datos o modelo de tenancy.
 
 ## Consecuencias
 

@@ -93,4 +93,4 @@ Se complementa con `privacy-security-policy.md`, `provider-policy.md`, `data-cla
 
 ## Momento de revision
 
-Revisar al cerrar Subfase 0.10, al implementar storage, al integrar OCR worker, al definir permisos productivos o ante cualquier incidente de documentos.
+Revisar al implementar storage, al integrar OCR worker, al definir permisos productivos, al cambiar raw access/prompt injection/privacy-security o ante cualquier incidente de documentos.

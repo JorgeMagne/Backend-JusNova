@@ -13,7 +13,7 @@ Definir como JusNova procesa texto documental y OCR sin convertir documentos pri
 
 Aplica a documentos privados de usuario, PDFs escaneados, imagenes, paginas con texto nativo, fragmentos OCR citables y escalacion visual selectiva.
 
-No implementa OCR worker, storage, permisos finales, retencion completa ni prompt injection policy completa. Esos controles se completan en fases posteriores y Subfase 0.10.
+No implementa OCR worker, storage, permisos finales ni retencion completa. Subfase 0.10 define contratos documentales de prompt injection, raw access y privacy/security; enforcement runtime queda para Fase 1 o fases posteriores.
 
 ## Definiciones
 
@@ -85,4 +85,4 @@ No implementa OCR worker, storage, permisos finales, retencion completa ni promp
 
 ## Momento de revision
 
-Revisar al implementar OCR worker, al integrar storage documental, al medir costo por pagina, cuando `document_citation_correctness` baje de umbral o al cerrar Subfase 0.10.
+Revisar al implementar OCR worker, al integrar storage documental, al medir costo por pagina, cuando `document_citation_correctness` baje de umbral o ante cambios en prompt injection/raw access/privacy-security.

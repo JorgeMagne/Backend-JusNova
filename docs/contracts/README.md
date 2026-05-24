@@ -143,7 +143,7 @@ Estos contratos quedan aceptados como base documental de conversacion, mensajes,
 - `DocumentEvidence.locator.page` debe coincidir con `DocumentEvidence.page` mediante validador custom.
 - `Passage.locator.coordinates` y `DocumentEvidence.locator.coordinates` usan bbox cerrado `x`, `y`, `width`, `height`; no aceptan objetos libres.
 - Los hashes de `Message` y `DocumentEvidence` se calculan sobre bytes UTF-8 exactos persistidos.
-- Seguridad documental completa, retencion, permisos y prompt injection policy quedan para Subfase 0.10.
+- Subfase 0.10 define contratos documentales para seguridad, privacidad, provider boundaries, raw access y prompt injection; enforcement/runtime de retencion y permisos productivos queda para Fase 1 o fases posteriores.
 
 ## Contratos aceptados en Subfase 0.10
 
@@ -169,6 +169,7 @@ Estos contratos quedan aceptados como base documental de seguridad, privacidad, 
 - `RawAccessEvent` registra acceso raw o elevado por recurso, clasificacion, rol de acceso, aprobador y motivo cerrado.
 - `support_operator` no es rol valido en `RawAccessEvent`; soporte normal opera solo con `SUPPORT_VIEW` redacted.
 - `DocumentEvidence` exige `document_evidence_id` para auditoria resoluble de fragmentos.
+- `DocumentEvidence.prompt_injection_risks[]` es requerido; `[]` significa evaluado sin riesgos detectados.
 - `LegalSearchQuery.query_classification` distingue busqueda legal publica abstracta de query derivada de cliente.
 - `PromptInjectionRisk` es el contrato compartido para riesgos detectados en documentos, retrieval y trazas.
 - `TraceObject.prompt_injection_risks[]` agrega riesgos de evidencia/retrieval usados por la respuesta.
