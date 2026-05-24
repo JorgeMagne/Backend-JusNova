@@ -59,13 +59,13 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-007 | Soporte directo/inferencial/debil/no soportado. | ADR-007: Dependencias posteriores. | Accepted | Subfase 0.4 claim/citation policy. | Claims mal clasificados. |
 | ADR-007 | Reglas de bloqueo. | ADR-007: Decision, Mitigaciones, Criterios. | Accepted | Fase 2 Citation Auditor. | Respuestas sin soporte. |
 | ADR-007 | Existen schemas JSON como condicion de Fase 0 completa. | ADR-007: Dependencias posteriores, Criterios. | Accepted | Subfase 0.4. | ADR aceptado sin contratos posteriores. |
-| ADR-008 | Budgets por complejidad. | ADR-008: Presupuestos conceptuales. | Accepted | Subfase 0.8 budgets YAML. | Costos invisibles. |
-| ADR-008 | Limites de discovery/fetch/OCR/tool rounds/output. | ADR-008: Decision, Dependencias posteriores. | Accepted | Subfase 0.8. | Presupuesto incompleto. |
-| ADR-008 | Creditos de investigacion. | ADR-008: Decision, Presupuestos conceptuales. | Accepted | Subfase 0.8. | Modo profundo sin control. |
-| ADR-008 | Usage Ledger. | ADR-008: Decision, Dependencias posteriores. | Accepted | Fase 1 UsageLedger. | Consumo no trazable. |
-| ADR-008 | Respuesta ante excedentes. | ADR-008: Justificacion, Mitigaciones. | Accepted | Subfase 0.8 cost policy. | Silencio ante limites. |
-| ADR-008 | Plan de entrada 400 Bs. | ADR-008: Contexto, Restricciones, Decision. | Accepted | Subfase 0.8 commercial plans. | Restriccion comercial no reflejada. |
-| ADR-008 | No reducir citacion para ahorrar costo. | ADR-008: Restricciones, Criterios. | Accepted | Subfase 0.8 cost policy. | Respuestas menos verificables por costo. |
+| ADR-008 | Budgets por complejidad. | ADR-008: Presupuestos conceptuales; `docs/schemas/budgets.yaml`; `docs/contracts/cost-budget.schema.json`. | Accepted | Fase 1 CostGovernor implementation. | Costos invisibles. |
+| ADR-008 | Limites de discovery/fetch/OCR/tool rounds/output. | ADR-008: Decision; `docs/schemas/budgets.yaml`; `docs/contracts/cost-budget.schema.json`. | Accepted | Fase 1 enforcement. | Presupuesto incompleto. |
+| ADR-008 | Creditos de investigacion. | ADR-008: Decision, Presupuestos conceptuales; `docs/policies/cost-governor-policy.md`; `docs/contracts/usage-event.schema.json`. | Accepted | Fase 1 UsageLedger. | Modo profundo sin control. |
+| ADR-008 | Usage Ledger. | ADR-008: Decision; `docs/contracts/usage-event.schema.json`. | Accepted | Fase 1 UsageLedger. | Consumo no trazable. |
+| ADR-008 | Respuesta ante excedentes. | ADR-008: Justificacion, Mitigaciones; `docs/policies/cost-governor-policy.md`. | Accepted | Fase 1 runtime behavior. | Silencio ante limites. |
+| ADR-008 | Plan de entrada 400 Bs. | ADR-008: Contexto, Restricciones, Decision; `docs/policies/commercial-plans-v0.md`. | Accepted | Revision con metricas beta. | Restriccion comercial no reflejada. |
+| ADR-008 | No reducir citacion para ahorrar costo. | ADR-008: Restricciones, Criterios; `docs/policies/cost-governor-policy.md`. | Accepted | Fase 1 implementation. | Respuestas menos verificables por costo. |
 | ADR-009 | Fuentes iniciales prioritarias. | ADR-009: Fuentes iniciales prioritarias. | Accepted | Fase 5 adapters. | Cobertura sin prioridades. |
 | ADR-009 | Campos minimos de registro. | ADR-009: Restricciones; `docs/contracts/source.schema.json`; `docs/policies/source-policy.md`. | Accepted | Source Registry Entry schema posterior. | Fuente sin metadata. |
 | ADR-009 | Tiers. | ADR-009: Decision, Mitigaciones; `docs/schemas/source-tiers.yaml`; `docs/policies/source-policy.md`. | Accepted | Fase 4 registry. | Fuentes debiles sin etiqueta. |

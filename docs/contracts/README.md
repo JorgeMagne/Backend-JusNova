@@ -93,6 +93,25 @@ Estos contratos quedan aceptados como base documental de trazabilidad, auditoria
 - `AbstentionRender` guarda hashes, refs internas y codigos cerrados para reconstruir abstenciones/bloqueos sin texto crudo sensible.
 - `CostReport` registra consumo observado y no presupuestos comerciales.
 
+## Contratos aceptados en Subfase 0.8
+
+Estos contratos quedan aceptados como base documental del Cost Governor, budgets por complejidad y Usage Ledger. Esta aceptacion no implementa runtime, billing, Stripe, DB ni conciliacion productiva.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Cost Budget | Accepted | `cost-budget.schema.json` |
+| Usage Event | Accepted | `usage-event.schema.json` |
+| Trace Object Budget Amendment | Accepted | `trace-object.schema.json` |
+
+## Reglas especificas de Subfase 0.8
+
+- `CostBudget` define limites exactos por `SIMPLE`, `MEDIO`, `COMPLEJO` e `INVESTIGACION`.
+- Los budgets internos por complejidad no cambian por plan comercial en v0.
+- `TraceObject` registra `cost_budget_ref`, `cost_budget_version`, `plan_code` y `complexity` como escalares cerrados.
+- `TraceObject` no embebe `CostBudget` ni referencia `cost-budget.schema.json` por `$ref`.
+- `UsageEvent` registra consumo y creditos sin `user_id` crudo ni `metadata` libre.
+- `LegalSearchQuery.budget` sigue siendo `search_budget` tecnico interno de busqueda viva.
+
 ## Schemas minimos esperados
 
 ```txt

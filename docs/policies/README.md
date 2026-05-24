@@ -49,12 +49,21 @@ Las politicas convierten principios juridicos, tecnicos, comerciales y de seguri
 | Answer Versioning Policy | Accepted | `answer-versioning-policy.md` |
 | Trace Visibility Policy | Accepted | `trace-visibility-policy.md` |
 
+## Politicas aceptadas en Subfase 0.8
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Commercial Plans v0 | Accepted | `commercial-plans-v0.md` |
+| Cost Governor Policy | Accepted | `cost-governor-policy.md` |
+| Trace Visibility Policy Amendment | Accepted | `trace-visibility-policy.md` |
+
 ## Politicas minimas esperadas
 
 ```txt
 abstention-policy.md
 answer-versioning-policy.md
 citation-policy.md
+commercial-plans-v0.md
 conflict-policy.md
 cost-governor-policy.md
 legal-search-policy.md

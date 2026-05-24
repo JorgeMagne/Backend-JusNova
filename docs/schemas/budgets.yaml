@@ -1,0 +1,48 @@
+document_status: Accepted
+date: 2026-05-24
+responsible: Codex / JusNova Chief Backend Architect
+related_decision: Subfase 0.8 - Cost Governor, planes y presupuestos
+
+budget_version: cost-budget-v0.8.0
+
+budgets:
+  SIMPLE:
+    discovery_calls_max: 1
+    fetch_urls_max: 3
+    ocr_pages_inline_max: 0
+    reformulations_max: 0
+    tool_rounds_max: 2
+    time_budget_ms: 45000
+    output_tokens_cap: 900
+    research_credit_cost: 0
+    async_allowed: false
+  MEDIO:
+    discovery_calls_max: 2
+    fetch_urls_max: 6
+    ocr_pages_inline_max: 2
+    reformulations_max: 1
+    tool_rounds_max: 3
+    time_budget_ms: 90000
+    output_tokens_cap: 1400
+    research_credit_cost: 0
+    async_allowed: false
+  COMPLEJO:
+    discovery_calls_max: 4
+    fetch_urls_max: 10
+    ocr_pages_inline_max: 10
+    reformulations_max: 2
+    tool_rounds_max: 4
+    time_budget_ms: 180000
+    output_tokens_cap: 2200
+    research_credit_cost: 1
+    async_allowed: false
+  INVESTIGACION:
+    discovery_calls_max: 8
+    fetch_urls_max: 20
+    ocr_pages_inline_max: 20
+    reformulations_max: 3
+    tool_rounds_max: 6
+    time_budget_ms: 300000
+    output_tokens_cap: 4000
+    research_credit_cost: 2
+    async_allowed: true

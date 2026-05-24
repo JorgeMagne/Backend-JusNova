@@ -5,6 +5,7 @@
 **Fecha:** 2026-05-22  
 **Responsable:** Codex / JusNova Chief Backend Architect  
 **Decision relacionada:** Costos, planes y profundidad de consulta
+**Enmienda:** Subfase 0.8 - Cost Governor, planes y presupuestos aceptados el 2026-05-24
 
 ## Contexto
 
@@ -44,8 +45,17 @@ Controlar profundidad permite alinear costo y experiencia sin permitir respuesta
 
 ## Dependencias posteriores
 
-- Subfase 0.8 debe crear `budgets.yaml`, `cost-budget.schema.json`, `usage-event.schema.json`, commercial plans y cost-governor policy.
+- Subfase 0.8 acepta `budgets.yaml`, `cost-budget.schema.json`, `usage-event.schema.json`, `commercial-plans-v0.md` y `cost-governor-policy.md`.
 - Fase 1 debe implementar CostGovernor stub y UsageLedger basico.
+
+## Cierre documental de Subfase 0.8
+
+- `docs/schemas/budgets.yaml` fija budgets exactos por complejidad.
+- `docs/contracts/cost-budget.schema.json` define el presupuesto efectivo aplicado.
+- `docs/contracts/usage-event.schema.json` define Usage Ledger sin PII directa ni metadata libre.
+- `docs/policies/commercial-plans-v0.md` fija `PROFESIONAL` como plan base de 400 Bs/mes y no propone plan inferior.
+- `docs/policies/cost-governor-policy.md` define que costo puede limitar profundidad, pero nunca veracidad, citas, vigencia, auditoria ni trazabilidad.
+- `docs/contracts/trace-object.schema.json` queda enmendado para registrar `cost_budget_ref`, `cost_budget_version`, `plan_code` y `complexity`.
 
 ## No afirma todavia
 
@@ -70,6 +80,8 @@ Controlar profundidad permite alinear costo y experiencia sin permitir respuesta
 
 - Budgets quedan en YAML en Subfase 0.8.
 - Plan de 400 Bs queda reflejado.
+- `TraceObject` queda enlazado al budget efectivo sin embeber `CostBudget`.
+- Usage Ledger queda modelado por contrato documental.
 - No hay silencio ante limitacion.
 - No se reduce citacion para ahorrar costo.
 
@@ -80,4 +92,3 @@ Revisar al cerrar Subfase 0.8, al completar Fase 1, y mensualmente durante beta 
 ## Consecuencias
 
 El sistema debe registrar costos y decidir continuar, abstenerse, pedir datos o proponer investigacion sin sacrificar soporte juridico.
-

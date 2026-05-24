@@ -1,0 +1,439 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/cost-budget.schema.json",
+  "title": "CostBudget",
+  "description": "Presupuesto operativo aplicado por el Cost Governor. Define limites tecnicos por complejidad y plan neutral; no representa costo observado ni facturacion.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-24",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.8 - Cost Governor, planes y presupuestos"
+  },
+  "required": [
+    "cost_budget_id",
+    "cost_budget_version",
+    "plan_code",
+    "complexity",
+    "created_at",
+    "discovery_calls_max",
+    "fetch_urls_max",
+    "ocr_pages_inline_max",
+    "reformulations_max",
+    "tool_rounds_max",
+    "time_budget_ms",
+    "output_tokens_cap",
+    "research_credit_cost",
+    "async_allowed"
+  ],
+  "properties": {
+    "cost_budget_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cost_budget_version": {
+      "type": "string",
+      "pattern": "^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "plan_code": {
+      "enum": [
+        "PROFESIONAL",
+        "PRO_PLUS",
+        "ESTUDIO",
+        "ENTERPRISE"
+      ]
+    },
+    "complexity": {
+      "enum": [
+        "SIMPLE",
+        "MEDIO",
+        "COMPLEJO",
+        "INVESTIGACION"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "discovery_calls_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fetch_urls_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ocr_pages_inline_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reformulations_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tool_rounds_max": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "time_budget_ms": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "output_tokens_cap": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "research_credit_cost": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "async_allowed": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "complexity": {
+            "const": "SIMPLE"
+          }
+        },
+        "required": [
+          "complexity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "discovery_calls_max": {
+            "const": 1
+          },
+          "fetch_urls_max": {
+            "const": 3
+          },
+          "ocr_pages_inline_max": {
+            "const": 0
+          },
+          "reformulations_max": {
+            "const": 0
+          },
+          "tool_rounds_max": {
+            "const": 2
+          },
+          "time_budget_ms": {
+            "const": 45000
+          },
+          "output_tokens_cap": {
+            "const": 900
+          },
+          "research_credit_cost": {
+            "const": 0
+          },
+          "async_allowed": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "complexity": {
+            "const": "MEDIO"
+          }
+        },
+        "required": [
+          "complexity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "discovery_calls_max": {
+            "const": 2
+          },
+          "fetch_urls_max": {
+            "const": 6
+          },
+          "ocr_pages_inline_max": {
+            "const": 2
+          },
+          "reformulations_max": {
+            "const": 1
+          },
+          "tool_rounds_max": {
+            "const": 3
+          },
+          "time_budget_ms": {
+            "const": 90000
+          },
+          "output_tokens_cap": {
+            "const": 1400
+          },
+          "research_credit_cost": {
+            "const": 0
+          },
+          "async_allowed": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "complexity": {
+            "const": "COMPLEJO"
+          }
+        },
+        "required": [
+          "complexity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "discovery_calls_max": {
+            "const": 4
+          },
+          "fetch_urls_max": {
+            "const": 10
+          },
+          "ocr_pages_inline_max": {
+            "const": 10
+          },
+          "reformulations_max": {
+            "const": 2
+          },
+          "tool_rounds_max": {
+            "const": 4
+          },
+          "time_budget_ms": {
+            "const": 180000
+          },
+          "output_tokens_cap": {
+            "const": 2200
+          },
+          "research_credit_cost": {
+            "const": 1
+          },
+          "async_allowed": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "complexity": {
+            "const": "INVESTIGACION"
+          }
+        },
+        "required": [
+          "complexity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "discovery_calls_max": {
+            "const": 8
+          },
+          "fetch_urls_max": {
+            "const": 20
+          },
+          "ocr_pages_inline_max": {
+            "const": 20
+          },
+          "reformulations_max": {
+            "const": 3
+          },
+          "tool_rounds_max": {
+            "const": 6
+          },
+          "time_budget_ms": {
+            "const": 300000
+          },
+          "output_tokens_cap": {
+            "const": 4000
+          },
+          "research_credit_cost": {
+            "const": 2
+          },
+          "async_allowed": {
+            "const": true
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "cost_budget_id": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "PROFESIONAL",
+      "complexity": "SIMPLE",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 1,
+      "fetch_urls_max": 3,
+      "ocr_pages_inline_max": 0,
+      "reformulations_max": 0,
+      "tool_rounds_max": 2,
+      "time_budget_ms": 45000,
+      "output_tokens_cap": 900,
+      "research_credit_cost": 0,
+      "async_allowed": false
+    },
+    {
+      "cost_budget_id": "cb_estudio_investigacion_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "plan_code": "ESTUDIO",
+      "complexity": "INVESTIGACION",
+      "created_at": "2026-05-24T00:00:00Z",
+      "discovery_calls_max": 8,
+      "fetch_urls_max": 20,
+      "ocr_pages_inline_max": 20,
+      "reformulations_max": 3,
+      "tool_rounds_max": 6,
+      "time_budget_ms": 300000,
+      "output_tokens_cap": 4000,
+      "research_credit_cost": 2,
+      "async_allowed": true
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "description": "Plan code con precio embebido no es canonico.",
+      "value": {
+        "cost_budget_id": "cb_bad_plan",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL_400",
+        "complexity": "SIMPLE",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 1,
+        "fetch_urls_max": 3,
+        "ocr_pages_inline_max": 0,
+        "reformulations_max": 0,
+        "tool_rounds_max": 2,
+        "time_budget_ms": 45000,
+        "output_tokens_cap": 900,
+        "research_credit_cost": 0,
+        "async_allowed": false
+      }
+    },
+    {
+      "description": "SIMPLE no permite async.",
+      "value": {
+        "cost_budget_id": "cb_simple_async",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 1,
+        "fetch_urls_max": 3,
+        "ocr_pages_inline_max": 0,
+        "reformulations_max": 0,
+        "tool_rounds_max": 2,
+        "time_budget_ms": 45000,
+        "output_tokens_cap": 900,
+        "research_credit_cost": 0,
+        "async_allowed": true
+      }
+    },
+    {
+      "description": "MEDIO no consume credito.",
+      "value": {
+        "cost_budget_id": "cb_medio_credit",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PRO_PLUS",
+        "complexity": "MEDIO",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 2,
+        "fetch_urls_max": 6,
+        "ocr_pages_inline_max": 2,
+        "reformulations_max": 1,
+        "tool_rounds_max": 3,
+        "time_budget_ms": 90000,
+        "output_tokens_cap": 1400,
+        "research_credit_cost": 1,
+        "async_allowed": false
+      }
+    },
+    {
+      "description": "COMPLEJO debe consumir un credito.",
+      "value": {
+        "cost_budget_id": "cb_complex_no_credit",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "ESTUDIO",
+        "complexity": "COMPLEJO",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 4,
+        "fetch_urls_max": 10,
+        "ocr_pages_inline_max": 10,
+        "reformulations_max": 2,
+        "tool_rounds_max": 4,
+        "time_budget_ms": 180000,
+        "output_tokens_cap": 2200,
+        "research_credit_cost": 0,
+        "async_allowed": false
+      }
+    },
+    {
+      "description": "INVESTIGACION permite async en v0.",
+      "value": {
+        "cost_budget_id": "cb_research_sync",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "ENTERPRISE",
+        "complexity": "INVESTIGACION",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 8,
+        "fetch_urls_max": 20,
+        "ocr_pages_inline_max": 20,
+        "reformulations_max": 3,
+        "tool_rounds_max": 6,
+        "time_budget_ms": 300000,
+        "output_tokens_cap": 4000,
+        "research_credit_cost": 2,
+        "async_allowed": false
+      }
+    },
+    {
+      "description": "Un limite alterado genera drift contra budgets.yaml.",
+      "value": {
+        "cost_budget_id": "cb_simple_drift",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 1,
+        "fetch_urls_max": 4,
+        "ocr_pages_inline_max": 0,
+        "reformulations_max": 0,
+        "tool_rounds_max": 2,
+        "time_budget_ms": 45000,
+        "output_tokens_cap": 900,
+        "research_credit_cost": 0,
+        "async_allowed": false
+      }
+    },
+    {
+      "description": "Campos legacy de proveedor no son vocabulario permitido.",
+      "value": {
+        "cost_budget_id": "cb_legacy_calls",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE",
+        "created_at": "2026-05-24T00:00:00Z",
+        "discovery_calls_max": 1,
+        "fetch_urls_max": 3,
+        "ocr_pages_inline_max": 0,
+        "reformulations_max": 0,
+        "tool_rounds_max": 2,
+        "time_budget_ms": 45000,
+        "output_tokens_cap": 900,
+        "research_credit_cost": 0,
+        "async_allowed": false,
+        "legacy_provider_calls": 1
+      }
+    }
+  ]
+}

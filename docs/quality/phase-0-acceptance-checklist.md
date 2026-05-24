@@ -36,9 +36,9 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Conflict Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/conflict-policy.md` |
 | Uncertainty Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/uncertainty-policy.md` |
 | No RAG Launch Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/no-rag-launch-policy.md` |
-| Cost Governor Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/cost-governor-policy.md` |
-| `budgets.yaml` aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/schemas/budgets.yaml` |
-| Plan base 400 Bs reflejado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/commercial-plans-v0.md` |
+| Cost Governor Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/cost-governor-policy.md` |
+| `budgets.yaml` aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/schemas/budgets.yaml` |
+| Plan base 400 Bs reflejado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/commercial-plans-v0.md` |
 | TraceObject aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json` |
 | Provider Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/provider-policy.md` |
 | Security/Privacy Policy aprobada | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/policies/privacy-security-policy.md` |
@@ -176,4 +176,19 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | AnswerVersion no embebe respuesta completa sensible | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/answer-version.schema.json` |
 | ADR-010 cierra dependencias documentales de trace y answer version | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-010-traceability-and-answer-versioning.md` |
 | ADR-007 registra que CitationAudit queda aceptado en 0.7 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-007-evidence-answer-citation-contracts.md` |
+| Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.8
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| `budgets.yaml` creado y aceptado con metadata documental | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/schemas/budgets.yaml` |
+| `cost-budget.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/cost-budget.schema.json` |
+| `usage-event.schema.json` creado, aceptado y validado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/usage-event.schema.json` |
+| `commercial-plans-v0.md` creado y plan base 400 Bs reflejado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/commercial-plans-v0.md` |
+| `cost-governor-policy.md` creado y aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/cost-governor-policy.md` |
+| `TraceObject` exige budget ref, budget version, plan code y complexity | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json` |
+| `TraceObject` no embebe `CostBudget` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/trace-object.schema.json` |
+| `trace-visibility-policy.md` registra enmienda 0.8 y visibilidad de plan/budget | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/trace-visibility-policy.md` |
+| ADR-008 cierra dependencia documental de budgets y plans | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-008-cost-governor-and-commercial-budgets.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |

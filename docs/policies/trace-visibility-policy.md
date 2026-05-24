@@ -4,6 +4,7 @@
 **Fecha:** 2026-05-22
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Subfase 0.7 - Trazabilidad, auditoria y versionado
+**Enmienda:** Subfase 0.8 - Cost Governor, planes y presupuestos
 
 ## Proposito
 
@@ -19,9 +20,9 @@ No define retencion final, permisos productivos completos ni proceso de incident
 
 | Nivel | Visible para | Incluye | Excluye |
 |---|---|---|---|
-| `USER_SUMMARY` | Usuario final | Fuentes usadas, advertencias, fecha de consulta, nivel de evidencia, resultado de vigencia expresado para usuario | Prompts, salidas completas de modelo, documentos completos, mensajes completos, hashes internos innecesarios |
-| `SUPPORT_VIEW` | Soporte autorizado | Errores, latencia, proveedores, consumo tecnico estimado, estado de auditoria, IDs de trazabilidad | Prompts, documentos completos, mensajes completos, OCR completo, salida completa del modelo |
-| `INTERNAL_AUDIT` | Equipo tecnico autorizado | Hashes, prompt versions, model calls, tool calls, fuentes rechazadas, citation audit, costos observados | Acceso libre a material crudo; por defecto se usan hashes y referencias |
+| `USER_SUMMARY` | Usuario final | Fuentes usadas, advertencias, fecha de consulta, nivel de evidencia, resultado de vigencia expresado para usuario | Prompts, salidas completas de modelo, documentos completos, mensajes completos, hashes internos innecesarios, plan interno, budget ref, budget version |
+| `SUPPORT_VIEW` | Soporte autorizado | Errores, latencia, proveedores, consumo tecnico estimado, estado de auditoria, IDs de trazabilidad, plan neutral, complejidad y budget ref | Prompts, documentos completos, mensajes completos, OCR completo, salida completa del modelo, precio mensual |
+| `INTERNAL_AUDIT` | Equipo tecnico autorizado | Hashes, prompt versions, model calls, tool calls, fuentes rechazadas, citation audit, costos observados, relacion completa con Usage Ledger, `cost_budget_ref`, `cost_budget_version`, `plan_code`, `complexity` | Acceso libre a material crudo; por defecto se usan hashes y referencias |
 
 ## Reglas deterministicas
 
@@ -70,7 +71,13 @@ No define retencion final, permisos productivos completos ni proceso de incident
 43. Dentro de `citation_audit.results[]`, la clave `(claim_id, citation_ref, passage_ref, source_ref)` debe ser unica.
 44. Si `CostReport.currency = NONE`, entonces `provider_estimated_costs[]`, `tool_calls[].cost_units.estimated_cost`, `retrieval_runs[].estimated_cost` y `estimated_total_cost` deben ser `0`.
 45. Todo campo `input_hash`, `output_hash`, `answer_hash`, `render_hash` o `url_hash` debe usar formato `sha256:` seguido de 64 caracteres hexadecimales; ningun hash puede contener texto crudo, URL cruda, prompt, documento, mensaje o salida completa.
-46. Las reglas 30 a 45 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
+46. Todo `TraceObject` debe registrar `cost_budget_ref`, `cost_budget_version`, `plan_code` y `complexity` como escalares cerrados.
+47. `TraceObject` no puede embeber `CostBudget` completo ni usar `$ref` a `cost-budget.schema.json`.
+48. `USER_SUMMARY` no muestra `plan_code`, `cost_budget_ref`, `cost_budget_version` ni limites de budget.
+49. `SUPPORT_VIEW` puede mostrar `plan_code` neutral, `complexity` y `cost_budget_ref`, pero no precio mensual ni condiciones comerciales completas.
+50. `INTERNAL_AUDIT` puede ver `cost_budget_ref`, `cost_budget_version`, `plan_code`, `complexity` y relacion con `UsageEvent`.
+51. La relacion entre `TraceObject` y Usage Ledger debe poder conciliar ejecucion, creditos y budget efectivo sin guardar PII directa.
+52. Las reglas 30 a 51 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
 
 ## Reglas asistidas por IA
 
@@ -89,7 +96,7 @@ No define retencion final, permisos productivos completos ni proceso de incident
 | Mensaje completo del usuario | No se guarda en trazas 0.7; usar hash o referencia conversacional. |
 | URL sensible | Guardar hash cuando se registre fuente abierta o rechazada dentro de `TraceObject`; URLs operativas crudas quedan fuera de la traza 0.7. |
 | Error tecnico | Guardar `error_code` y `safe_message_code`; el texto humano se genera desde catalogo cerrado en la vista. |
-| Costos y latencias | Guardar valores numericos observados, sin plan comercial ni precio mensual. |
+| Costos y latencias | Guardar valores numericos observados. En Subfase 0.8, `TraceObject` puede guardar plan neutral, complejidad y budget ref; no guarda precio mensual ni `CostBudget` embebido. |
 
 ## Registro de acceso elevado
 

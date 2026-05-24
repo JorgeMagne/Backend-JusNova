@@ -1,0 +1,980 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/usage-event.schema.json",
+  "title": "UsageEvent",
+  "description": "Evento cerrado del Usage Ledger para auditar consumo tecnico, creditos y cuota de plan sin guardar PII directa ni metadata libre.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-24",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.8 - Cost Governor, planes y presupuestos"
+  },
+  "required": [
+    "usage_event_id",
+    "organization_id",
+    "actor_ref",
+    "actor_type",
+    "plan_code",
+    "billing_period",
+    "event_scope",
+    "event_type",
+    "unit",
+    "quantity",
+    "created_at"
+  ],
+  "properties": {
+    "usage_event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor_ref": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+      }
+    },
+    "actor_type": {
+      "enum": [
+        "user",
+        "system",
+        "support",
+        "service"
+      ]
+    },
+    "plan_code": {
+      "enum": [
+        "PROFESIONAL",
+        "PRO_PLUS",
+        "ESTUDIO",
+        "ENTERPRISE"
+      ]
+    },
+    "billing_period": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
+    },
+    "event_scope": {
+      "enum": [
+        "execution",
+        "organization_period"
+      ]
+    },
+    "event_type": {
+      "enum": [
+        "standard_query",
+        "complex_query",
+        "research_credit_used",
+        "discovery_call",
+        "fetch",
+        "ocr_page",
+        "document_processed",
+        "model_input_tokens",
+        "model_output_tokens",
+        "storage_mb_day"
+      ]
+    },
+    "unit": {
+      "enum": [
+        "query",
+        "credit",
+        "call",
+        "fetch",
+        "page",
+        "document",
+        "token",
+        "mb_day"
+      ]
+    },
+    "quantity": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "complexity": {
+      "enum": [
+        "SIMPLE",
+        "MEDIO",
+        "COMPLEJO",
+        "INVESTIGACION",
+        null
+      ]
+    },
+    "cost_budget_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "cost_budget_version": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "conversation_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "trace_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "answer_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "retrieval_run_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "cost_report_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "model_call_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "tool_call_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "estimated_cost": {
+      "type": "number",
+      "minimum": 0
+    },
+    "currency": {
+      "enum": [
+        "BOB",
+        "USD",
+        "NONE"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "dependentRequired": {
+    "estimated_cost": [
+      "currency"
+    ],
+    "currency": [
+      "estimated_cost"
+    ]
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "event_scope": {
+            "const": "execution"
+          }
+        },
+        "required": [
+          "event_scope"
+        ]
+      },
+      "then": {
+        "required": [
+          "complexity",
+          "cost_budget_ref",
+          "cost_budget_version"
+        ],
+        "properties": {
+          "complexity": {
+            "enum": [
+              "SIMPLE",
+              "MEDIO",
+              "COMPLEJO",
+              "INVESTIGACION"
+            ]
+          },
+          "cost_budget_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cost_budget_version": {
+            "type": "string",
+            "pattern": "^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_scope": {
+            "const": "organization_period"
+          }
+        },
+        "required": [
+          "event_scope"
+        ]
+      },
+      "then": {
+        "properties": {
+          "complexity": {
+            "const": null
+          },
+          "cost_budget_ref": {
+            "const": null
+          },
+          "cost_budget_version": {
+            "const": null
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "standard_query",
+              "complex_query",
+              "research_credit_used",
+              "discovery_call",
+              "fetch",
+              "ocr_page",
+              "model_input_tokens",
+              "model_output_tokens"
+            ]
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event_scope": {
+            "const": "execution"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "storage_mb_day"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event_scope": {
+            "const": "organization_period"
+          },
+          "unit": {
+            "const": "mb_day"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "standard_query"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "unit": {
+            "const": "query"
+          },
+          "complexity": {
+            "enum": [
+              "SIMPLE",
+              "MEDIO"
+            ]
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "complex_query"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "unit": {
+            "const": "query"
+          },
+          "complexity": {
+            "enum": [
+              "COMPLEJO",
+              "INVESTIGACION"
+            ]
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "research_credit_used"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "unit": {
+            "const": "credit"
+          },
+          "complexity": {
+            "enum": [
+              "COMPLEJO",
+              "INVESTIGACION"
+            ]
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "research_credit_used"
+          },
+          "complexity": {
+            "const": "COMPLEJO"
+          }
+        },
+        "required": [
+          "event_type",
+          "complexity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "quantity": {
+            "const": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "research_credit_used"
+          },
+          "complexity": {
+            "const": "INVESTIGACION"
+          }
+        },
+        "required": [
+          "event_type",
+          "complexity"
+        ]
+      },
+      "then": {
+        "properties": {
+          "quantity": {
+            "const": 2
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "discovery_call"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "unit": {
+            "const": "call"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "fetch"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "unit": {
+            "const": "fetch"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "ocr_page"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "unit": {
+            "const": "page"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "document_processed"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "unit": {
+            "const": "document"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "model_input_tokens",
+              "model_output_tokens"
+            ]
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "unit": {
+            "const": "token"
+          },
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "unit": {
+            "enum": [
+              "query",
+              "credit",
+              "call",
+              "fetch",
+              "page",
+              "document",
+              "token"
+            ]
+          }
+        },
+        "required": [
+          "unit"
+        ]
+      },
+      "then": {
+        "properties": {
+          "quantity": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "currency": {
+            "const": "NONE"
+          }
+        },
+        "required": [
+          "currency"
+        ]
+      },
+      "then": {
+        "properties": {
+          "estimated_cost": {
+            "const": 0
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "usage_event_id": "ue_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "plan_code": "PROFESIONAL",
+      "billing_period": "2026-05",
+      "event_scope": "execution",
+      "event_type": "standard_query",
+      "unit": "query",
+      "quantity": 1,
+      "complexity": "SIMPLE",
+      "cost_budget_ref": "cb_profesional_simple_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "trace_id": "tr_001",
+      "answer_id": "ans_001",
+      "estimated_cost": 0,
+      "currency": "NONE",
+      "created_at": "2026-05-24T00:00:00Z"
+    },
+    {
+      "usage_event_id": "ue_storage_001",
+      "organization_id": "org_001",
+      "actor_ref": "service_usage_ledger",
+      "actor_type": "service",
+      "plan_code": "ESTUDIO",
+      "billing_period": "2026-05",
+      "event_scope": "organization_period",
+      "event_type": "storage_mb_day",
+      "unit": "mb_day",
+      "quantity": 42.5,
+      "complexity": null,
+      "cost_budget_ref": null,
+      "cost_budget_version": null,
+      "estimated_cost": 0,
+      "currency": "NONE",
+      "created_at": "2026-05-24T00:00:00Z"
+    },
+    {
+      "usage_event_id": "ue_credit_001",
+      "organization_id": "org_001",
+      "actor_ref": "actor_hash_001",
+      "actor_type": "user",
+      "plan_code": "PRO_PLUS",
+      "billing_period": "2026-05",
+      "event_scope": "execution",
+      "event_type": "research_credit_used",
+      "unit": "credit",
+      "quantity": 2,
+      "complexity": "INVESTIGACION",
+      "cost_budget_ref": "cb_pro_plus_investigacion_v080",
+      "cost_budget_version": "cost-budget-v0.8.0",
+      "trace_id": "tr_002",
+      "answer_id": "ans_002",
+      "created_at": "2026-05-24T00:00:00Z"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "description": "usage_event_id es obligatorio.",
+      "value": {
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "standard_query",
+        "unit": "query",
+        "quantity": 1,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "actor_ref no puede tener forma de email.",
+      "value": {
+        "usage_event_id": "ue_email",
+        "organization_id": "org_001",
+        "actor_ref": "abogado@example.com",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "standard_query",
+        "unit": "query",
+        "quantity": 1,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "user_id crudo y metadata libre no pertenecen al ledger 0.8.",
+      "value": {
+        "usage_event_id": "ue_user_id",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "user_id": "1234567",
+        "metadata": {
+          "note": "free text"
+        },
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "standard_query",
+        "unit": "query",
+        "quantity": 1,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "execution requiere budget efectivo.",
+      "value": {
+        "usage_event_id": "ue_no_budget",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "standard_query",
+        "unit": "query",
+        "quantity": 1,
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "organization_period no puede llevar complexity real.",
+      "value": {
+        "usage_event_id": "ue_org_complexity",
+        "organization_id": "org_001",
+        "actor_ref": "service_usage_ledger",
+        "actor_type": "service",
+        "plan_code": "ESTUDIO",
+        "billing_period": "2026-05",
+        "event_scope": "organization_period",
+        "event_type": "storage_mb_day",
+        "unit": "mb_day",
+        "quantity": 10.5,
+        "complexity": "SIMPLE",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "Evento solo execution no puede ser organization_period.",
+      "value": {
+        "usage_event_id": "ue_bad_scope",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "organization_period",
+        "event_type": "fetch",
+        "unit": "fetch",
+        "quantity": 1,
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "storage_mb_day solo es organization_period.",
+      "value": {
+        "usage_event_id": "ue_storage_execution",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "storage_mb_day",
+        "unit": "mb_day",
+        "quantity": 1.5,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "standard_query no puede usar INVESTIGACION.",
+      "value": {
+        "usage_event_id": "ue_standard_research",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "standard_query",
+        "unit": "query",
+        "quantity": 1,
+        "complexity": "INVESTIGACION",
+        "cost_budget_ref": "cb_profesional_investigacion_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "research credit no aplica a MEDIO.",
+      "value": {
+        "usage_event_id": "ue_credit_medio",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "research_credit_used",
+        "unit": "credit",
+        "quantity": 1,
+        "complexity": "MEDIO",
+        "cost_budget_ref": "cb_profesional_medio_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "COMPLEJO cuesta exactamente un credito en v0.",
+      "value": {
+        "usage_event_id": "ue_credit_complex_two",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PRO_PLUS",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "research_credit_used",
+        "unit": "credit",
+        "quantity": 2,
+        "complexity": "COMPLEJO",
+        "cost_budget_ref": "cb_pro_plus_complejo_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "INVESTIGACION cuesta exactamente dos creditos en v0.",
+      "value": {
+        "usage_event_id": "ue_credit_research_one",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PRO_PLUS",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "research_credit_used",
+        "unit": "credit",
+        "quantity": 1,
+        "complexity": "INVESTIGACION",
+        "cost_budget_ref": "cb_pro_plus_investigacion_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "La unidad debe coincidir con el evento.",
+      "value": {
+        "usage_event_id": "ue_bad_unit",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "ocr_page",
+        "unit": "token",
+        "quantity": 1,
+        "complexity": "MEDIO",
+        "cost_budget_ref": "cb_profesional_medio_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "quantity debe ser positiva.",
+      "value": {
+        "usage_event_id": "ue_zero",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "fetch",
+        "unit": "fetch",
+        "quantity": 0,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "billing_period debe tener mes valido.",
+      "value": {
+        "usage_event_id": "ue_bad_period",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-13",
+        "event_scope": "execution",
+        "event_type": "fetch",
+        "unit": "fetch",
+        "quantity": 1,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "estimated_cost requiere currency.",
+      "value": {
+        "usage_event_id": "ue_cost_no_currency",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "fetch",
+        "unit": "fetch",
+        "quantity": 1,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "estimated_cost": 0.05,
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "currency requiere estimated_cost.",
+      "value": {
+        "usage_event_id": "ue_currency_no_cost",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "fetch",
+        "unit": "fetch",
+        "quantity": 1,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "currency": "USD",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    },
+    {
+      "description": "currency NONE no permite costo positivo.",
+      "value": {
+        "usage_event_id": "ue_none_positive",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "plan_code": "PROFESIONAL",
+        "billing_period": "2026-05",
+        "event_scope": "execution",
+        "event_type": "fetch",
+        "unit": "fetch",
+        "quantity": 1,
+        "complexity": "SIMPLE",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "estimated_cost": 0.05,
+        "currency": "NONE",
+        "created_at": "2026-05-24T00:00:00Z"
+      }
+    }
+  ]
+}

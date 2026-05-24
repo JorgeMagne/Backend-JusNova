@@ -72,7 +72,7 @@ Estos ADRs quedan aceptados como decisiones arquitectonicas. Esta lista no impli
 | ADR-005 | AI Provider And Model Policy | Accepted | Fase 1 ModelProvider; Subfase 0.10 provider policy. |
 | ADR-006 | Document OCR Policy | Accepted | Subfase 0.9/0.10 policies; Fase 9 implementacion. |
 | ADR-007 | Evidence, Answer, Citation And Claim Contracts | Accepted | Subfase 0.4 schemas; Subfase 0.7 citation audit contract; Fase 2 auditor. |
-| ADR-008 | Cost Governor And Commercial Budgets | Accepted | Subfase 0.8 budgets; Fase 1 CostGovernor/UsageLedger. |
+| ADR-008 | Cost Governor And Commercial Budgets | Accepted | Subfase 0.8 budgets/contracts/policies accepted; Fase 1 CostGovernor/UsageLedger. |
 | ADR-009 | Source Registry And Validity Policy | Accepted | Subfase 0.6 source/validity/conflict/uncertainty policies accepted; Fase 4/5 registry/adapters. |
 | ADR-010 | Traceability And Answer Versioning | Accepted | Subfase 0.7 trace/audit/version schemas and policies accepted; Fase 3 versionado basico. |
 | ADR-011 | Security, Privacy And Provider Boundaries | Accepted | Subfase 0.10 policies; Fase 1 ownership. |
@@ -162,9 +162,33 @@ Estos contratos quedan aceptados como contratos documentales de trazabilidad, au
 | Answer Versioning Policy | Accepted | `docs/policies/answer-versioning-policy.md` |
 | Trace Visibility Policy | Accepted | `docs/policies/trace-visibility-policy.md` |
 
+## Taxonomias aceptadas en Subfase 0.8
+
+| Taxonomia | Estado | Archivo |
+|---|---|---|
+| Budgets por complejidad | Accepted | `docs/schemas/budgets.yaml` |
+
+## Contratos aceptados en Subfase 0.8
+
+Estos contratos quedan aceptados como contratos documentales de Cost Governor y Usage Ledger. Esta lista no implica que runtime, billing, Stripe, DB ni CostGovernor ya esten implementados.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Cost Budget | Accepted | `docs/contracts/cost-budget.schema.json` |
+| Usage Event | Accepted | `docs/contracts/usage-event.schema.json` |
+| Trace Object Budget Amendment | Accepted | `docs/contracts/trace-object.schema.json` |
+
+## Politicas aceptadas en Subfase 0.8
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Commercial Plans v0 | Accepted | `docs/policies/commercial-plans-v0.md` |
+| Cost Governor Policy | Accepted | `docs/policies/cost-governor-policy.md` |
+| Trace Visibility Policy Amendment | Accepted | `docs/policies/trace-visibility-policy.md` |
+
 ## Dependencias posteriores preservadas
 
 - Source Registry schema completo queda delegado a subfases posteriores y Fase 4.
 - Privacy/security policy, retencion, permisos finales y acceso a material crudo quedan delegados a Subfase 0.10.
-- Cost Governor, budgets comerciales y usage ledger quedan delegados a Subfase 0.8.
+- Runtime de CostGovernor, billing y UsageLedger quedan delegados a Fase 1; los contratos y policies documentales quedaron aceptados en Subfase 0.8.
 - Fase 0 global permanece en `Draft` hasta completar 0.1 a 0.14.
