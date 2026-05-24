@@ -1,0 +1,885 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/provider-call-audit.schema.json",
+  "title": "ProviderCallAudit",
+  "description": "Auditoria minimizada de llamadas a providers. Registra clases de datos, hashes y decision de policy sin almacenar payloads crudos.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-24",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+  },
+  "required": [
+    "provider_call_audit_id",
+    "organization_id",
+    "provider_family",
+    "provider_name",
+    "external_call",
+    "data_sent_classes",
+    "data_returned_classes",
+    "attempted_data_classes",
+    "input_hash",
+    "started_at",
+    "completed_at",
+    "status",
+    "training_use_allowed",
+    "policy_decision"
+  ],
+  "properties": {
+    "provider_call_audit_id": {
+      "type": "string",
+      "pattern": "^pca_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider_family": {
+      "$ref": "#/$defs/provider_family"
+    },
+    "provider_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "external_call": {
+      "type": "boolean"
+    },
+    "data_sent_classes": {
+      "$ref": "#/$defs/data_class_array"
+    },
+    "data_returned_classes": {
+      "$ref": "#/$defs/data_class_array"
+    },
+    "attempted_data_classes": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/data_class_array"
+        },
+        {
+          "minItems": 1
+        }
+      ]
+    },
+    "input_hash": {
+      "$ref": "#/$defs/sha256_hash"
+    },
+    "output_hash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "success",
+        "error",
+        "timeout",
+        "rate_limited",
+        "cancelled",
+        "policy_blocked"
+      ]
+    },
+    "training_use_allowed": {
+      "const": false
+    },
+    "policy_decision": {
+      "enum": [
+        "allowed",
+        "redacted",
+        "blocked_by_classification",
+        "blocked_by_feature_flag",
+        "blocked_by_kill_switch"
+      ]
+    },
+    "error_code": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "provider_error",
+        "timeout",
+        "rate_limited",
+        "cancelled_by_user",
+        "cancelled_by_system",
+        "policy_blocked",
+        "unmapped_error",
+        null
+      ]
+    },
+    "region_or_residency": {
+      "type": "string",
+      "minLength": 1
+    },
+    "feature_flag": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kill_switch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^tr_[A-Za-z0-9_-]+$"
+    },
+    "model_call_id": {
+      "type": "string",
+      "pattern": "^mc_[A-Za-z0-9_-]+$"
+    },
+    "tool_call_id": {
+      "type": "string",
+      "pattern": "^tc_[A-Za-z0-9_-]+$"
+    },
+    "retrieval_run_id": {
+      "type": "string",
+      "pattern": "^rr_[A-Za-z0-9_-]+$"
+    },
+    "usage_event_id": {
+      "type": "string",
+      "pattern": "^ue_[A-Za-z0-9_-]+$"
+    },
+    "cost_report_id": {
+      "type": "string",
+      "pattern": "^cr_[A-Za-z0-9_-]+$"
+    }
+  },
+  "$defs": {
+    "sha256_hash": {
+      "type": "string",
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "provider_family": {
+      "enum": [
+        "ModelProvider",
+        "SearchDiscoveryProvider",
+        "OfficialSourceAdapter",
+        "FetchProvider",
+        "ExtractionProvider",
+        "OCRProvider",
+        "EmbeddingProvider",
+        "StorageProvider",
+        "WorkflowProvider",
+        "SnapshotProvider",
+        "LegalRankingProvider"
+      ]
+    },
+    "data_class": {
+      "enum": [
+        "PUBLIC_LEGAL_SOURCE",
+        "PUBLIC_LEGAL_QUERY",
+        "PROVIDER_OPERATIONAL_METADATA",
+        "BILLING_USAGE",
+        "INTERNAL_TRACE_RESTRICTED",
+        "SECURITY_AUDIT_RESTRICTED",
+        "DERIVED_LEGAL_QUERY_RESTRICTED",
+        "USER_MESSAGE_CONFIDENTIAL",
+        "CASE_MEMORY_CONFIDENTIAL",
+        "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+        "USER_DOCUMENT_CONFIDENTIAL"
+      ]
+    },
+    "data_class_array": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/data_class"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "external_call": {
+            "const": true
+          }
+        },
+        "required": [
+          "external_call"
+        ]
+      },
+      "then": {
+        "required": [
+          "region_or_residency",
+          "feature_flag"
+        ],
+        "properties": {
+          "training_use_allowed": {
+            "const": false
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "success"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "output_hash"
+        ],
+        "properties": {
+          "output_hash": {
+            "type": "string",
+            "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+          },
+          "data_sent_classes": {
+            "minItems": 1
+          },
+          "data_returned_classes": {
+            "minItems": 1
+          },
+          "policy_decision": {
+            "enum": [
+              "allowed",
+              "redacted"
+            ]
+          },
+          "error_code": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "error",
+              "timeout",
+              "rate_limited",
+              "cancelled"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ],
+        "properties": {
+          "output_hash": {
+            "type": "null"
+          },
+          "policy_decision": {
+            "enum": [
+              "allowed",
+              "redacted"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "policy_blocked"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ],
+        "properties": {
+          "data_sent_classes": {
+            "maxItems": 0
+          },
+          "data_returned_classes": {
+            "maxItems": 0
+          },
+          "attempted_data_classes": {
+            "minItems": 1
+          },
+          "error_code": {
+            "const": "policy_blocked"
+          },
+          "output_hash": {
+            "type": "null"
+          },
+          "policy_decision": {
+            "enum": [
+              "blocked_by_classification",
+              "blocked_by_feature_flag",
+              "blocked_by_kill_switch"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "policy_decision": {
+            "const": "blocked_by_feature_flag"
+          }
+        },
+        "required": [
+          "policy_decision"
+        ]
+      },
+      "then": {
+        "required": [
+          "feature_flag"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "policy_decision": {
+            "const": "blocked_by_kill_switch"
+          }
+        },
+        "required": [
+          "policy_decision"
+        ]
+      },
+      "then": {
+        "required": [
+          "kill_switch"
+        ]
+      }
+    }
+  ],
+  "examples": [
+    {
+      "provider_call_audit_id": "pca_001",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "redacted",
+      "error_code": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_blocked_001",
+      "organization_id": "org_001",
+      "provider_family": "SearchDiscoveryProvider",
+      "provider_name": "openai_web_search_discovery",
+      "external_call": true,
+      "data_sent_classes": [],
+      "data_returned_classes": [],
+      "attempted_data_classes": [
+        "USER_DOCUMENT_CONFIDENTIAL"
+      ],
+      "input_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "output_hash": null,
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:00Z",
+      "status": "policy_blocked",
+      "training_use_allowed": false,
+      "policy_decision": "blocked_by_classification",
+      "error_code": "policy_blocked",
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_web_search.enabled"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "provider_call_audit_id": "bad_001",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled"
+    },
+    {
+      "provider_call_audit_id": "pca_bad_external_missing_region",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "feature_flag": "provider.openai_model.enabled"
+    },
+    {
+      "provider_call_audit_id": "pca_bad_training",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": true,
+      "policy_decision": "allowed",
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled"
+    },
+    {
+      "provider_call_audit_id": "pca_bad_timeout",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": null,
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "timeout",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled"
+    },
+    {
+      "provider_call_audit_id": "pca_bad_policy_blocked_returned",
+      "organization_id": "org_001",
+      "provider_family": "SearchDiscoveryProvider",
+      "provider_name": "openai_web_search_discovery",
+      "external_call": true,
+      "data_sent_classes": [],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "USER_DOCUMENT_CONFIDENTIAL"
+      ],
+      "input_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "output_hash": null,
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:00Z",
+      "status": "policy_blocked",
+      "training_use_allowed": false,
+      "policy_decision": "blocked_by_classification",
+      "error_code": "policy_blocked",
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_web_search.enabled"
+    },
+    {
+      "provider_call_audit_id": "pca_timeout_missing_error_code",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": null,
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "timeout",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_external_missing_region",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "redacted",
+      "error_code": null,
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_external_missing_feature_flag",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "redacted",
+      "error_code": null,
+      "region_or_residency": "configured_by_deployment",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_training_true",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": true,
+      "policy_decision": "redacted",
+      "error_code": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_policy_blocked_sent_payload",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "USER_DOCUMENT_CONFIDENTIAL"
+      ],
+      "data_returned_classes": [],
+      "attempted_data_classes": [
+        "USER_DOCUMENT_CONFIDENTIAL"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": null,
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "policy_blocked",
+      "training_use_allowed": false,
+      "policy_decision": "blocked_by_classification",
+      "error_code": "policy_blocked",
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_error_with_output_hash",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "error",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "error_code": "provider_error",
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_success_null_output_hash",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": null,
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "redacted",
+      "error_code": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_bad_unknown_attempted_class",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "UNKNOWN_CLASS"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "redacted",
+      "error_code": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "provider_call_audit_id": "pca_policy_unknown_provider",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "unknown_provider",
+      "external_call": false,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "allowed"
+    },
+    {
+      "provider_call_audit_id": "pca_policy_bad_allowlist",
+      "organization_id": "org_001",
+      "provider_family": "SearchDiscoveryProvider",
+      "provider_name": "openai_web_search_discovery",
+      "external_call": true,
+      "data_sent_classes": [
+        "USER_DOCUMENT_CONFIDENTIAL"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "USER_DOCUMENT_CONFIDENTIAL"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "allowed",
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_web_search.enabled"
+    },
+    {
+      "provider_call_audit_id": "pca_policy_family_mismatch",
+      "organization_id": "org_001",
+      "provider_family": "StorageProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_SOURCE"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "redacted",
+      "error_code": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_policy_class_not_in_provider_allowlist",
+      "organization_id": "org_001",
+      "provider_family": "SearchDiscoveryProvider",
+      "provider_name": "openai_web_search_discovery",
+      "external_call": true,
+      "data_sent_classes": [
+        "USER_DOCUMENT_CONFIDENTIAL"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "USER_DOCUMENT_CONFIDENTIAL"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "redacted",
+      "error_code": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    },
+    {
+      "provider_call_audit_id": "pca_policy_attempted_mismatch_success",
+      "organization_id": "org_001",
+      "provider_family": "ModelProvider",
+      "provider_name": "openai_model_provider",
+      "external_call": true,
+      "data_sent_classes": [
+        "PUBLIC_LEGAL_QUERY"
+      ],
+      "data_returned_classes": [
+        "PROVIDER_OPERATIONAL_METADATA"
+      ],
+      "attempted_data_classes": [
+        "PUBLIC_LEGAL_QUERY",
+        "DERIVED_LEGAL_QUERY_RESTRICTED"
+      ],
+      "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "started_at": "2026-05-24T10:00:00Z",
+      "completed_at": "2026-05-24T10:00:02Z",
+      "status": "success",
+      "training_use_allowed": false,
+      "policy_decision": "redacted",
+      "error_code": null,
+      "region_or_residency": "configured_by_deployment",
+      "feature_flag": "provider.openai_model.enabled",
+      "model_call_id": "mc_001"
+    }
+  ]
+}

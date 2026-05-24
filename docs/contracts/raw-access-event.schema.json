@@ -1,0 +1,858 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/raw-access-event.schema.json",
+  "title": "RawAccessEvent",
+  "description": "Evento de auditoria para acceso raw o elevado. No representa SUPPORT_VIEW normal y no almacena contenido crudo.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-24",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+  },
+  "required": [
+    "raw_access_event_id",
+    "organization_id",
+    "resource_type",
+    "resource_ref",
+    "classification",
+    "actor_ref",
+    "actor_type",
+    "access_role",
+    "reason",
+    "accessed_at",
+    "visibility_level",
+    "access_case_ref",
+    "approved_by_ref"
+  ],
+  "properties": {
+    "raw_access_event_id": {
+      "type": "string",
+      "pattern": "^rae_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resource_type": {
+      "enum": [
+        "document",
+        "document_evidence",
+        "message",
+        "trace",
+        "model_call",
+        "tool_call",
+        "retrieval_run",
+        "provider_call",
+        "ocr_artifact",
+        "embedding",
+        "storage_object",
+        "case_memory",
+        "usage_event"
+      ]
+    },
+    "resource_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "classification": {
+      "enum": [
+        "PUBLIC_LEGAL_SOURCE",
+        "PUBLIC_LEGAL_QUERY",
+        "PROVIDER_OPERATIONAL_METADATA",
+        "BILLING_USAGE",
+        "INTERNAL_TRACE_RESTRICTED",
+        "SECURITY_AUDIT_RESTRICTED",
+        "DERIVED_LEGAL_QUERY_RESTRICTED",
+        "USER_MESSAGE_CONFIDENTIAL",
+        "CASE_MEMORY_CONFIDENTIAL",
+        "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+        "USER_DOCUMENT_CONFIDENTIAL"
+      ]
+    },
+    "actor_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor_type": {
+      "enum": [
+        "user",
+        "system",
+        "support",
+        "service"
+      ]
+    },
+    "access_role": {
+      "enum": [
+        "security_auditor",
+        "incident_responder",
+        "system_job"
+      ]
+    },
+    "reason": {
+      "enum": [
+        "incident_response",
+        "legal_audit",
+        "security_investigation",
+        "user_request",
+        "regulatory_request"
+      ]
+    },
+    "accessed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "visibility_level": {
+      "enum": [
+        "INTERNAL_AUDIT",
+        "RAW_INCIDENT_ACCESS"
+      ]
+    },
+    "access_case_ref": {
+      "type": "string",
+      "pattern": "^(inc|audit|req)_[A-Za-z0-9_-]+$"
+    },
+    "approved_by_ref": {
+      "type": "string",
+      "pattern": "^(actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+    },
+    "document_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^doc_[A-Za-z0-9_-]+$"
+    },
+    "document_version_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^docv_[A-Za-z0-9_-]+$"
+    },
+    "passage_ref": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^D[0-9]+:P[0-9]+$"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "user"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+          },
+          "access_role": {
+            "const": "security_auditor"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "support"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^(support_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+          },
+          "access_role": {
+            "enum": [
+              "incident_responder",
+              "security_auditor"
+            ]
+          },
+          "visibility_level": {
+            "const": "RAW_INCIDENT_ACCESS"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "service"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "pattern": "^service_[A-Za-z0-9_-]+$"
+          },
+          "access_role": {
+            "enum": [
+              "system_job",
+              "incident_responder"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "actor_type": {
+            "const": "system"
+          }
+        },
+        "required": [
+          "actor_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "actor_ref": {
+            "const": "system"
+          },
+          "access_role": {
+            "const": "system_job"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "document_evidence"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "document_id",
+          "document_version_id",
+          "passage_ref"
+        ],
+        "properties": {
+          "resource_ref": {
+            "pattern": "^de_[A-Za-z0-9_-]+$"
+          },
+          "classification": {
+            "const": "DOCUMENT_EVIDENCE_CONFIDENTIAL"
+          },
+          "document_id": {
+            "type": "string",
+            "pattern": "^doc_[A-Za-z0-9_-]+$"
+          },
+          "document_version_id": {
+            "type": "string",
+            "pattern": "^docv_[A-Za-z0-9_-]+$"
+          },
+          "passage_ref": {
+            "type": "string",
+            "pattern": "^D[0-9]+:P[0-9]+$"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "document_id": {
+            "type": "null"
+          },
+          "document_version_id": {
+            "type": "null"
+          },
+          "passage_ref": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "document"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^doc_[A-Za-z0-9_-]+$"
+          },
+          "classification": {
+            "const": "USER_DOCUMENT_CONFIDENTIAL"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "message"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^msg_[A-Za-z0-9_-]+$"
+          },
+          "classification": {
+            "const": "USER_MESSAGE_CONFIDENTIAL"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "case_memory"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^case_[A-Za-z0-9_-]+$"
+          },
+          "classification": {
+            "const": "CASE_MEMORY_CONFIDENTIAL"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "usage_event"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^ue_[A-Za-z0-9_-]+$"
+          },
+          "classification": {
+            "const": "BILLING_USAGE"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "provider_call"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^pca_[A-Za-z0-9_-]+$"
+          },
+          "classification": {
+            "enum": [
+              "PROVIDER_OPERATIONAL_METADATA",
+              "SECURITY_AUDIT_RESTRICTED"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "enum": [
+              "trace",
+              "model_call",
+              "tool_call",
+              "retrieval_run"
+            ]
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "enum": [
+              "INTERNAL_TRACE_RESTRICTED",
+              "SECURITY_AUDIT_RESTRICTED"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "trace"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^tr_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "model_call"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^mc_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "tool_call"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^tc_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "retrieval_run"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^rr_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "enum": [
+              "ocr_artifact",
+              "storage_object"
+            ]
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "classification": {
+            "const": "USER_DOCUMENT_CONFIDENTIAL"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "ocr_artifact"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^ocr_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "storage_object"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^sto_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resource_type": {
+            "const": "embedding"
+          }
+        },
+        "required": [
+          "resource_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "resource_ref": {
+            "pattern": "^emb_[A-Za-z0-9_-]+$"
+          },
+          "classification": {
+            "enum": [
+              "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+              "CASE_MEMORY_CONFIDENTIAL"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reason": {
+            "enum": [
+              "incident_response",
+              "security_investigation"
+            ]
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "then": {
+        "properties": {
+          "access_case_ref": {
+            "pattern": "^inc_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reason": {
+            "const": "legal_audit"
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "then": {
+        "properties": {
+          "access_case_ref": {
+            "pattern": "^audit_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reason": {
+            "enum": [
+              "user_request",
+              "regulatory_request"
+            ]
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "then": {
+        "properties": {
+          "access_case_ref": {
+            "pattern": "^req_[A-Za-z0-9_-]+$"
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "raw_access_event_id": "rae_001",
+      "organization_id": "org_001",
+      "resource_type": "document_evidence",
+      "resource_ref": "de_001",
+      "classification": "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+      "actor_ref": "support_hash_reviewer_001",
+      "actor_type": "support",
+      "access_role": "security_auditor",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "expires_at": "2026-05-24T11:00:00Z",
+      "visibility_level": "RAW_INCIDENT_ACCESS",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_manager_001",
+      "document_id": "doc_001",
+      "document_version_id": "docv_001",
+      "passage_ref": "D1:P1"
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "raw_access_event_id": "rae_bad_support_operator",
+      "organization_id": "org_001",
+      "resource_type": "message",
+      "resource_ref": "msg_001",
+      "classification": "USER_MESSAGE_CONFIDENTIAL",
+      "actor_ref": "support_hash_reviewer_001",
+      "actor_type": "support",
+      "access_role": "support_operator",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "visibility_level": "RAW_INCIDENT_ACCESS",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_manager_001"
+    },
+    {
+      "raw_access_event_id": "rae_bad_resource_ref",
+      "organization_id": "org_001",
+      "resource_type": "message",
+      "resource_ref": "doc_001",
+      "classification": "USER_MESSAGE_CONFIDENTIAL",
+      "actor_ref": "support_hash_reviewer_001",
+      "actor_type": "support",
+      "access_role": "security_auditor",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "visibility_level": "RAW_INCIDENT_ACCESS",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_manager_001"
+    },
+    {
+      "raw_access_event_id": "rae_bad_doc_metadata",
+      "organization_id": "org_001",
+      "resource_type": "message",
+      "resource_ref": "msg_001",
+      "classification": "USER_MESSAGE_CONFIDENTIAL",
+      "actor_ref": "support_hash_reviewer_001",
+      "actor_type": "support",
+      "access_role": "security_auditor",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "visibility_level": "RAW_INCIDENT_ACCESS",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_manager_001",
+      "document_id": "doc_001"
+    },
+    {
+      "raw_access_event_id": "rae_bad_classification",
+      "organization_id": "org_001",
+      "resource_type": "document_evidence",
+      "resource_ref": "de_001",
+      "classification": "USER_DOCUMENT_CONFIDENTIAL",
+      "actor_ref": "support_hash_reviewer_001",
+      "actor_type": "support",
+      "access_role": "security_auditor",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "visibility_level": "RAW_INCIDENT_ACCESS",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_manager_001",
+      "document_id": "doc_001",
+      "document_version_id": "docv_001",
+      "passage_ref": "D1:P1"
+    },
+    {
+      "raw_access_event_id": "rae_bad_support_internal_audit",
+      "organization_id": "org_001",
+      "resource_type": "document_evidence",
+      "resource_ref": "de_001",
+      "classification": "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+      "actor_ref": "support_hash_001",
+      "actor_type": "support",
+      "access_role": "incident_responder",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "expires_at": "2026-05-24T11:00:00Z",
+      "visibility_level": "INTERNAL_AUDIT",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_approver",
+      "document_id": "doc_001",
+      "document_version_id": "docv_001",
+      "passage_ref": "D1:P1"
+    },
+    {
+      "raw_access_event_id": "rae_bad_message_with_document_id",
+      "organization_id": "org_001",
+      "resource_type": "message",
+      "resource_ref": "msg_001",
+      "classification": "USER_MESSAGE_CONFIDENTIAL",
+      "actor_ref": "support_hash_reviewer_001",
+      "actor_type": "support",
+      "access_role": "security_auditor",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "expires_at": "2026-05-24T11:00:00Z",
+      "visibility_level": "RAW_INCIDENT_ACCESS",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_manager_001",
+      "document_id": "doc_001",
+      "document_version_id": "docv_001",
+      "passage_ref": "D1:P1"
+    },
+    {
+      "raw_access_event_id": "rae_bad_document_evidence_missing_refs",
+      "organization_id": "org_001",
+      "resource_type": "document_evidence",
+      "resource_ref": "de_001",
+      "classification": "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+      "actor_ref": "support_hash_reviewer_001",
+      "actor_type": "support",
+      "access_role": "security_auditor",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "expires_at": "2026-05-24T11:00:00Z",
+      "visibility_level": "RAW_INCIDENT_ACCESS",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_manager_001"
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "raw_access_event_id": "rae_policy_self_approval",
+      "organization_id": "org_001",
+      "resource_type": "message",
+      "resource_ref": "msg_001",
+      "classification": "USER_MESSAGE_CONFIDENTIAL",
+      "actor_ref": "support_hash_reviewer_001",
+      "actor_type": "support",
+      "access_role": "security_auditor",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "expires_at": "2026-05-24T11:00:00Z",
+      "visibility_level": "RAW_INCIDENT_ACCESS",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_reviewer_001"
+    },
+    {
+      "raw_access_event_id": "rae_policy_bad_expiry",
+      "organization_id": "org_001",
+      "resource_type": "message",
+      "resource_ref": "msg_001",
+      "classification": "USER_MESSAGE_CONFIDENTIAL",
+      "actor_ref": "support_hash_reviewer_001",
+      "actor_type": "support",
+      "access_role": "security_auditor",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "expires_at": "2026-05-24T09:59:00Z",
+      "visibility_level": "RAW_INCIDENT_ACCESS",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_manager_001"
+    },
+    {
+      "raw_access_event_id": "rae_policy_self_approved",
+      "organization_id": "org_001",
+      "resource_type": "document_evidence",
+      "resource_ref": "de_001",
+      "classification": "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+      "actor_ref": "support_hash_same",
+      "actor_type": "support",
+      "access_role": "security_auditor",
+      "reason": "legal_audit",
+      "accessed_at": "2026-05-24T10:00:00Z",
+      "expires_at": "2026-05-24T11:00:00Z",
+      "visibility_level": "RAW_INCIDENT_ACCESS",
+      "access_case_ref": "audit_001",
+      "approved_by_ref": "support_hash_same",
+      "document_id": "doc_001",
+      "document_version_id": "docv_001",
+      "passage_ref": "D1:P1"
+    }
+  ]
+}

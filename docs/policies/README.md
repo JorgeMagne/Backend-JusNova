@@ -1,8 +1,8 @@
 # Policy Governance
 
-**Estado documental:** Draft  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Draft
+**Fecha:** 2026-05-22
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Gobierno de politicas operativas
 
 ## Proposito
@@ -65,6 +65,16 @@ Las politicas convierten principios juridicos, tecnicos, comerciales y de seguri
 | Document Security Policy minima | Accepted | `document-security-policy.md` |
 | Memory Policy | Accepted | `memory-policy.md` |
 | Trace Visibility Policy Message Reference Amendment | Accepted | `trace-visibility-policy.md` |
+
+## Politicas aceptadas en Subfase 0.10
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Privacy Security Policy | Accepted | `privacy-security-policy.md` |
+| Provider Policy | Accepted | `provider-policy.md` |
+| Prompt Injection Policy | Accepted | `prompt-injection-policy.md` |
+| Document Security Policy Amendment | Accepted | `document-security-policy.md` |
+| Trace Visibility Policy Security Amendment | Accepted | `trace-visibility-policy.md` |
 
 ## Politicas minimas esperadas
 

@@ -1,9 +1,9 @@
 # ADR-006 - Document OCR Policy
 
-**Estado:** Accepted  
-**Estado documental:** Accepted  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado:** Accepted
+**Estado documental:** Accepted
+**Fecha:** 2026-05-24
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** OCR, documentos y PDFs escaneados
 
 ## Contexto
@@ -56,7 +56,7 @@ El OCR local reduce exposicion de documentos sensibles, mantiene costos mas pred
 ## Dependencias posteriores
 
 - Subfase 0.9 crea `document-evidence.schema.json`, `ocr-policy.md` y una `document-security-policy.md` minima para ownership, hashes, referencias internas y minimizacion.
-- Subfase 0.10 debe completar privacy/security policy, permisos, retencion, provider boundaries y prompt injection policy.
+- Subfase 0.10 acepta privacy/security policy, provider boundaries, provider registry, raw access audit, prompt injection policy y clasificacion de datos. Permisos runtime, retencion automatizada e incident process productivo quedan para Fase 1 y fases posteriores.
 - Fase 9 implementara Document Evidence Search y OCR progresivo.
 
 ## No afirma todavia
@@ -83,6 +83,7 @@ El OCR local reduce exposicion de documentos sensibles, mantiene costos mas pred
 ## Criterios de aceptacion
 
 - Subfase 0.9 acepta contratos base de conversacion, mensajes, memoria, evidencia documental y OCR.
+- Subfase 0.10 agrega `document_evidence_id`, clasificacion de evidencia documental, raw access y riesgos de prompt injection compartidos.
 - No se usa LLM como OCR primario.
 - No se envian documentos completos a vision salvo caso justificado y trazado.
 - Todo documento procesado conserva hash, version y localizadores.

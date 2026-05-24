@@ -1,8 +1,8 @@
 # Shared Schemas And Taxonomies
 
-**Estado documental:** Accepted  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Accepted
+**Fecha:** 2026-05-22
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Estructura para taxonomias base de Fase 0
 
 ## Proposito
@@ -21,6 +21,7 @@ host-statuses.yaml
 validity-statuses.yaml
 complexity-levels.yaml
 data-classification.yaml
+provider-registry.yaml
 ```
 
 ## Regla
@@ -51,3 +52,19 @@ Cuando una taxonomia exista en esta carpeta, los contratos deben referenciar sus
 - `budgets.yaml` declara `cost_budget_version` para sintetizar instancias `CostBudget` conciliables.
 - Las keys de `budgets.yaml` deben coincidir exactamente con `complexity-levels.yaml`.
 - El vocabulario canonico es `discovery_calls_max`; no se introducen contadores ligados a un proveedor especifico.
+
+## Taxonomias aceptadas en Subfase 0.10
+
+| Taxonomia | Estado | Archivo |
+|---|---|---|
+| Data Classification | Accepted | `data-classification.yaml` |
+| Provider Registry | Accepted | `provider-registry.yaml` |
+
+## Reglas especificas de Subfase 0.10
+
+- `data-classification.yaml` define `sensitivity_order`, `sensitivity_rank`, visibilidad por defecto, logging raw y reglas por familia de provider.
+- Las keys de `sensitivity_order` y `data_classification` deben coincidir exactamente, sin extras ni faltantes.
+- Los ranks de sensibilidad son unicos y avanzan de 10 en 10 segun el orden declarado.
+- Cada clase declara reglas para las 11 familias canonicas de provider.
+- `provider-registry.yaml` declara providers permitidos, feature flags, kill switches, clases recibidas/devueltas, region, logs operativos y `training_use_allowed = false`.
+- Un provider no puede declarar clases prohibidas por `provider_family_rules`.

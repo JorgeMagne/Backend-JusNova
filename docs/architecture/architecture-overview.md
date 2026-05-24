@@ -1,9 +1,10 @@
 # Architecture Overview
 
-**Estado documental:** Accepted  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
-**Decision relacionada:** ADR-001 - High-Assurance Modular Core + Distributed Execution Layer
+**Estado documental:** Accepted
+**Fecha:** 2026-05-24
+**Responsable:** Codex / JusNova Chief Backend Architect
+**Decision relacionada:** ADR-001 - High-Assurance Modular Core + Distributed Execution Layer; ADR-011 - Security, Privacy and Provider Boundaries
+**Enmiendas:** Subfase 0.10 - provider registry, data classification and raw access boundaries
 
 ## Proposito
 
@@ -45,6 +46,8 @@ Workflow / Worker Layer             Streaming Layer
         |-- Extraction Worker            |-- answer deltas after gates
         |-- OCR Worker
         |-- Indexing Worker
+        |-- Provider Audit Worker
+        |-- Raw Access Audit Worker
         |-- Evaluation Runner
         |
         v
@@ -63,6 +66,7 @@ External Controlled Providers
         |-- Official Bolivian Sources
         |-- Search Discovery Providers
         |-- Optional Licensed Legal Sources
+        |-- OCR / Embedding / Storage Providers behind registry
 ```
 
 ## Core backend
@@ -105,8 +109,15 @@ Los proveedores externos quedan encapsulados por interfaces:
 - `FetchProvider`
 - `ExtractionProvider`
 - `OCRProvider`
+- `EmbeddingProvider`
 - `StorageProvider`
 - `WorkflowProvider`
+- `SnapshotProvider`
+- `LegalRankingProvider`
+
+La lista canonica coincide con `provider-policy.md`, `provider-interfaces.md` y `provider-registry.yaml`. Los alias historicos son `SourceFetcher = FetchProvider` y `EvidenceExtractor = ExtractionProvider`.
+
+Toda llamada externa a provider debe resolver contra `provider-registry.yaml`, respetar `data-classification.yaml`, declarar `training_use_allowed = false` y producir `ProviderCallAudit`.
 
 ## Regla de no conclusion prematura
 
@@ -121,4 +132,3 @@ El core no debe producir una respuesta juridica critica si no existe uno de esto
 ## Relacion con ADR-001
 
 ADR-001 acepta esta arquitectura como base. `module-boundaries.md` define limites concretos de modulos, workers y criterios de extraccion futura.
-

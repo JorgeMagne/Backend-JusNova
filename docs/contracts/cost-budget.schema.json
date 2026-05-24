@@ -10,7 +10,8 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.8 - Cost Governor, planes y presupuestos",
     "amendments": [
-      "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment"
+      "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment",
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
     ]
   },
   "required": [
@@ -505,7 +506,10 @@
             "started_at": "2026-05-22T00:00:00Z",
             "completed_at": "2026-05-22T00:00:03Z",
             "status": "success",
-            "error_code": null
+            "error_code": null,
+            "external_provider_call": true,
+            "provider_call_audit_id": "pca_mc_001",
+            "organization_id": "org_001"
           }
         ],
         "tool_calls": [],
@@ -592,7 +596,8 @@
         "input_message_ids": [
           "msg_tr_budget_mismatch_trace_input"
         ],
-        "output_message_id": "msg_tr_budget_mismatch_trace_output"
+        "output_message_id": "msg_tr_budget_mismatch_trace_output",
+        "prompt_injection_risks": []
       },
       "usage_events": [],
       "expected_policy_failures": [
@@ -651,7 +656,10 @@
             "started_at": "2026-05-22T00:00:00Z",
             "completed_at": "2026-05-22T00:00:03Z",
             "status": "success",
-            "error_code": null
+            "error_code": null,
+            "external_provider_call": true,
+            "provider_call_audit_id": "pca_mc_001",
+            "organization_id": "org_001"
           }
         ],
         "tool_calls": [],
@@ -738,7 +746,8 @@
         "input_message_ids": [
           "msg_tr_usage_budget_mismatch_input"
         ],
-        "output_message_id": "msg_tr_usage_budget_mismatch_output"
+        "output_message_id": "msg_tr_usage_budget_mismatch_output",
+        "prompt_injection_risks": []
       },
       "usage_events": [
         {
@@ -821,7 +830,10 @@
             "started_at": "2026-05-22T00:00:00Z",
             "completed_at": "2026-05-22T00:00:03Z",
             "status": "success",
-            "error_code": null
+            "error_code": null,
+            "external_provider_call": true,
+            "provider_call_audit_id": "pca_mc_001",
+            "organization_id": "org_001"
           }
         ],
         "tool_calls": [],
@@ -908,7 +920,8 @@
         "input_message_ids": [
           "msg_tr_missing_credit_input"
         ],
-        "output_message_id": "msg_tr_missing_credit_output"
+        "output_message_id": "msg_tr_missing_credit_output",
+        "prompt_injection_risks": []
       },
       "usage_events": [],
       "expected_policy_failures": [
@@ -966,7 +979,10 @@
             "started_at": "2026-05-22T00:00:00Z",
             "completed_at": "2026-05-22T00:00:03Z",
             "status": "success",
-            "error_code": null
+            "error_code": null,
+            "external_provider_call": true,
+            "provider_call_audit_id": "pca_mc_001",
+            "organization_id": "org_001"
           }
         ],
         "tool_calls": [],
@@ -1053,7 +1069,8 @@
         "input_message_ids": [
           "msg_tr_credit_wrong_anchor_input"
         ],
-        "output_message_id": "msg_tr_credit_wrong_anchor_output"
+        "output_message_id": "msg_tr_credit_wrong_anchor_output",
+        "prompt_injection_risks": []
       },
       "usage_events": [
         {
@@ -1135,7 +1152,10 @@
             "started_at": "2026-05-22T00:00:00Z",
             "completed_at": "2026-05-22T00:00:03Z",
             "status": "success",
-            "error_code": null
+            "error_code": null,
+            "external_provider_call": true,
+            "provider_call_audit_id": "pca_mc_001",
+            "organization_id": "org_001"
           }
         ],
         "tool_calls": [],
@@ -1222,7 +1242,8 @@
         "input_message_ids": [
           "msg_tr_credit_quantity_budget_mismatch_input"
         ],
-        "output_message_id": "msg_tr_credit_quantity_budget_mismatch_output"
+        "output_message_id": "msg_tr_credit_quantity_budget_mismatch_output",
+        "prompt_injection_risks": []
       },
       "usage_events": [
         {

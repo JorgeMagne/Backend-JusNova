@@ -4,7 +4,7 @@
 **Fecha:** 2026-05-22
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Subfase 0.7 - Trazabilidad, auditoria y versionado
-**Enmiendas:** Subfase 0.8 - Cost Governor, planes y presupuestos; Subfase 0.9 - Conversacion, memoria, documentos y OCR
+**Enmiendas:** Subfase 0.8 - Cost Governor, planes y presupuestos; Subfase 0.9 - Conversacion, memoria, documentos y OCR; Subfase 0.10 - Security, Privacy and Provider Boundaries
 
 ## Proposito
 
@@ -22,7 +22,8 @@ No define retencion final, permisos productivos completos ni proceso de incident
 |---|---|---|---|
 | `USER_SUMMARY` | Usuario final | Fuentes usadas, advertencias, fecha de consulta, nivel de evidencia, resultado de vigencia expresado para usuario | Prompts, salidas completas de modelo, documentos completos, mensajes completos, IDs internos de mensajes, hashes internos innecesarios, plan interno, budget ref, budget version |
 | `SUPPORT_VIEW` | Soporte autorizado | Errores, latencia, proveedores, consumo tecnico estimado, estado de auditoria, IDs de trazabilidad, IDs de conversacion/mensaje, plan neutral, complejidad y budget ref | Prompts, documentos completos, mensajes completos, OCR completo, salida completa del modelo, precio mensual |
-| `INTERNAL_AUDIT` | Equipo tecnico autorizado | Hashes, prompt versions, model calls, tool calls, fuentes rechazadas, citation audit, costos observados, refs completas de mensajes, relacion completa con Usage Ledger, `cost_budget_ref`, `cost_budget_version`, `plan_code`, `complexity` | Acceso libre a material crudo; por defecto se usan hashes y referencias |
+| `INTERNAL_AUDIT` | Equipo tecnico autorizado | Hashes, prompt versions, model calls, tool calls, provider audit refs, raw access refs, fuentes rechazadas, citation audit, costos observados, refs completas de mensajes, relacion completa con Usage Ledger, `cost_budget_ref`, `cost_budget_version`, `plan_code`, `complexity` | Acceso libre a material crudo; por defecto se usan hashes y referencias |
+| `RAW_INCIDENT_ACCESS` | Seguridad autorizada bajo evento raw | Acceso puntual a recurso crudo aprobado y auditado por `RawAccessEvent` | Soporte normal, `SUPPORT_VIEW`, browsing libre de documentos o mensajes |
 
 ## Reglas deterministicas
 
@@ -32,8 +33,8 @@ No define retencion final, permisos productivos completos ni proceso de incident
 4. `USER_SUMMARY` nunca muestra prompt completo, salida completa del modelo, documento completo ni mensaje completo.
 5. `SUPPORT_VIEW` nunca muestra prompt completo, documento completo, OCR completo ni salida completa del modelo.
 6. `INTERNAL_AUDIT` no significa acceso libre: usa hashes y referencias por defecto.
-7. Material crudo solo puede consultarse mediante proceso de incidente definido en Subfase 0.10.
-8. Todo acceso elevado registra `trace_id`, `actor_ref`, `actor_type`, `reason`, `accessed_at` y `visibility_level`.
+7. Material crudo solo puede consultarse mediante `RawAccessEvent` definido en Subfase 0.10.
+8. Todo acceso raw o elevado registra `raw_access_event_id`, `organization_id`, `resource_type`, `resource_ref`, `classification`, `actor_ref`, `actor_type`, `access_role`, `reason`, `access_case_ref`, `approved_by_ref`, `accessed_at` y `visibility_level`.
 9. `sources_rejected` y `retrieval_runs[].sources_rejected` deben guardar razon cerrada, `warning_codes` cerrados y hashes, no contenido crudo.
 10. `TraceObject.retrieval_runs[]` debe ser resumen sanitizado; no puede embeber `RetrievalRun` operativo completo, `LegalSearchResult.url`, `sources_opened[]` como URL cruda, `sources_rejected[].url`, mensajes libres de error ni warnings libres.
 11. `latency_ms`, `cost`, `token_usage` y `cost_units` deben ser objetos cerrados sin metadata libre.
@@ -82,7 +83,12 @@ No define retencion final, permisos productivos completos ni proceso de incident
 54. `output_message_id` debe resolver a un `Message` con `role = assistant`, `message_kind = assistant_final`, mismo `conversation_id`, mismo `organization_id`, mismo `trace_id`, mismo `answer_id` y mismo `answer_version_ref`.
 55. `output_message_id` no puede aparecer dentro de `input_message_ids[]`.
 56. `USER_SUMMARY` no muestra IDs internos de mensajes; `SUPPORT_VIEW` puede mostrar IDs de conversacion/mensaje; `INTERNAL_AUDIT` puede ver refs completas.
-57. Las reglas 30 a 56 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
+57. `ModelCall` y `ToolCall` deben declarar `external_provider_call` y `provider_call_audit_id`; las llamadas externas no pueden quedar sin auditoria de provider.
+58. `ProviderCallAudit` puede verse en `INTERNAL_AUDIT`; `SUPPORT_VIEW` solo puede ver diagnostico redacted, sin payload crudo ni clases sensibles no necesarias.
+59. `TraceObject.prompt_injection_risks[]` agrega riesgos detectados en retrieval y evidencia usados por la respuesta; el resumen de usuario solo muestra advertencias comprensibles, no detalles explotables.
+60. `RawAccessEvent.visibility_level` no admite `SUPPORT_VIEW`; soporte normal no es acceso raw.
+61. `support_operator` queda fuera de `RawAccessEvent`; un actor de soporte solo puede aparecer como `incident_responder` o `security_auditor` bajo `RAW_INCIDENT_ACCESS`.
+62. Las reglas 30 a 61 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
 
 ## Reglas asistidas por IA
 
@@ -105,18 +111,25 @@ No define retencion final, permisos productivos completos ni proceso de incident
 
 ## Registro de acceso elevado
 
-Todo acceso a `SUPPORT_VIEW` o `INTERNAL_AUDIT` debe registrar:
+Todo acceso a `SUPPORT_VIEW` o `INTERNAL_AUDIT` debe registrar evento de vista interna redacted. Todo acceso a material crudo debe registrar `RawAccessEvent`:
 
 ```txt
-trace_id
+raw_access_event_id
+organization_id
+resource_type
+resource_ref
+classification
 actor_ref
 actor_type
+access_role
 reason
+access_case_ref
+approved_by_ref
 accessed_at
 visibility_level
 ```
 
-El motivo debe ser concreto: soporte de usuario, investigacion de incidente, evaluacion de calidad, revision de seguridad o auditoria tecnica.
+El motivo debe ser concreto y cerrado. `support_operator` no puede abrir `RawAccessEvent`; soporte general opera solo con `SUPPORT_VIEW` redacted.
 
 ## Criterios de aceptacion
 
@@ -130,12 +143,13 @@ El motivo debe ser concreto: soporte de usuario, investigacion de incidente, eva
 - `latency_ms` y timestamps de llamadas o retrieval runs no pueden expresar duraciones negativas o totales imposibles.
 - Los IDs internos de `TraceObject` y las claves de `citation_audit.results[]` no pueden duplicarse.
 - Los niveles de visibilidad quedan definidos y no permiten acceso libre en `INTERNAL_AUDIT`.
-- Todo acceso elevado tiene campos minimos de registro.
+- Todo acceso raw o elevado tiene contrato `RawAccessEvent` y no se confunde con `SUPPORT_VIEW`.
+- Riesgos de prompt injection se conservan como referencias estructuradas, no como texto malicioso reutilizable.
 
 ## Relacion con contratos
 
 - Implementa visibilidad para `trace-object.schema.json`, `model-call.schema.json`, `tool-call.schema.json`, `citation-audit.schema.json`, `answer-version.schema.json`, `cost-report.schema.json`, `cost-budget.schema.json` y `usage-event.schema.json`.
-- Complementa `privacy-security-policy.md` futura de Subfase 0.10.
+- Complementa `privacy-security-policy.md`, `provider-policy.md` y `prompt-injection-policy.md` de Subfase 0.10.
 - Complementa `answer-versioning-policy.md` y `citation-policy.md`.
 
 ## Momento de revision

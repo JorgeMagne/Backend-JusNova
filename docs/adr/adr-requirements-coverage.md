@@ -1,8 +1,8 @@
 # ADR Requirements Coverage
 
-**Estado documental:** Accepted  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Accepted
+**Fecha:** 2026-05-22
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Subfase 0.3 - Cobertura de requisitos por ADR
 
 ## Proposito
@@ -42,8 +42,8 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-005 | Que tareas no dependen solo de IA. | ADR-005: Tareas que no dependen solo de IA. | Accepted | Fase 1/2 validators/auditors. | Prompt como control unico. |
 | ADR-005 | Versionado de prompts. | ADR-005: Restricciones, Mitigaciones. | Accepted | Fase 1 prompt registry. | Imposible comparar outputs. |
 | ADR-005 | Evaluacion de modelos. | ADR-005: Mitigaciones, Revision. | Accepted | Subfase 0.12 eval plan. | Cambios de modelo sin evidencia. |
-| ADR-005 | Datos enviados a proveedor. | ADR-005: Restricciones, Dependencias posteriores. | Accepted | Subfase 0.10 provider policy. | Exposicion de datos sensibles. |
-| ADR-005 | Minimizar datos sensibles. | ADR-005: Restricciones, Mitigaciones. | Accepted | Subfase 0.10 data classification. | Riesgo privacidad. |
+| ADR-005 | Datos enviados a proveedor. | ADR-005: Restricciones, Dependencias posteriores; `provider-policy.md`; `provider-registry.yaml`; `provider-call-audit.schema.json`. | Accepted | Fase 1 provider enforcement. | Exposicion de datos sensibles. |
+| ADR-005 | Minimizar datos sensibles. | ADR-005: Restricciones, Mitigaciones; `data-classification.yaml`; `provider-policy.md`. | Accepted | Fase 1 runtime enforcement. | Riesgo privacidad. |
 | ADR-005 | Cambiar proveedor futuro. | ADR-005: Decision, Justificacion. | Accepted | Provider interfaces. | Dependencia rigida. |
 | ADR-006 | Pipeline documental. | ADR-006: Pipeline aprobado. | Accepted | Subfase 0.9 contracts. | Documentos sin flujo confiable. |
 | ADR-006 | Deteccion de escaneo. | ADR-006: Pipeline aprobado. | Accepted | Fase 9 implementacion. | PDFs imagen sin texto. |
@@ -84,13 +84,15 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-010 | Referencias conversacionales sin contenido crudo. | ADR-010: Trazabilidad aprobada; `docs/contracts/trace-object.schema.json`; `docs/contracts/message.schema.json`; `docs/policies/trace-visibility-policy.md`. | Accepted | Fase 3/1 persistencia y conversacion. | Trazas sin reconstruccion conversacional o con mensajes completos. |
 | ADR-011 | Tenancy. | ADR-011: Reglas aprobadas. | Accepted | Fase 1 ownership. | Acceso cruzado. |
 | ADR-011 | Roles minimos. | ADR-011: Reglas aprobadas. | Accepted | Fase 11 hardening. | Permisos ambiguos. |
-| ADR-011 | Logs. | ADR-011: Restricciones, Reglas, Mitigaciones. | Accepted | Subfase 0.10. | Datos sensibles en logs. |
+| ADR-011 | Logs. | ADR-011: Restricciones, Reglas, Mitigaciones; `privacy-security-policy.md`; `security-checklist-phase-1.md`. | Accepted | Fase 1 log redaction enforcement. | Datos sensibles en logs. |
 | ADR-011 | Secrets. | ADR-011: Restricciones. | Accepted | Fase 1 settings/secrets. | Secretos en repo. |
 | ADR-011 | Object storage. | ADR-011: Reglas aprobadas. | Accepted | Fase 1 StorageProvider. | Archivos expuestos. |
 | ADR-011 | Document permissions. | ADR-011: Reglas aprobadas. | Accepted | Fase 11. | Documentos sin control. |
-| ADR-011 | Provider minimization. | ADR-011: Reglas aprobadas. | Accepted | Subfase 0.10 provider policy. | Datos excesivos a terceros. |
-| ADR-011 | Prompt injection. | ADR-011: Reglas aprobadas. | Accepted | Subfase 0.10 prompt injection policy. | Evidencia como instrucciones. |
-| ADR-011 | Retencion/eliminacion. | ADR-011: Reglas aprobadas. | Accepted | Subfase 0.10. | Datos retenidos sin politica. |
+| ADR-011 | Provider minimization. | ADR-011: Reglas aprobadas; `provider-policy.md`; `provider-registry.yaml`; `provider-call-audit.schema.json`. | Accepted | Fase 1 provider enforcement. | Datos excesivos a terceros. |
+| ADR-011 | Prompt injection. | ADR-011: Reglas aprobadas; `prompt-injection-policy.md`; `prompt-injection-risk.schema.json`. | Accepted | Fase 1 tool/model enforcement. | Evidencia como instrucciones. |
+| ADR-011 | Retencion/eliminacion. | ADR-011: Reglas aprobadas; `privacy-security-policy.md`; `document-security-policy.md`. | Accepted | Fase 1 deletion/tombstone implementation. | Datos retenidos sin politica. |
+| ADR-011 | Acceso raw/elevado. | `raw-access-event.schema.json`; `privacy-security-policy.md`; `trace-visibility-policy.md`. | Accepted | Fase 1 access workflow and approvals. | Soporte o auditoria acceden a material crudo sin control. |
+| ADR-011 | Data classification. | `data-classification.yaml`; `provider-policy.md`; `privacy-security-policy.md`. | Accepted | Fase 1 classification propagation. | Payloads derivados sin sensibilidad definida. |
 | ADR-012 | Metricas iniciales. | ADR-012: Metricas iniciales. | Accepted | Subfase 0.12. | Calidad subjetiva. |
 | ADR-012 | Dataset inicial minimo. | ADR-012: Dependencias posteriores. | Accepted | Subfase 0.12 dataset spec. | Evals sin cobertura. |
 | ADR-012 | Golden cases. | ADR-012: Decision, Mitigaciones. | Accepted | Subfase 0.12. | Regresiones no detectadas. |

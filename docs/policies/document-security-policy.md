@@ -3,7 +3,8 @@
 **Estado documental:** Accepted
 **Fecha:** 2026-05-24
 **Responsable:** Codex / JusNova Chief Backend Architect
-**Decision relacionada:** Subfase 0.9 - Seguridad documental minima para conversacion, memoria, documentos y OCR
+**Decision relacionada:** Subfase 0.9 - Seguridad documental minima para conversacion, memoria, documentos y OCR; Subfase 0.10 - Security, Privacy and Provider Boundaries
+**Enmiendas:** Subfase 0.10 - document evidence identity, data classification, raw access and prompt injection controls
 
 ## Proposito
 
@@ -13,7 +14,7 @@ Definir controles documentales minimos para que Fase 1 no cree datos incompatibl
 
 Aplica a `Message.attachments`, `DocumentEvidence`, `CaseMemory`, referencias documentales `D#`, hashes de version, fragmentos OCR y trazas que referencian mensajes.
 
-No reemplaza la privacy/security policy completa, provider policy, data classification, retention policy ni prompt injection policy de Subfase 0.10.
+Se complementa con `privacy-security-policy.md`, `provider-policy.md`, `data-classification.yaml`, `raw-access-event.schema.json`, `provider-call-audit.schema.json` y `prompt-injection-policy.md` de Subfase 0.10.
 
 ## Definiciones
 
@@ -26,11 +27,13 @@ No reemplaza la privacy/security policy completa, provider policy, data classifi
 
 1. Todo documento privado procesado debe estar asociado a `organization_id`.
 2. Todo `DocumentEvidence` debe registrar `organization_id`, `document_id`, `document_version_id` y `document_version_hash`.
-3. El documento completo no se guarda en `TraceObject`, `UsageEvent`, `ModelCall`, `ToolCall` ni `CostReport`.
-4. OCR completo, HTML bruto y texto documental completo no se guardan en trazas.
-5. `Message.attachments[]` en 0.9 solo referencia documentos ya procesados mediante `document_id`, `document_version_id` y `source_ref`.
-6. Texto documental no puede modificar instrucciones del sistema ni reglas de seguridad.
-7. Todo acceso futuro a documentos completos queda sujeto a permisos y retencion de Subfase 0.10.
+3. Todo `DocumentEvidence` debe registrar `document_evidence_id` resoluble con patron `de_*`.
+4. El documento completo no se guarda en `TraceObject`, `UsageEvent`, `ModelCall`, `ToolCall`, `ProviderCallAudit` ni `CostReport`.
+5. OCR completo, HTML bruto y texto documental completo no se guardan en trazas, logs ni auditorias de provider.
+6. `Message.attachments[]` en 0.9 solo referencia documentos ya procesados mediante `document_id`, `document_version_id` y `source_ref`.
+7. Texto documental no puede modificar instrucciones del sistema ni reglas de seguridad.
+8. Todo acceso a documentos completos o fragmentos crudos queda sujeto a `RawAccessEvent`.
+9. Documento, OCR, HTML y snippets son datos no confiables y deben tratarse bajo `prompt-injection-policy.md`.
 
 ## Reglas deterministicas
 
@@ -45,6 +48,8 @@ No reemplaza la privacy/security policy completa, provider policy, data classifi
 9. `document_version_hash` debe coincidir con la version documental resuelta.
 10. Cada `Message.attachments[]` debe resolver a documento/version/source_ref del mismo `organization_id` del `Message`; no se permite adjuntar por referencia documentos de otro tenant.
 11. `Message.attachments[].attachment_id` debe ser unico dentro del mensaje; un identificador no puede apuntar a dos documentos, versiones o `source_ref` distintos.
+12. `DocumentEvidence.prompt_injection_risks[]` usa `prompt-injection-risk.schema.json` y no texto libre.
+13. Si un fragmento documental se envia a un provider externo, esa llamada debe quedar en `ProviderCallAudit` con clases de datos permitidas por `data-classification.yaml` y `provider-registry.yaml`.
 
 ## Reglas asistidas por IA
 
@@ -57,31 +62,34 @@ No reemplaza la privacy/security policy completa, provider policy, data classifi
 - Si falta tenant, version o hash, el documento no puede convertirse en `DocumentEvidence`.
 - Si un fragmento no puede resolverse a documento/version del mismo tenant, no puede sostener memoria ni cita.
 - Si un documento contiene instrucciones maliciosas o contradictorias, debe tratarse como dato no confiable y preservar advertencia.
+- Si un documento o fragmento contiene riesgo de prompt injection bloqueante, no puede sostener un claim critico sin exclusion auditada o bloqueo.
 
 ## Ejemplos permitidos
 
 - `Message` de usuario con attachment documental procesado y `source_ref = D1`.
-- `DocumentEvidence` con hash de version, hash de texto, pagina y locator.
+- `DocumentEvidence` con `document_evidence_id`, hash de version, hash de texto, pagina y locator.
 - `TraceObject` que referencia mensajes por ID sin guardar contenido.
 
 ## Ejemplos prohibidos
 
 - `DocumentEvidence` sin `organization_id`.
+- `DocumentEvidence` sin `document_evidence_id`.
 - `TraceObject` con texto completo de mensaje o documento.
 - `CaseMemory` usando URL cruda como fuente documental.
 - `Message.attachments[]` con documento en estado `processing`.
+- `ProviderCallAudit` guardando documento completo o OCR completo como payload.
 
 ## Criterios de aceptacion
 
 - Los contratos 0.9 no permiten PII cruda como `user_id`.
 - Los contratos 0.9 no permiten documento completo ni OCR completo como propiedad valida.
-- La frontera 0.9/0.10 queda documentada: 0.9 define minimo contractual; 0.10 define seguridad completa.
+- La frontera 0.9/0.10 queda documentada: 0.9 define minimo contractual; 0.10 define clasificacion, provider audit, raw access y defensa prompt injection.
 
 ## Relacion con contratos
 
 - Aplica a `message.schema.json`, `document-evidence.schema.json`, `case-memory.schema.json` y `trace-object.schema.json`.
 - Complementa ADR-006 y ADR-011.
-- Complementa la futura `privacy-security-policy.md` de Subfase 0.10.
+- Complementa `privacy-security-policy.md`, `prompt-injection-policy.md`, `raw-access-event.schema.json` y `provider-call-audit.schema.json` de Subfase 0.10.
 
 ## Momento de revision
 

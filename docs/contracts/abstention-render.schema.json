@@ -11,7 +11,8 @@
     "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
     "amendments": [
       "Subfase 0.8 - Cost Governor, planes y presupuestos",
-      "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment"
+      "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment",
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
     ]
   },
   "required": [
@@ -390,7 +391,8 @@
         "input_message_ids": [
           "msg_tr_abstention_001_input"
         ],
-        "output_message_id": "msg_tr_abstention_001_output"
+        "output_message_id": "msg_tr_abstention_001_output",
+        "prompt_injection_risks": []
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",
@@ -497,7 +499,8 @@
         "input_message_ids": [
           "msg_tr_abstention_001_input"
         ],
-        "output_message_id": "msg_tr_abstention_001_output"
+        "output_message_id": "msg_tr_abstention_001_output",
+        "prompt_injection_risks": []
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",
@@ -604,7 +607,8 @@
         "input_message_ids": [
           "msg_tr_abstention_001_input"
         ],
-        "output_message_id": "msg_tr_abstention_001_output"
+        "output_message_id": "msg_tr_abstention_001_output",
+        "prompt_injection_risks": []
       },
       "answer_version": {
         "answer_version_id": "av_abstention_001",

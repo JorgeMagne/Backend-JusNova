@@ -1,8 +1,8 @@
 # Contract Governance
 
-**Estado documental:** Draft  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Draft
+**Fecha:** 2026-05-22
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Gobierno de contratos internos y JSON Schemas
 
 ## Proposito
@@ -145,6 +145,35 @@ Estos contratos quedan aceptados como base documental de conversacion, mensajes,
 - Los hashes de `Message` y `DocumentEvidence` se calculan sobre bytes UTF-8 exactos persistidos.
 - Seguridad documental completa, retencion, permisos y prompt injection policy quedan para Subfase 0.10.
 
+## Contratos aceptados en Subfase 0.10
+
+Estos contratos quedan aceptados como base documental de seguridad, privacidad, limites de proveedores, auditoria de llamadas externas, auditoria de acceso raw y defensa contra prompt injection. Esta aceptacion no implementa auth, DB, storage, SDKs de proveedores, SIEM ni permisos runtime.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Provider Call Audit | Accepted | `provider-call-audit.schema.json` |
+| Raw Access Event | Accepted | `raw-access-event.schema.json` |
+| Prompt Injection Risk | Accepted | `prompt-injection-risk.schema.json` |
+| Document Evidence Security Amendment | Accepted | `document-evidence.schema.json` |
+| Legal Search Query Classification Amendment | Accepted | `legal-search-query.schema.json` |
+| Model Call Provider Audit Amendment | Accepted | `model-call.schema.json` |
+| Tool Call Provider Audit Amendment | Accepted | `tool-call.schema.json` |
+| Retrieval Run Prompt Injection Amendment | Accepted | `retrieval-run.schema.json` |
+| Trace Object Security Amendment | Accepted | `trace-object.schema.json` |
+
+## Reglas especificas de Subfase 0.10
+
+- `ProviderCallAudit` registra llamadas externas, clases de datos intentadas/enviadas/devueltas, decision de policy, hashes, provider family y provider name.
+- `ProviderCallAudit.provider_name` debe resolver contra `provider-registry.yaml` y coincidir en familia.
+- `ModelCall` y `ToolCall` declaran `external_provider_call` y `provider_call_audit_id`; una llamada externa no puede quedar sin auditoria.
+- `RawAccessEvent` registra acceso raw o elevado por recurso, clasificacion, rol de acceso, aprobador y motivo cerrado.
+- `support_operator` no es rol valido en `RawAccessEvent`; soporte normal opera solo con `SUPPORT_VIEW` redacted.
+- `DocumentEvidence` exige `document_evidence_id` para auditoria resoluble de fragmentos.
+- `LegalSearchQuery.query_classification` distingue busqueda legal publica abstracta de query derivada de cliente.
+- `PromptInjectionRisk` es el contrato compartido para riesgos detectados en documentos, retrieval y trazas.
+- `TraceObject.prompt_injection_risks[]` agrega riesgos de evidencia/retrieval usados por la respuesta.
+- Ningun contrato 0.10 guarda documentos completos, OCR completo, prompts completos, mensajes completos, HTML bruto ni salidas completas.
+
 ## Schemas minimos esperados
 
 ```txt
@@ -154,6 +183,7 @@ claim.schema.json
 citation.schema.json
 citation-audit.schema.json
 cost-budget.schema.json
+provider-call-audit.schema.json
 document-evidence.schema.json
 evidence-pack.schema.json
 evidence-quality.schema.json
@@ -163,6 +193,8 @@ legal-search-result.schema.json
 message.schema.json
 model-call.schema.json
 passage.schema.json
+prompt-injection-risk.schema.json
+raw-access-event.schema.json
 retrieval-plan.schema.json
 retrieval-run.schema.json
 source.schema.json

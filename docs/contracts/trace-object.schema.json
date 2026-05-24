@@ -11,7 +11,8 @@
     "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
     "amendments": [
       "Subfase 0.8 - Cost Governor, planes y presupuestos",
-      "Subfase 0.9 - Conversacion, memoria, documentos y OCR"
+      "Subfase 0.9 - Conversacion, memoria, documentos y OCR",
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
     ]
   },
   "required": [
@@ -41,7 +42,8 @@
     "citation_audit",
     "cost",
     "latency_ms",
-    "warnings"
+    "warnings",
+    "prompt_injection_risks"
   ],
   "properties": {
     "trace_id": {
@@ -214,6 +216,13 @@
         "type": "string",
         "minLength": 1
       }
+    },
+    "prompt_injection_risks": {
+      "type": "array",
+      "items": {
+        "$ref": "./prompt-injection-risk.schema.json"
+      },
+      "uniqueItems": true
     }
   },
   "$defs": {
@@ -231,7 +240,8 @@
         "estimated_cost",
         "warnings",
         "started_at",
-        "completed_at"
+        "completed_at",
+        "prompt_injection_risks"
       ],
       "properties": {
         "retrieval_run_id": {
@@ -551,6 +561,13 @@
         "completed_at": {
           "type": "string",
           "format": "date-time"
+        },
+        "prompt_injection_risks": {
+          "type": "array",
+          "items": {
+            "$ref": "./prompt-injection-risk.schema.json"
+          },
+          "uniqueItems": true
         }
       },
       "additionalProperties": false,
@@ -1310,7 +1327,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:03Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_001",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -1397,7 +1417,8 @@
       "input_message_ids": [
         "msg_tr_001_input"
       ],
-      "output_message_id": "msg_tr_001_output"
+      "output_message_id": "msg_tr_001_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_abstention_001",
@@ -1460,7 +1481,8 @@
       "input_message_ids": [
         "msg_tr_abstention_001_input"
       ],
-      "output_message_id": "msg_tr_abstention_001_output"
+      "output_message_id": "msg_tr_abstention_001_output",
+      "prompt_injection_risks": []
     }
   ],
   "x-invalid-examples": [
@@ -1578,7 +1600,8 @@
       "input_message_ids": [
         "msg_tr_004_input"
       ],
-      "output_message_id": "msg_tr_004_output"
+      "output_message_id": "msg_tr_004_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_004b",
@@ -1639,7 +1662,8 @@
       "input_message_ids": [
         "msg_tr_004b_input"
       ],
-      "output_message_id": "msg_tr_004b_output"
+      "output_message_id": "msg_tr_004b_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_005",
@@ -1715,7 +1739,8 @@
       "input_message_ids": [
         "msg_tr_005_input"
       ],
-      "output_message_id": "msg_tr_005_output"
+      "output_message_id": "msg_tr_005_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_006",
@@ -1785,7 +1810,8 @@
       "input_message_ids": [
         "msg_tr_006_input"
       ],
-      "output_message_id": "msg_tr_006_output"
+      "output_message_id": "msg_tr_006_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_007",
@@ -1866,7 +1892,8 @@
       "input_message_ids": [
         "msg_tr_007_input"
       ],
-      "output_message_id": "msg_tr_007_output"
+      "output_message_id": "msg_tr_007_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_008",
@@ -1936,7 +1963,8 @@
       "input_message_ids": [
         "msg_tr_008_input"
       ],
-      "output_message_id": "msg_tr_008_output"
+      "output_message_id": "msg_tr_008_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_009",
@@ -2004,7 +2032,8 @@
       "input_message_ids": [
         "msg_tr_009_input"
       ],
-      "output_message_id": "msg_tr_009_output"
+      "output_message_id": "msg_tr_009_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_012",
@@ -2077,7 +2106,8 @@
       "input_message_ids": [
         "msg_tr_012_input"
       ],
-      "output_message_id": "msg_tr_012_output"
+      "output_message_id": "msg_tr_012_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_013",
@@ -2165,7 +2195,8 @@
       "input_message_ids": [
         "msg_tr_013_input"
       ],
-      "output_message_id": "msg_tr_013_output"
+      "output_message_id": "msg_tr_013_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_014",
@@ -2230,7 +2261,8 @@
       "input_message_ids": [
         "msg_tr_014_input"
       ],
-      "output_message_id": "msg_tr_014_output"
+      "output_message_id": "msg_tr_014_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_010",
@@ -2264,7 +2296,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_010",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -2340,7 +2375,8 @@
       "input_message_ids": [
         "msg_tr_010_input"
       ],
-      "output_message_id": "msg_tr_010_output"
+      "output_message_id": "msg_tr_010_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_011",
@@ -2374,7 +2410,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_011",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -2443,7 +2482,8 @@
       "input_message_ids": [
         "msg_tr_011_input"
       ],
-      "output_message_id": "msg_tr_011_output"
+      "output_message_id": "msg_tr_011_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_014",
@@ -2477,7 +2517,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_014",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -2546,7 +2589,8 @@
       "input_message_ids": [
         "msg_tr_014_input"
       ],
-      "output_message_id": "msg_tr_014_output"
+      "output_message_id": "msg_tr_014_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_015",
@@ -2581,7 +2625,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_015",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -2650,7 +2697,8 @@
       "input_message_ids": [
         "msg_tr_015_input"
       ],
-      "output_message_id": "msg_tr_015_output"
+      "output_message_id": "msg_tr_015_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_016",
@@ -2684,7 +2732,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "error",
-          "error_code": "provider_error"
+          "error_code": "provider_error",
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_016",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -2753,7 +2804,8 @@
       "input_message_ids": [
         "msg_tr_016_input"
       ],
-      "output_message_id": "msg_tr_016_output"
+      "output_message_id": "msg_tr_016_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_017",
@@ -2787,7 +2839,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_017",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -2856,7 +2911,8 @@
       "input_message_ids": [
         "msg_tr_017_input"
       ],
-      "output_message_id": "msg_tr_017_output"
+      "output_message_id": "msg_tr_017_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_018",
@@ -2890,7 +2946,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_018",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -2936,7 +2995,9 @@
           "estimated_cost": 0,
           "warnings": [],
           "started_at": "2026-05-22T00:00:00Z",
-          "completed_at": "2026-05-22T00:00:01Z"
+          "completed_at": "2026-05-22T00:00:01Z",
+          "prompt_injection_risks": [],
+          "organization_id": "org_001"
         }
       ],
       "evidence_pack_ids": [
@@ -3003,7 +3064,8 @@
       "input_message_ids": [
         "msg_tr_018_input"
       ],
-      "output_message_id": "msg_tr_018_output"
+      "output_message_id": "msg_tr_018_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_019",
@@ -3037,7 +3099,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_019",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -3119,7 +3184,8 @@
       "input_message_ids": [
         "msg_tr_019_input"
       ],
-      "output_message_id": "msg_tr_019_output"
+      "output_message_id": "msg_tr_019_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_url_hash_raw_001",
@@ -3154,7 +3220,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:03Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_001",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -3241,7 +3310,8 @@
       "input_message_ids": [
         "msg_tr_url_hash_raw_001_input"
       ],
-      "output_message_id": "msg_tr_url_hash_raw_001_output"
+      "output_message_id": "msg_tr_url_hash_raw_001_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_missing_input_message_ids",
@@ -3276,7 +3346,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:03Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_001",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -3360,7 +3433,8 @@
         "queue": 50
       },
       "warnings": [],
-      "output_message_id": "msg_tr_001_output"
+      "output_message_id": "msg_tr_001_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_empty_input_message_ids",
@@ -3395,7 +3469,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:03Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_001",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -3480,7 +3557,8 @@
       },
       "warnings": [],
       "input_message_ids": [],
-      "output_message_id": "msg_tr_001_output"
+      "output_message_id": "msg_tr_001_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_duplicate_input_message_ids",
@@ -3515,7 +3593,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:03Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_001",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -3603,7 +3684,8 @@
         "msg_dup",
         "msg_dup"
       ],
-      "output_message_id": "msg_tr_001_output"
+      "output_message_id": "msg_tr_001_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_empty_output_message_id",
@@ -3638,7 +3720,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:03Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_001",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -3725,7 +3810,8 @@
       "input_message_ids": [
         "msg_tr_001_input"
       ],
-      "output_message_id": ""
+      "output_message_id": "",
+      "prompt_injection_risks": []
     }
   ],
   "x-policy-invalid-examples": [
@@ -3761,7 +3847,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_policy_001",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -3832,7 +3921,8 @@
       "input_message_ids": [
         "msg_tr_policy_001_input"
       ],
-      "output_message_id": "msg_tr_policy_001_output"
+      "output_message_id": "msg_tr_policy_001_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_policy_002",
@@ -3866,7 +3956,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_policy_002",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [
@@ -3885,7 +3978,10 @@
             "pages": 0,
             "tokens": 0,
             "estimated_cost": 0
-          }
+          },
+          "external_provider_call": false,
+          "provider_call_audit_id": null,
+          "organization_id": "org_001"
         }
       ],
       "retrieval_runs": [],
@@ -3955,7 +4051,8 @@
       "input_message_ids": [
         "msg_tr_policy_002_input"
       ],
-      "output_message_id": "msg_tr_policy_002_output"
+      "output_message_id": "msg_tr_policy_002_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_policy_003",
@@ -3989,7 +4086,10 @@
           "started_at": "2026-05-22T00:00:05Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_policy_003",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -4060,7 +4160,8 @@
       "input_message_ids": [
         "msg_tr_policy_003_input"
       ],
-      "output_message_id": "msg_tr_policy_003_output"
+      "output_message_id": "msg_tr_policy_003_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_policy_004",
@@ -4094,7 +4195,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_policy_004",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -4115,7 +4219,8 @@
           "estimated_cost": 0,
           "warnings": [],
           "started_at": "2026-05-22T00:00:10Z",
-          "completed_at": "2026-05-22T00:00:00Z"
+          "completed_at": "2026-05-22T00:00:00Z",
+          "prompt_injection_risks": []
         }
       ],
       "evidence_pack_ids": [
@@ -4184,7 +4289,8 @@
       "input_message_ids": [
         "msg_tr_policy_004_input"
       ],
-      "output_message_id": "msg_tr_policy_004_output"
+      "output_message_id": "msg_tr_policy_004_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_policy_005",
@@ -4218,7 +4324,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:10Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_policy_005",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -4289,7 +4398,8 @@
       "input_message_ids": [
         "msg_tr_policy_005_input"
       ],
-      "output_message_id": "msg_tr_policy_005_output"
+      "output_message_id": "msg_tr_policy_005_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_policy_006",
@@ -4323,7 +4433,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_policy_006",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -4415,7 +4528,8 @@
       "input_message_ids": [
         "msg_tr_policy_006_input"
       ],
-      "output_message_id": "msg_tr_policy_006_output"
+      "output_message_id": "msg_tr_policy_006_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_policy_007",
@@ -4449,7 +4563,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:01Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_policy_007",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [
@@ -4468,7 +4585,10 @@
             "pages": 0,
             "tokens": 0,
             "estimated_cost": 99
-          }
+          },
+          "external_provider_call": false,
+          "provider_call_audit_id": null,
+          "organization_id": "org_001"
         }
       ],
       "retrieval_runs": [
@@ -4488,7 +4608,8 @@
           "estimated_cost": 88,
           "warnings": [],
           "started_at": "2026-05-22T00:00:02Z",
-          "completed_at": "2026-05-22T00:00:03Z"
+          "completed_at": "2026-05-22T00:00:03Z",
+          "prompt_injection_risks": []
         }
       ],
       "evidence_pack_ids": [
@@ -4557,7 +4678,8 @@
       "input_message_ids": [
         "msg_tr_policy_007_input"
       ],
-      "output_message_id": "msg_tr_policy_007_output"
+      "output_message_id": "msg_tr_policy_007_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_output_in_input_messages",
@@ -4592,7 +4714,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:03Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_001",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -4679,7 +4804,8 @@
       "input_message_ids": [
         "msg_tr_output_in_input_messages_output"
       ],
-      "output_message_id": "msg_tr_output_in_input_messages_output"
+      "output_message_id": "msg_tr_output_in_input_messages_output",
+      "prompt_injection_risks": []
     },
     {
       "trace_id": "tr_input_message_other_conversation",
@@ -4714,7 +4840,10 @@
           "started_at": "2026-05-22T00:00:00Z",
           "completed_at": "2026-05-22T00:00:03Z",
           "status": "success",
-          "error_code": null
+          "error_code": null,
+          "external_provider_call": true,
+          "provider_call_audit_id": "pca_mc_001",
+          "organization_id": "org_001"
         }
       ],
       "tool_calls": [],
@@ -4801,7 +4930,8 @@
       "input_message_ids": [
         "msg_from_other_conversation"
       ],
-      "output_message_id": "msg_tr_input_message_other_conversation_output"
+      "output_message_id": "msg_tr_input_message_other_conversation_output",
+      "prompt_injection_risks": []
     }
   ],
   "x-cross-contract-policy-invalid-examples": [
@@ -4839,7 +4969,10 @@
             "started_at": "2026-05-22T00:00:00Z",
             "completed_at": "2026-05-22T00:00:03Z",
             "status": "success",
-            "error_code": null
+            "error_code": null,
+            "external_provider_call": true,
+            "provider_call_audit_id": "pca_mc_001",
+            "organization_id": "org_001"
           }
         ],
         "tool_calls": [],
@@ -4926,7 +5059,8 @@
         "input_message_ids": [
           "msg_cross_input_other_conversation_input"
         ],
-        "output_message_id": "msg_cross_input_other_conversation_output"
+        "output_message_id": "msg_cross_input_other_conversation_output",
+        "prompt_injection_risks": []
       },
       "messages": [
         {
@@ -4997,7 +5131,10 @@
             "started_at": "2026-05-22T00:00:00Z",
             "completed_at": "2026-05-22T00:00:03Z",
             "status": "success",
-            "error_code": null
+            "error_code": null,
+            "external_provider_call": true,
+            "provider_call_audit_id": "pca_mc_001",
+            "organization_id": "org_001"
           }
         ],
         "tool_calls": [],
@@ -5084,7 +5221,8 @@
         "input_message_ids": [
           "msg_cross_output_not_final_input"
         ],
-        "output_message_id": "msg_cross_output_not_final_output"
+        "output_message_id": "msg_cross_output_not_final_output",
+        "prompt_injection_risks": []
       },
       "messages": [
         {
@@ -5155,7 +5293,10 @@
             "started_at": "2026-05-22T00:00:00Z",
             "completed_at": "2026-05-22T00:00:03Z",
             "status": "success",
-            "error_code": null
+            "error_code": null,
+            "external_provider_call": true,
+            "provider_call_audit_id": "pca_mc_001",
+            "organization_id": "org_001"
           }
         ],
         "tool_calls": [],
@@ -5242,7 +5383,8 @@
         "input_message_ids": [
           "msg_cross_output_ref_mismatch_input"
         ],
-        "output_message_id": "msg_cross_output_ref_mismatch_output"
+        "output_message_id": "msg_cross_output_ref_mismatch_output",
+        "prompt_injection_risks": []
       },
       "messages": [
         {
@@ -5278,6 +5420,371 @@
           "created_at": "2026-05-24T10:00:10Z"
         }
       ]
+    },
+    {
+      "case": "missing_prompt_injection_aggregation",
+      "description": "Risk detected in retrieval used by the answer is absent from TraceObject.prompt_injection_risks[].",
+      "trace_object": {
+        "trace_id": "tr_policy_prompt_injection_missing_aggregation",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_prompt_injection_missing_aggregation",
+        "answer_version_ref": "av_prompt_injection_missing_aggregation",
+        "answer_version": 1,
+        "conversation_id": "conv_001",
+        "case_id": null,
+        "response_outcome": "answered",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_prompt_injection_missing_aggregation",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+            "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+            "token_usage": {
+              "input_tokens": 1200,
+              "output_tokens": 700,
+              "total_tokens": 1900
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:03Z",
+            "status": "success",
+            "error_code": null,
+            "external_provider_call": true,
+            "provider_call_audit_id": "pca_mc_prompt_injection_missing_aggregation",
+            "organization_id": "org_001"
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [
+          {
+            "retrieval_run_id": "rr_prompt_injection_001",
+            "query_id": "q_001",
+            "retrieval_plan_id": "rp_001",
+            "status": "completed_with_evidence",
+            "providers_used": [
+              "official_source_adapter_registry"
+            ],
+            "sources_opened": [
+              {
+                "source_ref": "F1",
+                "result_id": "res_001",
+                "url_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "opened_at": "2026-05-24T10:00:00Z"
+              }
+            ],
+            "sources_rejected": [],
+            "evidence_pack_id": "ep_001",
+            "latency_ms": 100,
+            "estimated_cost": 0,
+            "warnings": [
+              "sanitized_summary"
+            ],
+            "started_at": "2026-05-24T10:00:00Z",
+            "completed_at": "2026-05-24T10:00:01Z",
+            "prompt_injection_risks": [
+              {
+                "risk_code": "instruction_override_attempt",
+                "detected_in_ref": "F1:P1",
+                "classification": "PUBLIC_LEGAL_SOURCE",
+                "severity": "blocking",
+                "detected_at": "2026-05-24T10:00:00Z",
+                "handling": "used_as_evidence_only"
+              }
+            ],
+            "quality": {
+              "overall": "MEDIUM",
+              "coverage": 0.72,
+              "authority": 0.91,
+              "citation_readiness": 0.84,
+              "validity_risk": "MEDIUM",
+              "conflicts_detected": false,
+              "warnings": [
+                "Vigencia no confirmada."
+              ]
+            }
+          }
+        ],
+        "evidence_pack_ids": [
+          "ep_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [
+          {
+            "source_ref": null,
+            "result_id": "lsr_002",
+            "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+            "reason": "low_authority",
+            "tier": "TIER3_SECUNDARIO",
+            "source_type": "web",
+            "rejected_at": "2026-05-22T00:00:00Z",
+            "warning_codes": [
+              "tier3_not_primary"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_001",
+          "currency": "USD",
+          "is_estimated": true,
+          "billing_source": "provider_estimate",
+          "model_input_tokens": 1200,
+          "model_output_tokens": 700,
+          "tool_calls": 0,
+          "provider_estimated_costs": [
+            {
+              "provider": "openai",
+              "estimated_cost": 0.08
+            }
+          ],
+          "estimated_total_cost": 0.08
+        },
+        "latency_ms": {
+          "total": 3200,
+          "model_total": 3000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": [],
+        "input_message_ids": [
+          "msg_prompt_injection_missing_aggregation_input"
+        ],
+        "output_message_id": "msg_prompt_injection_missing_aggregation_output",
+        "prompt_injection_risks": []
+      }
+    },
+    {
+      "case": "critical_claim_uses_blocking_prompt_injection_evidence",
+      "description": "A critical claim remains passed while relying on evidence with a blocking prompt injection risk.",
+      "trace_object": {
+        "trace_id": "tr_policy_prompt_injection_critical_claim",
+        "organization_id": "org_001",
+        "actor_ref": "actor_hash_001",
+        "actor_type": "user",
+        "answer_id": "ans_prompt_injection_critical_claim",
+        "answer_version_ref": "av_prompt_injection_critical_claim",
+        "answer_version": 1,
+        "conversation_id": "conv_001",
+        "case_id": null,
+        "response_outcome": "answered",
+        "cost_budget_ref": "cb_profesional_simple_v080",
+        "cost_budget_version": "cost-budget-v0.8.0",
+        "plan_code": "PROFESIONAL",
+        "complexity": "SIMPLE",
+        "created_at": "2026-05-22T00:00:00Z",
+        "model_calls": [
+          {
+            "model_call_id": "mc_prompt_injection_critical_claim",
+            "purpose": "answer_generation",
+            "provider": "openai",
+            "model": "gpt-5",
+            "prompt_version": "answer-generation-v1",
+            "input_hash": "sha256:9c55de4d0e5f1e05cb8e71f0679fa1590c715a21e93196e5f76dffbdfdd19a1b",
+            "output_hash": "sha256:b9bb7d3ced693db67f075ca4b73a45e03dba11dc85c52bb5d8e1b9ae4d85dfd0",
+            "token_usage": {
+              "input_tokens": 1200,
+              "output_tokens": 700,
+              "total_tokens": 1900
+            },
+            "started_at": "2026-05-22T00:00:00Z",
+            "completed_at": "2026-05-22T00:00:03Z",
+            "status": "success",
+            "error_code": null,
+            "external_provider_call": true,
+            "provider_call_audit_id": "pca_mc_prompt_injection_critical_claim",
+            "organization_id": "org_001"
+          }
+        ],
+        "tool_calls": [],
+        "retrieval_runs": [
+          {
+            "retrieval_run_id": "rr_prompt_injection_001",
+            "query_id": "q_001",
+            "retrieval_plan_id": "rp_001",
+            "status": "completed_with_evidence",
+            "providers_used": [
+              "official_source_adapter_registry"
+            ],
+            "sources_opened": [
+              {
+                "source_ref": "F1",
+                "result_id": "res_001",
+                "url_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "opened_at": "2026-05-24T10:00:00Z"
+              }
+            ],
+            "sources_rejected": [],
+            "evidence_pack_id": "ep_001",
+            "latency_ms": 100,
+            "estimated_cost": 0,
+            "warnings": [
+              "sanitized_summary"
+            ],
+            "started_at": "2026-05-24T10:00:00Z",
+            "completed_at": "2026-05-24T10:00:01Z",
+            "prompt_injection_risks": [
+              {
+                "risk_code": "instruction_override_attempt",
+                "detected_in_ref": "F1:P1",
+                "classification": "PUBLIC_LEGAL_SOURCE",
+                "severity": "blocking",
+                "detected_at": "2026-05-24T10:00:00Z",
+                "handling": "used_as_evidence_only"
+              }
+            ],
+            "quality": {
+              "overall": "MEDIUM",
+              "coverage": 0.72,
+              "authority": 0.91,
+              "citation_readiness": 0.84,
+              "validity_risk": "MEDIUM",
+              "conflicts_detected": false,
+              "warnings": [
+                "Vigencia no confirmada."
+              ]
+            }
+          }
+        ],
+        "evidence_pack_ids": [
+          "ep_001"
+        ],
+        "sources_used": [
+          "F1"
+        ],
+        "sources_rejected": [
+          {
+            "source_ref": null,
+            "result_id": "lsr_002",
+            "url_hash": "sha256:6ed85c999757bdaa736e76c201f42c21b4fec9f90cf900482dfb980f9b42a643",
+            "reason": "low_authority",
+            "tier": "TIER3_SECUNDARIO",
+            "source_type": "web",
+            "rejected_at": "2026-05-22T00:00:00Z",
+            "warning_codes": [
+              "tier3_not_primary"
+            ]
+          }
+        ],
+        "claims": [
+          {
+            "claim_id": "cl_001",
+            "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
+            "claim_type": "procedimiento",
+            "criticality": "high",
+            "support_level": "direct",
+            "citations": [
+              "C1"
+            ],
+            "verification_status": "passed",
+            "requires_human_review": false
+          }
+        ],
+        "citation_audit": {
+          "citation_audit_id": "ca_001",
+          "auditor_version": "citation-auditor-v1",
+          "overall_status": "passed",
+          "results": [
+            {
+              "citation_ref": "C1",
+              "claim_id": "cl_001",
+              "passage_ref": "F1:P1",
+              "source_ref": "F1",
+              "status": "valid",
+              "support_assessment": "direct",
+              "severity": "low"
+            }
+          ],
+          "blocking_failures": [],
+          "warnings": [],
+          "created_at": "2026-05-22T00:00:00Z"
+        },
+        "cost": {
+          "cost_report_id": "cr_001",
+          "currency": "USD",
+          "is_estimated": true,
+          "billing_source": "provider_estimate",
+          "model_input_tokens": 1200,
+          "model_output_tokens": 700,
+          "tool_calls": 0,
+          "provider_estimated_costs": [
+            {
+              "provider": "openai",
+              "estimated_cost": 0.08
+            }
+          ],
+          "estimated_total_cost": 0.08
+        },
+        "latency_ms": {
+          "total": 3200,
+          "model_total": 3000,
+          "tool_total": 0,
+          "retrieval_total": 0,
+          "citation_audit": 100,
+          "persistence": 50,
+          "queue": 50
+        },
+        "warnings": [],
+        "input_message_ids": [
+          "msg_prompt_injection_critical_claim_input"
+        ],
+        "output_message_id": "msg_prompt_injection_critical_claim_output",
+        "prompt_injection_risks": [
+          {
+            "risk_code": "instruction_override_attempt",
+            "detected_in_ref": "F1:P1",
+            "classification": "PUBLIC_LEGAL_SOURCE",
+            "severity": "blocking",
+            "detected_at": "2026-05-24T10:00:00Z",
+            "handling": "used_as_evidence_only"
+          }
+        ]
+      }
     }
   ]
 }
