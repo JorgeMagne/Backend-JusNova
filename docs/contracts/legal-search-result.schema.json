@@ -34,7 +34,8 @@
   "properties": {
     "result_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^lsr_[A-Za-z0-9_-]+$"
     },
     "title": {
       "type": "string",
@@ -479,6 +480,24 @@
     }
   ],
   "x-invalid-examples": [
+    {
+      "result_id": "result-001",
+      "title": "Resultado con ID no canonico",
+      "url": "https://www.example.gob.bo/documento",
+      "tier": "TIER1_OFICIAL",
+      "source_type": "institucional",
+      "jurisdiction": "BO",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "relevance_score": 0.7,
+      "authority_score": 0.9,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.8,
+      "extraction_status": "not_fetched",
+      "citation_eligible": false,
+      "warnings": []
+    },
     {
       "result_id": "lsr_002",
       "title": "Ley sin vigencia",

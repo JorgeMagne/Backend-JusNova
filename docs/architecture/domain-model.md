@@ -33,7 +33,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | Conversation/Case | `Conversation`, `Message`, `Case`, `CaseMemory` |
 | Documents | `Document`, `DocumentVersion`, `DocumentPage`, `DocumentChunk`, `DocumentEvidence` |
 | Storage/Derived Artifacts | `StorageObject`, `OcrArtifact`, `Embedding` |
-| Sources/Retrieval | `SourceRegistryEntry`, `SourceSnapshot`, `RetrievalRun` |
+| Sources/Retrieval | `LegalSearchQuery`, `LegalEntity`, `RetrievalPlan`, `LegalSearchResult`, `SourceRegistryEntry`, `SourceSnapshot`, `RetrievalRun` |
 | Evidence/Answer | `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Answer`, `AnswerVersion`, `Claim`, `Citation`, `CitationAudit` |
 | Audit/Security | `TraceObject`, `ModelCall`, `ToolCall`, `ProviderCallAudit`, `RawAccessEvent`, `PromptInjectionRisk` |
 | Commercial | `UsageEvent`, `Plan`, `Subscription`, `ResearchCredit`, `CostBudget`, `CostReport` |
@@ -58,6 +58,10 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | StorageObject | `^sto_[A-Za-z0-9_-]+$` | `raw-access-event.schema.json` resource ref |
 | OcrArtifact | `^ocr_[A-Za-z0-9_-]+$` | `raw-access-event.schema.json` resource ref |
 | Embedding | `^emb_[A-Za-z0-9_-]+$` | `raw-access-event.schema.json` resource ref |
+| LegalSearchQuery | `^q_[A-Za-z0-9_-]+$` | `legal-search-query.schema.json` |
+| LegalEntity | `^ent_[A-Za-z0-9_-]+$` como value object bajo `LegalSearchQuery` | `legal-entity.schema.json` |
+| RetrievalPlan | `^rp_[A-Za-z0-9_-]+$` | `retrieval-plan.schema.json` |
+| LegalSearchResult | `^lsr_[A-Za-z0-9_-]+$` como value object bajo `RetrievalRun`/traza sanitizada | `legal-search-result.schema.json` |
 | SourceRegistryEntry | `^src_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | SourceSnapshot | `^snap_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | RetrievalRun | `^rr_[A-Za-z0-9_-]+$` | `retrieval-run.schema.json` |
@@ -128,6 +132,16 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | CaseMemory -> Embedding | `0..n` | Embeddings derivados de memoria heredan `CASE_MEMORY_CONFIDENTIAL`. |
 | Embedding -> DocumentEvidence | `0..1`, XOR `CaseMemory` | Si `document_evidence_id` existe, no puede existir parent de memoria. |
 | Embedding -> CaseMemory | `0..1`, XOR `DocumentEvidence` | Si `case_id`/memoria existe, no puede existir parent documental; todo embedding tiene exactamente un parent. |
+| Organization -> LegalSearchQuery | `0..n` | Toda busqueda viva se ejecuta bajo tenant aunque sea query publica abstracta. |
+| LegalSearchQuery -> Organization | `n..1` | `organization_id` es requerido por contrato. |
+| LegalSearchQuery -> LegalEntity | `0..n` | Entidades detectadas son value objects de la query. |
+| LegalEntity -> LegalSearchQuery | `n..1` | No persiste como entidad global sin query owner. |
+| LegalSearchQuery -> RetrievalPlan | `0..n` | Una query puede no llegar a plan si se bloquea o cancela temprano. |
+| RetrievalPlan -> LegalSearchQuery | `n..1` | Todo plan deriva de una query y comparte `organization_id`. |
+| RetrievalPlan -> RetrievalRun | `0..n` | Plan puede existir antes de ejecutarse o reintentarse. |
+| RetrievalRun -> RetrievalPlan | `n..1` | `retrieval_plan_id` es requerido por contrato. |
+| RetrievalRun -> LegalSearchResult | `0..n` | `discovery_results` son resultados normalizados embebidos, no evidencia citable. |
+| LegalSearchResult -> RetrievalRun | `n..1` | `result_id=lsr_*` no debe tratarse como raw-access resource independiente en 0.11. |
 | SourceRegistryEntry -> SourceSnapshot | `0..n` | Una fuente puede registrarse antes de snapshots. |
 | SourceSnapshot -> SourceRegistryEntry | `0..1` | Snapshots privados pueden existir fuera del registry publico global. |
 | RetrievalRun -> EvidencePack | `0..n` | Runs fallidos pueden no producir pack. |
@@ -185,6 +199,8 @@ Si la ejecucion falla antes de crear respuesta/version, el `run_id` queda como r
 | EvaluationRun | Ejecuta solo casos globales sinteticos/publicos. | Cualquier input es tenant-scoped o user-derived. |
 
 Todo artefacto derivado hereda la mayor sensibilidad (`sensitivity_rank`) de sus entradas.
+
+`LegalSearchQuery`, `RetrievalPlan` y `LegalSearchResult` pueden estar vinculados a fuentes publicas, pero siguen siendo tenant-scoped porque el acto de busqueda, la estrategia y los resultados pueden revelar intereses, hechos o contexto del cliente. `LegalEntity` se conserva como value object de `LegalSearchQuery`; no debe crear una tabla global reutilizable con valores extraidos de usuarios.
 
 ## Artefactos raw addressable
 

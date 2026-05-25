@@ -8,10 +8,14 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
   },
   "required": [
     "retrieval_plan_id",
+    "organization_id",
     "query_id",
     "jurisdiction",
     "intents",
@@ -25,11 +29,18 @@
   "properties": {
     "retrieval_plan_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^rp_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "query_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^q_[A-Za-z0-9_-]+$"
     },
     "jurisdiction": {
       "type": "string",
@@ -129,6 +140,7 @@
   "examples": [
     {
       "retrieval_plan_id": "rp_001",
+      "organization_id": "org_001",
       "query_id": "q_legal_001",
       "jurisdiction": "BO",
       "intents": [
@@ -156,12 +168,58 @@
   "x-invalid-examples": [
     {
       "retrieval_plan_id": "rp_002",
+      "organization_id": "org_001",
       "query_id": "q_legal_002",
       "jurisdiction": "BO",
       "intents": [
         "JURISPRUDENCIA"
       ],
       "strategies": [],
+      "source_targets": [
+        "TCP"
+      ],
+      "search_queries": [
+        "debido proceso"
+      ],
+      "fallback_allowed": true,
+      "stop_conditions": [
+        "budget_exhausted"
+      ],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "retrieval_plan_id": "plan_003",
+      "organization_id": "org_001",
+      "query_id": "q_legal_003",
+      "jurisdiction": "BO",
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "strategies": [
+        "OFFICIAL_DIRECT"
+      ],
+      "source_targets": [
+        "TCP"
+      ],
+      "search_queries": [
+        "debido proceso"
+      ],
+      "fallback_allowed": true,
+      "stop_conditions": [
+        "budget_exhausted"
+      ],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "retrieval_plan_id": "rp_004",
+      "query_id": "q_legal_004",
+      "jurisdiction": "BO",
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "strategies": [
+        "OFFICIAL_DIRECT"
+      ],
       "source_targets": [
         "TCP"
       ],

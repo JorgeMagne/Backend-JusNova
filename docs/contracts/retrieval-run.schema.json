@@ -45,11 +45,13 @@
     },
     "query_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^q_[A-Za-z0-9_-]+$"
     },
     "retrieval_plan_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^rp_[A-Za-z0-9_-]+$"
     },
     "status": {
       "enum": [

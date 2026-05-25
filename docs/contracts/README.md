@@ -196,6 +196,8 @@ Estos contratos quedan aceptados como base documental del modelo conceptual y de
 - `Citation`, `CitationAudit` y `AbstentionRender` usan los mismos refs locales/canonicos para claims, citas, evidence packs y answers: `cl_*`, `C#`, `ep_*`, `ca_*` y `ans_*`.
 - `Message.attachments[].attachment_id` usa `att_*`; `Source.snapshot_id` y `LegalSearchResult.snapshot_id` usan `snap_*`; `AnswerVersion.answer_contract_ref` usa `ans_*:vN`.
 - `AnswerVersion.abstention_render_ref` usa `abstention_render_*` y `rendered_answer_snapshot_id` usa `render_snap_*` cuando existen.
+- `LegalSearchQuery.query_id`, `RetrievalPlan.retrieval_plan_id`, `LegalSearchResult.result_id` y `LegalEntity.entity_id` usan prefijos canonicos `q_*`, `rp_*`, `lsr_*` y `ent_*`.
+- `RetrievalPlan` exige `organization_id=org_*`; los planes de busqueda son tenant-scoped aunque consulten fuentes publicas.
 - Todo contrato privado que requiere `organization_id` exige forma canonica `org_*`, alineada con `domain-model.md` y `entity-ownership-matrix.md`.
 - `domain-model.md`, `entity-ownership-matrix.md` y `api-draft-v0.md` gobiernan relaciones conceptuales, ownership y visibilidad de endpoints para Fase 1.
 

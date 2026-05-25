@@ -261,11 +261,13 @@
         },
         "query_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^q_[A-Za-z0-9_-]+$"
         },
         "retrieval_plan_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^rp_[A-Za-z0-9_-]+$"
         },
         "status": {
           "enum": [
@@ -305,7 +307,8 @@
                   "string",
                   "null"
                 ],
-                "minLength": 1
+                "minLength": 1,
+                "pattern": "^lsr_[A-Za-z0-9_-]+$"
               },
               "url_hash": {
                 "type": "string",
@@ -840,7 +843,8 @@
             "string",
             "null"
           ],
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^lsr_[A-Za-z0-9_-]+$"
         },
         "url_hash": {
           "type": "string",
@@ -2975,7 +2979,7 @@
           "adapter_calls": [],
           "discovery_results": [
             {
-              "result_id": "r_018",
+              "result_id": "lsr_018",
               "title": "Resultado crudo no sanitizado",
               "url": "https://example.com/private-query?id=123",
               "tier": "TIER3_SECUNDARIO",
@@ -5992,7 +5996,7 @@
             "sources_opened": [
               {
                 "source_ref": "F1",
-                "result_id": "res_001",
+                "result_id": "lsr_001",
                 "url_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                 "opened_at": "2026-05-24T10:00:00Z"
               }
@@ -6170,7 +6174,7 @@
             "sources_opened": [
               {
                 "source_ref": "F1",
-                "result_id": "res_001",
+                "result_id": "lsr_001",
                 "url_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                 "opened_at": "2026-05-24T10:00:00Z"
               }

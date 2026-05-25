@@ -27,7 +27,8 @@
   "properties": {
     "query_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^q_[A-Za-z0-9_-]+$"
     },
     "organization_id": {
       "type": "string",
@@ -371,6 +372,53 @@
         "max_results_per_provider": 0,
         "tool_rounds_max": 0,
         "timeout_ms": 1000
+      },
+      "query_classification": "PUBLIC_LEGAL_QUERY",
+      "organization_id": "org_001"
+    },
+    {
+      "query_id": "query_bad_prefix_001",
+      "raw_query": "Busca jurisprudencia del TCP sobre accion de amparo por debido proceso.",
+      "normalized_query": "jurisprudencia tcp accion de amparo debido proceso",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "CONSTITUCIONAL"
+      ],
+      "intents": [
+        "JURISPRUDENCIA"
+      ],
+      "required_source_types": [
+        "jurisprudencia"
+      ],
+      "entities": [
+        {
+          "entity_id": "ent_001",
+          "entity_type": "institucion",
+          "value": "Tribunal Constitucional Plurinacional",
+          "number": null,
+          "year": null,
+          "authority": "TCP",
+          "confidence": 0.95,
+          "needs_disambiguation": false
+        }
+      ],
+      "date_constraints": {
+        "from": null,
+        "to": null,
+        "as_of": "2026-05-22"
+      },
+      "must_verify_validity": false,
+      "allowed_domains": [
+        "tcpbolivia.bo"
+      ],
+      "blocked_domains": [],
+      "budget": {
+        "discovery_calls_max": 2,
+        "source_fetches_max": 6,
+        "official_adapter_calls_max": 2,
+        "max_results_per_provider": 10,
+        "tool_rounds_max": 3,
+        "timeout_ms": 90000
       },
       "query_classification": "PUBLIC_LEGAL_QUERY",
       "organization_id": "org_001"
