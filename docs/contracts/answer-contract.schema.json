@@ -15,6 +15,7 @@
   },
   "required": [
     "answer_id",
+    "organization_id",
     "answer_version",
     "trace_id",
     "evidence_pack_id",
@@ -31,6 +32,11 @@
       "type": "string",
       "minLength": 1,
       "pattern": "^ans_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "answer_version": {
       "type": "integer",
@@ -208,6 +214,7 @@
   "examples": [
     {
       "answer_id": "ans_001",
+      "organization_id": "org_001",
       "answer_version": 1,
       "trace_id": "tr_001",
       "evidence_pack_id": "ep_001",
@@ -475,6 +482,7 @@
   "x-policy-invalid-examples": [
     {
       "answer_id": "ans_003",
+      "organization_id": "org_001",
       "answer_version": 1,
       "trace_id": "tr_003",
       "evidence_pack_id": "ep_001",

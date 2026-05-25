@@ -18,6 +18,7 @@
   },
   "required": [
     "abstention_render_id",
+    "organization_id",
     "trace_id",
     "answer_id",
     "answer_version",
@@ -34,6 +35,11 @@
     "abstention_render_id": {
       "type": "string",
       "pattern": "^abstention_render_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "trace_id": {
       "type": "string",
@@ -170,6 +176,7 @@
   "examples": [
     {
       "abstention_render_id": "abstention_render_001",
+      "organization_id": "org_001",
       "trace_id": "tr_abstention_001",
       "answer_id": "ans_002",
       "answer_version": 1,

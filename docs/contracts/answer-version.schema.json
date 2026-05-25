@@ -19,6 +19,7 @@
   "required": [
     "answer_version_id",
     "answer_id",
+    "organization_id",
     "answer_version",
     "previous_answer_version",
     "response_outcome",
@@ -39,6 +40,11 @@
       "type": "string",
       "minLength": 1,
       "pattern": "^ans_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "answer_version": {
       "type": "integer",
@@ -229,6 +235,7 @@
     {
       "answer_version_id": "av_001",
       "answer_id": "ans_001",
+      "organization_id": "org_001",
       "answer_version": 1,
       "previous_answer_version": null,
       "response_outcome": "answered",
@@ -243,6 +250,7 @@
     {
       "answer_version_id": "av_002",
       "answer_id": "ans_001",
+      "organization_id": "org_001",
       "answer_version": 2,
       "previous_answer_version": 1,
       "response_outcome": "answered",
@@ -257,6 +265,7 @@
     {
       "answer_version_id": "av_abstention_001",
       "answer_id": "ans_002",
+      "organization_id": "org_001",
       "answer_version": 1,
       "previous_answer_version": null,
       "response_outcome": "total_abstention",
@@ -386,6 +395,7 @@
     {
       "answer_version_id": "av_policy_prev_001",
       "answer_id": "ans_001",
+      "organization_id": "org_001",
       "answer_version": 2,
       "previous_answer_version": 2,
       "response_outcome": "answered",

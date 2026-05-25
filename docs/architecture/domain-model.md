@@ -34,7 +34,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | Documents | `Document`, `DocumentVersion`, `DocumentPage`, `DocumentChunk`, `DocumentEvidence` |
 | Storage/Derived Artifacts | `StorageObject`, `OcrArtifact`, `Embedding` |
 | Sources/Retrieval | `LegalSearchQuery`, `LegalEntity`, `RetrievalPlan`, `LegalSearchResult`, `SourceRegistryEntry`, `SourceSnapshot`, `RetrievalRun` |
-| Evidence/Answer | `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Answer`, `AnswerVersion`, `Claim`, `Citation`, `CitationAudit` |
+| Evidence/Answer | `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Answer`, `AnswerVersion`, `AbstentionRender`, `Claim`, `Citation`, `CitationAudit` |
 | Audit/Security | `TraceObject`, `ModelCall`, `ToolCall`, `ProviderCallAudit`, `RawAccessEvent`, `PromptInjectionRisk` |
 | Commercial | `UsageEvent`, `Plan`, `Subscription`, `ResearchCredit`, `CostBudget`, `CostReport` |
 | Evaluation | `EvaluationCase`, `EvaluationRun` |
@@ -68,6 +68,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | EvidencePack | `^ep_[A-Za-z0-9_-]+$` | `evidence-pack.schema.json` |
 | Answer | `^ans_[A-Za-z0-9_-]+$` | `answer-contract.schema.json` |
 | AnswerVersion | `^av_[A-Za-z0-9_-]+$` | `answer-version.schema.json` |
+| AbstentionRender | `^abstention_render_[A-Za-z0-9_-]+$` como value object bajo `AnswerVersion` | `abstention-render.schema.json` |
 | Claim | `^cl_[A-Za-z0-9_-]+$` | `claim.schema.json` |
 | CitationAudit | `citation_audit_id` de value object embebido; ejemplos usan `ca_*` | `citation-audit.schema.json` embebido en `TraceObject` |
 | TraceObject | `^tr_[A-Za-z0-9_-]+$` | `trace-object.schema.json` |
@@ -151,6 +152,8 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | EvidenceSource -> EvidencePassage | `1..n` cuando es citable; source shells pueden ser `0..n` | Una fuente citada requiere pasajes. |
 | Answer -> AnswerVersion | `0..n` | Permite answer shell antes de version publicada. |
 | AnswerVersion -> Answer | `n..1` | Toda version pertenece a una respuesta. |
+| AnswerVersion -> AbstentionRender | `0..1` | Solo para `total_abstention` o `blocked`; respuestas sustantivas usan `AnswerContract`. |
+| AbstentionRender -> AnswerVersion | `n..1` por `answer_id`, `answer_version` y `trace_id` | Value object tenant-scoped; no guarda prompts, documentos ni output completo. |
 | AnswerVersion -> TraceObject | `1..1` al finalizar | Mientras el run esta en progreso no hay `TraceObject` valido. |
 | TraceObject -> AnswerVersion | `1..1` | Trace final requiere `answer_version_ref`. |
 | AnswerVersion -> Claim | `0..n` | Abstenciones/bloqueos pueden no publicar claims. |
