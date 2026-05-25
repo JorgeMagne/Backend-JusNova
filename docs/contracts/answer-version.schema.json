@@ -74,7 +74,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+:v[0-9]+$"
     },
     "abstention_render_ref": {
       "description": "Referencia a abstention-render.schema.json para total_abstention o blocked.",
@@ -182,7 +183,8 @@
         "properties": {
           "answer_contract_ref": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^ans_[A-Za-z0-9_-]+:v[0-9]+$"
           },
           "abstention_render_ref": {
             "type": "null"

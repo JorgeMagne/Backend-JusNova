@@ -128,7 +128,8 @@
       "properties": {
         "attachment_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^att_[A-Za-z0-9_-]+$"
         },
         "attachment_type": {
           "const": "document"
