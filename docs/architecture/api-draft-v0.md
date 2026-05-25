@@ -78,7 +78,19 @@ No crea `Message` obligatorio.
 
 ### GET /v1/conversations/{conversation_id}
 
-Devuelve metadata conversacional y pagina de mensajes seguros. No devuelve trace internals ni provider audit.
+Request: sin body.
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `conversation_id` | `conv_*`. |
+| `case_id` | `case_*` o `null`. |
+| `title` | `string|null`; no es evidencia. |
+| `status` | `active`, `archived` o `deleted`. |
+| `message_summaries[]` | Pagina de refs/summaries seguros; no incluye trace internals ni provider audit. |
+| `created_at` | date-time. |
+| `updated_at` | date-time. |
 
 ### POST /v1/conversations/{conversation_id}/messages
 
@@ -100,6 +112,10 @@ Response:
 | `status` | `accepted` o `queued`. |
 
 ### GET /v1/conversations/{conversation_id}/runs/{run_id}/stream
+
+Request: sin body; stream asociado a path params.
+
+Response: stream de eventos seguros.
 
 Eventos in-progress:
 
@@ -124,36 +140,259 @@ Si la ejecucion falla antes de crear respuesta/version, el error usa `ErrorEnvel
 
 ## Case endpoints
 
-`GET /v1/cases/{case_id}/memory` devuelve `CaseMemorySafeSummary`, no `case-memory.schema.json` completo. La vista segura puede incluir resumen de hechos, riesgos y preguntas, pero no debe usarse como evidencia juridica ni exponer material raw. Acceso raw/elevado a memoria requiere `RawAccessEvent`.
+### POST /v1/cases
+
+Request:
+
+| Campo | Regla |
+|---|---|
+| `title` | Opcional, `string|null`; no es evidencia. |
+| `procedural_stage_code` | Opcional; si existe usa enum de `CaseMemory.procedural_stage_code`. |
+| `procedural_stage_label` | Opcional, `string|null`. |
+| `conversation_id` | Opcional `conv_*` para vincular una conversacion inicial. |
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `case_id` | `case_*`. |
+| `title` | `string|null`. |
+| `status` | `active`. |
+| `procedural_stage_code` | Enum cerrado o `unknown`. |
+| `conversation_ids[]` | `conv_*`; puede ser `[]`. |
+| `created_at` | date-time. |
+| `updated_at` | date-time. |
+
+### GET /v1/cases/{case_id}
+
+Request: sin body.
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `case_id` | `case_*`. |
+| `title` | `string|null`; no es fuente juridica. |
+| `status` | `active`, `archived` o `deleted`. |
+| `procedural_stage_code` | Enum cerrado de memoria o `unknown`. |
+| `procedural_stage_label` | `string|null`. |
+| `conversation_ids[]` | Refs `conv_*`, no mensajes completos. |
+| `document_ids[]` | Refs `doc_*`, no documentos ni OCR. |
+| `created_at` | date-time. |
+| `updated_at` | date-time. |
+
+### PATCH /v1/cases/{case_id}
+
+Request:
+
+| Campo | Regla |
+|---|---|
+| `title` | Opcional, `string|null`; no es evidencia. |
+| `status` | Opcional: `active`, `archived` o `deleted`. |
+| `procedural_stage_code` | Opcional; enum cerrado de memoria. |
+| `procedural_stage_label` | Opcional, `string|null`. |
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `case_id` | `case_*`. |
+| `status` | Estado persistido. |
+| `procedural_stage_code` | Valor persistido. |
+| `procedural_stage_label` | `string|null`. |
+| `updated_at` | date-time. |
+
+### GET /v1/cases/{case_id}/memory
+
+Request: sin body.
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `case_id` | `case_*`. |
+| `memory_version` | Entero `>= 1`. |
+| `safe_summary` | `CaseMemorySafeSummary`, no `case-memory.schema.json` completo. |
+| `facts_summary[]` | Texto minimizado/redacted; no prueba juridica por si solo. |
+| `risk_flags[]` | Codigos/severidad, sin raw document/message content. |
+| `open_legal_questions[]` | Preguntas seguras, no evidence pack. |
+| `updated_at` | date-time. |
+
+La vista segura puede incluir resumen de hechos, riesgos y preguntas, pero no debe usarse como evidencia juridica ni exponer material raw. Acceso raw/elevado a memoria requiere `RawAccessEvent`.
 
 ## Document endpoints
 
-`POST /v1/documents` crea un shell de documento y un intent de carga/procesamiento. No requiere `DocumentVersion` inmediata.
+### POST /v1/documents
 
-`GET /v1/documents/{document_id}` devuelve solo metadata/status:
+Request:
 
-- `document_id`;
-- estado de procesamiento;
-- conteos;
-- warnings cerrados;
-- timestamps;
-- refs internas seguras.
+| Campo | Regla |
+|---|---|
+| `case_id` | Opcional `case_*` o `null`. |
+| `filename_hint` | Opcional, solo display redacted; no storage key ni evidencia. |
+| `content_type` | MIME declarado; se valida por allowlist/sniffing en processing. |
+| `size_bytes` | Entero positivo. |
 
-No devuelve binario, signed URL, OCR completo, texto completo, storage key ni documento completo.
+Response:
 
-`POST /v1/documents/{document_id}/process` inicia procesamiento. `GET /processing-status` devuelve progreso, conteos y warnings, no OCR completo.
+| Campo | Regla |
+|---|---|
+| `document_id` | `doc_*`. |
+| `case_id` | `case_*` o `null`. |
+| `status` | `uploaded`, `processing_required` o `rejected`. |
+| `upload_intent_ref` | Ref opaco no adivinable; no storage key ni signed URL irrestricta. |
+| `accepted_content_types[]` | Codigos seguros o MIME allowlist. |
+| `max_size_bytes` | Limite visible. |
+| `created_at` | date-time. |
+
+Crea un shell de documento y un intent de carga/procesamiento. No requiere `DocumentVersion` inmediata.
+
+### GET /v1/documents/{document_id}
+
+Request: sin body.
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `document_id` | `doc_*`. |
+| `case_id` | `case_*` o `null`. |
+| `latest_document_version_id` | `docv_*` o `null`. |
+| `status` | Estado de procesamiento. |
+| `page_count` | Entero `>= 0` o `null`. |
+| `chunk_count` | Entero `>= 0` o `null`. |
+| `evidence_count` | Entero `>= 0`. |
+| `warnings[]` | Codigos cerrados, no texto OCR. |
+| `created_at` | date-time. |
+| `updated_at` | date-time. |
+
+Devuelve solo metadata/status. No devuelve binario, signed URL, OCR completo, texto completo, storage key ni documento completo.
+
+### POST /v1/documents/{document_id}/process
+
+Request:
+
+| Campo | Regla |
+|---|---|
+| `document_version_id` | Opcional `docv_*`; si falta, backend usa version pendiente/latest. |
+| `force_reprocess` | Opcional boolean; default `false`. |
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `document_id` | `doc_*`. |
+| `document_version_id` | `docv_*` o `null` si aun no existe version procesable. |
+| `status` | `queued`, `processing` o `blocked`. |
+| `processing_status_url` | URL relativa a `/v1/documents/{document_id}/processing-status`. |
+| `warnings[]` | Codigos cerrados. |
+
+### GET /v1/documents/{document_id}/processing-status
+
+Request: sin body.
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `document_id` | `doc_*`. |
+| `document_version_id` | `docv_*` o `null`. |
+| `status` | `queued`, `processing`, `processed`, `failed` o `blocked`. |
+| `pages_total` | Entero `>= 0` o `null`. |
+| `pages_processed` | Entero `>= 0`. |
+| `warnings[]` | Codigos cerrados. |
+| `updated_at` | date-time. |
+
+Devuelve progreso, conteos y warnings, no OCR completo.
 
 ## Answer endpoints
 
-`GET /v1/answers/{answer_id}` devuelve respuesta visible. La respuesta debe identificar la version visible mediante `answer_version_ref`.
+### GET /v1/answers/{answer_id}
 
-`GET /v1/answers/{answer_id}/sources` devuelve solo fuentes realmente citadas para la version visible. Cualquier `source_ref` (`F#`/`D#`) o `passage_ref` (`F#:P#`/`D#:P#`) queda estrictamente scoped al `answer_version_ref` y al `evidence_pack_id` devueltos por el endpoint; esos refs no son IDs globales.
+Request: sin body.
 
-`GET /v1/answers/{answer_id}/trace-summary` devuelve resumen seguro, nunca `TraceObject` completo.
+Response:
+
+| Campo | Regla |
+|---|---|
+| `answer_id` | `ans_*`. |
+| `answer_version_ref` | `av_*` visible. |
+| `response_outcome` | Outcome cerrado de respuesta/version. |
+| `sections` | Secciones visibles/redacted del `AnswerContract`; no payload de modelo. |
+| `warnings[]` | Codigos/mensajes seguros. |
+| `created_at` | date-time. |
+
+Devuelve respuesta visible. La respuesta debe identificar la version visible mediante `answer_version_ref`.
+
+### GET /v1/answers/{answer_id}/sources
+
+Request: sin body.
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `answer_id` | `ans_*`. |
+| `answer_version_ref` | `av_*`. |
+| `evidence_pack_id` | `ep_*`. |
+| `sources[]` | Fuentes realmente citadas; `source_ref` local al pack. |
+| `passages[]` | Pasajes citados; `passage_ref` local al pack. |
+| `citations[]` | `citation_ref=C#` local a `answer_version_ref`. |
+
+Devuelve solo fuentes realmente citadas para la version visible. Cualquier `source_ref` (`F#`/`D#`) o `passage_ref` (`F#:P#`/`D#:P#`) queda estrictamente scoped al `answer_version_ref` y al `evidence_pack_id` devueltos por el endpoint; esos refs no son IDs globales.
+
+### GET /v1/answers/{answer_id}/trace-summary
+
+Request: sin body.
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `answer_id` | `ans_*`. |
+| `answer_version_ref` | `av_*`. |
+| `trace_id` | `tr_*`. |
+| `summary_visibility` | `USER_SUMMARY`. |
+| `steps[]` | Codigos seguros de alto nivel, sin prompts ni payloads. |
+| `warnings[]` | Codigos seguros. |
+| `cost_summary` | Totales agregados permitidos; no `CostReport` raw. |
+
+Devuelve resumen seguro, nunca `TraceObject` completo.
 
 ## Usage endpoints
 
-`GET /v1/usage/current` devuelve agregados del periodo y limites visibles. `GET /v1/research-credits` devuelve balance y movimientos resumidos. El ledger raw de `UsageEvent` queda interno/auditado.
+### GET /v1/usage/current
+
+Request: sin body.
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `period_start` | date-time. |
+| `period_end` | date-time. |
+| `plan_code` | Codigo de plan visible. |
+| `subscription_id` | `sub_*` o `null`. |
+| `usage_totals` | Agregados por categoria; no ledger raw. |
+| `limits` | Limites visibles del plan/presupuesto. |
+| `research_credits_balance` | Numero visible o `null`. |
+
+Devuelve agregados del periodo y limites visibles.
+
+### GET /v1/research-credits
+
+Request: sin body.
+
+Response:
+
+| Campo | Regla |
+|---|---|
+| `balance` | Numero de creditos disponibles. |
+| `currency` | `NONE` o codigo futuro si aplica. |
+| `movements[]` | Movimientos resumidos con fecha, tipo y delta; no `UsageEvent` raw. |
+| `updated_at` | date-time. |
+
+Devuelve balance y movimientos resumidos. El ledger raw de `UsageEvent` queda interno/auditado.
 
 ## Errores
 
