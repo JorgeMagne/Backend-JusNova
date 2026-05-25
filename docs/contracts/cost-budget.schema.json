@@ -11,7 +11,8 @@
     "related_decision": "Subfase 0.8 - Cost Governor, planes y presupuestos",
     "amendments": [
       "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment",
-      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft fixture alignment"
     ]
   },
   "required": [
