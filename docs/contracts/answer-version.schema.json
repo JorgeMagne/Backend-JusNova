@@ -16,6 +16,14 @@
       "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
     ]
   },
+  "x-tenant-policy": {
+    "description": "AnswerVersion.organization_id debe coincidir con TraceObject, AnswerContract o AbstentionRender resueltos por sus refs. JSON Schema valida cada objeto localmente; la igualdad de tenant es una regla custom obligatoria.",
+    "same_organization_id_refs": [
+      "trace_id -> TraceObject.organization_id",
+      "answer_contract_ref -> AnswerContract.organization_id",
+      "abstention_render_ref -> AbstentionRender.organization_id"
+    ]
+  },
   "required": [
     "answer_version_id",
     "answer_id",
@@ -410,10 +418,10 @@
   ],
   "x-cross-contract-policy-invalid-examples": [
     {
-      "description": "TraceObject, AnswerVersion y AbstentionRender validan por separado y comparten identidad, pero response_outcome diverge entre la traza y la version/render.",
+      "description": "TraceObject, AnswerVersion y AbstentionRender validan por separado y comparten identidad, pero response_outcome y organization_id divergen entre la traza, version y render.",
       "trace_object": {
         "trace_id": "tr_abstention_001",
-        "organization_id": "org_001",
+        "organization_id": "org_other",
         "actor_ref": "system",
         "actor_type": "system",
         "answer_id": "ans_002",
@@ -517,7 +525,8 @@
       },
       "policy_errors": [
         "TraceObject.response_outcome != AnswerVersion.response_outcome",
-        "TraceObject.response_outcome != AbstentionRender.response_outcome"
+        "TraceObject.response_outcome != AbstentionRender.response_outcome",
+        "TraceObject.organization_id != AnswerVersion.organization_id"
       ]
     },
     {
@@ -666,7 +675,7 @@
       },
       "answer_contract": {
         "answer_id": "ans_third",
-        "organization_id": "org_001",
+        "organization_id": "org_other",
         "answer_version": 7,
         "trace_id": "tr_third_trace",
         "evidence_pack_id": "ep_001",
@@ -708,7 +717,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
-            "organization_id": "org_001",
+            "organization_id": "org_other",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -723,7 +732,7 @@
         "citations": [
           {
             "citation_ref": "C1",
-            "organization_id": "org_001",
+            "organization_id": "org_other",
             "passage_ref": "F1:P1",
             "source_ref": "F1",
             "status": "valid",
@@ -748,7 +757,8 @@
         "TraceObject.trace_id != AnswerVersion.trace_id",
         "AnswerContract.trace_id != TraceObject.trace_id",
         "AnswerContract.answer_id != TraceObject.answer_id",
-        "AnswerContract.answer_version != TraceObject.answer_version"
+        "AnswerContract.answer_version != TraceObject.answer_version",
+        "AnswerContract.organization_id != AnswerVersion.organization_id"
       ]
     },
     {

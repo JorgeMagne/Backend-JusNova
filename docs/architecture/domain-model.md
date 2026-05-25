@@ -24,6 +24,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 7. Un `run_id` en progreso usa patron `tr_*`, pero no es un `TraceObject` valido hasta que exista `answer_id` y `answer_version_ref`.
 8. Refs locales como `F#`, `D#`, `F#:P#`, `D#:P#` y `C#` no son IDs globales.
 9. `StorageObject`, `OcrArtifact` y `Embedding` son entidades conceptuales porque 0.10 ya permite auditarlas por `RawAccessEvent`; esto no amplia el enum de raw access.
+10. Todo objeto embebido o referenciado dentro de un agregado tenant-scoped debe resolver al mismo `organization_id` que el contenedor; mismatches cross-tenant son policy-invalid aunque JSON Schema solo pueda validar la forma local.
 
 ## Entidades conceptuales
 
@@ -204,6 +205,12 @@ Si la ejecucion falla antes de crear respuesta/version, el `run_id` queda como r
 Todo artefacto derivado hereda la mayor sensibilidad (`sensitivity_rank`) de sus entradas.
 
 `LegalSearchQuery`, `RetrievalPlan` y `LegalSearchResult` pueden estar vinculados a fuentes publicas, pero siguen siendo tenant-scoped porque el acto de busqueda, la estrategia y los resultados pueden revelar intereses, hechos o contexto del cliente. `LegalEntity` se conserva como value object de `LegalSearchQuery`; no debe crear una tabla global reutilizable con valores extraidos de usuarios.
+
+## Igualdad de tenant entre contratos
+
+Fase 1 debe validar que `organization_id` coincide entre contenedores y subobjetos o refs resueltos. La regla aplica como minimo a `AnswerContract -> Claim/Citation`, `AnswerVersion -> AnswerContract/AbstentionRender/TraceObject`, `TraceObject -> ModelCall/ToolCall/RetrievalRun/EvidencePack`, `ProviderCallAudit -> ModelCall/ToolCall/RetrievalRun/UsageEvent/CostReport` y cualquier artefacto documental derivado.
+
+Los schemas nuevos cierran la forma de cada objeto, pero la igualdad entre objetos resueltos es una validacion custom/cross-contract obligatoria porque JSON Schema draft 2020-12 no expresa igualdad dinamica entre `organization_id` de objetos independientes.
 
 ## Artefactos raw addressable
 

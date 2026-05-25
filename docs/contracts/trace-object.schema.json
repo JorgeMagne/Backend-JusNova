@@ -16,6 +16,18 @@
       "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
     ]
   },
+  "x-tenant-policy": {
+    "description": "La traza y todo contrato embebido o referenciado por ella deben resolver al mismo organization_id. JSON Schema valida forma local; la igualdad de tenant se valida por policy/custom.",
+    "same_organization_id": [
+      "model_calls[].organization_id",
+      "tool_calls[].organization_id",
+      "claims[].organization_id",
+      "retrieval_runs[].retrieval_run_id -> RetrievalRun.organization_id",
+      "evidence_pack_ids[] -> EvidencePack.organization_id",
+      "model_calls[].provider_call_audit_id -> ProviderCallAudit.organization_id",
+      "tool_calls[].provider_call_audit_id -> ProviderCallAudit.organization_id"
+    ]
+  },
   "required": [
     "trace_id",
     "organization_id",
@@ -4390,7 +4402,7 @@
           "error_code": null,
           "external_provider_call": true,
           "provider_call_audit_id": "pca_mc_policy_001",
-          "organization_id": "org_001"
+          "organization_id": "org_other"
         }
       ],
       "tool_calls": [],
@@ -4457,7 +4469,8 @@
         "queue": 50
       },
       "warnings": [
-        "Schema-valid but policy-invalid: C99 and F99 are not covered by citation_audit.results."
+        "Schema-valid but policy-invalid: C99 and F99 are not covered by citation_audit.results.",
+        "Schema-valid but policy-invalid: ModelCall.organization_id != TraceObject.organization_id."
       ],
       "input_message_ids": [
         "msg_tr_policy_001_input"
@@ -4522,7 +4535,7 @@
           },
           "external_provider_call": false,
           "provider_call_audit_id": null,
-          "organization_id": "org_001"
+          "organization_id": "org_other"
         }
       ],
       "retrieval_runs": [],
@@ -4588,7 +4601,8 @@
         "queue": 50
       },
       "warnings": [
-        "Schema-valid but policy-invalid: CostReport does not aggregate model_calls and tool_calls."
+        "Schema-valid but policy-invalid: CostReport does not aggregate model_calls and tool_calls.",
+        "Schema-valid but policy-invalid: ToolCall.organization_id != TraceObject.organization_id."
       ],
       "input_message_ids": [
         "msg_tr_policy_002_input"
@@ -4698,7 +4712,8 @@
         "queue": 0
       },
       "warnings": [
-        "Schema-valid but policy-invalid: completed_at precedes started_at and latency components exceed total."
+        "Schema-valid but policy-invalid: completed_at precedes started_at and latency components exceed total.",
+        "Schema-valid but policy-invalid: retrieval_runs[].retrieval_run_id resolves to a RetrievalRun with a different organization_id."
       ],
       "input_message_ids": [
         "msg_tr_policy_003_input"

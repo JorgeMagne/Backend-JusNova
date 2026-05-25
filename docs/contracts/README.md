@@ -198,7 +198,8 @@ Estos contratos quedan aceptados como base documental del modelo conceptual y de
 - `AnswerVersion.abstention_render_ref` usa `abstention_render_*` y `rendered_answer_snapshot_id` usa `render_snap_*` cuando existen.
 - `LegalSearchQuery.query_id`, `RetrievalPlan.retrieval_plan_id`, `LegalSearchResult.result_id` y `LegalEntity.entity_id` usan prefijos canonicos `q_*`, `rp_*`, `lsr_*` y `ent_*`.
 - `RetrievalPlan` exige `organization_id=org_*`; los planes de busqueda son tenant-scoped aunque consulten fuentes publicas.
-- `AnswerContract`, `AnswerVersion`, `AbstentionRender` y `EvidencePack` exigen `organization_id=org_*`; claims, citas, citation audit y cost report heredan tenant del `AnswerVersion`/`TraceObject` contenedor.
+- `AnswerContract`, `AnswerVersion`, `AbstentionRender`, `EvidencePack`, `Claim` y `Citation` exigen `organization_id=org_*`.
+- Todo subobjeto o contrato referenciado dentro de un agregado tenant-scoped debe resolver al mismo `organization_id` que el contenedor. Esto se valida por policy/custom para `AnswerContract -> Claim/Citation`, `AnswerVersion -> TraceObject/AnswerContract/AbstentionRender`, `TraceObject -> ModelCall/ToolCall/RetrievalRun/EvidencePack` y `ProviderCallAudit -> ModelCall/ToolCall/RetrievalRun/UsageEvent/CostReport`.
 - Todo contrato privado que requiere `organization_id` exige forma canonica `org_*`, alineada con `domain-model.md` y `entity-ownership-matrix.md`.
 - `domain-model.md`, `entity-ownership-matrix.md` y `api-draft-v0.md` gobiernan relaciones conceptuales, ownership y visibilidad de endpoints para Fase 1.
 

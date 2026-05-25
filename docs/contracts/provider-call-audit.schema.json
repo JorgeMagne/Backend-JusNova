@@ -13,6 +13,16 @@
       "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
     ]
   },
+  "x-tenant-policy": {
+    "description": "ProviderCallAudit.organization_id debe coincidir con el recurso resuelto por model_call_id, tool_call_id, retrieval_run_id, usage_event_id o cost_report_id.",
+    "same_organization_id_refs": [
+      "model_call_id -> ModelCall.organization_id",
+      "tool_call_id -> ToolCall.organization_id",
+      "retrieval_run_id -> RetrievalRun.organization_id",
+      "usage_event_id -> UsageEvent.organization_id",
+      "cost_report_id -> TraceObject.organization_id"
+    ]
+  },
   "required": [
     "provider_call_audit_id",
     "organization_id",
@@ -1542,6 +1552,60 @@
       "region_or_residency": "configured_by_deployment",
       "feature_flag": "provider.openai_model.enabled",
       "model_call_id": "mc_001"
+    }
+  ],
+  "x-cross-contract-policy-invalid-examples": [
+    {
+      "provider_call_audit": {
+        "provider_call_audit_id": "pca_cross_tenant_model_call",
+        "organization_id": "org_001",
+        "provider_family": "ModelProvider",
+        "provider_name": "openai_model_provider",
+        "external_call": true,
+        "data_sent_classes": [
+          "PUBLIC_LEGAL_SOURCE"
+        ],
+        "data_returned_classes": [
+          "PROVIDER_OPERATIONAL_METADATA"
+        ],
+        "attempted_data_classes": [
+          "PUBLIC_LEGAL_SOURCE"
+        ],
+        "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "started_at": "2026-05-24T10:00:00Z",
+        "completed_at": "2026-05-24T10:00:02Z",
+        "status": "success",
+        "training_use_allowed": false,
+        "policy_decision": "allowed",
+        "region_or_residency": "configured_by_deployment",
+        "feature_flag": "provider.openai_model.enabled",
+        "model_call_id": "mc_cross_tenant_model_call"
+      },
+      "model_call": {
+        "model_call_id": "mc_cross_tenant_model_call",
+        "purpose": "answer_generation",
+        "provider": "openai",
+        "model": "gpt-5",
+        "prompt_version": "answer-generation-v1",
+        "input_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "output_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "token_usage": {
+          "input_tokens": 10,
+          "output_tokens": 20,
+          "total_tokens": 30
+        },
+        "started_at": "2026-05-24T10:00:00Z",
+        "completed_at": "2026-05-24T10:00:02Z",
+        "status": "success",
+        "error_code": null,
+        "external_provider_call": true,
+        "provider_call_audit_id": "pca_cross_tenant_model_call",
+        "organization_id": "org_other"
+      },
+      "policy_errors": [
+        "ProviderCallAudit.organization_id != resolved ModelCall.organization_id"
+      ]
     }
   ],
   "x-policy-invalid-examples": [

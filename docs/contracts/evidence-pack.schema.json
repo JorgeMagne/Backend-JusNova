@@ -13,6 +13,15 @@
       "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
     ]
   },
+  "x-tenant-policy": {
+    "description": "EvidencePack.organization_id debe coincidir con LegalSearchQuery y RetrievalRun resueltos por query_id y retrieval_run_id; fuentes documentales privadas tambien deben resolver al mismo tenant.",
+    "same_organization_id_refs": [
+      "query_id -> LegalSearchQuery.organization_id",
+      "retrieval_run_id -> RetrievalRun.organization_id",
+      "sources[].source_ref=D# -> DocumentEvidence.organization_id",
+      "passages[].passage_ref=D#:P# -> DocumentEvidence.organization_id"
+    ]
+  },
   "required": [
     "evidence_pack_id",
     "organization_id",
@@ -307,6 +316,27 @@
       "organization_id": "org_001",
       "query_id": "query_bad_prefix",
       "retrieval_run_id": "rr_bad_query",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "PROCESAL_CIVIL"
+      ],
+      "sources": [],
+      "passages": [],
+      "quality": {
+        "overall": "NONE",
+        "authority_score": 0,
+        "coverage_score": 0,
+        "warnings": []
+      },
+      "created_at": "2026-05-22T00:00:00Z"
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "evidence_pack_id": "ep_cross_tenant_001",
+      "organization_id": "org_001",
+      "query_id": "q_other_tenant_001",
+      "retrieval_run_id": "rr_other_tenant_001",
       "jurisdiction": "BO",
       "legal_area": [
         "PROCESAL_CIVIL"
