@@ -239,13 +239,14 @@ Response:
 |---|---|
 | `document_id` | `doc_*`. |
 | `case_id` | `case_*` o `null`. |
-| `status` | `uploaded`, `processing_required` o `rejected`. |
-| `storage_object_ref` | `sto_*`; ref opaco no adivinable del objeto privado, no storage key ni signed URL irrestricta. |
+| `upload_status` | `accepted`, `rejected` o `quarantined`. |
+| `processing_status` | `queued`, `processing`, `processed`, `failed` o `blocked`; inicial normalmente `queued` o `blocked`. |
+| `storage_object_ref` | `sto_*` o `null`; si `upload_status=rejected`, debe ser `null`; si `quarantined`, apunta a objeto privado no usable hasta validacion. |
 | `accepted_content_types[]` | Codigos seguros o MIME allowlist. |
 | `max_size_bytes` | Limite visible. |
 | `created_at` | date-time. |
 
-Crea un shell de documento y un intent de carga/procesamiento. No requiere `DocumentVersion` inmediata.
+Crea un shell de documento y un objeto privado inicial cuando el upload es aceptado o puesto en cuarentena. No requiere `DocumentVersion` inmediata.
 
 ### GET /v1/documents/{document_id}
 
@@ -258,7 +259,9 @@ Response:
 | `document_id` | `doc_*`. |
 | `case_id` | `case_*` o `null`. |
 | `latest_document_version_id` | `docv_*` o `null`. |
-| `status` | `queued`, `processing`, `processed`, `failed` o `blocked`. |
+| `upload_status` | `accepted`, `rejected` o `quarantined`. |
+| `processing_status` | `queued`, `processing`, `processed`, `failed` o `blocked`. |
+| `storage_object_ref` | `sto_*` o `null`; `null` cuando `upload_status=rejected`. |
 | `page_count` | Entero `>= 0` o `null`. |
 | `chunk_count` | Entero `>= 0` o `null`. |
 | `evidence_count` | Entero `>= 0`. |
@@ -283,7 +286,7 @@ Response:
 |---|---|
 | `document_id` | `doc_*`. |
 | `document_version_id` | `docv_*` o `null` si aun no existe version procesable. |
-| `status` | `queued`, `processing` o `blocked`. |
+| `processing_status` | `queued`, `processing` o `blocked`. |
 | `processing_status_url` | URL relativa a `/v1/documents/{document_id}/processing-status`. |
 | `warnings[]` | Codigos cerrados. |
 
@@ -297,7 +300,7 @@ Response:
 |---|---|
 | `document_id` | `doc_*`. |
 | `document_version_id` | `docv_*` o `null`. |
-| `status` | `queued`, `processing`, `processed`, `failed` o `blocked`. |
+| `processing_status` | `queued`, `processing`, `processed`, `failed` o `blocked`. |
 | `pages_total` | Entero `>= 0` o `null`. |
 | `pages_processed` | Entero `>= 0`. |
 | `warnings[]` | Codigos cerrados. |
