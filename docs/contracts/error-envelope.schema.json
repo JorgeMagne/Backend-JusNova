@@ -144,6 +144,7 @@
             "usage_event",
             "answer",
             "answer_version",
+            "claim",
             "evidence_pack",
             "source",
             "passage",
@@ -601,6 +602,25 @@
             "properties": {
               "resource_ref": {
                 "pattern": "^av_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "claim"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^cl_[A-Za-z0-9_-]+$"
               }
             }
           }
@@ -1389,6 +1409,20 @@
       "metadata": {
         "resource_type": "message",
         "resource_ref": "doc_001"
+      }
+    },
+    {
+      "error_code": "unsupported_critical_claim",
+      "safe_message_code": "critical_claim_not_supported",
+      "message": "Claim ref con prefijo incorrecto.",
+      "severity": "error",
+      "request_id": "rq_bad_claim_ref",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "resource_type": "claim",
+        "resource_ref": "ans_001"
       }
     },
     {
