@@ -258,7 +258,7 @@ Response:
 | `document_id` | `doc_*`. |
 | `case_id` | `case_*` o `null`. |
 | `latest_document_version_id` | `docv_*` o `null`. |
-| `status` | Estado de procesamiento. |
+| `status` | `queued`, `processing`, `processed`, `failed` o `blocked`. |
 | `page_count` | Entero `>= 0` o `null`. |
 | `chunk_count` | Entero `>= 0` o `null`. |
 | `evidence_count` | Entero `>= 0`. |
