@@ -15,6 +15,7 @@
   },
   "required": [
     "evidence_pack_id",
+    "organization_id",
     "query_id",
     "retrieval_run_id",
     "jurisdiction",
@@ -32,7 +33,13 @@
     },
     "query_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^q_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "retrieval_run_id": {
       "type": "string",
@@ -201,6 +208,7 @@
   "examples": [
     {
       "evidence_pack_id": "ep_001",
+      "organization_id": "org_001",
       "query_id": "q_001",
       "retrieval_run_id": "rr_001",
       "jurisdiction": "BO",
@@ -259,6 +267,7 @@
   "x-invalid-examples": [
     {
       "evidence_pack_id": "ep_002",
+      "organization_id": "org_001",
       "query_id": "q_002",
       "retrieval_run_id": "rr_002",
       "jurisdiction": "BO",
@@ -271,6 +280,43 @@
         "overall": "HIGH",
         "authority_score": 0.95,
         "coverage_score": 0.82,
+        "warnings": []
+      },
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "evidence_pack_id": "ep_missing_org",
+      "query_id": "q_missing_org",
+      "retrieval_run_id": "rr_missing_org",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "PROCESAL_CIVIL"
+      ],
+      "sources": [],
+      "passages": [],
+      "quality": {
+        "overall": "NONE",
+        "authority_score": 0,
+        "coverage_score": 0,
+        "warnings": []
+      },
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "evidence_pack_id": "ep_bad_query",
+      "organization_id": "org_001",
+      "query_id": "query_bad_prefix",
+      "retrieval_run_id": "rr_bad_query",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "PROCESAL_CIVIL"
+      ],
+      "sources": [],
+      "passages": [],
+      "quality": {
+        "overall": "NONE",
+        "authority_score": 0,
+        "coverage_score": 0,
         "warnings": []
       },
       "created_at": "2026-05-22T00:00:00Z"
