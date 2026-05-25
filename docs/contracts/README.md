@@ -227,11 +227,11 @@ raw-access-event.schema.json
 retrieval-plan.schema.json
 retrieval-run.schema.json
 source.schema.json
-source-registry-entry.schema.json
-source-snapshot.schema.json
 trace-object.schema.json
 tool-call.schema.json
 usage-event.schema.json
 case-memory.schema.json
 conversation.schema.json
 ```
+
+`SourceRegistryEntry` y `SourceSnapshot` permanecen como entidades conceptuales/delegadas en Fase 0; no tienen schema JSON minimo aceptado en este directorio.

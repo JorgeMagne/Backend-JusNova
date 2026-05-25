@@ -86,7 +86,7 @@ Response:
 |---|---|
 | `conversation_id` | `conv_*`. |
 | `case_id` | `case_*` o `null`. |
-| `title` | `string|null`; no es evidencia. |
+| `title` | `string/null`; no es evidencia. |
 | `status` | `active`, `archived` o `deleted`. |
 | `message_summaries[]` | Pagina de refs/summaries seguros; no incluye trace internals ni provider audit. |
 | `created_at` | date-time. |
@@ -146,9 +146,9 @@ Request:
 
 | Campo | Regla |
 |---|---|
-| `title` | Opcional, `string|null`; no es evidencia. |
+| `title` | Opcional, `string/null`; no es evidencia. |
 | `procedural_stage_code` | Opcional; si existe usa enum de `CaseMemory.procedural_stage_code`. |
-| `procedural_stage_label` | Opcional, `string|null`. |
+| `procedural_stage_label` | Opcional, `string/null`. |
 | `conversation_id` | Opcional `conv_*` para vincular una conversacion inicial. |
 
 Response:
@@ -156,7 +156,7 @@ Response:
 | Campo | Regla |
 |---|---|
 | `case_id` | `case_*`. |
-| `title` | `string|null`. |
+| `title` | `string/null`. |
 | `status` | `active`. |
 | `procedural_stage_code` | Enum cerrado o `unknown`. |
 | `conversation_ids[]` | `conv_*`; puede ser `[]`. |
@@ -172,10 +172,10 @@ Response:
 | Campo | Regla |
 |---|---|
 | `case_id` | `case_*`. |
-| `title` | `string|null`; no es fuente juridica. |
+| `title` | `string/null`; no es fuente juridica. |
 | `status` | `active`, `archived` o `deleted`. |
 | `procedural_stage_code` | Enum cerrado de memoria o `unknown`. |
-| `procedural_stage_label` | `string|null`. |
+| `procedural_stage_label` | `string/null`. |
 | `conversation_ids[]` | Refs `conv_*`, no mensajes completos. |
 | `document_ids[]` | Refs `doc_*`, no documentos ni OCR. |
 | `created_at` | date-time. |
@@ -187,10 +187,10 @@ Request:
 
 | Campo | Regla |
 |---|---|
-| `title` | Opcional, `string|null`; no es evidencia. |
+| `title` | Opcional, `string/null`; no es evidencia. |
 | `status` | Opcional: `active`, `archived` o `deleted`. |
 | `procedural_stage_code` | Opcional; enum cerrado de memoria. |
-| `procedural_stage_label` | Opcional, `string|null`. |
+| `procedural_stage_label` | Opcional, `string/null`. |
 
 Response:
 
@@ -199,7 +199,7 @@ Response:
 | `case_id` | `case_*`. |
 | `status` | Estado persistido. |
 | `procedural_stage_code` | Valor persistido. |
-| `procedural_stage_label` | `string|null`. |
+| `procedural_stage_label` | `string/null`. |
 | `updated_at` | date-time. |
 
 ### GET /v1/cases/{case_id}/memory

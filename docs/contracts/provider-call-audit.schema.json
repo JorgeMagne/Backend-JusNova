@@ -20,7 +20,7 @@
       "tool_call_id -> ToolCall.organization_id",
       "retrieval_run_id -> RetrievalRun.organization_id",
       "usage_event_id -> UsageEvent.organization_id",
-      "cost_report_id -> TraceObject.organization_id"
+      "cost_report_id -> owning TraceObject.cost.cost_report_id -> TraceObject.organization_id"
     ]
   },
   "required": [
