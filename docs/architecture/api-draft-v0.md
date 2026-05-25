@@ -240,13 +240,23 @@ Response:
 | `document_id` | `doc_*`. |
 | `case_id` | `case_*` o `null`. |
 | `upload_status` | `accepted`, `rejected` o `quarantined`. |
-| `processing_status` | `queued`, `processing`, `processed`, `failed` o `blocked`; inicial normalmente `queued` o `blocked`. |
+| `processing_status` | En respuesta de creacion solo `queued` o `blocked`. |
 | `storage_object_ref` | `sto_*` o `null`; si `upload_status=rejected`, debe ser `null`; si `quarantined`, apunta a objeto privado no usable hasta validacion. |
 | `accepted_content_types[]` | Codigos seguros o MIME allowlist. |
 | `max_size_bytes` | Limite visible. |
 | `created_at` | date-time. |
 
 Crea un shell de documento y un objeto privado inicial cuando el upload es aceptado o puesto en cuarentena. No requiere `DocumentVersion` inmediata.
+
+Compatibilidad de estados documentales:
+
+| `upload_status` | `processing_status` permitido |
+|---|---|
+| `accepted` | `queued`, `processing`, `processed`, `failed`, `blocked` |
+| `rejected` | `blocked`, `failed` |
+| `quarantined` | `queued`, `blocked` |
+
+En `POST /v1/documents`, el estado inicial solo puede ser `queued` o `blocked`: `accepted -> queued|blocked`, `quarantined -> queued|blocked`, `rejected -> blocked`.
 
 ### GET /v1/documents/{document_id}
 
