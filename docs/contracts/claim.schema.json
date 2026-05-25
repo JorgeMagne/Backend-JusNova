@@ -8,10 +8,14 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
   },
   "required": [
     "claim_id",
+    "organization_id",
     "text",
     "claim_type",
     "criticality",
@@ -23,7 +27,13 @@
   "properties": {
     "claim_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^cl_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "text": {
       "type": "string",
@@ -174,6 +184,7 @@
   "examples": [
     {
       "claim_id": "cl_001",
+      "organization_id": "org_001",
       "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
       "claim_type": "procedimiento",
       "criticality": "high",
@@ -188,6 +199,7 @@
   "x-invalid-examples": [
     {
       "claim_id": "cl_002",
+      "organization_id": "org_001",
       "text": "La norma esta vigente.",
       "claim_type": "vigencia",
       "criticality": "high",
@@ -198,6 +210,7 @@
     },
     {
       "claim_id": "cl_005",
+      "organization_id": "org_001",
       "text": "La norma esta vigente.",
       "claim_type": "vigencia",
       "criticality": "high",
@@ -210,6 +223,7 @@
     },
     {
       "claim_id": "cl_006",
+      "organization_id": "org_001",
       "text": "La conclusion requiere revision humana.",
       "claim_type": "otro",
       "criticality": "medium",
@@ -219,11 +233,22 @@
       ],
       "verification_status": "needs_review",
       "requires_human_review": false
+    },
+    {
+      "claim_id": "cl_missing_org",
+      "text": "Claim sin tenant explicito.",
+      "claim_type": "otro",
+      "criticality": "low",
+      "support_level": "weak",
+      "citations": [],
+      "verification_status": "needs_review",
+      "requires_human_review": true
     }
   ],
   "x-policy-invalid-examples": [
     {
       "claim_id": "cl_004",
+      "organization_id": "org_001",
       "text": "La norma aplicable establece el requisito critico.",
       "claim_type": "norma",
       "criticality": "high",

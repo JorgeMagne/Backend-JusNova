@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract"
+    "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
   },
   "required": [
     "entity_id",
@@ -20,7 +23,8 @@
   "properties": {
     "entity_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ent_[A-Za-z0-9_-]+$"
     },
     "entity_type": {
       "enum": [
@@ -84,6 +88,16 @@
     }
   ],
   "x-invalid-examples": [
+    {
+      "entity_id": "entity-002",
+      "entity_type": "ley",
+      "value": "Ley 439",
+      "number": "439",
+      "year": 2013,
+      "authority": "Asamblea Legislativa Plurinacional",
+      "confidence": 0.94,
+      "needs_disambiguation": false
+    },
     {
       "entity_id": "ent_002",
       "entity_type": "norma_desconocida",

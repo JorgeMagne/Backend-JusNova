@@ -35,6 +35,8 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 | OQ-011 | Si seguridad documental completa queda cerrada en 0.9. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto: 0.9 solo define minimo documental; Subfase 0.10 acepta privacy/security, provider boundaries, raw access y prompt injection contracts. |
 | OQ-012 | Si soporte general puede acceder a prompts, documentos, mensajes o salidas raw. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `privacy-security-policy.md`, `trace-visibility-policy.md` y `raw-access-event.schema.json`; soporte normal usa `SUPPORT_VIEW` redacted y `support_operator` no existe en `RawAccessEvent`. |
 | OQ-013 | Si llamadas externas de provider pueden quedar sin auditoria. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `provider-call-audit.schema.json`, `model-call.schema.json`, `tool-call.schema.json` y `provider-policy.md`. |
+| OQ-014 | Si un `run_id` en progreso es ya un `TraceObject` valido. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `domain-model.md` y `api-draft-v0.md`: `run_id=tr_*` es reservado operacional hasta finalizacion con `answer_id` y `answer_version_ref`. |
+| OQ-015 | Si `/v1/cases/{case_id}/memory` devuelve `CaseMemory` crudo. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `api-draft-v0.md`: el endpoint devuelve `CaseMemorySafeSummary`; raw/elevated access requiere `RawAccessEvent`. |
 
 ## Preguntas Blocking
 

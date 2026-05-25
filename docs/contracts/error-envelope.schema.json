@@ -1,0 +1,1623 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://jusnova.local/contracts/error-envelope.schema.json",
+  "title": "ErrorEnvelope",
+  "description": "Envelope cerrado para errores API de JusNova. No transporta contenido crudo de usuario, documentos, OCR, providers ni stack traces.",
+  "type": "object",
+  "x-governance": {
+    "document_status": "Accepted",
+    "date": "2026-05-24",
+    "responsible": "Codex / JusNova Chief Backend Architect",
+    "related_decision": "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+  },
+  "required": [
+    "error_code",
+    "safe_message_code",
+    "message",
+    "severity",
+    "request_id",
+    "retryable",
+    "user_visible",
+    "created_at"
+  ],
+  "properties": {
+    "error_code": {
+      "enum": [
+        "validation_error",
+        "not_found",
+        "auth_required",
+        "forbidden",
+        "tenant_mismatch",
+        "conflict",
+        "rate_limited",
+        "payload_too_large",
+        "unsupported_file_type",
+        "budget_exhausted",
+        "research_credit_required",
+        "policy_blocked",
+        "prompt_injection_blocked",
+        "unsupported_critical_claim",
+        "evidence_insufficient",
+        "document_processing_required",
+        "document_processing_failed",
+        "provider_unavailable",
+        "storage_unavailable",
+        "timeout",
+        "internal_error"
+      ]
+    },
+    "safe_message_code": {
+      "enum": [
+        "invalid_request",
+        "resource_not_found",
+        "authentication_required",
+        "access_denied",
+        "tenant_access_denied",
+        "resource_conflict",
+        "too_many_requests",
+        "payload_too_large_safe",
+        "file_type_not_supported",
+        "budget_limit_reached",
+        "research_credit_needed",
+        "policy_blocked_safe",
+        "prompt_injection_blocked_safe",
+        "critical_claim_not_supported",
+        "insufficient_evidence",
+        "document_needs_processing",
+        "document_processing_error",
+        "provider_temporarily_unavailable",
+        "storage_temporarily_unavailable",
+        "request_timeout",
+        "unexpected_error"
+      ]
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "warning",
+        "error",
+        "critical"
+      ]
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^rq_[A-Za-z0-9_-]+$"
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "user_visible": {
+      "type": "boolean"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):[0-5][0-9])$"
+    },
+    "trace_id": {
+      "type": "string",
+      "pattern": "^tr_[A-Za-z0-9_-]+$"
+    },
+    "conversation_id": {
+      "type": "string",
+      "pattern": "^conv_[A-Za-z0-9_-]+$"
+    },
+    "answer_id": {
+      "type": "string",
+      "pattern": "^ans_[A-Za-z0-9_-]+$"
+    },
+    "document_id": {
+      "type": "string",
+      "pattern": "^doc_[A-Za-z0-9_-]+$"
+    },
+    "provider_call_audit_id": {
+      "type": "string",
+      "pattern": "^pca_[A-Za-z0-9_-]+$"
+    },
+    "metadata": {
+      "$ref": "#/$defs/metadata"
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "resource_type": {
+          "enum": [
+            "conversation",
+            "message",
+            "case",
+            "case_memory",
+            "document",
+            "document_version",
+            "document_evidence",
+            "trace",
+            "model_call",
+            "tool_call",
+            "retrieval_run",
+            "provider_call",
+            "usage_event",
+            "answer",
+            "answer_version",
+            "claim",
+            "evidence_pack",
+            "source",
+            "passage",
+            "subscription",
+            "research_credit"
+          ]
+        },
+        "resource_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parent_resource_type": {
+          "enum": [
+            "evidence_pack"
+          ]
+        },
+        "parent_resource_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+$",
+          "maxLength": 120
+        },
+        "limit_name": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]+$",
+          "maxLength": 80
+        },
+        "retry_after_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "allowed_values": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80,
+            "anyOf": [
+              {
+                "description": "Codigo simbolico seguro sin slash.",
+                "pattern": "^[A-Za-z0-9_.:-]+$"
+              },
+              {
+                "description": "MIME type de upload permitido por catalogo cerrado.",
+                "enum": [
+                  "application/pdf",
+                  "application/msword",
+                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                  "image/jpeg",
+                  "image/png",
+                  "image/tiff",
+                  "image/webp",
+                  "text/plain"
+                ]
+              }
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "dependentRequired": {
+        "resource_type": [
+          "resource_ref"
+        ],
+        "resource_ref": [
+          "resource_type"
+        ],
+        "parent_resource_type": [
+          "parent_resource_ref",
+          "resource_type",
+          "resource_ref"
+        ],
+        "parent_resource_ref": [
+          "parent_resource_type",
+          "resource_type",
+          "resource_ref"
+        ]
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "resource_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "resource_ref"
+            ]
+          },
+          "then": {
+            "required": [
+              "resource_type"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "parent_resource_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "parent_resource_ref",
+              "resource_type",
+              "resource_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "parent_resource_ref"
+            ]
+          },
+          "then": {
+            "required": [
+              "parent_resource_type",
+              "resource_type",
+              "resource_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "parent_resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_type": {
+                "enum": [
+                  "source",
+                  "passage"
+                ]
+              },
+              "parent_resource_type": {
+                "const": "evidence_pack"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "parent_resource_ref"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_type": {
+                "enum": [
+                  "source",
+                  "passage"
+                ]
+              },
+              "parent_resource_type": {
+                "const": "evidence_pack"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "conversation"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^conv_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "message"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^msg_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "case"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^case_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "case_memory"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^case_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "document"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^doc_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "document_version"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^docv_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "document_evidence"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^de_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "trace"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^tr_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "model_call"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^mc_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "tool_call"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^tc_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "retrieval_run"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^rr_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "provider_call"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^pca_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "usage_event"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^ue_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "answer"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^ans_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "answer_version"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^av_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "claim"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^cl_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "evidence_pack"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^ep_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "source"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "parent_resource_type",
+              "parent_resource_ref"
+            ],
+            "properties": {
+              "resource_ref": {
+                "pattern": "^(F[0-9]+|D[0-9]+)$"
+              },
+              "parent_resource_type": {
+                "const": "evidence_pack"
+              },
+              "parent_resource_ref": {
+                "pattern": "^ep_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "passage"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "required": [
+              "parent_resource_type",
+              "parent_resource_ref"
+            ],
+            "properties": {
+              "resource_ref": {
+                "pattern": "^(F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$"
+              },
+              "parent_resource_type": {
+                "const": "evidence_pack"
+              },
+              "parent_resource_ref": {
+                "pattern": "^ep_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "subscription"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^sub_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "resource_type": {
+                "const": "research_credit"
+              }
+            },
+            "required": [
+              "resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_ref": {
+                "pattern": "^rc_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "parent_resource_type": {
+                "const": "evidence_pack"
+              }
+            },
+            "required": [
+              "parent_resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "parent_resource_ref": {
+                "pattern": "^ep_[A-Za-z0-9_-]+$"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "validation_error"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "invalid_request"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "not_found"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "resource_not_found"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "auth_required"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "authentication_required"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "forbidden"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "access_denied"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "tenant_mismatch"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "tenant_access_denied"
+          },
+          "severity": {
+            "const": "critical"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "conflict"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "resource_conflict"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "rate_limited"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "required": [
+          "metadata"
+        ],
+        "properties": {
+          "safe_message_code": {
+            "const": "too_many_requests"
+          },
+          "retryable": {
+            "const": true
+          },
+          "metadata": {
+            "required": [
+              "retry_after_seconds"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "payload_too_large"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "payload_too_large_safe"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "unsupported_file_type"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "file_type_not_supported"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "budget_exhausted"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "budget_limit_reached"
+          },
+          "user_visible": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "research_credit_required"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "research_credit_needed"
+          },
+          "user_visible": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "policy_blocked"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "policy_blocked_safe"
+          },
+          "severity": {
+            "const": "critical"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "prompt_injection_blocked"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "prompt_injection_blocked_safe"
+          },
+          "severity": {
+            "const": "critical"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "unsupported_critical_claim"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "critical_claim_not_supported"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "evidence_insufficient"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "insufficient_evidence"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "document_processing_required"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "document_needs_processing"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "document_processing_failed"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "document_processing_error"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "provider_unavailable"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "provider_temporarily_unavailable"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "storage_unavailable"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "storage_temporarily_unavailable"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "timeout"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "request_timeout"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "error_code": {
+            "const": "internal_error"
+          }
+        },
+        "required": [
+          "error_code"
+        ]
+      },
+      "then": {
+        "properties": {
+          "safe_message_code": {
+            "const": "unexpected_error"
+          }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "La solicitud no cumple el contrato esperado.",
+      "severity": "error",
+      "request_id": "rq_001",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "field": "content",
+        "allowed_values": [
+          "string_non_empty"
+        ]
+      }
+    },
+    {
+      "error_code": "rate_limited",
+      "safe_message_code": "too_many_requests",
+      "message": "La solicitud excede el limite temporal permitido.",
+      "severity": "warning",
+      "request_id": "rq_002",
+      "retryable": true,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "limit_name": "conversation_message_rate",
+        "retry_after_seconds": 30
+      }
+    },
+    {
+      "error_code": "unsupported_file_type",
+      "safe_message_code": "file_type_not_supported",
+      "message": "El tipo de archivo no esta permitido.",
+      "severity": "error",
+      "request_id": "rq_file_type",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "allowed_values": [
+          "application/pdf",
+          "image/png"
+        ]
+      }
+    },
+    {
+      "error_code": "prompt_injection_blocked",
+      "safe_message_code": "prompt_injection_blocked_safe",
+      "message": "La evidencia contiene instrucciones no confiables y no puede usarse para esta conclusion.",
+      "severity": "critical",
+      "request_id": "rq_003",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "trace_id": "tr_001",
+      "metadata": {
+        "resource_type": "passage",
+        "resource_ref": "F1:P1",
+        "parent_resource_type": "evidence_pack",
+        "parent_resource_ref": "ep_001"
+      }
+    }
+  ],
+  "x-invalid-examples": [
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Falta request id.",
+      "severity": "error",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "error_code": "random_error",
+      "safe_message_code": "unexpected_error",
+      "message": "Codigo no permitido.",
+      "severity": "error",
+      "request_id": "rq_bad_code",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "safe_code_desconocido",
+      "message": "Safe message code no permitido.",
+      "severity": "error",
+      "request_id": "rq_bad_safe_code",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "unexpected_error",
+      "message": "Mapping incorrecto.",
+      "severity": "error",
+      "request_id": "rq_bad_mapping",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Request id invalido.",
+      "severity": "error",
+      "request_id": "request-001",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Created at invalido.",
+      "severity": "error",
+      "request_id": "rq_bad_created_at",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "not-a-date"
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Severity no permitida.",
+      "severity": "notice",
+      "request_id": "rq_bad_severity",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "error_code": "rate_limited",
+      "safe_message_code": "too_many_requests",
+      "message": "Falta retry_after_seconds.",
+      "severity": "warning",
+      "request_id": "rq_missing_retry",
+      "retryable": true,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "limit_name": "message_rate"
+      }
+    },
+    {
+      "error_code": "rate_limited",
+      "safe_message_code": "too_many_requests",
+      "message": "Retry after invalido.",
+      "severity": "warning",
+      "request_id": "rq_zero_retry",
+      "retryable": true,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "retry_after_seconds": 0
+      }
+    },
+    {
+      "error_code": "budget_exhausted",
+      "safe_message_code": "budget_limit_reached",
+      "message": "Budget agotado no visible al usuario.",
+      "severity": "warning",
+      "request_id": "rq_budget_hidden",
+      "retryable": false,
+      "user_visible": false,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "error_code": "tenant_mismatch",
+      "safe_message_code": "tenant_access_denied",
+      "message": "Tenant mismatch no critico.",
+      "severity": "warning",
+      "request_id": "rq_tenant_warning",
+      "retryable": false,
+      "user_visible": false,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Metadata con clave raw prohibida.",
+      "severity": "error",
+      "request_id": "rq_raw_metadata",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "raw_prompt": "no permitido"
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Metadata con document_text prohibido.",
+      "severity": "error",
+      "request_id": "rq_document_text_metadata",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "document_text": "no permitido"
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Resource ref de mensaje apunta a documento.",
+      "severity": "error",
+      "request_id": "rq_bad_resource_ref",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "resource_type": "message",
+        "resource_ref": "doc_001"
+      }
+    },
+    {
+      "error_code": "unsupported_critical_claim",
+      "safe_message_code": "critical_claim_not_supported",
+      "message": "Claim ref con prefijo incorrecto.",
+      "severity": "error",
+      "request_id": "rq_bad_claim_ref",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "resource_type": "claim",
+        "resource_ref": "ans_001"
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Parent context no aplica a recurso global.",
+      "severity": "error",
+      "request_id": "rq_parent_on_global_resource",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "resource_type": "conversation",
+        "resource_ref": "conv_001",
+        "parent_resource_type": "evidence_pack",
+        "parent_resource_ref": "ep_001"
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Resource type sin ref.",
+      "severity": "error",
+      "request_id": "rq_resource_no_ref",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "resource_type": "message"
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Source local sin contexto padre.",
+      "severity": "error",
+      "request_id": "rq_source_no_parent",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "resource_type": "source",
+        "resource_ref": "F1"
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Passage local sin parent_resource_ref.",
+      "severity": "error",
+      "request_id": "rq_passage_no_parent_ref",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "resource_type": "passage",
+        "resource_ref": "D1:P1",
+        "parent_resource_type": "evidence_pack"
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Parent context sin recurso hijo.",
+      "severity": "error",
+      "request_id": "rq_parent_only",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "parent_resource_type": "answer_version",
+        "parent_resource_ref": "av_001"
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Allowed values vacio.",
+      "severity": "error",
+      "request_id": "rq_empty_allowed",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "allowed_values": []
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Allowed value demasiado largo.",
+      "severity": "error",
+      "request_id": "rq_long_allowed",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "allowed_values": [
+          "valor_seguro_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ]
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Allowed value con texto libre.",
+      "severity": "error",
+      "request_id": "rq_text_allowed",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "allowed_values": [
+          "texto libre copiado del documento"
+        ]
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Allowed value con query MIME no permitida.",
+      "severity": "error",
+      "request_id": "rq_query_allowed",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "allowed_values": [
+          "application/pdf?raw=document"
+        ]
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Allowed value con URL no permitida.",
+      "severity": "error",
+      "request_id": "rq_url_allowed",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "allowed_values": [
+          "https://example.com/private"
+        ]
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Allowed value con path no permitido.",
+      "severity": "error",
+      "request_id": "rq_path_allowed",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "allowed_values": [
+          "private/path"
+        ]
+      }
+    }
+  ],
+  "x-policy-invalid-examples": [
+    {
+      "error_code": "internal_error",
+      "safe_message_code": "unexpected_error",
+      "message": "El documento del usuario indica una instruccion privada especifica y se expone en el error.",
+      "severity": "error",
+      "request_id": "rq_policy_raw_message",
+      "retryable": false,
+      "user_visible": false,
+      "created_at": "2026-05-24T10:00:00Z"
+    },
+    {
+      "error_code": "unsupported_critical_claim",
+      "safe_message_code": "critical_claim_not_supported",
+      "message": "No hay evidencia suficiente para sostener una conclusion critica.",
+      "severity": "critical",
+      "request_id": "rq_policy_unsupported_claim",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "trace_id": "tr_other_org_001"
+    },
+    {
+      "error_code": "provider_unavailable",
+      "safe_message_code": "provider_temporarily_unavailable",
+      "message": "La ejecucion fallo antes de crear una respuesta versionada.",
+      "severity": "error",
+      "request_id": "rq_policy_reserved_run_as_trace",
+      "retryable": true,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "trace_id": "tr_reserved_in_progress_001"
+    }
+  ]
+}

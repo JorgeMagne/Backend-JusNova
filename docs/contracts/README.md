@@ -175,6 +175,34 @@ Estos contratos quedan aceptados como base documental de seguridad, privacidad, 
 - `TraceObject.prompt_injection_risks[]` agrega riesgos de evidencia/retrieval usados por la respuesta.
 - Ningun contrato 0.10 guarda documentos completos, OCR completo, prompts completos, mensajes completos, HTML bruto ni salidas completas.
 
+## Contratos aceptados en Subfase 0.11
+
+Estos contratos quedan aceptados como base documental del modelo conceptual y del API draft minimo. Esta aceptacion no implementa runtime, routers, OpenAPI formal, migraciones, DB ni servicios.
+
+| Contrato | Estado | Archivo |
+|---|---|---|
+| Error Envelope | Accepted | `error-envelope.schema.json` |
+
+## Reglas especificas de Subfase 0.11
+
+- `ErrorEnvelope` es obligatorio para respuestas HTTP no 2xx en el API draft.
+- `ErrorEnvelope.error_code` y `safe_message_code` usan enums cerrados y mapping deterministico.
+- `ErrorEnvelope.message` es texto seguro, acotado y no debe interpolar contenido de usuario, documento, provider o stack trace.
+- `ErrorEnvelope.metadata` es objeto cerrado; refs locales `F#`, `D#`, `F#:P#` y `D#:P#` solo pueden aparecer con contexto padre resoluble, y `parent_resource_type`/`parent_resource_ref` no pueden aparecer sin `resource_type`/`resource_ref`.
+- `ErrorEnvelope.metadata.allowed_values[]` acepta codigos seguros sin `/` y MIME types permitidos por catalogo cerrado como `application/pdf`; no acepta URLs, paths, espacios, query strings, comillas ni texto libre.
+- `ErrorEnvelope.created_at` requiere `format: date-time`, patron RFC3339 basico y validacion CI con `ajv-formats`/format assertions para rechazar fechas calendario imposibles.
+- Un `run_id` en progreso usa forma `tr_*`, pero no es `TraceObject` schema-valid hasta que exista `answer_id` y `answer_version_ref`.
+- `Conversation`, `Message`, `AnswerContract`, `AnswerVersion`, `EvidencePack`, `RetrievalRun`, `Claim`, `TraceObject` y `UsageEvent` producen refs canonicas compatibles con `api-draft-v0.md` y `ErrorEnvelope`: `conv_*`, `msg_*`, `ans_*`, `av_*`, `ep_*`, `rr_*`, `cl_*`, `tr_*` y `ue_*`.
+- `Citation`, `CitationAudit` y `AbstentionRender` usan los mismos refs locales/canonicos para claims, citas, evidence packs y answers: `cl_*`, `C#`, `ep_*`, `ca_*` y `ans_*`.
+- `Message.attachments[].attachment_id` usa `att_*`; `Source.snapshot_id` y `LegalSearchResult.snapshot_id` usan `snap_*`; `AnswerVersion.answer_contract_ref` usa `ans_*:vN`.
+- `AnswerVersion.abstention_render_ref` usa `abstention_render_*` y `rendered_answer_snapshot_id` usa `render_snap_*` cuando existen.
+- `LegalSearchQuery.query_id`, `RetrievalPlan.retrieval_plan_id`, `LegalSearchResult.result_id` y `LegalEntity.entity_id` usan prefijos canonicos `q_*`, `rp_*`, `lsr_*` y `ent_*`.
+- `RetrievalPlan` exige `organization_id=org_*`; los planes de busqueda son tenant-scoped aunque consulten fuentes publicas.
+- `AnswerContract`, `AnswerVersion`, `AbstentionRender`, `EvidencePack`, `Claim` y `Citation` exigen `organization_id=org_*`.
+- Todo subobjeto o contrato referenciado dentro de un agregado tenant-scoped debe resolver al mismo `organization_id` que el contenedor. Esto se valida por policy/custom para `AnswerContract -> Claim/Citation`, `AnswerVersion -> TraceObject/AnswerContract/AbstentionRender`, `TraceObject -> ModelCall/ToolCall/RetrievalRun/EvidencePack` y `ProviderCallAudit -> ModelCall/ToolCall/RetrievalRun/UsageEvent/CostReport`.
+- Todo contrato privado que requiere `organization_id` exige forma canonica `org_*`, alineada con `domain-model.md` y `entity-ownership-matrix.md`.
+- `domain-model.md`, `entity-ownership-matrix.md` y `api-draft-v0.md` gobiernan relaciones conceptuales, ownership y visibilidad de endpoints para Fase 1.
+
 ## Schemas minimos esperados
 
 ```txt
@@ -199,11 +227,11 @@ raw-access-event.schema.json
 retrieval-plan.schema.json
 retrieval-run.schema.json
 source.schema.json
-source-registry-entry.schema.json
-source-snapshot.schema.json
 trace-object.schema.json
 tool-call.schema.json
 usage-event.schema.json
 case-memory.schema.json
 conversation.schema.json
 ```
+
+`SourceRegistryEntry` y `SourceSnapshot` permanecen como entidades conceptuales/delegadas en Fase 0; no tienen schema JSON minimo aceptado en este directorio.

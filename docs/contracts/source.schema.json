@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts; Subfase 0.6 - Politicas de fuentes, vigencia, conflicto e incertidumbre"
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts; Subfase 0.6 - Politicas de fuentes, vigencia, conflicto e incertidumbre",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
   },
   "required": [
     "source_ref",
@@ -67,7 +70,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^snap_[A-Za-z0-9_-]+$"
     },
     "snapshot_unavailable_reason": {
       "type": [
@@ -177,7 +181,8 @@
           "properties": {
             "snapshot_id": {
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "pattern": "^snap_[A-Za-z0-9_-]+$"
             }
           }
         },
@@ -206,7 +211,8 @@
         "properties": {
           "snapshot_id": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^snap_[A-Za-z0-9_-]+$"
           }
         },
         "required": [

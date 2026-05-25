@@ -12,7 +12,20 @@
     "amendments": [
       "Subfase 0.8 - Cost Governor, planes y presupuestos",
       "Subfase 0.9 - Conversacion, memoria, documentos y OCR",
-      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
+  },
+  "x-tenant-policy": {
+    "description": "La traza y todo contrato embebido o referenciado por ella deben resolver al mismo organization_id. JSON Schema valida forma local; la igualdad de tenant se valida por policy/custom.",
+    "same_organization_id": [
+      "model_calls[].organization_id",
+      "tool_calls[].organization_id",
+      "claims[].organization_id",
+      "retrieval_runs[].retrieval_run_id -> RetrievalRun.organization_id",
+      "evidence_pack_ids[] -> EvidencePack.organization_id",
+      "model_calls[].provider_call_audit_id -> ProviderCallAudit.organization_id",
+      "tool_calls[].provider_call_audit_id -> ProviderCallAudit.organization_id"
     ]
   },
   "required": [
@@ -53,7 +66,8 @@
     },
     "organization_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "actor_ref": {
       "type": "string",
@@ -70,11 +84,13 @@
     },
     "answer_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+$"
     },
     "answer_version_ref": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^av_[A-Za-z0-9_-]+$"
     },
     "answer_version": {
       "type": "integer",
@@ -82,7 +98,8 @@
     },
     "conversation_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^conv_[A-Za-z0-9_-]+$"
     },
     "input_message_ids": {
       "description": "IDs de mensajes de entrada usados para reconstruir la respuesta. No contiene contenido de mensajes.",
@@ -181,7 +198,8 @@
       "type": "array",
       "items": {
         "type": "string",
-        "minLength": 1
+        "minLength": 1,
+        "pattern": "^ep_[A-Za-z0-9_-]+$"
       },
       "uniqueItems": true
     },
@@ -255,11 +273,13 @@
         },
         "query_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^q_[A-Za-z0-9_-]+$"
         },
         "retrieval_plan_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^rp_[A-Za-z0-9_-]+$"
         },
         "status": {
           "enum": [
@@ -299,7 +319,8 @@
                   "string",
                   "null"
                 ],
-                "minLength": 1
+                "minLength": 1,
+                "pattern": "^lsr_[A-Za-z0-9_-]+$"
               },
               "url_hash": {
                 "type": "string",
@@ -322,7 +343,8 @@
         },
         "evidence_pack_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^ep_[A-Za-z0-9_-]+$"
         },
         "no_evidence_reason": {
           "enum": [
@@ -833,7 +855,8 @@
             "string",
             "null"
           ],
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^lsr_[A-Za-z0-9_-]+$"
         },
         "url_hash": {
           "type": "string",
@@ -1363,6 +1386,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -2065,6 +2089,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim no publicable.",
           "claim_type": "otro",
           "criticality": "medium",
@@ -2139,6 +2164,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim bloqueado pero marcado passed.",
           "claim_type": "otro",
           "criticality": "medium",
@@ -2319,6 +2345,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim publicado.",
           "claim_type": "otro",
           "criticality": "medium",
@@ -2433,6 +2460,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim parcialmente respondido.",
           "claim_type": "otro",
           "criticality": "medium",
@@ -2540,6 +2568,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim no publicable en respuesta completa.",
           "claim_type": "otro",
           "criticality": "medium",
@@ -2648,6 +2677,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim fallido sin parte respondida.",
           "claim_type": "otro",
           "criticality": "medium",
@@ -2755,6 +2785,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim publicado.",
           "claim_type": "otro",
           "criticality": "medium",
@@ -2862,6 +2893,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim publicado.",
           "claim_type": "otro",
           "criticality": "medium",
@@ -2968,7 +3000,7 @@
           "adapter_calls": [],
           "discovery_results": [
             {
-              "result_id": "r_018",
+              "result_id": "lsr_018",
               "title": "Resultado crudo no sanitizado",
               "url": "https://example.com/private-query?id=123",
               "tier": "TIER3_SECUNDARIO",
@@ -3015,6 +3047,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim publicado.",
           "claim_type": "otro",
           "criticality": "medium",
@@ -3135,6 +3168,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim publicado.",
           "claim_type": "otro",
           "criticality": "medium",
@@ -3256,6 +3290,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -3382,6 +3417,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -3505,6 +3541,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -3629,6 +3666,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -3756,6 +3794,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -3882,6 +3921,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -4008,6 +4048,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -4134,6 +4175,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -4260,6 +4302,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -4359,7 +4402,7 @@
           "error_code": null,
           "external_provider_call": true,
           "provider_call_audit_id": "pca_mc_policy_001",
-          "organization_id": "org_001"
+          "organization_id": "org_other"
         }
       ],
       "tool_calls": [],
@@ -4374,6 +4417,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "Claim publicado con cita no cubierta por la auditoria.",
           "claim_type": "norma",
           "criticality": "high",
@@ -4425,7 +4469,8 @@
         "queue": 50
       },
       "warnings": [
-        "Schema-valid but policy-invalid: C99 and F99 are not covered by citation_audit.results."
+        "Schema-valid but policy-invalid: C99 and F99 are not covered by citation_audit.results.",
+        "Schema-valid but policy-invalid: ModelCall.organization_id != TraceObject.organization_id."
       ],
       "input_message_ids": [
         "msg_tr_policy_001_input"
@@ -4490,7 +4535,7 @@
           },
           "external_provider_call": false,
           "provider_call_audit_id": null,
-          "organization_id": "org_001"
+          "organization_id": "org_other"
         }
       ],
       "retrieval_runs": [],
@@ -4504,6 +4549,7 @@
       "claims": [
         {
           "claim_id": "cl_002",
+          "organization_id": "org_001",
           "text": "Claim publicado con auditoria consistente y costo inconsistente.",
           "claim_type": "norma",
           "criticality": "high",
@@ -4555,7 +4601,8 @@
         "queue": 50
       },
       "warnings": [
-        "Schema-valid but policy-invalid: CostReport does not aggregate model_calls and tool_calls."
+        "Schema-valid but policy-invalid: CostReport does not aggregate model_calls and tool_calls.",
+        "Schema-valid but policy-invalid: ToolCall.organization_id != TraceObject.organization_id."
       ],
       "input_message_ids": [
         "msg_tr_policy_002_input"
@@ -4613,6 +4660,7 @@
       "claims": [
         {
           "claim_id": "cl_003",
+          "organization_id": "org_001",
           "text": "Claim publicado con tiempos imposibles.",
           "claim_type": "norma",
           "criticality": "high",
@@ -4664,7 +4712,8 @@
         "queue": 0
       },
       "warnings": [
-        "Schema-valid but policy-invalid: completed_at precedes started_at and latency components exceed total."
+        "Schema-valid but policy-invalid: completed_at precedes started_at and latency components exceed total.",
+        "Schema-valid but policy-invalid: retrieval_runs[].retrieval_run_id resolves to a RetrievalRun with a different organization_id."
       ],
       "input_message_ids": [
         "msg_tr_policy_003_input"
@@ -4742,6 +4791,7 @@
       "claims": [
         {
           "claim_id": "cl_004",
+          "organization_id": "org_001",
           "text": "Claim publicado con retrieval temporalmente imposible.",
           "claim_type": "norma",
           "criticality": "high",
@@ -4851,6 +4901,7 @@
       "claims": [
         {
           "claim_id": "cl_005",
+          "organization_id": "org_001",
           "text": "Claim publicado con latencia subreportada.",
           "claim_type": "norma",
           "criticality": "high",
@@ -4960,6 +5011,7 @@
       "claims": [
         {
           "claim_id": "cl_dup",
+          "organization_id": "org_001",
           "text": "Primer claim con identificador duplicado.",
           "claim_type": "norma",
           "criticality": "high",
@@ -4972,6 +5024,7 @@
         },
         {
           "claim_id": "cl_dup",
+          "organization_id": "org_001",
           "text": "Segundo claim distinto con el mismo identificador.",
           "claim_type": "vigencia",
           "criticality": "high",
@@ -5131,6 +5184,7 @@
       "claims": [
         {
           "claim_id": "cl_007",
+          "organization_id": "org_001",
           "text": "Claim publicado con costos locales no reflejados.",
           "claim_type": "norma",
           "criticality": "high",
@@ -5254,6 +5308,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -5380,6 +5435,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -5509,6 +5565,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -5671,6 +5728,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -5833,6 +5891,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -5985,7 +6044,7 @@
             "sources_opened": [
               {
                 "source_ref": "F1",
-                "result_id": "res_001",
+                "result_id": "lsr_001",
                 "url_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                 "opened_at": "2026-05-24T10:00:00Z"
               }
@@ -6045,6 +6104,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -6163,7 +6223,7 @@
             "sources_opened": [
               {
                 "source_ref": "F1",
-                "result_id": "res_001",
+                "result_id": "lsr_001",
                 "url_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
                 "opened_at": "2026-05-24T10:00:00Z"
               }
@@ -6223,6 +6283,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",

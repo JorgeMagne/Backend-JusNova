@@ -12,12 +12,22 @@
     "amendments": [
       "Subfase 0.8 - Cost Governor, planes y presupuestos",
       "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment",
-      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
+  },
+  "x-tenant-policy": {
+    "description": "AnswerVersion.organization_id debe coincidir con TraceObject, AnswerContract o AbstentionRender resueltos por sus refs. JSON Schema valida cada objeto localmente; la igualdad de tenant es una regla custom obligatoria.",
+    "same_organization_id_refs": [
+      "trace_id -> TraceObject.organization_id",
+      "answer_contract_ref -> AnswerContract.organization_id",
+      "abstention_render_ref -> AbstentionRender.organization_id"
     ]
   },
   "required": [
     "answer_version_id",
     "answer_id",
+    "organization_id",
     "answer_version",
     "previous_answer_version",
     "response_outcome",
@@ -31,11 +41,18 @@
   "properties": {
     "answer_version_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^av_[A-Za-z0-9_-]+$"
     },
     "answer_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "answer_version": {
       "type": "integer",
@@ -71,7 +88,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+:v[1-9][0-9]*$"
     },
     "abstention_render_ref": {
       "description": "Referencia a abstention-render.schema.json para total_abstention o blocked.",
@@ -79,14 +97,16 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^abstention_render_[A-Za-z0-9_-]+$"
     },
     "rendered_answer_snapshot_id": {
       "type": [
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^render_snap_[A-Za-z0-9_-]+$"
     },
     "version_reason": {
       "enum": [
@@ -179,7 +199,8 @@
         "properties": {
           "answer_contract_ref": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^ans_[A-Za-z0-9_-]+:v[1-9][0-9]*$"
           },
           "abstention_render_ref": {
             "type": "null"
@@ -211,7 +232,8 @@
           },
           "abstention_render_ref": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^abstention_render_[A-Za-z0-9_-]+$"
           }
         }
       }
@@ -221,6 +243,7 @@
     {
       "answer_version_id": "av_001",
       "answer_id": "ans_001",
+      "organization_id": "org_001",
       "answer_version": 1,
       "previous_answer_version": null,
       "response_outcome": "answered",
@@ -235,6 +258,7 @@
     {
       "answer_version_id": "av_002",
       "answer_id": "ans_001",
+      "organization_id": "org_001",
       "answer_version": 2,
       "previous_answer_version": 1,
       "response_outcome": "answered",
@@ -249,6 +273,7 @@
     {
       "answer_version_id": "av_abstention_001",
       "answer_id": "ans_002",
+      "organization_id": "org_001",
       "answer_version": 1,
       "previous_answer_version": null,
       "response_outcome": "total_abstention",
@@ -378,6 +403,7 @@
     {
       "answer_version_id": "av_policy_prev_001",
       "answer_id": "ans_001",
+      "organization_id": "org_001",
       "answer_version": 2,
       "previous_answer_version": 2,
       "response_outcome": "answered",
@@ -392,10 +418,10 @@
   ],
   "x-cross-contract-policy-invalid-examples": [
     {
-      "description": "TraceObject, AnswerVersion y AbstentionRender validan por separado y comparten identidad, pero response_outcome diverge entre la traza y la version/render.",
+      "description": "TraceObject, AnswerVersion y AbstentionRender validan por separado y comparten identidad, pero response_outcome y organization_id divergen entre la traza, version y render.",
       "trace_object": {
         "trace_id": "tr_abstention_001",
-        "organization_id": "org_001",
+        "organization_id": "org_other",
         "actor_ref": "system",
         "actor_type": "system",
         "answer_id": "ans_002",
@@ -460,6 +486,7 @@
       "answer_version": {
         "answer_version_id": "av_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "blocked",
@@ -476,6 +503,7 @@
         "abstention_render_id": "abstention_render_001",
         "trace_id": "tr_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "response_outcome": "blocked",
         "render_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
@@ -497,7 +525,8 @@
       },
       "policy_errors": [
         "TraceObject.response_outcome != AnswerVersion.response_outcome",
-        "TraceObject.response_outcome != AbstentionRender.response_outcome"
+        "TraceObject.response_outcome != AbstentionRender.response_outcome",
+        "TraceObject.organization_id != AnswerVersion.organization_id"
       ]
     },
     {
@@ -566,6 +595,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -629,21 +659,23 @@
         "prompt_injection_risks": []
       },
       "answer_version": {
-        "answer_version_id": "different_av",
-        "answer_id": "different_answer",
+        "answer_version_id": "av_different",
+        "answer_id": "ans_different",
+        "organization_id": "org_001",
         "answer_version": 2,
         "previous_answer_version": 1,
         "response_outcome": "answered",
         "answer_hash": "sha256:ae39ea48d91cbb1c31f12361e77dc07c982cb1f8af23f5820ca0d3c5b091c0ea",
         "trace_id": "tr_different_trace",
-        "answer_contract_ref": "third_answer:v7",
+        "answer_contract_ref": "ans_third:v7",
         "rendered_answer_snapshot_id": "render_snap_001",
         "version_reason": "citation_repaired",
         "created_at": "2026-05-22T00:05:00Z",
         "created_by_ref": "actor_hash_001"
       },
       "answer_contract": {
-        "answer_id": "third_answer",
+        "answer_id": "ans_third",
+        "organization_id": "org_other",
         "answer_version": 7,
         "trace_id": "tr_third_trace",
         "evidence_pack_id": "ep_001",
@@ -685,6 +717,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_other",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -699,6 +732,7 @@
         "citations": [
           {
             "citation_ref": "C1",
+            "organization_id": "org_other",
             "passage_ref": "F1:P1",
             "source_ref": "F1",
             "status": "valid",
@@ -723,7 +757,8 @@
         "TraceObject.trace_id != AnswerVersion.trace_id",
         "AnswerContract.trace_id != TraceObject.trace_id",
         "AnswerContract.answer_id != TraceObject.answer_id",
-        "AnswerContract.answer_version != TraceObject.answer_version"
+        "AnswerContract.answer_version != TraceObject.answer_version",
+        "AnswerContract.organization_id != AnswerVersion.organization_id"
       ]
     },
     {
@@ -779,6 +814,7 @@
         "claims": [
           {
             "claim_id": "cl_trace_001",
+            "organization_id": "org_001",
             "text": "Claim trazado y auditado.",
             "claim_type": "norma",
             "criticality": "high",
@@ -839,6 +875,7 @@
       "answer_version": {
         "answer_version_id": "av_content_001",
         "answer_id": "ans_content_001",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "answered",
@@ -852,6 +889,7 @@
       },
       "answer_contract": {
         "answer_id": "ans_content_001",
+        "organization_id": "org_001",
         "answer_version": 1,
         "trace_id": "tr_content_001",
         "evidence_pack_id": "ep_untraced_999",
@@ -893,6 +931,7 @@
         "claims": [
           {
             "claim_id": "cl_untraced_999",
+            "organization_id": "org_001",
             "text": "Claim publicado que no existe en la traza.",
             "claim_type": "norma",
             "criticality": "high",
@@ -907,6 +946,7 @@
         "citations": [
           {
             "citation_ref": "C99",
+            "organization_id": "org_001",
             "passage_ref": "F99:P1",
             "source_ref": "F99",
             "status": "valid",
@@ -984,6 +1024,7 @@
         "claims": [
           {
             "claim_id": "cl_same_001",
+            "organization_id": "org_001",
             "text": "Claim trazado con texto canonico original.",
             "claim_type": "norma",
             "criticality": "high",
@@ -1044,6 +1085,7 @@
       "answer_version": {
         "answer_version_id": "av_content_002",
         "answer_id": "ans_content_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "answered",
@@ -1057,6 +1099,7 @@
       },
       "answer_contract": {
         "answer_id": "ans_content_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "trace_id": "tr_content_002",
         "evidence_pack_id": "ep_trace_002",
@@ -1098,6 +1141,7 @@
         "claims": [
           {
             "claim_id": "cl_same_001",
+            "organization_id": "org_001",
             "text": "Claim publicado con texto canonico alterado.",
             "claim_type": "vigencia",
             "criticality": "high",
@@ -1112,6 +1156,7 @@
         "citations": [
           {
             "citation_ref": "C1",
+            "organization_id": "org_001",
             "passage_ref": "F1:P1",
             "source_ref": "F1",
             "status": "weak",
@@ -1188,6 +1233,7 @@
         "claims": [
           {
             "claim_id": "cl_hash_001",
+            "organization_id": "org_001",
             "text": "Claim trazado con contenido juridico estable.",
             "claim_type": "norma",
             "criticality": "high",
@@ -1248,6 +1294,7 @@
       "answer_version": {
         "answer_version_id": "av_hash_001",
         "answer_id": "ans_hash_001",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "answered",
@@ -1261,6 +1308,7 @@
       },
       "answer_contract": {
         "answer_id": "ans_hash_001",
+        "organization_id": "org_001",
         "answer_version": 1,
         "trace_id": "tr_hash_001",
         "evidence_pack_id": "ep_hash_001",
@@ -1302,6 +1350,7 @@
         "claims": [
           {
             "claim_id": "cl_hash_001",
+            "organization_id": "org_001",
             "text": "Claim trazado con contenido juridico estable.",
             "claim_type": "norma",
             "criticality": "high",
@@ -1316,6 +1365,7 @@
         "citations": [
           {
             "citation_ref": "C1",
+            "organization_id": "org_001",
             "passage_ref": "F1:P1",
             "source_ref": "F1",
             "status": "valid",

@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado"
+    "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
   },
   "required": [
     "citation_audit_id",
@@ -22,7 +25,8 @@
   "properties": {
     "citation_audit_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ca_[A-Za-z0-9_-]+$"
     },
     "auditor_version": {
       "type": "string",
@@ -79,7 +83,8 @@
         },
         "claim_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "^cl_[A-Za-z0-9_-]+$"
         },
         "passage_ref": {
           "type": "string",
@@ -152,7 +157,8 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "pattern": "^cl_[A-Za-z0-9_-]+$"
         },
         "severity": {
           "enum": [
@@ -201,7 +207,8 @@
               },
               "claim_id": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "pattern": "^cl_[A-Za-z0-9_-]+$"
               }
             }
           }
@@ -233,7 +240,8 @@
               },
               "claim_id": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "pattern": "^cl_[A-Za-z0-9_-]+$"
               }
             }
           }

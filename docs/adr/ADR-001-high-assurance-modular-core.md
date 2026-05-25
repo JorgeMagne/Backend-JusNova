@@ -40,12 +40,14 @@ El core mantiene consistencia transaccional, contratos juridicos, trazabilidad, 
 
 - La vista de arquitectura queda en `docs/architecture/architecture-overview.md`.
 - Los limites modulares, workers y criterios de extraccion futura quedan en `docs/architecture/module-boundaries.md`.
+- El modelo conceptual, relaciones, cardinalidades y ownership de entidades quedan en `docs/architecture/domain-model.md` y `docs/architecture/entity-ownership-matrix.md`.
 - El core incluye conversacion, memoria, orquestacion, busqueda viva, source registry, evidencia, answer contract, citation auditor, claim verification, documentos, costos, usage, seguridad y trazabilidad.
 - Los workers incluyen retrieval, adaptadores oficiales, fetch/snapshot, extraction, OCR, indexing y evaluation.
 
 ## Dependencias posteriores
 
 - Fase 1 debe crear estructura de paquetes coherente con estos limites.
+- Fase 1 debe derivar migraciones iniciales del modelo conceptual y la matriz de ownership aceptados en Subfase 0.11.
 - Fase 1 debe crear health checks, settings, logging y trazabilidad minima.
 - Fases posteriores deben implementar workers segun madurez operacional.
 
@@ -75,6 +77,7 @@ El core mantiene consistencia transaccional, contratos juridicos, trazabilidad, 
 - Existe lista de modulos core.
 - Existe lista de workers/workflows.
 - Existen criterios de extraccion futura.
+- Existe modelo conceptual con relaciones y cardinalidades que permite shells de API sin inventar entidades.
 
 ## Momento de revision
 
@@ -83,4 +86,3 @@ Revisar al cerrar Fase 1, antes de implementar Fase 4 Live Legal Search Core, y 
 ## Consecuencias
 
 Fase 1 debe construir un backend modular, no una malla de microservicios ni un monolito sin limites.
-

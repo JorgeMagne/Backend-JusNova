@@ -10,7 +10,8 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract",
     "amendments": [
-      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
     ]
   },
   "required": [
@@ -39,15 +40,18 @@
     },
     "organization_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "query_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^q_[A-Za-z0-9_-]+$"
     },
     "retrieval_plan_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^rp_[A-Za-z0-9_-]+$"
     },
     "status": {
       "enum": [
@@ -193,7 +197,8 @@
     },
     "evidence_pack_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ep_[A-Za-z0-9_-]+$"
     },
     "no_evidence_reason": {
       "enum": [

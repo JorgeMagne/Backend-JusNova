@@ -58,6 +58,7 @@ La seguridad es estructural en datos, storage, logs, providers y prompts. No pue
 
 - Subfase 0.9 crea una `document-security-policy.md` minima para documentos, mensajes y evidencia documental sin cerrar permisos, retencion ni controles completos.
 - Subfase 0.10 acepta privacy/security policy, provider policy, prompt injection policy, data classification, provider registry, `ProviderCallAudit`, `RawAccessEvent`, `PromptInjectionRisk` y security checklist.
+- Subfase 0.11 acepta matriz de ownership y API draft seguro sin ampliar `RawAccessEvent.resource_type`.
 - Fase 1 debe crear estructura de ownership en modelos base.
 - Fase 1 debe implementar enforcement runtime, storage privado, secrets/config validation, provider adapters y raw access workflows.
 - Fase 11 implementara hardening completo si el roadmap mantiene esa etapa.
@@ -90,6 +91,8 @@ La seguridad es estructural en datos, storage, logs, providers y prompts. No pue
 - Subfase 0.10 crea checklist de seguridad de Fase 1.
 - `data-classification.yaml` y `provider-registry.yaml` quedan aceptados.
 - `provider-call-audit.schema.json`, `raw-access-event.schema.json` y `prompt-injection-risk.schema.json` quedan aceptados.
+- `entity-ownership-matrix.md` cubre toda entidad conceptual con tenant, clasificacion, raw access aplicable y borrado.
+- `api-draft-v0.md` devuelve vistas seguras y no expone memoria, documentos, OCR, trazas ni provider payloads crudos.
 - No se permite logging de documentos completos.
 - Toda salida a proveedor externo se registra.
 - Documentos y HTML se tratan como datos no confiables.

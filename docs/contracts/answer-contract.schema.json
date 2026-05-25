@@ -8,10 +8,21 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
+  },
+  "x-tenant-policy": {
+    "description": "JSON Schema valida la forma de Claim y Citation, pero la igualdad entre organization_id del AnswerContract y sus subobjetos es una regla custom obligatoria.",
+    "same_organization_id": [
+      "claims[].organization_id",
+      "citations[].organization_id"
+    ]
   },
   "required": [
     "answer_id",
+    "organization_id",
     "answer_version",
     "trace_id",
     "evidence_pack_id",
@@ -26,7 +37,13 @@
   "properties": {
     "answer_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "answer_version": {
       "type": "integer",
@@ -39,7 +56,8 @@
     },
     "evidence_pack_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ep_[A-Za-z0-9_-]+$"
     },
     "jurisdiction": {
       "type": "string",
@@ -203,6 +221,7 @@
   "examples": [
     {
       "answer_id": "ans_001",
+      "organization_id": "org_001",
       "answer_version": 1,
       "trace_id": "tr_001",
       "evidence_pack_id": "ep_001",
@@ -244,6 +263,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -258,6 +278,7 @@
       "citations": [
         {
           "citation_ref": "C1",
+          "organization_id": "org_001",
           "passage_ref": "F1:P1",
           "source_ref": "F1",
           "status": "valid",
@@ -281,12 +302,14 @@
       "description": "Cadena minima claim -> citation -> passage -> source.",
       "claim": {
         "claim_id": "cl_001",
+        "organization_id": "org_001",
         "citations": [
           "C1"
         ]
       },
       "citation": {
         "citation_ref": "C1",
+        "organization_id": "org_001",
         "passage_ref": "F1:P1",
         "source_ref": "F1"
       },
@@ -435,6 +458,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -449,6 +473,7 @@
       "citations": [
         {
           "citation_ref": "C1",
+          "organization_id": "org_001",
           "passage_ref": "F1:P1",
           "source_ref": "F1",
           "status": "valid",
@@ -470,6 +495,7 @@
   "x-policy-invalid-examples": [
     {
       "answer_id": "ans_003",
+      "organization_id": "org_001",
       "answer_version": 1,
       "trace_id": "tr_003",
       "evidence_pack_id": "ep_001",
@@ -511,6 +537,7 @@
       "claims": [
         {
           "claim_id": "cl_001",
+          "organization_id": "org_001",
           "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
           "claim_type": "procedimiento",
           "criticality": "high",
@@ -525,6 +552,7 @@
       "citations": [
         {
           "citation_ref": "C1",
+          "organization_id": "org_001",
           "passage_ref": "F1:P1",
           "source_ref": "F1",
           "status": "valid",
@@ -538,6 +566,85 @@
         "F2"
       ],
       "warnings": [],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "answer_id": "ans_cross_tenant_claim",
+      "organization_id": "org_001",
+      "answer_version": 1,
+      "trace_id": "tr_cross_tenant_claim",
+      "evidence_pack_id": "ep_001",
+      "jurisdiction": "BO",
+      "sections": {
+        "conclusion_operativa": {
+          "title": "Conclusion operativa",
+          "content": "Respuesta con claim y cita de otro tenant."
+        },
+        "hechos_considerados": {
+          "title": "Hechos considerados",
+          "content": ""
+        },
+        "fundamento_normativo": {
+          "title": "Fundamento normativo",
+          "content": "La respuesta se apoya en el pasaje citado [F1:P1]."
+        },
+        "jurisprudencia_relevante": {
+          "title": "Jurisprudencia relevante",
+          "content": ""
+        },
+        "analisis_aplicado": {
+          "title": "Analisis aplicado",
+          "content": ""
+        },
+        "incertidumbres_vigencia_conflictos": {
+          "title": "Incertidumbres, vigencia y conflictos",
+          "content": ""
+        },
+        "recomendacion_profesional": {
+          "title": "Recomendacion profesional",
+          "content": ""
+        },
+        "fuentes_utilizadas": {
+          "title": "Fuentes utilizadas",
+          "content": "F1 - Fuente citada."
+        }
+      },
+      "claims": [
+        {
+          "claim_id": "cl_cross_tenant",
+          "organization_id": "org_other",
+          "text": "Claim estructuralmente valido pero de otro tenant.",
+          "claim_type": "norma",
+          "criticality": "high",
+          "support_level": "direct",
+          "citations": [
+            "C1"
+          ],
+          "verification_status": "passed",
+          "requires_human_review": false
+        }
+      ],
+      "citations": [
+        {
+          "citation_ref": "C1",
+          "organization_id": "org_other",
+          "passage_ref": "F1:P1",
+          "source_ref": "F1",
+          "status": "valid",
+          "supports_claim_ids": [
+            "cl_cross_tenant"
+          ],
+          "auditor_notes": [
+            "Schema-valid but policy-invalid: Citation.organization_id != AnswerContract.organization_id."
+          ]
+        }
+      ],
+      "sources_used": [
+        "F1"
+      ],
+      "warnings": [
+        "Schema-valid but policy-invalid: Claim.organization_id != AnswerContract.organization_id."
+      ],
       "created_at": "2026-05-22T00:00:00Z"
     }
   ]

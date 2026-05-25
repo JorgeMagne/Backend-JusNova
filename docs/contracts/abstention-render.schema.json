@@ -12,11 +12,13 @@
     "amendments": [
       "Subfase 0.8 - Cost Governor, planes y presupuestos",
       "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment",
-      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
     ]
   },
   "required": [
     "abstention_render_id",
+    "organization_id",
     "trace_id",
     "answer_id",
     "answer_version",
@@ -34,6 +36,11 @@
       "type": "string",
       "pattern": "^abstention_render_[A-Za-z0-9_-]+$"
     },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
+    },
     "trace_id": {
       "type": "string",
       "minLength": 1,
@@ -41,7 +48,8 @@
     },
     "answer_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+$"
     },
     "answer_version": {
       "type": "integer",
@@ -68,7 +76,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^render_snap_[A-Za-z0-9_-]+$"
     },
     "reason_code": {
       "description": "Debe usar el mismo vocabulario que TraceObject.abstention_reason y coincidir con ese campo por validador cross-contract.",
@@ -103,7 +112,8 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^ep_[A-Za-z0-9_-]+$"
           },
           "uniqueItems": true
         },
@@ -111,7 +121,8 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^cl_[A-Za-z0-9_-]+$"
           },
           "uniqueItems": true
         },
@@ -119,7 +130,8 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^C[0-9]+$"
           },
           "uniqueItems": true
         },
@@ -127,7 +139,8 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^F[0-9]+$|^D[0-9]+$"
           },
           "uniqueItems": true
         }
@@ -163,6 +176,7 @@
   "examples": [
     {
       "abstention_render_id": "abstention_render_001",
+      "organization_id": "org_001",
       "trace_id": "tr_abstention_001",
       "answer_id": "ans_002",
       "answer_version": 1,
@@ -421,6 +435,7 @@
       "answer_version": {
         "answer_version_id": "av_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "total_abstention",
@@ -437,6 +452,7 @@
         "abstention_render_id": "abstention_render_001",
         "trace_id": "tr_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "response_outcome": "total_abstention",
         "render_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
@@ -529,6 +545,7 @@
       "answer_version": {
         "answer_version_id": "av_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "total_abstention",
@@ -545,6 +562,7 @@
         "abstention_render_id": "abstention_render_001",
         "trace_id": "tr_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "response_outcome": "total_abstention",
         "render_hash": "sha256:be126c9c0e2d636865d0764e9c67d2692dc4cda9ed7606ec2bfc02ee4c9ac242",
@@ -637,6 +655,7 @@
       "answer_version": {
         "answer_version_id": "av_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "total_abstention",
@@ -653,6 +672,7 @@
         "abstention_render_id": "abstention_render_001",
         "trace_id": "tr_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "response_outcome": "total_abstention",
         "render_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
