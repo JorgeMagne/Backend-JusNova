@@ -70,7 +70,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^render_snap_[A-Za-z0-9_-]+$"
     },
     "reason_code": {
       "description": "Debe usar el mismo vocabulario que TraceObject.abstention_reason y coincidir con ese campo por validador cross-contract.",
