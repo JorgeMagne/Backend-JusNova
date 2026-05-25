@@ -12,7 +12,8 @@
     "amendments": [
       "Subfase 0.8 - Cost Governor, planes y presupuestos",
       "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment",
-      "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+      "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
     ]
   },
   "required": [
@@ -41,7 +42,8 @@
     },
     "answer_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+$"
     },
     "answer_version": {
       "type": "integer",
@@ -103,7 +105,8 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^ep_[A-Za-z0-9_-]+$"
           },
           "uniqueItems": true
         },
@@ -111,7 +114,8 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^cl_[A-Za-z0-9_-]+$"
           },
           "uniqueItems": true
         },
@@ -119,7 +123,8 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^C[0-9]+$"
           },
           "uniqueItems": true
         },
@@ -127,7 +132,8 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^F[0-9]+$|^D[0-9]+$"
           },
           "uniqueItems": true
         }
