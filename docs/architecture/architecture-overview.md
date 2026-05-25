@@ -44,10 +44,11 @@ API Gateway / Backend Core FastAPI
         v                                v
 Workflow / Worker Layer             Streaming Layer
         |                                |
-        |-- Live Retrieval Worker        |-- status events
-        |-- Official Adapter Worker      |-- source_found events
-        |-- Fetch / Snapshot Worker      |-- verification events
-        |-- Extraction Worker            |-- answer deltas after gates
+        |-- Live Retrieval Worker        |-- run_queued / run_started
+        |-- Official Adapter Worker      |-- retrieval_started / retrieval_progress
+        |-- Fetch / Snapshot Worker      |-- document_processing_required
+        |-- Extraction Worker            |-- evidence_ready / run_failed
+        |                                |-- answer_final / answer_blocked
         |-- OCR Worker
         |-- Indexing Worker
         |-- Provider Audit Worker

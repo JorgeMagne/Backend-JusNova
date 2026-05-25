@@ -43,6 +43,8 @@ Este documento define que vive dentro del core, que vive en workers y bajo que c
 | Extraction Worker | HTML/PDF parse, metadata y pasajes. | CPU/IO variable. |
 | OCR Worker | OCR por pagina y jobs async. | CPU alto y latencia. |
 | Indexing Worker | OpenSearch indexing de documentos, snapshots y evidence cache. | Trabajo reintentable y no transaccional. |
+| Provider Audit Worker | Persistir `ProviderCallAudit`, validar registry/family/allowlists y conservar hashes/costos sin payloads crudos. | Auditoria de proveedores separada del core legal y de llamadas externas. |
+| Raw Access Audit Worker | Persistir `RawAccessEvent` para accesos raw/elevados ya autorizados y verificar refs/clasificacion. | La auditoria de acceso raw no debe mezclarse con soporte general ni con logs operativos. |
 | Evaluation Runner | Golden tests, search benchmarks, regression runs. | Ejecucion batch y costosa. |
 
 ## Limites de dependencia
