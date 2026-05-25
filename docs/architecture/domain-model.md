@@ -147,6 +147,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | TraceObject -> ModelCall | `0..n` | Algunas respuestas pueden no requerir llamada de modelo. |
 | TraceObject -> ToolCall | `0..n` | Algunas respuestas pueden no usar tools. |
 | TraceObject -> RetrievalRun | `0..n` | Abstenciones o respuestas documentales pueden no usar retrieval vivo. |
+| TraceObject -> PromptInjectionRisk | `0..n` | Agregacion final de riesgos de documentos/retrieval/mensajes usados por la respuesta; exclusiones deben quedar auditadas por policy. |
 | TraceObject -> ProviderCallAudit | `0..n` mediante `model_call_id`, `tool_call_id` o `retrieval_run_id` | Auditoria externa se enlaza por refs propios de `ProviderCallAudit`. |
 | ProviderCallAudit -> ModelCall | `0..1` | Auditoria de llamada de modelo externa si aplica. |
 | ProviderCallAudit -> ToolCall | `0..1` | Auditoria de tool/provider externo si aplica. |
