@@ -478,6 +478,7 @@
       "answer_version": {
         "answer_version_id": "av_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "blocked",
@@ -494,6 +495,7 @@
         "abstention_render_id": "abstention_render_001",
         "trace_id": "tr_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "response_outcome": "blocked",
         "render_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
@@ -647,21 +649,23 @@
         "prompt_injection_risks": []
       },
       "answer_version": {
-        "answer_version_id": "different_av",
-        "answer_id": "different_answer",
+        "answer_version_id": "av_different",
+        "answer_id": "ans_different",
+        "organization_id": "org_001",
         "answer_version": 2,
         "previous_answer_version": 1,
         "response_outcome": "answered",
         "answer_hash": "sha256:ae39ea48d91cbb1c31f12361e77dc07c982cb1f8af23f5820ca0d3c5b091c0ea",
         "trace_id": "tr_different_trace",
-        "answer_contract_ref": "third_answer:v7",
+        "answer_contract_ref": "ans_third:v7",
         "rendered_answer_snapshot_id": "render_snap_001",
         "version_reason": "citation_repaired",
         "created_at": "2026-05-22T00:05:00Z",
         "created_by_ref": "actor_hash_001"
       },
       "answer_contract": {
-        "answer_id": "third_answer",
+        "answer_id": "ans_third",
+        "organization_id": "org_001",
         "answer_version": 7,
         "trace_id": "tr_third_trace",
         "evidence_pack_id": "ep_001",
@@ -857,6 +861,7 @@
       "answer_version": {
         "answer_version_id": "av_content_001",
         "answer_id": "ans_content_001",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "answered",
@@ -870,6 +875,7 @@
       },
       "answer_contract": {
         "answer_id": "ans_content_001",
+        "organization_id": "org_001",
         "answer_version": 1,
         "trace_id": "tr_content_001",
         "evidence_pack_id": "ep_untraced_999",
@@ -1062,6 +1068,7 @@
       "answer_version": {
         "answer_version_id": "av_content_002",
         "answer_id": "ans_content_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "answered",
@@ -1075,6 +1082,7 @@
       },
       "answer_contract": {
         "answer_id": "ans_content_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "trace_id": "tr_content_002",
         "evidence_pack_id": "ep_trace_002",
@@ -1266,6 +1274,7 @@
       "answer_version": {
         "answer_version_id": "av_hash_001",
         "answer_id": "ans_hash_001",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "answered",
@@ -1279,6 +1288,7 @@
       },
       "answer_contract": {
         "answer_id": "ans_hash_001",
+        "organization_id": "org_001",
         "answer_version": 1,
         "trace_id": "tr_hash_001",
         "evidence_pack_id": "ep_hash_001",

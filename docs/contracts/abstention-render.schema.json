@@ -435,6 +435,7 @@
       "answer_version": {
         "answer_version_id": "av_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "total_abstention",
@@ -451,6 +452,7 @@
         "abstention_render_id": "abstention_render_001",
         "trace_id": "tr_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "response_outcome": "total_abstention",
         "render_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
@@ -543,6 +545,7 @@
       "answer_version": {
         "answer_version_id": "av_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "total_abstention",
@@ -559,6 +562,7 @@
         "abstention_render_id": "abstention_render_001",
         "trace_id": "tr_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "response_outcome": "total_abstention",
         "render_hash": "sha256:be126c9c0e2d636865d0764e9c67d2692dc4cda9ed7606ec2bfc02ee4c9ac242",
@@ -651,6 +655,7 @@
       "answer_version": {
         "answer_version_id": "av_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "total_abstention",
@@ -667,6 +672,7 @@
         "abstention_render_id": "abstention_render_001",
         "trace_id": "tr_abstention_001",
         "answer_id": "ans_002",
+        "organization_id": "org_001",
         "answer_version": 1,
         "response_outcome": "total_abstention",
         "render_hash": "sha256:f4d690d5a71ff0a5c3b268404547a19332dfefa279132ebc849a110f4885d225",
