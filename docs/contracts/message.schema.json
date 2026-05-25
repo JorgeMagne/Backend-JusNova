@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-24",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.9 - Conversacion, memoria, documentos y OCR"
+    "related_decision": "Subfase 0.9 - Conversacion, memoria, documentos y OCR",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
   },
   "required": [
     "message_id",
@@ -31,11 +34,13 @@
     },
     "conversation_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^conv_[A-Za-z0-9_-]+$"
     },
     "organization_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "actor_ref": {
       "type": "string",
@@ -78,7 +83,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+$"
     },
     "trace_id": {
       "type": [
@@ -93,7 +99,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^av_[A-Za-z0-9_-]+$"
     },
     "attachments": {
       "type": "array",
@@ -320,7 +327,8 @@
         "properties": {
           "answer_id": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^ans_[A-Za-z0-9_-]+$"
           },
           "trace_id": {
             "type": "string",
@@ -329,7 +337,8 @@
           },
           "answer_version_ref": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^av_[A-Za-z0-9_-]+$"
           },
           "attachments": {
             "maxItems": 0

@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-24",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.8 - Cost Governor, planes y presupuestos"
+    "related_decision": "Subfase 0.8 - Cost Governor, planes y presupuestos",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
   },
   "required": [
     "usage_event_id",
@@ -31,7 +34,8 @@
     },
     "organization_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "actor_ref": {
       "type": "string",
@@ -135,7 +139,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^conv_[A-Za-z0-9_-]+$"
     },
     "trace_id": {
       "type": [
@@ -150,7 +155,8 @@
         "string",
         "null"
       ],
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^ans_[A-Za-z0-9_-]+$"
     },
     "retrieval_run_id": {
       "type": [
@@ -311,7 +317,8 @@
             "properties": {
               "conversation_id": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "pattern": "^conv_[A-Za-z0-9_-]+$"
               }
             }
           },
@@ -334,7 +341,8 @@
             "properties": {
               "answer_id": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "pattern": "^ans_[A-Za-z0-9_-]+$"
               }
             }
           },
@@ -606,7 +614,8 @@
             "properties": {
               "answer_id": {
                 "type": "string",
-                "minLength": 1
+                "minLength": 1,
+                "pattern": "^ans_[A-Za-z0-9_-]+$"
               }
             }
           }

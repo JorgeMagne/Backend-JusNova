@@ -54,7 +54,8 @@
     },
     "organization_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "actor_ref": {
       "type": "string",
@@ -85,7 +86,8 @@
     },
     "conversation_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^conv_[A-Za-z0-9_-]+$"
     },
     "input_message_ids": {
       "description": "IDs de mensajes de entrada usados para reconstruir la respuesta. No contiene contenido de mensajes.",

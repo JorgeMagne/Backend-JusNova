@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-24",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+    "related_decision": "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
+    "amendments": [
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+    ]
   },
   "required": [
     "provider_call_audit_id",
@@ -33,7 +36,8 @@
     },
     "organization_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "provider_family": {
       "$ref": "#/$defs/provider_family"

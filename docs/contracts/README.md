@@ -192,7 +192,8 @@ Estos contratos quedan aceptados como base documental del modelo conceptual y de
 - `ErrorEnvelope.metadata.allowed_values[]` acepta codigos seguros sin `/` y MIME types permitidos por catalogo cerrado como `application/pdf`; no acepta URLs, paths, espacios, query strings, comillas ni texto libre.
 - `ErrorEnvelope.created_at` requiere `format: date-time`, patron RFC3339 basico y validacion CI con `ajv-formats`/format assertions para rechazar fechas calendario imposibles.
 - Un `run_id` en progreso usa forma `tr_*`, pero no es `TraceObject` schema-valid hasta que exista `answer_id` y `answer_version_ref`.
-- `AnswerContract`, `AnswerVersion`, `EvidencePack`, `Claim` y `TraceObject` producen IDs canonicos compatibles con `api-draft-v0.md` y `ErrorEnvelope`: `ans_*`, `av_*`, `ep_*`, `cl_*` y `tr_*`.
+- `Conversation`, `Message`, `AnswerContract`, `AnswerVersion`, `EvidencePack`, `RetrievalRun`, `Claim`, `TraceObject` y `UsageEvent` producen refs canonicas compatibles con `api-draft-v0.md` y `ErrorEnvelope`: `conv_*`, `msg_*`, `ans_*`, `av_*`, `ep_*`, `rr_*`, `cl_*`, `tr_*` y `ue_*`.
+- Todo contrato privado que requiere `organization_id` exige forma canonica `org_*`, alineada con `domain-model.md` y `entity-ownership-matrix.md`.
 - `domain-model.md`, `entity-ownership-matrix.md` y `api-draft-v0.md` gobiernan relaciones conceptuales, ownership y visibilidad de endpoints para Fase 1.
 
 ## Schemas minimos esperados
