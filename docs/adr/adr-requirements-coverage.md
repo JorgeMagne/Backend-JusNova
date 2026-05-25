@@ -19,7 +19,7 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-001 | Diagrama y limites modulares. | `architecture-overview.md`; `module-boundaries.md`. | Accepted | Ninguna para decision. | ADR sin respaldo visual/operativo. |
 | ADR-001 | Modelo conceptual y cardinalidades para Fase 1. | `domain-model.md`; `entity-ownership-matrix.md`. | Accepted | Fase 1 migraciones iniciales. | Tablas y relaciones inventadas o incompatibles. |
 | ADR-002 | Python/FastAPI/Pydantic sobre NestJS. | ADR-002: Contexto, Decision, Justificacion. | Accepted | Fase 1 scaffold. | Stack no alineado a IA/OCR/retrieval. |
-| ADR-002 | OpenSearch cubre lexical/filtros/vector inicial evaluable. | ADR-002: Decision, Justificacion. | Accepted | Fase 1 OpenSearch; Fase 12 evals. | Base de busqueda prematura o insuficiente. |
+| ADR-002 | OpenSearch cubre lexical/filtros/vector inicial evaluable. | ADR-002: Decision, Justificacion. | Accepted | Fase 1 OpenSearch y eval runner. | Base de busqueda prematura o insuficiente. |
 | ADR-002 | Base vectorial dedicada no obligatoria en lanzamiento. | ADR-002: Opciones consideradas, No afirma todavia. | Accepted | Revisar tras metricas retrieval. | Dependencia extra sin evidencia. |
 | ADR-002 | Redis no es fuente de verdad. | ADR-002: Decision; `architecture-overview.md`. | Accepted | Fase 1 cache/locks. | Perdida de datos transaccionales. |
 | ADR-002 | Object storage obligatorio. | ADR-002: Decision, Justificacion. | Accepted | Fase 1 StorageProvider. | PDFs/snapshots en base transaccional. |
@@ -96,9 +96,9 @@ Esta matriz permite revisar cada ADR contra los puntos obligatorios que debe cer
 | ADR-011 | Acceso raw/elevado. | `raw-access-event.schema.json`; `privacy-security-policy.md`; `trace-visibility-policy.md`. | Accepted | Fase 1 access workflow and approvals. | Soporte o auditoria acceden a material crudo sin control. |
 | ADR-011 | Data classification. | `data-classification.yaml`; `provider-policy.md`; `privacy-security-policy.md`. | Accepted | Fase 1 classification propagation. | Payloads derivados sin sensibilidad definida. |
 | ADR-011 | Ownership por entidad y vistas seguras de API. | `entity-ownership-matrix.md`; `api-draft-v0.md`; `error-envelope.schema.json`. | Accepted | Fase 1 tenancy enforcement y API skeleton. | Entidades privadas sin tenant o endpoints con payloads crudos. |
-| ADR-012 | Metricas iniciales. | ADR-012: Metricas iniciales. | Accepted | Subfase 0.12. | Calidad subjetiva. |
-| ADR-012 | Dataset inicial minimo. | ADR-012: Dependencias posteriores. | Accepted | Subfase 0.12 dataset spec. | Evals sin cobertura. |
-| ADR-012 | Golden cases. | ADR-012: Decision, Mitigaciones. | Accepted | Subfase 0.12. | Regresiones no detectadas. |
-| ADR-012 | Evals automaticas. | ADR-012: Decision, Mitigaciones. | Accepted | Fase 12 harness. | Releases sin control. |
-| ADR-012 | Revision humana. | ADR-012: Decision, Mitigaciones. | Accepted | Subfase 0.12 y beta. | Calidad juridica sin abogado. |
-| ADR-012 | Gates beta/mercado. | ADR-012: Decision, Criterios. | Accepted | Subfase 0.12 gates. | Salida a mercado insegura. |
+| ADR-012 | Metricas iniciales. | `evaluation-plan-v0.md`; ADR-012: Metricas iniciales. | Accepted | Fase 1 eval runner. | Calidad subjetiva. |
+| ADR-012 | Dataset inicial minimo. | `initial-golden-dataset-spec.md`; ADR-012: Dependencias posteriores. | Accepted | Fase 1 construccion de fixtures. | Evals sin cobertura. |
+| ADR-012 | Golden cases con intents canonicos, vigencia aceptada y refs locales scopeados. | `initial-golden-dataset-spec.md`; `legal-intents.yaml`; `validity-statuses.yaml`; `domain-model.md`. | Accepted | Fase 1 fixtures y review legal. | Regresiones o taxonomias paralelas. |
+| ADR-012 | Evals automaticas. | ADR-012: Decision, Mitigaciones; `evaluation-plan-v0.md`. | Accepted | Fase 1 harness y regression suite. | Releases sin control. |
+| ADR-012 | Revision humana. | ADR-012: Decision, Mitigaciones; `initial-golden-dataset-spec.md`; `docs/handoff/review-responsibilities.md`. | Accepted | Antes de mercado. | Calidad juridica sin abogado. |
+| ADR-012 | Gates beta/mercado. | `beta-readiness-gates.md`; `market-readiness-gates.md`; ADR-012: Criterios. | Accepted | Fase 1 y pre-market. | Salida a mercado insegura. |

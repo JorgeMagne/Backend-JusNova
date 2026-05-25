@@ -39,7 +39,7 @@ Cuando Fase 0 pase a `Accepted`, este documento funcionara como paquete rector. 
 | `phase-0-status.md` | Accepted | Codex / JusNova Chief Backend Architect |
 | `open-questions.md` | Accepted | Codex / JusNova Chief Backend Architect |
 | `risk-register.md` | Accepted | Codex / JusNova Chief Backend Architect |
-| Responsables de revision | Accepted | Codex / JusNova Chief Backend Architect |
+| Responsables de revision propuestos | Draft | Codex / JusNova Chief Backend Architect; aceptacion requerida antes de market |
 
 ## Pendiente para cierre final
 
@@ -256,6 +256,19 @@ Estos documentos quedan aceptados como base conceptual para migraciones iniciale
 | Module Boundaries Amendment | Accepted | `docs/architecture/module-boundaries.md` |
 | Architecture Overview Amendment | Accepted | `docs/architecture/architecture-overview.md` |
 
+## Calidad aceptada en Subfase 0.12
+
+Estos documentos quedan aceptados como criterios vinculantes para evaluar beta y mercado. Esta lista no implica que exista harness runtime, CI de evaluacion, dashboard, dataset completo ni reportes ejecutables.
+
+| Entregable | Estado | Archivo |
+|---|---|---|
+| Evaluation Plan v0 | Accepted | `docs/quality/evaluation-plan-v0.md` |
+| Initial Golden Dataset Spec | Accepted | `docs/quality/initial-golden-dataset-spec.md` |
+| Beta Readiness Gates | Accepted | `docs/quality/beta-readiness-gates.md` |
+| Market Readiness Gates | Accepted | `docs/quality/market-readiness-gates.md` |
+| Phase 0 Acceptance Checklist update | Accepted | `docs/quality/phase-0-acceptance-checklist.md` |
+| ADR-012 Quality Gate Amendment | Accepted | `docs/adr/ADR-012-evaluation-and-quality-gates.md` |
+
 ## Dependencias posteriores preservadas
 
 - Runtime de API, routers, OpenAPI formal, migraciones y servicios queda delegado a Fase 1.
@@ -263,4 +276,7 @@ Estos documentos quedan aceptados como base conceptual para migraciones iniciale
 - Runtime de auth, permisos finales, retention automation, SIEM, storage real, provider SDKs y enforcement productivo quedan delegados a Fase 1 y fases posteriores.
 - Runtime de conversacion, storage documental, OCR worker, busqueda documental y memoria persistente quedan delegados a Fase 1 y fases posteriores.
 - Runtime de CostGovernor, billing y UsageLedger quedan delegados a Fase 1; los contratos y policies documentales quedaron aceptados en Subfase 0.8.
+- Evaluation harness, eval runner, CI de scoring, regression suite y dataset completo quedan delegados a Fase 1.
+- No hay beta sin eval report y sin cumplimiento de blockers de `beta-readiness-gates.md`.
+- No hay mercado sin beta gates, market gates y revision juridica humana.
 - Fase 0 global permanece en `Draft` hasta completar 0.1 a 0.14.
