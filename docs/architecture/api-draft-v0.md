@@ -240,7 +240,7 @@ Response:
 | `document_id` | `doc_*`. |
 | `case_id` | `case_*` o `null`. |
 | `status` | `uploaded`, `processing_required` o `rejected`. |
-| `upload_intent_ref` | Ref opaco no adivinable; no storage key ni signed URL irrestricta. |
+| `storage_object_ref` | `sto_*`; ref opaco no adivinable del objeto privado, no storage key ni signed URL irrestricta. |
 | `accepted_content_types[]` | Codigos seguros o MIME allowlist. |
 | `max_size_bytes` | Limite visible. |
 | `created_at` | date-time. |

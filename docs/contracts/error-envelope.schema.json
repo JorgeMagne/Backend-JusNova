@@ -157,8 +157,7 @@
         },
         "parent_resource_type": {
           "enum": [
-            "evidence_pack",
-            "answer_version"
+            "evidence_pack"
           ]
         },
         "parent_resource_ref": {
@@ -279,6 +278,46 @@
               "resource_type",
               "resource_ref"
             ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "parent_resource_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_type": {
+                "enum": [
+                  "source",
+                  "passage"
+                ]
+              },
+              "parent_resource_type": {
+                "const": "evidence_pack"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "parent_resource_ref"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resource_type": {
+                "enum": [
+                  "source",
+                  "passage"
+                ]
+              },
+              "parent_resource_type": {
+                "const": "evidence_pack"
+              }
+            }
           }
         },
         {
@@ -696,25 +735,6 @@
             "properties": {
               "parent_resource_ref": {
                 "pattern": "^ep_[A-Za-z0-9_-]+$"
-              }
-            }
-          }
-        },
-        {
-          "if": {
-            "properties": {
-              "parent_resource_type": {
-                "const": "answer_version"
-              }
-            },
-            "required": [
-              "parent_resource_type"
-            ]
-          },
-          "then": {
-            "properties": {
-              "parent_resource_ref": {
-                "pattern": "^av_[A-Za-z0-9_-]+$"
               }
             }
           }
@@ -1369,6 +1389,22 @@
       "metadata": {
         "resource_type": "message",
         "resource_ref": "doc_001"
+      }
+    },
+    {
+      "error_code": "validation_error",
+      "safe_message_code": "invalid_request",
+      "message": "Parent context no aplica a recurso global.",
+      "severity": "error",
+      "request_id": "rq_parent_on_global_resource",
+      "retryable": false,
+      "user_visible": true,
+      "created_at": "2026-05-24T10:00:00Z",
+      "metadata": {
+        "resource_type": "conversation",
+        "resource_ref": "conv_001",
+        "parent_resource_type": "evidence_pack",
+        "parent_resource_ref": "ep_001"
       }
     },
     {
