@@ -537,6 +537,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -687,6 +688,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -861,6 +863,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -1010,6 +1013,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -1183,6 +1187,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",

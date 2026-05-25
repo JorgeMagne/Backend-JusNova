@@ -15,6 +15,7 @@
   },
   "required": [
     "citation_ref",
+    "organization_id",
     "passage_ref",
     "source_ref",
     "status",
@@ -25,6 +26,11 @@
     "citation_ref": {
       "type": "string",
       "pattern": "^C[0-9]+$"
+    },
+    "organization_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^org_[A-Za-z0-9_-]+$"
     },
     "passage_ref": {
       "type": "string",
@@ -121,6 +127,7 @@
   "examples": [
     {
       "citation_ref": "C1",
+      "organization_id": "org_001",
       "passage_ref": "F1:P1",
       "source_ref": "F1",
       "status": "valid",
@@ -133,6 +140,7 @@
   "x-invalid-examples": [
     {
       "citation_ref": "C1",
+      "organization_id": "org_001",
       "passage_ref": "missing",
       "source_ref": "F1",
       "status": "valid",
@@ -143,6 +151,7 @@
     },
     {
       "citation_ref": "C9",
+      "organization_id": "org_001",
       "passage_ref": "F1:P1",
       "source_ref": "F1",
       "status": "valid",
@@ -151,6 +160,7 @@
     },
     {
       "citation_ref": "C10",
+      "organization_id": "org_001",
       "passage_ref": "F1:P1",
       "source_ref": "D1",
       "status": "weak",
@@ -158,11 +168,22 @@
       "auditor_notes": [
         "Una cita F no puede apuntar a una fuente D."
       ]
+    },
+    {
+      "citation_ref": "C11",
+      "passage_ref": "F1:P1",
+      "source_ref": "F1",
+      "status": "valid",
+      "supports_claim_ids": [
+        "cl_001"
+      ],
+      "auditor_notes": []
     }
   ],
   "x-policy-invalid-examples": [
     {
       "citation_ref": "C2",
+      "organization_id": "org_001",
       "passage_ref": "F1:P999",
       "source_ref": "F1",
       "status": "valid",

@@ -586,6 +586,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -707,6 +708,7 @@
         "claims": [
           {
             "claim_id": "cl_001",
+            "organization_id": "org_001",
             "text": "El recurso de casacion exige cumplir los requisitos formales aplicables.",
             "claim_type": "procedimiento",
             "criticality": "high",
@@ -721,6 +723,7 @@
         "citations": [
           {
             "citation_ref": "C1",
+            "organization_id": "org_001",
             "passage_ref": "F1:P1",
             "source_ref": "F1",
             "status": "valid",
@@ -801,6 +804,7 @@
         "claims": [
           {
             "claim_id": "cl_trace_001",
+            "organization_id": "org_001",
             "text": "Claim trazado y auditado.",
             "claim_type": "norma",
             "criticality": "high",
@@ -917,6 +921,7 @@
         "claims": [
           {
             "claim_id": "cl_untraced_999",
+            "organization_id": "org_001",
             "text": "Claim publicado que no existe en la traza.",
             "claim_type": "norma",
             "criticality": "high",
@@ -931,6 +936,7 @@
         "citations": [
           {
             "citation_ref": "C99",
+            "organization_id": "org_001",
             "passage_ref": "F99:P1",
             "source_ref": "F99",
             "status": "valid",
@@ -1008,6 +1014,7 @@
         "claims": [
           {
             "claim_id": "cl_same_001",
+            "organization_id": "org_001",
             "text": "Claim trazado con texto canonico original.",
             "claim_type": "norma",
             "criticality": "high",
@@ -1124,6 +1131,7 @@
         "claims": [
           {
             "claim_id": "cl_same_001",
+            "organization_id": "org_001",
             "text": "Claim publicado con texto canonico alterado.",
             "claim_type": "vigencia",
             "criticality": "high",
@@ -1138,6 +1146,7 @@
         "citations": [
           {
             "citation_ref": "C1",
+            "organization_id": "org_001",
             "passage_ref": "F1:P1",
             "source_ref": "F1",
             "status": "weak",
@@ -1214,6 +1223,7 @@
         "claims": [
           {
             "claim_id": "cl_hash_001",
+            "organization_id": "org_001",
             "text": "Claim trazado con contenido juridico estable.",
             "claim_type": "norma",
             "criticality": "high",
@@ -1330,6 +1340,7 @@
         "claims": [
           {
             "claim_id": "cl_hash_001",
+            "organization_id": "org_001",
             "text": "Claim trazado con contenido juridico estable.",
             "claim_type": "norma",
             "criticality": "high",
@@ -1344,6 +1355,7 @@
         "citations": [
           {
             "citation_ref": "C1",
+            "organization_id": "org_001",
             "passage_ref": "F1:P1",
             "source_ref": "F1",
             "status": "valid",
