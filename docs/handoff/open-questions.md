@@ -37,6 +37,10 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 | OQ-013 | Si llamadas externas de provider pueden quedar sin auditoria. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `provider-call-audit.schema.json`, `model-call.schema.json`, `tool-call.schema.json` y `provider-policy.md`. |
 | OQ-014 | Si un `run_id` en progreso es ya un `TraceObject` valido. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `domain-model.md` y `api-draft-v0.md`: `run_id=tr_*` es reservado operacional hasta finalizacion con `answer_id` y `answer_version_ref`. |
 | OQ-015 | Si `/v1/cases/{case_id}/memory` devuelve `CaseMemory` crudo. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `api-draft-v0.md`: el endpoint devuelve `CaseMemorySafeSummary`; raw/elevated access requiere `RawAccessEvent`. |
+| OQ-016 | Si evaluacion puede ser opcional antes de beta. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto negativamente por `evaluation-plan-v0.md` y `beta-readiness-gates.md`: blockers no medibles o fallidos bloquean beta. |
+| OQ-017 | Herramienta concreta para eval runner y formato ejecutable de reportes. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Definir en Fase 1 sin cambiar metricas, dataset spec ni gates de 0.12. |
+| OQ-018 | Plataforma CI exacta para ejecutar regression suite. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Resolver durante Fase 1 segun infraestructura real. |
+| OQ-019 | Revisores humanos finales para market readiness. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Nombrar antes de market readiness; 0.12 ya exige revision humana. |
 
 ## Preguntas Blocking
 

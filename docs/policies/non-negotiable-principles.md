@@ -63,7 +63,7 @@ Esta policy aplica a:
 
 **Principio:** El lanzamiento no depende de un corpus juridico boliviano propio indexado masivamente.  
 **Regla tecnica:** La fundamentacion juridica debe provenir de Live Legal Search, adaptadores oficiales, discovery controlado, Source Snapshots, Evidence Cache con fecha, o documentos del usuario; nunca de un corpus juridico propio tratado como fuente exhaustiva antes de mercado.  
-**Mecanismo verificable:** ADR-004, `no-rag-launch-policy.md`, `source-snapshot.schema.json`, `retrieval-run.schema.json`, trace de origen de evidencia.  
+**Mecanismo verificable:** ADR-004, `no-rag-launch-policy.md`, `source-policy.md`, estrategia de snapshot/hash, `retrieval-run.schema.json`, trace de origen de evidencia.
 **No depende solo del prompt:** Cada fuente usada debe tener `source_type`, `tier`, `retrieved_at` y origen recuperable.  
 **Dueno futuro de implementacion:** Codex / JusNova Chief Backend Architect, futuro Backend Lead.  
 **Criterio de aceptacion:** Ninguna respuesta juridica critica puede declarar que proviene de "el corpus JusNova" antes de que exista un ADR posterior que habilite corpus/RAG avanzado.  
@@ -83,7 +83,7 @@ Esta policy aplica a:
 
 **Principio:** Un resultado encontrado en internet no es evidencia valida por el solo hecho de existir.  
 **Regla tecnica:** Un `LegalSearchResult` solo puede convertirse en fuente citable si fue abierto o procesado, clasificado, snapshotteado o justificado, extraido en pasajes y evaluado por autoridad, jurisdiccion, extractabilidad y calidad.  
-**Mecanismo verificable:** `legal-search-result.schema.json`, `source.schema.json`, `source-snapshot.schema.json`, `passage.schema.json`, Source Authority Classifier, Evidence Quality Evaluator.  
+**Mecanismo verificable:** `legal-search-result.schema.json`, `source.schema.json`, `source-policy.md`, estrategia de snapshot/hash, `passage.schema.json`, Source Authority Classifier, Evidence Quality Evaluator.
 **No depende solo del prompt:** Las fuentes sin pasaje extraido no pueden aparecer como citas inline ni en `Fuentes utilizadas`.  
 **Dueno futuro de implementacion:** Codex / JusNova Chief Backend Architect, futuro Retrieval Lead.  
 **Criterio de aceptacion:** Un snippet de buscador o URL descubierta con `extraction_status = not_fetched` no puede sostener un claim.  
@@ -207,7 +207,7 @@ Esta policy aplica a:
 | P-NN-012 | Provider interfaces | Import boundary checks | Fase 1 |
 | P-NN-013 | Provider registry/config | Feature flags | Fase 1 |
 | P-NN-014 | Tenant ownership | Log redaction/security tests | Fase 1 |
-| P-NN-015 | Eval gates | Human review records | Fase 12 |
+| P-NN-015 | Eval gates | Human review records | Fase 1 |
 
 ## Anti-patrones bloqueantes
 

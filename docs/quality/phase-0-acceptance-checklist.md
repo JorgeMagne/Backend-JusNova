@@ -28,7 +28,7 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Citation Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/citation.schema.json` |
 | Claim Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/claim.schema.json` |
 | Live Legal Search Contract aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/legal-search-query.schema.json` |
-| Source Registry Contract aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/contracts/source-registry-entry.schema.json` |
+| Source Registry conceptual/delegation documentada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-009-source-registry-and-validity-policy.md`, `docs/policies/source-policy.md`, `docs/architecture/domain-model.md` |
 | Validity Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/validity-policy.md` |
 | Source Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/source-policy.md` |
 | Citation Policy aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/policies/citation-policy.md` |
@@ -49,9 +49,10 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Matriz de ownership por entidad aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/entity-ownership-matrix.md` |
 | API draft v0 aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/api-draft-v0.md` |
 | Error Envelope aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/error-envelope.schema.json` |
-| Evaluation Plan v0 aprobado | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/quality/evaluation-plan-v0.md` |
-| Beta Readiness Gates definidos | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/quality/beta-readiness-gates.md` |
-| Market Readiness Gates definidos | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/quality/market-readiness-gates.md` |
+| Evaluation Plan v0 aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/evaluation-plan-v0.md` |
+| Initial Golden Dataset Spec aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/initial-golden-dataset-spec.md` |
+| Beta Readiness Gates definidos | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/beta-readiness-gates.md` |
+| Market Readiness Gates definidos | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/market-readiness-gates.md` |
 | Phase 1 Implementation Brief listo | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/handoff/phase-1-implementation-brief.md` |
 | Sprint 1 Backlog listo | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/handoff/sprint-1-backlog.md` |
 | Risk Register actualizado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/risk-register.md` |
@@ -70,7 +71,7 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | `phase-0-status.md` creado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/phase-0-status.md` |
 | `open-questions.md` creado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/open-questions.md` |
 | `risk-register.md` creado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/risk-register.md` |
-| Responsables de revision definidos | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/review-responsibilities.md` |
+| Responsables de revision propuestos | No | Pending | Codex / JusNova Chief Backend Architect | `docs/handoff/review-responsibilities.md`; aceptacion requerida antes de market |
 
 ## Checklist especifico de Subfase 0.1
 
@@ -256,3 +257,19 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | `error-envelope.schema.json` creado, cerrado y con mapping `error_code -> safe_message_code` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/error-envelope.schema.json` |
 | `module-boundaries.md` y `architecture-overview.md` registran enmienda 0.11 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/module-boundaries.md`, `docs/architecture/architecture-overview.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.12
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| ADR-012 actualizado con metricas, gates y waiver policy | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-012-evaluation-and-quality-gates.md` |
+| `evaluation-plan-v0.md` creado con 10 metricas canonicas | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/evaluation-plan-v0.md` |
+| Metricas beta tienen target, blocker, definicion, numerador, denominador y consecuencia | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/evaluation-plan-v0.md` |
+| `initial-golden-dataset-spec.md` creado con buckets, tags, enums, refs locales, claims esperados, fuentes esperadas y grafo de citas | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/initial-golden-dataset-spec.md` |
+| Golden dataset usa `legal_intents[]` canonicos y `expected_validity_status` aceptado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/initial-golden-dataset-spec.md`, `docs/schemas/legal-intents.yaml`, `docs/schemas/validity-statuses.yaml` |
+| Expected blocked outcomes usan `expected_block_reason` o `expected_error_code` cerrados | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/initial-golden-dataset-spec.md`, `docs/contracts/trace-object.schema.json`, `docs/contracts/error-envelope.schema.json` |
+| Beta readiness gates definidos con evidencia, owner, blocker, fase y respaldo contractual | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/beta-readiness-gates.md` |
+| Market readiness gates definidos con revision humana, seguridad, backups, soporte e incidentes | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/market-readiness-gates.md` |
+| Source Registry/Snapshot schemas inexistentes no quedan como blockers de Fase 0 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/phase-0-acceptance-checklist.md`, `docs/architecture/phase-0-final-decision-pack.md` |
+| No quedan menciones legacy de fase posterior de evaluacion en `docs/` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/`, `docs/policies/non-negotiable-principles.md` |
+| Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/phase-0-status.md`, `docs/architecture/phase-0-final-decision-pack.md` |

@@ -26,3 +26,15 @@ docs/
 
 Una decision critica no es vinculante hasta que este documentada en esta carpeta, tenga responsable, estado documental y criterios de aceptacion cuando correspondan.
 
+## Entregables de calidad 0.12
+
+Los quality gates de 0.12 son vinculantes para Fase 1 y para cualquier decision de beta o mercado:
+
+- `quality/evaluation-plan-v0.md`
+- `quality/initial-golden-dataset-spec.md`
+- `quality/beta-readiness-gates.md`
+- `quality/market-readiness-gates.md`
+- `quality/phase-0-acceptance-checklist.md`
+- `adr/ADR-012-evaluation-and-quality-gates.md`
+
+Fase 1 debe implementar harness/eval runner y reportes sin debilitar los blockers aceptados en estos documentos.
