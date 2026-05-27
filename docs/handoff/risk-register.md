@@ -5,6 +5,8 @@
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Registro vivo de riesgos de Fase 0
 
+Nota: el estado `Draft` es intencional porque este registro es vivo. Los checklists pueden aceptar que está creado y actualizado sin convertirlo en documento cerrado.
+
 ## Escala
 
 | Campo | Valores |
@@ -45,3 +47,4 @@
 | R-026 | Prompt injection no cubierto por suficientes casos adversariales. | Medium | Critical | Mitigating | Dataset objetivo exige 30 casos adversariales y beta gates bloquean si prompt injection resistance no cumple target. | Codex / JusNova Chief Backend Architect |
 | R-027 | Document grounding insuficiente en PDFs o OCR. | Medium | Critical | Mitigating | Dataset objetivo exige 50 consultas mixtas, 30 PDFs escaneados y metrica blocker `document_grounding`. | Codex / JusNova Chief Backend Architect |
 | R-028 | Regression suite se implementa tarde y no bloquea releases. | Medium | High | Mitigating | Beta y market gates exigen eval report y regression suite antes de avanzar. | Codex / JusNova Chief Backend Architect |
+| R-029 | Handoff de Fase 1 introduce rutas, enums o tablas paralelas a contratos aceptados. | Medium | High | Mitigating | Subfase 0.13 alinea brief/backlog/plan con `docs/contracts/`, `docs/schemas/budgets.yaml`, `domain-model.md`, `api-draft-v0.md` y `error-envelope.schema.json`; Fase 1 debe tratar operational runs/events como detalle tecnico. | Codex / JusNova Chief Backend Architect |

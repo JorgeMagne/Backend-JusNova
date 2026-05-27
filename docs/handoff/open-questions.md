@@ -23,7 +23,7 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 | ID | Pregunta | Tipo | Estado | Responsable | Resolucion esperada |
 |---|---|---|---|---|---|
 | OQ-001 | Proveedor final de object storage S3-compatible para produccion inicial. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Resolver tras ADR-002 con criterios de operacion, costo y licencia. |
-| OQ-002 | Temporal desde Fase 1 o cola durable inicial si operacion local bloquea avance. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Resolver en handoff de Fase 1 manteniendo Temporal como meta profesional segun ADR-002. |
+| OQ-002 | Temporal desde Fase 1 o cola durable inicial si operacion local bloquea avance. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Cerrar al completar [P2-06](sprint-1-backlog.md#p2-06-workflowgateway-y-localworkflowgateway): Temporal queda como meta de workflow, no P0 de Sprint 1; Fase 1 debe crear `WorkflowGateway`/`LocalWorkflowGateway` sin acoplar el core a Temporal. |
 | OQ-003 | Proveedor secundario de web discovery si adaptadores oficiales y proveedor inicial no alcanzan recall. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Resolver despues de benchmarks iniciales de retrieval. |
 | OQ-004 | Limites exactos de OCR por plan despues de medir costos reales. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Ajustar tras pruebas de OCR y Cost Governor. |
 | OQ-005 | Lista canonica ADR-001 a ADR-012 de Fase 0 detallada. | Resolved | Closed | Codex / JusNova Chief Backend Architect | Resuelto por `docs/adr/decision-matrix.md`. |

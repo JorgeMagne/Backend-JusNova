@@ -53,9 +53,9 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Initial Golden Dataset Spec aprobado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/initial-golden-dataset-spec.md` |
 | Beta Readiness Gates definidos | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/beta-readiness-gates.md` |
 | Market Readiness Gates definidos | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/market-readiness-gates.md` |
-| Phase 1 Implementation Brief listo | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/handoff/phase-1-implementation-brief.md` |
-| Sprint 1 Backlog listo | Si | Pending | Codex / JusNova Chief Backend Architect | `docs/handoff/sprint-1-backlog.md` |
-| Risk Register actualizado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/risk-register.md` |
+| Phase 1 Implementation Brief listo | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/phase-1-implementation-brief.md` |
+| Sprint 1 Backlog listo | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/sprint-1-backlog.md` |
+| Risk Register actualizado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/risk-register.md`; documento vivo `Draft` actualizado |
 | Open Questions no tiene bloqueantes | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/open-questions.md` |
 
 ## Checklist especifico de Subfase 0.0
@@ -70,7 +70,7 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Plantilla Checklist creada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/_CHECKLIST_TEMPLATE.md` |
 | `phase-0-status.md` creado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/phase-0-status.md` |
 | `open-questions.md` creado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/open-questions.md` |
-| `risk-register.md` creado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/risk-register.md` |
+| `risk-register.md` creado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/risk-register.md`; documento vivo `Draft` |
 | Responsables de revision propuestos | No | Pending | Codex / JusNova Chief Backend Architect | `docs/handoff/review-responsibilities.md`; aceptacion requerida antes de market |
 
 ## Checklist especifico de Subfase 0.1
@@ -272,4 +272,18 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Market readiness gates definidos con revision humana, seguridad, backups, soporte e incidentes | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/market-readiness-gates.md` |
 | Source Registry/Snapshot schemas inexistentes no quedan como blockers de Fase 0 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/phase-0-acceptance-checklist.md`, `docs/architecture/phase-0-final-decision-pack.md` |
 | No quedan menciones legacy de fase posterior de evaluacion en `docs/` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/`, `docs/policies/non-negotiable-principles.md` |
+| Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/phase-0-status.md`, `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.13
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| `phase-1-implementation-brief.md` creado y alineado a contratos/rutas canonicas | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/phase-1-implementation-brief.md` |
+| `sprint-1-backlog.md` creado con prioridades P0/P1/P2 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/sprint-1-backlog.md` |
+| `phase-1-development-plan.md` creado como plan operativo de Fase 1 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/phases/phase-1-development-plan.md` |
+| Handoff usa JSON Schemas desde `docs/contracts/` y budgets desde `docs/schemas/budgets.yaml` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/phase-1-implementation-brief.md`, `docs/handoff/sprint-1-backlog.md` |
+| `ErrorEnvelope` de Fase 1 respeta `error-envelope.schema.json` y `api-draft-v0.md` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/error-envelope.schema.json`, `docs/architecture/api-draft-v0.md`, `docs/handoff/phase-1-implementation-brief.md` |
+| Runs/eventos operativos no crean entidades canonicas nuevas ni sustituyen `TraceObject` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/domain-model.md`, `docs/handoff/phase-1-implementation-brief.md`, `docs/phases/phase-1-development-plan.md` |
+| Fase 1 no construye busqueda viva, OCR, RAG ni analisis juridico real | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/phase-1-implementation-brief.md`, `docs/handoff/sprint-1-backlog.md`, `docs/phases/phase-1-development-plan.md` |
+| Open questions no contienen bloqueantes para preparar Fase 1; inicio condicionado a 0.14/Fase 0 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/open-questions.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/phase-0-status.md`, `docs/architecture/phase-0-final-decision-pack.md` |

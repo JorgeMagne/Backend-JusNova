@@ -38,7 +38,7 @@ Cuando Fase 0 pase a `Accepted`, este documento funcionara como paquete rector. 
 | Plantilla Checklist | Accepted | Codex / JusNova Chief Backend Architect |
 | `phase-0-status.md` | Accepted | Codex / JusNova Chief Backend Architect |
 | `open-questions.md` | Accepted | Codex / JusNova Chief Backend Architect |
-| `risk-register.md` | Accepted | Codex / JusNova Chief Backend Architect |
+| `risk-register.md` | Draft vivo actualizado | Codex / JusNova Chief Backend Architect |
 | Responsables de revision propuestos | Draft | Codex / JusNova Chief Backend Architect; aceptacion requerida antes de market |
 
 ## Pendiente para cierre final
@@ -268,6 +268,18 @@ Estos documentos quedan aceptados como criterios vinculantes para evaluar beta y
 | Market Readiness Gates | Accepted | `docs/quality/market-readiness-gates.md` |
 | Phase 0 Acceptance Checklist update | Accepted | `docs/quality/phase-0-acceptance-checklist.md` |
 | ADR-012 Quality Gate Amendment | Accepted | `docs/adr/ADR-012-evaluation-and-quality-gates.md` |
+
+## Handoff aceptado en Subfase 0.13
+
+Estos documentos quedan aceptados como handoff vinculante para Fase 1, condicionado al cierre formal de 0.14/Fase 0. Esta lista no implica que el backend, migraciones, routers, workers, CI o eval runner ya existan; fija que debe implementarse primero y que queda fuera de alcance.
+
+| Entregable | Estado | Archivo |
+|---|---|---|
+| Phase 1 Implementation Brief | Accepted | `docs/handoff/phase-1-implementation-brief.md` |
+| Sprint 1 Backlog | Accepted | `docs/handoff/sprint-1-backlog.md` |
+| Phase 1 Development Plan | Accepted | `docs/phases/phase-1-development-plan.md` |
+| Phase 0 Acceptance Checklist update | Accepted | `docs/quality/phase-0-acceptance-checklist.md` |
+| Phase 0 Status update | Accepted | `docs/phase-0-status.md` |
 
 ## Dependencias posteriores preservadas
 
