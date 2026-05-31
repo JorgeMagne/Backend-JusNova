@@ -1,8 +1,8 @@
 # JusNova Backend Docs
 
-**Estado documental:** Draft  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Draft
+**Fecha:** 2026-05-22
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Fase 0.0 - Preparacion y gobierno documental
 
 ## Proposito
@@ -20,6 +20,7 @@ docs/
   schemas/       Taxonomias YAML/JSON compartidas.
   quality/       Gates, evaluacion, checklists y criterios de aceptacion.
   handoff/       Backlog, riesgos, preguntas y transferencia a Fase 1.
+  phases/        Planes de ejecucion por fase.
 ```
 
 ## Regla de gobierno
@@ -38,3 +39,13 @@ Los quality gates de 0.12 son vinculantes para Fase 1 y para cualquier decision 
 - `adr/ADR-012-evaluation-and-quality-gates.md`
 
 Fase 1 debe implementar harness/eval runner y reportes sin debilitar los blockers aceptados en estos documentos.
+
+## Entregables de handoff 0.13
+
+El handoff de 0.13 es vinculante para preparar Fase 1; la ejecución de Fase 1 queda condicionada al cierre formal de 0.14/Fase 0:
+
+- `handoff/phase-1-implementation-brief.md`
+- `handoff/sprint-1-backlog.md`
+- `phases/phase-1-development-plan.md`
+
+Estos documentos deben leerse junto con `architecture/domain-model.md`, `architecture/api-draft-v0.md`, `contracts/error-envelope.schema.json` y `schemas/budgets.yaml`; no autorizan rutas, enums o contratos paralelos.

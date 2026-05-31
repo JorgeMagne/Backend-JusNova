@@ -30,7 +30,7 @@ Las decisiones fuera de `docs/` no son vinculantes para implementacion. Cualquie
 | 0.10 | Seguridad, privacidad y proveedores externos | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.11 | Modelo de datos conceptual y APIs draft | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.12 | Evaluacion inicial y quality gates | Accepted | Codex / JusNova Chief Backend Architect |
-| 0.13 | Plan de Fase 1, backlog y handoff | Draft | Codex / JusNova Chief Backend Architect |
+| 0.13 | Plan de Fase 1, backlog y handoff | Accepted | Codex / JusNova Chief Backend Architect |
 | 0.14 | Revision final, congelamiento y aprobacion | Draft | Codex / JusNova Chief Backend Architect |
 
 ## Estados documentales permitidos
