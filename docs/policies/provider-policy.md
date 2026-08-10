@@ -4,6 +4,7 @@
 **Fecha:** 2026-05-24
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Subfase 0.10 - Seguridad, privacidad y proveedores externos
+**Enmienda:** Subfase 0.14 - route resolution fail-closed y auditoria por intento
 
 ## Proposito
 
@@ -48,6 +49,7 @@ Todo provider permitido en v0.10 debe declararse en `docs/schemas/provider-regis
 
 - `provider_name`
 - `provider_family`
+- `external_call_mode` (`always|never|deployment_configured`)
 - `feature_flag`
 - `kill_switch`
 - `timeout_ms`
@@ -104,6 +106,23 @@ Todo provider permitido en v0.10 debe declararse en `docs/schemas/provider-regis
 10. `policy_decision=blocked_by_kill_switch` exige `kill_switch`.
 11. `ProviderCallAudit.status=timeout` exige `error_code=timeout`; `rate_limited` exige `error_code=rate_limited`; `cancelled` exige `cancelled_by_user|cancelled_by_system`; `error` exige `provider_error|unmapped_error`.
 12. `ModelCall.provider = openai` representa proveedor externo en v0.10; debe usar `external_provider_call=true` y `provider_call_audit_id` no nulo.
+13. `external_call_mode=always` resuelve `ProviderMetadata.external_call=true`; `never` resuelve `false`; `deployment_configured` exige una decision booleana explicita de deployment antes de habilitar el provider. No existe default implicito.
+14. Si el valor resuelto de `external_call` es `true`, cada intento externo crea o actualiza un `ProviderCallAudit` y ninguna llamada sale sin audit ref.
+15. Cada llamada logica usa un `logical_call_id`; cada intento conserva el mismo `organization_id`, `request_id` y `correlation_id`, y usa un `attempt_number` unico y creciente desde `1`.
+16. `attempt_kind=initial` exige `attempt_number=1` y `fallback_route_id=null`; `retry` exige `attempt_number>=2`; `fallback` exige `attempt_number>=2` y un `fallback_route_id=proute_*` resoluble.
+17. Todo `retry|fallback` exige `operation_idempotent=true` o `idempotency_key_hash=sha256:*`; nunca se persiste la idempotency key raw.
+18. La pareja `(logical_call_id, attempt_number)` es unica. En `ModelCall` o `ToolCall`, el `provider_call_audit_id` singular apunta al intento terminal; los intentos previos se resuelven por `model_call_id|tool_call_id` y `logical_call_id`. Para retrieval, todos los intentos se resuelven por `retrieval_run_id` y `logical_call_id`.
+
+## Provider Reliability Layer
+
+- `retry_policy.max_attempts` cuenta el intento inicial. `max_attempts=2` permite como maximo un retry.
+- Un retry solo se ejecuta para una operacion idempotente o protegida por idempotency key y para un codigo listado en `retry_on`.
+- Errores de validacion, clasificacion, feature flag, kill switch, autorizacion o policy no se reintentan.
+- `RetrievalPlan.fallback_allowed=true` solo concede permiso; no selecciona provider ni demuestra que exista alternativa.
+- El fallback solo se permite cuando `provider-registry.yaml` contiene un `ProviderRoute` activo compatible en familia, tenant, clases permitidas y budget. El provider primario y el alternativo deben ser distintos y resolver en el registry.
+- El registry congelado mantiene `fallback_routes: []`; por tanto no existe fallback productivo activo en Fase 1. El camino positivo se prueba solo con un fixture local cerrado de dos stubs y el camino productivo sin ruta falla con `provider_unavailable`.
+- Si no existe fallback explicito o este viola policy/budget, la PRL devuelve `provider_unavailable` mediante `ErrorEnvelope`; no selecciona un provider por heuristica silenciosa.
+- Cada intento crea un `ProviderCallAudit` separado con `ProviderCallContext` completo; retries y fallback no pueden duplicar usage ni cargos.
 
 ## Comportamiento ante incumplimiento
 
@@ -112,6 +131,7 @@ Todo provider permitido en v0.10 debe declararse en `docs/schemas/provider-regis
 - Feature flag apagado: `policy_decision=blocked_by_feature_flag`.
 - Kill switch activo: `policy_decision=blocked_by_kill_switch`.
 - Error tecnico del provider: `status=error|timeout|rate_limited|cancelled`, con `policy_decision=allowed|redacted`.
+- Retry agotado o fallback no permitido: `ErrorEnvelope.error_code=provider_unavailable`, conservando la causa tecnica solo en auditoria interna segura.
 
 ## Relacion con contratos
 
@@ -126,6 +146,8 @@ Todo provider permitido en v0.10 debe declararse en `docs/schemas/provider-regis
 
 - Las 11 familias aparecen en policy, interfaces y arquitectura.
 - Todo provider tiene registry cerrado.
+- `external_call` se resuelve de forma determinista para cada deployment.
+- Retry seguro, fallback explicito mediante fixture cerrado y ausencia de ruta productiva se prueban sin duplicar usage ni cargos; cada intento conserva auditoria propia y la llamada logica mantiene una sola contabilizacion.
 - Toda llamada externa puede auditar clases enviadas/devueltas sin payload raw.
 - El core legal queda desacoplado de SDKs concretos.
 

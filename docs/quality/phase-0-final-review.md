@@ -71,7 +71,9 @@ Ademas de la lectura cruzada, se ejecutaron checks de parseo/compilacion de sche
 Estas dependencias no bloquean Fase 0 y no deben reinterpretarse como entregables faltantes:
 
 - `source-registry-entry.schema.json` y `source-snapshot.schema.json` completos quedan para subfases posteriores; Fase 1 usa seed/DTO interno sin crear contratos paralelos.
-- Runtime de API, migraciones, auth, permisos, storage real, provider SDKs y enforcement queda para Fase 1 o fases posteriores segun el handoff.
+- `validity-status.schema.json` historico queda reemplazado por `validity-statuses.yaml` y campos `validity_status`; `conflict-report.schema.json` historico queda reemplazado por `EvidenceQuality`, status/warnings y traza. No se crean contratos paralelos.
+- `UNKNOWN` no es `Source.tier`; solo se usa donde una taxonomia aceptada lo declara o como estado interno no publicable.
+- Runtime de API y migraciones queda para Fase 1. Auth productiva minima es obligatoria en P1-09 antes de beta; storage real/provider SDKs se habilitan solo con policy, auditoria y checklist aplicables.
 - Citation Auditor productivo queda en Fase 2.
 - Versionado/trazabilidad juridica productiva continua en Fase 3.
 - Live Legal Search, adapters, validity resolver y Source Registry productivo quedan en Fases 4/5.
@@ -81,7 +83,7 @@ Estas dependencias no bloquean Fase 0 y no deben reinterpretarse como entregable
 
 ## Preguntas no bloqueantes al freeze
 
-Permanecen abiertas o diferidas las preguntas `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-017`, `OQ-018` y `OQ-019`. Todas tienen owner y momento de resolucion documentado en `docs/handoff/open-questions.md`.
+Permanecen abiertas o diferidas las preguntas `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-017`, `OQ-018`, `OQ-019` y `OQ-020`. Todas tienen owner y momento de resolucion documentado; `OQ-020` no bloquea Fase 0 pero bloquea beta.
 
 ## Riesgos vivos al freeze
 
@@ -97,12 +99,27 @@ El registro canonico permanece en `docs/handoff/risk-register.md`. Los riesgos a
 | Fenced JSON/YAML de documentos cambiados parseables | PASS |
 | Referencias locales y anchors Markdown resolubles | PASS |
 | Tablas Markdown de archivos cambiados consistentes | PASS |
+| Checklist de aceptacion | 222 items: 221 `Accepted`; 1 `Pending` no bloqueante para nominacion humana pre-market |
 | Open questions `Blocking` abiertas | 0 |
 | Cambios fuera de `docs/` | 0 |
 
-## Correccion residual de freeze
+## Correcciones de la reauditoria de freeze
 
-La auditoria detecto y corrigio pipes sin escapar dentro de regex en tablas de `domain-model.md` y `entity-ownership-matrix.md`. No se modifico la semantica de IDs ni contratos.
+Antes del merge final se ejecuto una segunda lectura adversarial sobre todas las subfases. Se corrigieron, sin cambiar el producto ni reabrir decisiones fundacionales:
+
+- trazabilidad de los artefactos historicos `validity-status.schema.json`/`conflict-report.schema.json` y exclusion de `UNKNOWN` como `Source.tier`;
+- bypass de criticalidad y omision de assertions visibles mediante `ClaimCompletenessValidator` y oracle semantico independiente;
+- cardinalidad `EvidencePack -> RetrievalRun 0..1` y reutilizacion unica de `EvidenceQuality`;
+- transporte binario de upload y variantes publicas de respuesta bloqueada/abstenida;
+- gate de auth productiva pre-beta, retry/fallback determinista y resolucion de llamadas externas en provider registry;
+- inclusion explicita de Subfase 0.1 y de la matriz de cobertura ADR en el Final Decision Pack;
+- fallback productivo fail-closed sin rutas activas, fixture local cerrado para la prueba positiva y contexto auditable unico por intento de provider;
+- ownership de `ValidityResolver` base en Fase 4 y ampliacion por adapters en Fase 5;
+- separacion entre dependencias dirigidas P0 y la integracion atomica P0-12+P0-13, sin ciclo documental;
+- alcance fail-closed de storage/providers de ADR-011;
+- pipes sin escapar dentro de regex en tablas de `domain-model.md` y `entity-ownership-matrix.md`.
+
+Cada correccion queda en contrato, policy, gate o handoff verificable. No quedan hallazgos P1/P2 abiertos tras esta reauditoria.
 
 ## Aprobacion
 

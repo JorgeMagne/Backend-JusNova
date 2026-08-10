@@ -34,6 +34,7 @@ Aplica a fuentes externas, fuentes oficiales, fuentes secundarias, fuentes cache
 8. Toda fuente usada debe tener `retrieved_at`.
 9. Toda fuente usada debe tener `tier`.
 10. Toda fuente usada debe tener `source_type`.
+11. `UNKNOWN` no es un valor permitido de `Source.tier`. Un resultado aun no clasificado permanece como candidato interno de discovery y no puede entrar a `EvidencePack.sources[]`, `sources_used[]` ni sostener claims hasta resolver uno de los seis tiers canonicos o quedar rechazado.
 
 ## Reglas deterministicas
 
@@ -47,6 +48,7 @@ Aplica a fuentes externas, fuentes oficiales, fuentes secundarias, fuentes cache
 8. `TIER2_CONFIABLE` usado por caida de fuente oficial exige warning visible.
 9. Una fuente listada en `sources_used` debe tener una cita real asociada.
 10. Discovery web no es evidencia hasta fetch, extraccion, snapshot o razon documentada, normalizacion y passage.
+11. El estado `UNKNOWN` de `host-statuses.yaml` describe salud de host/dependencia; nunca se mapea a `Source.tier`.
 
 ## Reglas asistidas por IA
 

@@ -50,7 +50,7 @@ Aplica a fuentes publicas, documentos privados, OCR, HTML externo, snippets de b
 Un claim es critico si cumple cualquiera de estas condiciones:
 
 - `Claim.criticality = high`.
-- `claim_type` en `norma`, `vigencia`, `plazo`, `competencia`, `jurisprudencia`.
+- `claim_type` en `plazo`, `requisito`, `competencia`, `causal`, `procedimiento`, `norma`, `jurisprudencia`, `vigencia`.
 
 ## Comportamiento ante incumplimiento
 

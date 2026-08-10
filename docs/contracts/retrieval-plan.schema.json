@@ -114,7 +114,8 @@
       "uniqueItems": true
     },
     "fallback_allowed": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Permiso solicitado por el plan para usar fallback. No identifica ni habilita un provider alternativo: la PRL solo puede ejecutarlo si existe un ProviderRoute activo y compatible en provider-registry.yaml; de lo contrario falla de forma cerrada con provider_unavailable."
     },
     "stop_conditions": {
       "type": "array",

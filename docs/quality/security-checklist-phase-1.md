@@ -11,8 +11,11 @@ Checklist minimo para que Fase 1 implemente datos, logs, storage, providers y wo
 
 ## Checklist
 
+Los items de upload, storage, OCR o provider productivo son obligatorios cuando esa superficie se habilita. Un stub deshabilitado puede cerrar su trabajo de Fase 1 solo si falla cerrado y no procesa datos reales; no habilita beta/mercado para la superficie productiva hasta cumplir todos sus items aplicables.
+
 - [ ] Toda tabla privada incluye `organization_id` o owner tecnico equivalente.
 - [ ] Tests de aislamiento multi-tenant cubren lectura, escritura, borrado y listado.
+- [ ] Antes de beta, `AuthProvider` productivo valida firma, issuer, audience, expiracion y membership activa; `DevAuthProvider` y headers dev quedan bloqueados fuera de local/test.
 - [ ] Documentos se guardan en storage privado con rutas no adivinables.
 - [ ] URLs firmadas son de corta vida y no exponen nombres humanos de archivo/caso.
 - [ ] Uploads validan tipo, tamano, MIME, extension y contenido.
@@ -24,6 +27,7 @@ Checklist minimo para que Fase 1 implemente datos, logs, storage, providers y wo
 - [ ] `SUPPORT_VIEW` no puede ver raw prompts, documentos, mensajes ni model outputs.
 - [ ] Todo raw/elevated access crea `RawAccessEvent`.
 - [ ] Todo provider externo esta en `provider-registry.yaml`.
+- [ ] `external_call_mode` se resuelve a booleano antes de habilitar cada provider y toda resolucion externa activa `ProviderCallAudit`.
 - [ ] Todo provider tiene feature flag, kill switch, timeout, retry policy y error mapping.
 - [ ] El core legal no importa SDKs directos de proveedores.
 - [ ] Toda llamada externa crea `ProviderCallAudit`.

@@ -5,6 +5,8 @@
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Registro de dudas abiertas de Fase 0
 
+Nota: el estado `Draft` es intencional porque este registro es vivo. El cierre de Fase 0 acepta el registro como evidencia actualizada y confirma cero preguntas `Blocking`; no convierte preguntas no bloqueantes abiertas en decisiones cerradas.
+
 ## Regla
 
 Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con preguntas bloqueantes sobre arquitectura, evidencia, citas, vigencia, trazabilidad, costos, seguridad o lanzamiento sin RAG.
@@ -41,6 +43,7 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 | OQ-017 | Herramienta concreta para eval runner y formato ejecutable de reportes. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Definir en Fase 1 sin cambiar metricas, dataset spec ni gates de 0.12. |
 | OQ-018 | Plataforma CI exacta para ejecutar regression suite. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Resolver durante Fase 1 segun infraestructura real. |
 | OQ-019 | Revisores humanos finales para market readiness. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Nombrar antes de market readiness; 0.12 ya exige revision humana. |
+| OQ-020 | Adapter productivo de `AuthProvider` para beta y deployment inicial. | Non-blocking | Open | Backend Lead / Security Reviewer | No bloquea Fase 0; bloquea beta. Resolver en P1-09 mediante ADR o decision de deployment: validar token firmado, issuer, audience, expiracion y membership activa; no acoplar dominio a SDK de auth. |
 
 ## Preguntas Blocking
 
@@ -49,6 +52,6 @@ No hay preguntas `Blocking` registradas al estado actual de Fase 0.
 ## Freeze de Subfase 0.14
 
 - Preguntas `Blocking` abiertas al cierre: 0.
-- Preguntas no bloqueantes abiertas o diferidas: `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-017`, `OQ-018`, `OQ-019`.
+- Preguntas no bloqueantes para Fase 0 abiertas o diferidas: `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-017`, `OQ-018`, `OQ-019`, `OQ-020`. `OQ-020` se vuelve blocker pre-beta segun `beta-readiness-gates.md`.
 - Cada pregunta conserva responsable y momento de resolucion.
 - Reabrir arquitectura, evidencia, citas, vigencia, trazabilidad, costos, seguridad o lanzamiento sin RAG requiere ADR nuevo; no puede registrarse como simple open question post-freeze.

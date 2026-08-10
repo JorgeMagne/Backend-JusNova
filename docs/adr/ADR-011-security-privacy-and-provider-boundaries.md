@@ -60,12 +60,12 @@ La seguridad es estructural en datos, storage, logs, providers y prompts. No pue
 - Subfase 0.10 acepta privacy/security policy, provider policy, prompt injection policy, data classification, provider registry, `ProviderCallAudit`, `RawAccessEvent`, `PromptInjectionRisk` y security checklist.
 - Subfase 0.11 acepta matriz de ownership y API draft seguro sin ampliar `RawAccessEvent.resource_type`.
 - Fase 1 debe crear estructura de ownership en modelos base.
-- Fase 1 debe implementar enforcement runtime, storage privado, secrets/config validation, provider adapters y raw access workflows.
+- Fase 1 debe implementar ownership, secrets/config validation, enforcement de los boundaries disponibles, interfaces/stubs fail-closed de storage/providers y raw access workflows. Un adapter productivo solo se habilita cuando su workstream lo requiere y ha pasado policy, auditoria y checklist; Fase 1 no esta obligada a escribir documentos reales ni llamar proveedores externos para satisfacer el scaffold.
 - Fase 11 implementara hardening completo si el roadmap mantiene esa etapa.
 
 ## No afirma todavia
 
-- No afirma autenticacion completa en Fase 1.
+- No selecciona en Fase 0 un proveedor concreto de autenticacion. `DevAuthProvider` sirve solo para local/test; el gate pre-beta exige `AuthProvider` productivo y membership tenant-scoped.
 - No afirma despliegue enterprise.
 - No afirma que proveedores externos reciban documentos completos.
 
@@ -103,4 +103,4 @@ Revisar al completar Fase 1, antes de beta y ante cualquier cambio de proveedor,
 
 ## Consecuencias
 
-Fase 1 debe modelar ownership, settings, secrets, logs y provider boundaries desde el primer commit funcional.
+Fase 1 debe modelar ownership, settings, secrets, logs y provider boundaries desde el primer commit funcional. Storage o providers productivos permanecen deshabilitados hasta contar con adapter, auditoria y controles aplicables; los stubs deben fallar cerrado.

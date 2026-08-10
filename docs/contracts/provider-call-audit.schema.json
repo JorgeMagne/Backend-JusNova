@@ -10,7 +10,8 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
     "amendments": [
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Contexto auditable por intento y fallback fail-closed"
     ]
   },
   "x-tenant-policy": {
@@ -22,6 +23,29 @@
       "usage_event_id -> UsageEvent.organization_id",
       "cost_report_id -> owning TraceObject.cost.cost_report_id -> TraceObject.organization_id"
     ]
+  },
+  "x-reliability-policy": {
+    "description": "Campos aditivos de contexto por intento. Son obligatorios por provider-policy.md y ProviderCallAuditService para toda llamada ejecutable; permanecen opcionales en el shape base para no invalidar fixtures historicos de auditoria aceptados antes del freeze final.",
+    "required_per_attempt": [
+      "logical_call_id",
+      "request_id",
+      "correlation_id",
+      "attempt_number",
+      "attempt_kind",
+      "operation_idempotent",
+      "idempotency_key_hash",
+      "fallback_route_id"
+    ],
+    "unique_attempt_key": [
+      "logical_call_id",
+      "attempt_number"
+    ],
+    "same_across_attempts": [
+      "organization_id",
+      "request_id",
+      "correlation_id"
+    ],
+    "terminal_attempt_ref": "ModelCall.provider_call_audit_id o ToolCall.provider_call_audit_id apunta al intento terminal; intentos previos se resuelven por logical_call_id y la ref dueña."
   },
   "required": [
     "provider_call_audit_id",
@@ -48,6 +72,46 @@
       "type": "string",
       "minLength": 1,
       "pattern": "^org_[A-Za-z0-9_-]+$"
+    },
+    "logical_call_id": {
+      "type": "string",
+      "pattern": "^pcall_[A-Za-z0-9_-]+$"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^rq_[A-Za-z0-9_-]+$"
+    },
+    "correlation_id": {
+      "type": "string",
+      "pattern": "^corr_[A-Za-z0-9_-]+$"
+    },
+    "attempt_number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "attempt_kind": {
+      "enum": [
+        "initial",
+        "retry",
+        "fallback"
+      ]
+    },
+    "operation_idempotent": {
+      "type": "boolean"
+    },
+    "idempotency_key_hash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "fallback_route_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^proute_[A-Za-z0-9_-]+$"
     },
     "provider_family": {
       "$ref": "#/$defs/provider_family"
@@ -235,6 +299,126 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "attempt_kind": {
+            "const": "initial"
+          }
+        },
+        "required": [
+          "attempt_kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "attempt_number",
+          "fallback_route_id"
+        ],
+        "properties": {
+          "attempt_number": {
+            "const": 1
+          },
+          "fallback_route_id": {
+            "type": "null"
+          }
+        }
+      },
+      "$comment": "initial_attempt_shape"
+    },
+    {
+      "if": {
+        "properties": {
+          "attempt_kind": {
+            "const": "retry"
+          }
+        },
+        "required": [
+          "attempt_kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "attempt_number",
+          "operation_idempotent",
+          "idempotency_key_hash",
+          "fallback_route_id"
+        ],
+        "properties": {
+          "attempt_number": {
+            "minimum": 2
+          },
+          "fallback_route_id": {
+            "type": "null"
+          }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "operation_idempotent": {
+                "const": true
+              }
+            }
+          },
+          {
+            "properties": {
+              "idempotency_key_hash": {
+                "type": "string",
+                "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+              }
+            }
+          }
+        ]
+      },
+      "$comment": "retry_requires_idempotency"
+    },
+    {
+      "if": {
+        "properties": {
+          "attempt_kind": {
+            "const": "fallback"
+          }
+        },
+        "required": [
+          "attempt_kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "attempt_number",
+          "operation_idempotent",
+          "idempotency_key_hash",
+          "fallback_route_id"
+        ],
+        "properties": {
+          "attempt_number": {
+            "minimum": 2
+          },
+          "fallback_route_id": {
+            "type": "string",
+            "pattern": "^proute_[A-Za-z0-9_-]+$"
+          }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "operation_idempotent": {
+                "const": true
+              }
+            }
+          },
+          {
+            "properties": {
+              "idempotency_key_hash": {
+                "type": "string",
+                "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+              }
+            }
+          }
+        ]
+      },
+      "$comment": "fallback_requires_route_and_idempotency"
     },
     {
       "if": {
@@ -1025,6 +1209,14 @@
     {
       "provider_call_audit_id": "pca_001",
       "organization_id": "org_001",
+      "logical_call_id": "pcall_001",
+      "request_id": "rq_provider_001",
+      "correlation_id": "corr_provider_001",
+      "attempt_number": 1,
+      "attempt_kind": "initial",
+      "operation_idempotent": true,
+      "idempotency_key_hash": null,
+      "fallback_route_id": null,
       "provider_family": "ModelProvider",
       "provider_name": "openai_model_provider",
       "external_call": true,
@@ -1053,6 +1245,14 @@
     {
       "provider_call_audit_id": "pca_blocked_001",
       "organization_id": "org_001",
+      "logical_call_id": "pcall_blocked_001",
+      "request_id": "rq_provider_blocked_001",
+      "correlation_id": "corr_provider_blocked_001",
+      "attempt_number": 1,
+      "attempt_kind": "initial",
+      "operation_idempotent": false,
+      "idempotency_key_hash": null,
+      "fallback_route_id": null,
       "provider_family": "SearchDiscoveryProvider",
       "provider_name": "openai_web_search_discovery",
       "external_call": true,
@@ -1559,6 +1759,14 @@
       "provider_call_audit": {
         "provider_call_audit_id": "pca_cross_tenant_model_call",
         "organization_id": "org_001",
+        "logical_call_id": "pcall_cross_tenant_model_call",
+        "request_id": "rq_cross_tenant_model_call",
+        "correlation_id": "corr_cross_tenant_model_call",
+        "attempt_number": 1,
+        "attempt_kind": "initial",
+        "operation_idempotent": true,
+        "idempotency_key_hash": null,
+        "fallback_route_id": null,
         "provider_family": "ModelProvider",
         "provider_name": "openai_model_provider",
         "external_call": true,
@@ -1612,6 +1820,14 @@
     {
       "provider_call_audit_id": "pca_policy_unknown_provider",
       "organization_id": "org_001",
+      "logical_call_id": "pcall_policy_unknown_provider",
+      "request_id": "rq_policy_unknown_provider",
+      "correlation_id": "corr_policy_unknown_provider",
+      "attempt_number": 1,
+      "attempt_kind": "initial",
+      "operation_idempotent": true,
+      "idempotency_key_hash": null,
+      "fallback_route_id": null,
       "provider_family": "ModelProvider",
       "provider_name": "unknown_provider",
       "external_call": false,
@@ -1635,6 +1851,14 @@
     {
       "provider_call_audit_id": "pca_policy_bad_allowlist",
       "organization_id": "org_001",
+      "logical_call_id": "pcall_policy_bad_allowlist",
+      "request_id": "rq_policy_bad_allowlist",
+      "correlation_id": "corr_policy_bad_allowlist",
+      "attempt_number": 1,
+      "attempt_kind": "initial",
+      "operation_idempotent": true,
+      "idempotency_key_hash": null,
+      "fallback_route_id": null,
       "provider_family": "SearchDiscoveryProvider",
       "provider_name": "openai_web_search_discovery",
       "external_call": true,
@@ -1660,6 +1884,14 @@
     {
       "provider_call_audit_id": "pca_policy_family_mismatch",
       "organization_id": "org_001",
+      "logical_call_id": "pcall_policy_family_mismatch",
+      "request_id": "rq_policy_family_mismatch",
+      "correlation_id": "corr_policy_family_mismatch",
+      "attempt_number": 1,
+      "attempt_kind": "initial",
+      "operation_idempotent": true,
+      "idempotency_key_hash": null,
+      "fallback_route_id": null,
       "provider_family": "StorageProvider",
       "provider_name": "openai_model_provider",
       "external_call": true,
@@ -1687,6 +1919,14 @@
     {
       "provider_call_audit_id": "pca_policy_class_not_in_provider_allowlist",
       "organization_id": "org_001",
+      "logical_call_id": "pcall_policy_class_not_in_provider_allowlist",
+      "request_id": "rq_policy_class_not_in_provider_allowlist",
+      "correlation_id": "corr_policy_class_not_in_provider_allowlist",
+      "attempt_number": 1,
+      "attempt_kind": "initial",
+      "operation_idempotent": true,
+      "idempotency_key_hash": null,
+      "fallback_route_id": null,
       "provider_family": "SearchDiscoveryProvider",
       "provider_name": "openai_web_search_discovery",
       "external_call": true,

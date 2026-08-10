@@ -42,7 +42,7 @@ Esta policy aplica a:
 ### P-NN-001 - Evidencia o silencio
 
 **Principio:** Toda afirmacion juridica critica requiere evidencia o debe bloquearse, abstenerse o declararse incierta.  
-**Regla tecnica:** Todo `Claim` con `criticality = high` debe tener al menos una cita valida a un `EvidencePassage` existente, salvo que `verification_status = blocked` y la respuesta use formato de abstencion.  
+**Regla tecnica:** Todo `Claim` con `criticality = high` o `claim_type` en `plazo`, `requisito`, `competencia`, `causal`, `procedimiento`, `norma`, `jurisprudencia`, `vigencia` debe tener al menos una cita valida a un `EvidencePassage` existente, salvo que `verification_status = blocked` y la respuesta use formato de abstencion. Toda afirmacion juridica critica visible debe estar representada por un `Claim`.
 **Mecanismo verificable:** `claim.schema.json`, `citation.schema.json`, `evidence-pack.schema.json`, `CitationAuditor`, `ClaimVerifier`, tests de claims criticos sin soporte.  
 **No depende solo del prompt:** El auditor debe rechazar programaticamente respuestas con critical claims sin cita valida.  
 **Dueno futuro de implementacion:** Codex / JusNova Chief Backend Architect, futuro AI Orchestration Lead.  
@@ -96,7 +96,7 @@ Esta policy aplica a:
 **Mecanismo verificable:** `citation.schema.json`, `citation-audit.schema.json`, `CitationAuditor`, pruebas de cita rota, fuente final derivada de citas reales.  
 **No depende solo del prompt:** El auditor debe fallar si una cita no existe, apunta a fuente inexistente, no aparece en `EvidencePack`, o se lista una fuente no citada.  
 **Dueno futuro de implementacion:** Codex / JusNova Chief Backend Architect, futuro AI Orchestration Lead.  
-**Criterio de aceptacion:** `citation_audit.status = passed` exige cero citas rotas y cero claims criticos sin soporte.  
+**Criterio de aceptacion:** `citation_audit.overall_status = passed` exige cero citas rotas, cero assertions criticas visibles sin `Claim` y cero claims criticos sin soporte.
 **Severidad si se incumple:** Critical.
 
 ### P-NN-007 - Vigencia no se presume
@@ -199,7 +199,7 @@ Esta policy aplica a:
 | P-NN-004 | RetrievalPlan / EvidencePack gate | Search Trace | Fase 4 |
 | P-NN-005 | Fetch/extract/snapshot gate | SourceAuthorityClassifier | Fase 4 |
 | P-NN-006 | CitationAuditor | Answer formatter | Fase 2 |
-| P-NN-007 | ValidityStatus / ValidityResolver | Forbidden phrase checks | Fase 7 |
+| P-NN-007 | ValidityStatus / ValidityResolver | Forbidden phrase checks | Fase 4/5 |
 | P-NN-008 | Context Assembler | Memory policy | Fase 3 |
 | P-NN-009 | Claim source rules | Document policy | Fase 9 |
 | P-NN-010 | CostGovernor | UsageLedger | Fase 1 |
@@ -208,6 +208,8 @@ Esta policy aplica a:
 | P-NN-013 | Provider registry/config | Feature flags | Fase 1 |
 | P-NN-014 | Tenant ownership | Log redaction/security tests | Fase 1 |
 | P-NN-015 | Eval gates | Human review records | Fase 1 |
+
+Para P-NN-007, Fase 4 implementa la clasificacion conservadora y el `ValidityResolver` base junto al Source Registry; Fase 5 integra adapters oficiales y amplía verificacion. Ningun control minimo de vigencia queda diferido a Fase 7.
 
 ## Anti-patrones bloqueantes
 

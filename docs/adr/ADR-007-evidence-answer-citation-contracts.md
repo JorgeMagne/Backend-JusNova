@@ -53,7 +53,7 @@ El pipeline contractual permite auditar claim -> cita -> pasaje -> fuente -> sna
 - Subfase 0.4 creo citation policy y abstention policy.
 - Subfase 0.6 acepto source, validity, conflict y uncertainty policies.
 - Subfase 0.7 creo `citation-audit.schema.json` dentro de trazabilidad, auditoria y versionado.
-- Fase 2 implementara Citation Auditor y bloqueo de claims criticos.
+- Fase 2 implementara `ClaimCompletenessValidator`, Citation Auditor y bloqueo de claims criticos. Ninguna afirmacion juridica critica visible puede quedar fuera de `AnswerContract.claims[]`.
 
 ## No afirma todavia
 

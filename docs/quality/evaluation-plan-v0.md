@@ -39,7 +39,7 @@ Este documento define las metricas minimas para evaluar calidad juridica, factua
 ### `citation_validity_rate`
 
 - Definition: proporcion de citas publicadas que resuelven a fuente, pasaje y locator validos.
-- Numerator: citas publicadas donde `citation_ref`, `source_ref`, `passage_ref`, `supports_claim_ids`, source metadata y locator coinciden con `expected_citations[]` y `expected_claims[]`.
+- Numerator: citas publicadas donde `citation_ref`, `source_ref`, `passage_ref`, `supports_claim_ids`, source metadata y locator coinciden con `expected_citations[]` y con el oracle semantico de `expected_claims[]`; coincidir solo por `claim_id` no es suficiente.
 - Denominator: total de citas publicadas en respuestas evaluadas contra `expected_citations[]`, incluyendo citas de claims criticos y no criticos.
 - Target beta: `1.00`.
 - Blocker: true.
@@ -53,13 +53,15 @@ Este documento define las metricas minimas para evaluar calidad juridica, factua
 ### `unsupported_critical_claims`
 
 - Definition: conteo absoluto de claims criticos publicados sin soporte valido.
-- Numerator: numero de claims criticos publicados con soporte ausente, debil cuando policy exige soporte directo, cita rota o evidencia bloqueada.
+- Numerator: numero de claims criticos publicados con soporte ausente, debil cuando policy exige soporte directo, cita rota o evidencia bloqueada, mas assertions juridicas criticas visibles omitidas de `claims[]`, claims runtime semanticamente divergentes del oracle y claims criticos esperados omitidos cuando el outcome era `published`.
 - Denominator: no aplica como ratio; es conteo absoluto por eval run.
 - Target beta: `0`.
 - Blocker: true.
 - Evidence source: `claim.schema.json`, `citation.schema.json`, `citation-policy.md`, `abstention-policy.md`, `trace-object.schema.json`.
 - Dataset coverage minimo: casos con obligaciones, plazos, vigencia, estrategia, jurisprudencia y documentos privados.
-- Failure consequence: no beta; la respuesta debe bloquear o abstenerse antes de publicar claim critico sin soporte.
+- Failure consequence: no beta; la respuesta debe bloquear o abstenerse antes de publicar claim critico sin soporte, assertion critica visible sin `Claim` equivalente o claim que no coincide semanticamente con el oracle aprobado.
+- Claim completeness rule: el runner ejecuta un extractor/validador independiente del sistema bajo prueba sobre `AnswerContract.sections.*.content`. Todo candidato critico debe mapearse bidireccionalmente a `actual claims[]` y `expected_claims[]`; `ClaimCompletenessValidator` registra `critical_assertion_unmapped` cuando falta el mapeo.
+- Semantic oracle rule: `actual Claim.text` se compara segun `semantic_match_mode`; el modo `human_review` solo cuenta con `review_artifact_ref` legal aprobado. La autoevaluacion de `Claim.verification_status` o `CitationAudit.support_assessment` del sistema bajo prueba no sustituye este oracle.
 - Surface rule: los casos que puntuan esta metrica deben usar `evaluation_surface=final_response` o `trace_object`; artefactos `retrieval_run` y `evidence_pack` no contienen claims publicados.
 - Contratos vinculados: Claim, Citation, CitationPolicy, AbstentionPolicy, TraceObject.
 

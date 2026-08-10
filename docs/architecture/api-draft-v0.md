@@ -224,14 +224,15 @@ La vista segura puede incluir resumen de hechos, riesgos y preguntas, pero no de
 
 ### POST /v1/documents
 
-Request:
+Request: `multipart/form-data`. El binario viaja en la parte `file`; no existe upload out-of-band, storage key aportada por cliente ni body JSON alternativo en v1.
 
 | Campo | Regla |
 |---|---|
+| `file` | Requerido; stream binario. El backend calcula tamano y tipo efectivo mediante sniffing antes de aceptar, rechazar o poner en cuarentena. |
 | `case_id` | Opcional `case_*` o `null`. |
 | `filename_hint` | Opcional, solo display redacted; no storage key ni evidencia. |
-| `content_type` | MIME declarado; se valida por allowlist/sniffing en processing. |
-| `size_bytes` | Entero positivo. |
+| `content_type` | Hint opcional declarado por cliente. No sustituye el MIME detectado por servidor ni decide por si solo la allowlist. |
+| `size_bytes` | Hint opcional entero positivo. El limite se aplica sobre bytes realmente recibidos y el valor divergente produce `validation_error`. |
 
 Response:
 
@@ -331,11 +332,12 @@ Response:
 | `answer_id` | `ans_*`. |
 | `answer_version_ref` | `av_*` visible. |
 | `response_outcome` | Outcome cerrado de respuesta/version. |
-| `sections` | Secciones visibles/redacted del `AnswerContract`; no payload de modelo. |
+| `sections` | Requerido para `answered` o `partial_abstention`; secciones visibles/redacted del `AnswerContract`, nunca payload de modelo. `null` u omitido para `total_abstention` o `blocked`. |
+| `abstention` | Requerido para `total_abstention` o `blocked`; vista publica segura con `reason_code`, `rendered_body` y `warning_codes[]`. `null` u omitido para `answered` o `partial_abstention`. No expone `render_storage_ref`. |
 | `warnings[]` | Codigos/mensajes seguros. |
 | `created_at` | date-time. |
 
-Devuelve respuesta visible. La respuesta debe identificar la version visible mediante `answer_version_ref`.
+Devuelve una union discriminada por `response_outcome`. Una respuesta o abstencion ya materializada se devuelve con `200`; `policy_blocked`, `prompt_injection_blocked`, `unsupported_critical_claim` y `evidence_insufficient` se usan como `ErrorEnvelope` solo cuando no existe un artefacto publico seguro que devolver. La respuesta siempre identifica la version visible mediante `answer_version_ref`.
 
 ### GET /v1/answers/{answer_id}/sources
 
@@ -347,12 +349,12 @@ Response:
 |---|---|
 | `answer_id` | `ans_*`. |
 | `answer_version_ref` | `av_*`. |
-| `evidence_pack_id` | `ep_*`. |
-| `sources[]` | Fuentes realmente citadas; `source_ref` local al pack. |
-| `passages[]` | Pasajes citados; `passage_ref` local al pack. |
-| `citations[]` | `citation_ref=C#` local a `answer_version_ref`. |
+| `evidence_pack_id` | `ep_*` para respuesta con evidencia; `null` para `total_abstention` o `blocked` sin pack. |
+| `sources[]` | Fuentes realmente citadas; `source_ref` local al pack. Debe ser `[]` si `evidence_pack_id=null`. |
+| `passages[]` | Pasajes citados; `passage_ref` local al pack. Debe ser `[]` si `evidence_pack_id=null`. |
+| `citations[]` | `citation_ref=C#` local a `answer_version_ref`. Debe ser `[]` si `evidence_pack_id=null`. |
 
-Devuelve solo fuentes realmente citadas para la version visible. Cualquier `source_ref` (`F#`/`D#`) o `passage_ref` (`F#:P#`/`D#:P#`) queda estrictamente scoped al `answer_version_ref` y al `evidence_pack_id` devueltos por el endpoint; esos refs no son IDs globales.
+Devuelve solo fuentes realmente citadas para la version visible. Cualquier `source_ref` (`F#`/`D#`) o `passage_ref` (`F#:P#`/`D#:P#`) queda estrictamente scoped al `answer_version_ref` y al `evidence_pack_id` devueltos por el endpoint; esos refs no son IDs globales. Una abstencion o bloqueo sin evidencia no fabrica `ep_*`, fuentes, pasajes ni citas.
 
 ### GET /v1/answers/{answer_id}/trace-summary
 

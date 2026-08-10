@@ -41,6 +41,7 @@ Las decisiones fuera de `docs/` no son vinculantes para implementacion. Cualquie
 - Resultado: lentes tecnico, juridico y producto/operacion en `PASS`.
 - Preguntas `Blocking` abiertas: 0.
 - Regla post-freeze: toda modificacion critica requiere ADR nuevo o documento `Superseded`.
+- La reauditoria previa al merge final y sus correcciones de coherencia quedan registradas en `phase-0-final-review.md`; forman parte del mismo freeze 0.14, no una decision de producto posterior.
 
 El estado `Accepted` habilita el inicio de Fase 1. No habilita beta ni mercado sin satisfacer sus readiness gates.
 

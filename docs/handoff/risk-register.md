@@ -13,7 +13,7 @@ Nota: el estado `Draft` es intencional porque este registro es vivo. Los checkli
 - `R-002` permanece en mitigacion: los contratos son implementables documentalmente y Fase 1 debe probar round-trip y policy invariants.
 - `R-003` se cierra para Fase 0: la revision cruzada final no deja contradicciones P1/P2 abiertas.
 - Los riesgos runtime, beta y market permanecen abiertos o en mitigacion y conservan sus gates.
-- Se agrega `R-030` para controlar drift posterior al freeze.
+- Se agregan `R-030` para controlar drift posterior al freeze y `R-031` para impedir que dev auth llegue a beta.
 
 ## Escala
 
@@ -29,7 +29,7 @@ Nota: el estado `Draft` es intencional porque este registro es vivo. Los checkli
 |---|---|---|---|---|---|---|
 | R-001 | Sobrediseno documental sin avance ejecutable hacia Fase 1. | Medium | High | Closed | Handoff 0.13, backlog P0/P1/P2 y plan operativo aceptados; Fase 1 queda habilitada por 0.14. | Codex / JusNova Chief Backend Architect |
 | R-002 | Contratos demasiado abstractos para implementacion. | Medium | High | Mitigating | JSON Schemas, ejemplos, invariants y criterios de aceptacion estan cerrados; Fase 1 debe demostrar round-trip y tests policy-valid. | Codex / JusNova Chief Backend Architect |
-| R-003 | Contradicciones entre ADRs, policies y contracts. | Medium | High | Closed | Revision cruzada 0.14, final review y decision pack congelado sin P1/P2 abiertos. | Codex / JusNova Chief Backend Architect |
+| R-003 | Contradicciones entre ADRs, policies y contracts. | Medium | High | Closed | Revision cruzada 0.14 y reauditoria adversarial corrigieron los hallazgos residuales antes del merge; schemas, policies, gates y handoff quedan alineados sin P1/P2 abiertos. | Codex / JusNova Chief Backend Architect |
 | R-004 | Dependencia accidental de proveedor externo en documentos de Fase 0. | Medium | Critical | Mitigating | Provider interfaces obligatorias, provider registry, provider policy y `ProviderCallAudit` aceptados en 0.10. | Codex / JusNova Chief Backend Architect |
 | R-005 | Politica de vigencia insuficiente o ambigua. | Medium | Critical | Mitigating | Estados cerrados de vigencia, frases prohibidas, abstention policy y `validity_awareness` blocker; enforcement queda para runtime/evals. | Codex / JusNova Chief Backend Architect |
 | R-006 | Seguridad tratada tarde. | Medium | Critical | Mitigating | Subfase 0.9 crea seguridad documental minima; Subfase 0.10 acepta privacy/security policy, data classification, raw access, provider registry y prompt injection controls. Enforcement runtime queda para Fase 1. | Codex / JusNova Chief Backend Architect |
@@ -57,3 +57,4 @@ Nota: el estado `Draft` es intencional porque este registro es vivo. Los checkli
 | R-028 | Regression suite se implementa tarde y no bloquea releases. | Medium | High | Mitigating | Beta y market gates exigen eval report y regression suite antes de avanzar. | Codex / JusNova Chief Backend Architect |
 | R-029 | Handoff de Fase 1 introduce rutas, enums o tablas paralelas a contratos aceptados. | Medium | High | Mitigating | Subfase 0.13 alinea brief/backlog/plan con `docs/contracts/`, `docs/schemas/budgets.yaml`, `domain-model.md`, `api-draft-v0.md` y `error-envelope.schema.json`; Fase 1 debe tratar operational runs/events como detalle tecnico. | Codex / JusNova Chief Backend Architect |
 | R-030 | Cambios posteriores al freeze alteran decisiones criticas sin trazabilidad. | Medium | Critical | Mitigating | Fase 0 congelada: todo cambio critico requiere ADR nuevo o documento `Superseded`, con impacto en contracts, policies, evals y handoff. | Codex / JusNova Chief Backend Architect |
+| R-031 | `DevAuthProvider` o headers de desarrollo llegan a beta/produccion sin autenticacion productiva ni membership activa. | Medium | Critical | Open | P1-09 y gate pre-beta exigen adapter productivo provider-neutral, tokens firmados con issuer/audience/expiry, resolucion actor-membership-tenant y negativos de seguridad; `DevAuthProvider` solo local/test. | Backend Lead / Security Reviewer |

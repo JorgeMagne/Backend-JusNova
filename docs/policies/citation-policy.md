@@ -34,7 +34,7 @@ Aplica a `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Claim`, `Citation
 7. Toda `Citation` incluida en `AnswerContract.citations` debe aparecer en al menos un `Claim.citations[]`.
 8. Toda `Citation` con `status = valid` debe tener al menos un `supports_claim_ids[]`.
 9. Todo `supports_claim_ids[]` debe apuntar a un `Claim.claim_id` existente.
-10. Todo claim critico con `criticality = high` y `claim_type` juridico debe tener al menos una cita `valid`.
+10. Todo claim critico debe tener al menos una cita `valid`. El predicado critico es `criticality = high` o `claim_type` en `plazo`, `requisito`, `competencia`, `causal`, `procedimiento`, `norma`, `jurisprudencia`, `vigencia`.
 11. Una fuente final en `sources_used` debe aparecer en al menos una `Citation.source_ref` que soporte un claim existente.
 12. Las fuentes externas se citan como `[F#:P#]`.
 13. Los documentos del usuario se citan como `[D#:P#]`.
@@ -44,6 +44,9 @@ Aplica a `EvidencePack`, `EvidenceSource`, `EvidencePassage`, `Claim`, `Citation
 17. Todo `TraceObject` con `citation_audit.overall_status = passed` debe tener cada `Claim.citations[]` representado en `CitationAudit.results[]` con el mismo `claim_id` y `citation_ref`.
 18. Todo `TraceObject.sources_used[]` debe aparecer en al menos un `CitationAudit.results[].source_ref` con `status = valid` y asociado a un claim existente en `TraceObject.claims[]`.
 19. Un `TraceObject` no puede declarar auditoria `passed` si una cita publicada, claim publicado o fuente usada no fue cubierta por `CitationAudit.results[]`.
+20. Toda afirmacion juridica critica visible en `AnswerContract.sections.*.content` debe corresponder por equivalencia semantica a un `Claim` del mismo `AnswerContract`; omitirla de `claims[]` es fallo bloqueante aunque el JSON Schema local valide.
+21. Todo `Claim.text` publicado debe representar la misma proposicion juridica que el texto visible del que fue extraido; reutilizar un `claim_id` para otra proposicion es fallo bloqueante.
+22. `ClaimCompletenessValidator` se ejecuta antes de aceptar `CitationAudit.overall_status=passed`. Una afirmacion critica visible sin `Claim` produce `blocking_failures[].failure_code=critical_assertion_unmapped`, con `citation_ref=null` y `claim_id=null`.
 
 ## Reglas deterministicas
 
@@ -66,18 +69,23 @@ Estas reglas deben implementarse en validadores, tests o auditoria de citas; no 
 15. Para `TraceObject`, construir el conjunto de pares auditados `(claim_id, citation_ref)` desde `citation_audit.results[]`.
 16. Rechazar `citation_audit.overall_status = passed` si algun par publicado no aparece como par auditado con `status = valid`.
 17. Rechazar `citation_audit.overall_status = passed` si algun `sources_used[]` no aparece como `source_ref` en un resultado auditado valido.
+18. Ejecutar `ClaimCompletenessValidator` sobre todas las secciones visibles y construir cobertura bidireccional `assertion critica visible <-> Claim`.
+19. Rechazar cualquier afirmacion critica visible sin `Claim` semanticamente equivalente y registrar `critical_assertion_unmapped`.
+20. Rechazar cualquier `Claim` cuyo texto no sea semanticamente equivalente a la afirmacion visible que representa o cuyo `claim_type` juridico no use `criticality=high`.
 
 ## Reglas asistidas por IA
 
 1. El modelo puede proponer claims y mapear pasajes candidatos.
 2. El modelo no decide por si solo que una cita es valida.
 3. Si el modelo no puede justificar soporte, el claim debe marcarse `unsupported`, `needs_review` o `blocked`.
+4. El modelo puede proponer la extraccion de assertions, pero la completitud se valida contra el oracle aprobado o revision humana registrada; la propia lista `claims[]` del modelo no es oracle suficiente.
 
 ## Comportamiento ante incumplimiento
 
 - Cita rota: bloquear respuesta final o reparar sin agregar claims nuevos.
 - Cita valida sin claim soportado: bloquear respuesta final por cita decorativa.
 - Claim critico sin cita valida: bloquear o abstener parcialmente.
+- Afirmacion juridica critica visible sin `Claim` equivalente: bloquear con `critical_assertion_unmapped` o reparar antes de publicar.
 - Fuente final no citada: eliminar de `sources_used` o bloquear hasta reparar.
 - Fuente `TIER3_SECUNDARIO` como unico soporte de claim normativo o de vigencia critico: no publicar conclusion critica. Si existe presupuesto o credito, ofrecer Modo Investigacion antes de cualquier respuesta sustantiva; si no existe o no se activa, bloquear o emitir abstencion parcial o total.
 
@@ -130,6 +138,7 @@ Cadena valida:
 - Los ejemplos validos de 0.4 muestran la cadena completa.
 - Las validaciones negativas cubren cita a pasaje inexistente, cita valida sin claim soportado, claim critico sin cita, fuente final no citada y TIER3 como unico soporte normativo critico.
 - Las validaciones de 0.7 cubren `TraceObject.claims[].citations[]` y `TraceObject.sources_used[]` contra `CitationAudit.results[]`.
+- Las validaciones de completitud cubren afirmacion critica visible omitida de `claims[]`, divergencia entre `Claim.text` y texto visible, y tipo juridico degradado a `criticality!=high`.
 
 ## Relacion con contratos
 

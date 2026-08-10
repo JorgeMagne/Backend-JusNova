@@ -10,7 +10,8 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts",
     "amendments": [
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Claim completeness hardening"
     ]
   },
   "x-tenant-policy": {
@@ -19,6 +20,11 @@
       "claims[].organization_id",
       "citations[].organization_id"
     ]
+  },
+  "x-claim-completeness-policy": {
+    "description": "ClaimCompletenessValidator es obligatorio antes de publicar. Debe comprobar que toda afirmacion juridica critica visible en sections esta representada por un Claim semanticamente equivalente y que no existe Claim publicado cuyo texto diverja de la afirmacion visible que representa. JSON Schema valida forma local, no completitud semantica del texto.",
+    "critical_claim_predicate": "criticality=high OR claim_type in plazo|requisito|competencia|causal|procedimiento|norma|jurisprudencia|vigencia",
+    "failure_code": "critical_assertion_unmapped"
   },
   "required": [
     "answer_id",
@@ -644,6 +650,55 @@
       ],
       "warnings": [
         "Schema-valid but policy-invalid: Claim.organization_id != AnswerContract.organization_id."
+      ],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "answer_id": "ans_unmapped_critical_assertion",
+      "organization_id": "org_001",
+      "answer_version": 1,
+      "trace_id": "tr_unmapped_critical_assertion",
+      "evidence_pack_id": "ep_001",
+      "jurisdiction": "BO",
+      "sections": {
+        "conclusion_operativa": {
+          "title": "Conclusion operativa",
+          "content": "La norma aplicable establece un plazo obligatorio de diez dias."
+        },
+        "hechos_considerados": {
+          "title": "Hechos considerados",
+          "content": ""
+        },
+        "fundamento_normativo": {
+          "title": "Fundamento normativo",
+          "content": "La afirmacion juridica visible no fue extraida como Claim."
+        },
+        "jurisprudencia_relevante": {
+          "title": "Jurisprudencia relevante",
+          "content": ""
+        },
+        "analisis_aplicado": {
+          "title": "Analisis aplicado",
+          "content": ""
+        },
+        "incertidumbres_vigencia_conflictos": {
+          "title": "Incertidumbres, vigencia y conflictos",
+          "content": ""
+        },
+        "recomendacion_profesional": {
+          "title": "Recomendacion profesional",
+          "content": ""
+        },
+        "fuentes_utilizadas": {
+          "title": "Fuentes utilizadas",
+          "content": ""
+        }
+      },
+      "claims": [],
+      "citations": [],
+      "sources_used": [],
+      "warnings": [
+        "Schema-valid but policy-invalid: critical visible assertion has no Claim."
       ],
       "created_at": "2026-05-22T00:00:00Z"
     }

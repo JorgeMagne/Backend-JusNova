@@ -4,7 +4,7 @@
 **Fecha:** 2026-05-24
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Subfase 0.5 - Live Legal Search Engine Contract; Subfase 0.10 - Security, Privacy and Provider Boundaries
-**Enmiendas:** Subfase 0.10 - provider registry, provider audit and canonical provider families
+**Enmiendas:** Subfase 0.10 - provider registry, provider audit and canonical provider families; Subfase 0.14 - provider route and per-attempt context closure
 
 ## Proposito
 
@@ -41,9 +41,37 @@ class ProviderMetadata:
 ```
 
 ```python
+class ProviderRoute:
+    route_id: str  # ^proute_[A-Za-z0-9_-]+$
+    provider_family: str
+    primary_provider_name: str
+    fallback_provider_name: str
+    organization_id: str | None  # null = ruta global
+    allowed_data_classes: list[str]
+    allowed_cost_budget_refs: list[str]  # cb_*
+    enabled: bool
+```
+
+```python
+class ProviderCallContext:
+    logical_call_id: str  # ^pcall_[A-Za-z0-9_-]+$
+    request_id: str  # ^rq_[A-Za-z0-9_-]+$
+    correlation_id: str  # ^corr_[A-Za-z0-9_-]+$
+    attempt_number: int  # inicia en 1
+    attempt_kind: str  # initial | retry | fallback
+    operation_idempotent: bool
+    idempotency_key_hash: str | None  # sha256:*; nunca key raw
+    fallback_route_id: str | None  # proute_* solo para attempt_kind=fallback
+```
+
+```python
 class BaseProvider:
     metadata: ProviderMetadata
 ```
+
+`ProviderMetadata.external_call` no se configura de forma ad hoc. Se resuelve desde `provider-registry.yaml`: `always -> true`, `never -> false` y `deployment_configured` exige un booleano explicito del deployment antes de habilitar el provider. La PRL interpreta `retry_policy.max_attempts` como intentos totales incluido el inicial y solo reintenta operaciones idempotentes o protegidas por `idempotency_key_hash`; cualquier fallback requiere un `ProviderRoute` activo, nunca seleccion automatica silenciosa.
+
+`ProviderRoute` y `ProviderCallContext` son DTOs internos cerrados, no payloads publicos. Los nombres de provider deben resolver en el registry, ser distintos y pertenecer a la misma familia; `organization_id`, clases permitidas y `allowed_cost_budget_refs` deben ser compatibles con la ejecucion. El registry aceptado mantiene `fallback_routes: []`: por tanto, `RetrievalPlan.fallback_allowed=true` expresa permiso, no disponibilidad, y la PRL productiva falla con `provider_unavailable` mientras no exista una ruta aceptada. Fase 1 solo prueba el camino positivo con un fixture local que use dos providers stub de la misma familia y esta forma exacta.
 
 ## Familias canonicas
 

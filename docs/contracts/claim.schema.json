@@ -10,7 +10,8 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts",
     "amendments": [
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Critical claim hardening"
     ]
   },
   "required": [
@@ -92,6 +93,34 @@
   },
   "additionalProperties": false,
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "claim_type": {
+            "enum": [
+              "plazo",
+              "requisito",
+              "competencia",
+              "causal",
+              "procedimiento",
+              "norma",
+              "jurisprudencia",
+              "vigencia"
+            ]
+          }
+        },
+        "required": [
+          "claim_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "criticality": {
+            "const": "high"
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {
@@ -243,6 +272,17 @@
       "citations": [],
       "verification_status": "needs_review",
       "requires_human_review": true
+    },
+    {
+      "claim_id": "cl_norma_low_without_citation",
+      "organization_id": "org_001",
+      "text": "La norma establece una obligacion aplicable.",
+      "claim_type": "norma",
+      "criticality": "low",
+      "support_level": "weak",
+      "citations": [],
+      "verification_status": "passed",
+      "requires_human_review": false
     }
   ],
   "x-policy-invalid-examples": [

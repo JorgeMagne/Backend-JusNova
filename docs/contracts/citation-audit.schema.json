@@ -10,7 +10,8 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
     "amendments": [
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Claim completeness failure code"
     ]
   },
   "required": [
@@ -143,6 +144,7 @@
             "validity_not_confirmed",
             "decorative_source",
             "source_passage_mismatch",
+            "critical_assertion_unmapped",
             "policy_blocked"
           ]
         },
@@ -171,7 +173,10 @@
           "if": {
             "properties": {
               "failure_code": {
-                "const": "policy_blocked"
+                "enum": [
+                  "critical_assertion_unmapped",
+                  "policy_blocked"
+                ]
               }
             },
             "required": [

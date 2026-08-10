@@ -92,6 +92,7 @@ Fase 1 incluye:
 - `UsageLedger` básico;
 - `commercial` mínimo con `Plan`/`Subscription`/`ResearchCredit`;
 - `StorageProvider` abstracto con stub y límites privados;
+- `AuthProvider` productivo mínimo antes de beta, provider-neutral y tenant-scoped; `DevAuthProvider` solo local/test;
 - trazabilidad mínima;
 - shells `Answer`/`AnswerVersion`/`AbstentionRender`/`TraceObject` para `answer_blocked`;
 - modelos de Evidence/Citation/Claim como contratos fundacionales;
@@ -117,7 +118,7 @@ Fase 1 **no debe** implementar:
 - Source Snapshotter real;
 - Modo Investigación real;
 - pagos/facturación real;
-- autenticación enterprise completa;
+- autenticación enterprise completa (SSO corporativo, SCIM, administración avanzada y múltiples IdP); esto no difiere el `AuthProvider` productivo mínimo requerido por P1-09;
 - RAG jurídico propio;
 - embeddings sobre corpus jurídico;
 - crawling masivo;
@@ -447,6 +448,13 @@ jusnova-backend/
           schemas.py
           repository.py
           service.py
+        auth/
+          __init__.py
+          provider.py
+          dev_provider.py
+          production_adapter.py
+          service.py
+          schemas.py
         conversations/
           __init__.py
           models.py
@@ -516,6 +524,7 @@ jusnova-backend/
           __init__.py
           models.py
           schemas.py
+          claim_completeness.py
         source_registry/
           __init__.py
           models.py
@@ -572,6 +581,7 @@ jusnova-backend/
       test_provider_call_audit.py
       test_raw_access_event.py
       test_prompt_injection_guard_stub.py
+      test_auth_provider.py
       test_source_registry_seed.py
       test_fetcher_stub.py
       test_snapshot_stub.py
@@ -1310,6 +1320,14 @@ Modelos mínimos:
 provider_call_audits
   provider_call_audit_id text pk -- pca_*
   organization_id text fk not null -- org_*
+  logical_call_id text not null -- pcall_*, agrupa todos los intentos de una llamada
+  request_id text not null -- rq_*
+  correlation_id text not null -- corr_*
+  attempt_number integer not null -- >= 1; unico por logical_call_id
+  attempt_kind text not null -- initial|retry|fallback
+  operation_idempotent boolean not null
+  idempotency_key_hash text null -- sha256:*; nunca key raw
+  fallback_route_id text null -- proute_* solo para attempt_kind=fallback
   provider_family text not null
   provider_name text not null
   trace_id text null -- tr_*, final TraceObject/operational run anchor when available
@@ -1365,8 +1383,11 @@ PromptInjectionGuardStub
 
 Reglas:
 
-- `ProviderReliabilityLayerStub` debe mapear timeout, rate limit y provider unavailable a `ErrorEnvelope` sin llamar proveedores reales.
-- `ProviderCallAuditService` debe validar fixtures contra `provider-call-audit.schema.json` y contra `provider-policy.md` + `docs/schemas/provider-registry.yaml`: `provider_name` resuelve en registry, `provider_family` coincide, `data_sent_classes[]` y `data_returned_classes[]` respetan allowlists/clases conocidas, y los estados `policy_blocked|timeout|rate_limited|cancelled|error` cumplen sus `error_code`/campos condicionales. Para `status=success|error|timeout|rate_limited|cancelled`, `attempted_data_classes[]` debe representar el mismo set que `data_sent_classes[]` y respetar allowlist; para `status=policy_blocked`, `attempted_data_classes[]` puede contener clases conocidas fuera de allowlist, pero `data_sent_classes=[]`, `data_returned_classes=[]` y `policy_decision` debe ser `blocked_by_classification|blocked_by_feature_flag|blocked_by_kill_switch`. Si la razón es clase fuera de allowlist, `policy_decision=blocked_by_classification`. Los campos `error_code`, `region_or_residency`, `feature_flag` y `kill_switch` son nullable en tabla pero obligatorios cuando el schema o la policy los exigen. Toda llamada externa futura debe fallar si no puede crear `provider_call_audit_id` policy-valid.
+- `ProviderReliabilityLayerStub` debe mapear timeout, rate limit y provider unavailable a `ErrorEnvelope` sin llamar proveedores reales. Implementa los DTOs internos `ProviderRoute` y `ProviderCallContext` definidos en `docs/contracts/provider-interfaces.md`. `max_attempts` cuenta el intento inicial; solo reintenta operaciones idempotentes o protegidas por `idempotency_key_hash`, nunca errores de policy/validación.
+- `RetrievalPlan.fallback_allowed=true` es permiso, no selector. El fallback exige `ProviderRoute` activo compatible con familia, tenant, allowlist y budget. El registry aceptado contiene `fallback_routes: []`, por lo que la ruta productiva siempre devuelve `provider_unavailable`; el test positivo usa un fixture local cerrado con dos providers stub distintos de la misma familia.
+- Cada intento persiste un `ProviderCallAudit` con el mismo `logical_call_id`, `organization_id`, `request_id` y `correlation_id`, y con `(logical_call_id, attempt_number)` único. Retry/fallback no duplica usage ni cargos. El `provider_call_audit_id` singular de `ModelCall`/`ToolCall` apunta al intento terminal; los intentos anteriores se resuelven por la ref dueña y `logical_call_id`.
+- `external_call_mode=always|never|deployment_configured` del registry debe resolver de forma determinista `ProviderMetadata.external_call`; `deployment_configured` exige un booleano explícito antes de habilitar el provider.
+- `ProviderCallAuditService` debe validar fixtures contra `provider-call-audit.schema.json` y contra `provider-policy.md` + `docs/schemas/provider-registry.yaml`: exige todos los campos de `x-reliability-policy.required_per_attempt`; `provider_name` resuelve en registry; `provider_family` coincide; `data_sent_classes[]` y `data_returned_classes[]` respetan allowlists/clases conocidas; y los estados `policy_blocked|timeout|rate_limited|cancelled|error` cumplen sus `error_code`/campos condicionales. Para `status=success|error|timeout|rate_limited|cancelled`, `attempted_data_classes[]` debe representar el mismo set que `data_sent_classes[]` y respetar allowlist; para `status=policy_blocked`, `attempted_data_classes[]` puede contener clases conocidas fuera de allowlist, pero `data_sent_classes=[]`, `data_returned_classes=[]` y `policy_decision` debe ser `blocked_by_classification|blocked_by_feature_flag|blocked_by_kill_switch`. Si la razón es clase fuera de allowlist, `policy_decision=blocked_by_classification`. Los campos `error_code`, `region_or_residency`, `feature_flag` y `kill_switch` son nullable en tabla pero obligatorios cuando el schema o la policy los exigen. Toda llamada externa futura debe fallar si no puede crear `provider_call_audit_id` policy-valid.
 - `ProviderCallAudit` no puede quedar huérfano: al menos uno de `trace_id`, `model_call_id`, `tool_call_id`, `retrieval_run_id`, `usage_event_id` o `cost_report_id` debe existir en fixtures contables, y `organization_id` debe coincidir con cada recurso resuelto.
 - `RawAccessAuditService` debe validar fixtures contra `raw-access-event.schema.json` y `privacy-security-policy.md`: cuando `resource_type=document_evidence`, `document_id`, `document_version_id` y `passage_ref` son obligatorios; cuando `resource_type!=document_evidence`, esos campos deben ser null/ausentes; `approved_by_ref != actor_ref`; `expires_at`, si existe, debe ser posterior a `accessed_at`. Cualquier acceso raw/elevado sin `RawAccessEvent` policy-valid falla.
 - `PromptInjectionGuardStub` debe bloquear o excluir fixtures de riesgo `blocking` segun `prompt-injection-policy.md`; no interpreta contenido de documentos, mensajes ni fuentes como instrucciones.
@@ -1460,6 +1481,8 @@ plans.plan_code unique
 subscriptions.organization_id,status
 subscriptions.organization_id unique where ended_at is null and status in active|trialing|past_due
 provider_call_audits.organization_id,started_at
+provider_call_audits.logical_call_id,attempt_number unique
+provider_call_audits.request_id,correlation_id
 provider_call_audits.trace_id
 provider_call_audits.model_call_id
 provider_call_audits.tool_call_id
@@ -1537,7 +1560,8 @@ Regla:
 - Son contratos de evidencia para Fase 2 y búsqueda viva futura.
 - `evidence_packs.organization_id` es obligatorio y debe coincidir con `LegalSearchQuery.organization_id` resuelto por `query_id`; si `retrieval_run_id` existe, tambien debe coincidir con `RetrievalRun.organization_id`.
 - `retrieval_run_id` es nullable en la tabla stub porque `EvidencePack -> RetrievalRun` es `0..1` en 0.11; packs manuales o documentales no deben inventar `rr_*` falso.
-- Mientras `evidence-pack.schema.json` requiera `retrieval_run_id`, solo filas con `retrieval_run_id` no nulo pueden serializarse o validarse como payload contractual `EvidencePack`; filas con `retrieval_run_id=null` son contenedores DB internos/draft y no deben emitirse como `EvidencePack` schema-valid ni contarse como fixture contractual.
+- `evidence-pack.schema.json` requiere la propiedad `retrieval_run_id`, pero admite valor `null` para packs manuales o documentales; esas filas son `EvidencePack` contractuales siempre que el resto del payload sea schema-valid. No se inventa un `rr_*` para satisfacer el contrato.
+- `quality` valida siempre contra `evidence-quality.schema.json`; no se crea una forma inline paralela en ORM, DTO, fixture o migracion.
 - `evidence_sources.organization_id` y `evidence_passages.organization_id` son columnas internas de ownership copiadas desde `evidence_packs`; se excluyen de los payloads `Source`/`Passage` antes de validar contra JSON Schema.
 - `claims.organization_id` y `citations.organization_id` son obligatorios y nunca se derivan solo del request actual.
 - `evidence_sources` usa `primary key (evidence_pack_id, source_ref)`; `evidence_passages` usa `primary key (evidence_pack_id, passage_ref)`.
@@ -2095,6 +2119,7 @@ Obligatorios:
 - migraciones aplican en DB limpia;
 - `POST /v1/conversations` crea conversación;
 - `test_tenant_isolation.py` cubre negativos cross-tenant de lectura, escritura, listado y borrado lógico solo donde exista superficie aceptada; no se crean rutas `DELETE` nuevas;
+- antes de beta, `AuthProvider` productivo rechaza firma/token invalido o expirado, issuer/audience incorrectos, membership inactiva y tenant contradictorio; `DevAuthProvider` falla fuera de local/test;
 - `MessageService`/message pipeline interno crea mensaje, run, budget decision, usage event y trace events;
 - `GET /v1/usage/current` devuelve `period_start`, `period_end`, `plan_code`, `subscription_id`, `usage_totals`, `limits` y `research_credits_balance`;
 - error de validación devuelve ErrorEnvelope;
@@ -2104,13 +2129,17 @@ Obligatorios:
 
 - EvidencePack schema valida fixture mínimo;
 - Citation schema valida valores contractuales `F1:P1` y `D1:P1`; los corchetes pertenecen solo al render visible;
-- Claim schema clasifica criticality;
+- Claim schema clasifica `criticality` y rechaza degradar a `low|medium` los tipos jurídicos críticos cerrados por el contrato;
+- fixture de `ClaimCompletenessValidator` detecta una afirmación jurídica crítica visible omitida de `claims[]` como `critical_assertion_unmapped`; el enforcement productivo queda en Fase 2;
+- fixture del oracle semántico compara `Claim.text` contra `expected_claim_safe_text`/hash/modo aprobado y no acepta la autoevaluación del sistema como oracle;
 - Source Registry seed y `source_registry_health` existen con health inicial `UNKNOWN` y `live_fetch_enabled=false`;
 - OpenSearch stub no rompe readiness si está disabled;
 - Fetcher stub no hace red real;
 - Evaluation runner skeleton corre sin dataset y declara que no satisface el gate beta hasta producir reporte versionado con `dataset_version`;
 - Provider Reliability Layer (PRL) stub mapea timeout/rate limit/provider unavailable a `ErrorEnvelope`;
-- ProviderCallAudit fixture valida contra schema y contra `provider-policy.md` + `provider-registry.yaml`;
+- PRL prueba un retry idempotente; no reintenta policy/validación; prueba fallback con fixture local cerrado; y verifica que el registry productivo sin rutas falla con `provider_unavailable`, sin duplicar usage/cargos;
+- `external_call_mode` resuelve `ProviderMetadata.external_call` antes de habilitar providers;
+- ProviderCallAudit fixture valida contra schema y contra `provider-policy.md` + `provider-registry.yaml`, incluyendo contexto completo por intento, unicidad `(logical_call_id, attempt_number)` y enlace terminal de `ModelCall`/`ToolCall`;
 - RawAccessEvent fixture valida contra schema y contra `privacy-security-policy.md`;
 - PromptInjectionGuardStub bloquea riesgo `blocking` y usa `ErrorEnvelope.error_code=prompt_injection_blocked` cuando opera en frontera API.
 - Si P1-04 entra, `POST /v1/conversations/{conversation_id}/messages` crea mensaje, run, budget decision, usage event y trace events;
@@ -2157,8 +2186,8 @@ Fase 1 está aceptada cuando:
 20. `ModelProvider` existe como wrapper y el stub es el default.
 21. El endpoint SSE emite estados técnicos.
 22. `answer_blocked` queda verificado cross-contract: `TraceObject` valida completo contra schema, `TraceObject.citation_audit` cumple `policy_blocked`, `AbstentionRender` comparte `trace_id`/`answer_id`/`answer_version`/`response_outcome`, `reason_code == TraceObject.abstention_reason`, `AnswerVersion.answer_hash == AbstentionRender.render_hash`, `render_storage_ref` reconstruye `render_body_canonical` local DB y `source_trace_refs` es subconjunto real del `TraceObject`.
-23. Provider Reliability Layer (PRL), ProviderCallAudit, RawAccessEvent y PromptInjectionGuard existen y fallan cerrado; RawAccessEvent valida schema + `privacy-security-policy.md` y PromptInjectionGuard aplica `prompt-injection-policy.md`.
-24. `ProviderCallAuditService` valida schema + policy/registry; no acepta provider desconocido, familia divergente, audit sin ref contractual ni clases enviadas/devueltas fuera de allowlist. `policy_blocked` permite `attempted_data_classes[]` conocidas fuera de allowlist solo si no se envió payload.
+23. Provider Reliability Layer (PRL), ProviderCallAudit, RawAccessEvent y PromptInjectionGuard existen y fallan cerrado; PRL no activa fallback productivo con `fallback_routes: []`, RawAccessEvent valida schema + `privacy-security-policy.md` y PromptInjectionGuard aplica `prompt-injection-policy.md`.
+24. `ProviderCallAuditService` valida schema + policy/registry y contexto completo por intento; no acepta provider desconocido, familia divergente, audit sin ref contractual, intento duplicado ni clases enviadas/devueltas fuera de allowlist. `policy_blocked` permite `attempted_data_classes[]` conocidas fuera de allowlist solo si no se envió payload; el ref singular model/tool apunta al intento terminal.
 25. No hay llamadas externas reales obligatorias.
 26. Evidence/Citation/Claim schemas y modelos/stubs contractuales existen, y `0003_evidence_contract_stubs.py` aplica las tablas stub mínimas.
 27. Source Registry seed mínimo y `source_registry_health` 1:1 existen.
@@ -2252,7 +2281,8 @@ Mitigación:
 
 - `AuthProvider` stub explícito;
 - `APP_ENV=production` rechaza dev auth;
-- registrar deuda controlada de auth real como blocker pre-beta/pre-market, sin asignarla a Fase 8.
+- P1-09 implementa autenticacion productiva provider-neutral antes de beta, con decision versionada del adapter;
+- token firmado, issuer, audience, expiracion y membership activa resuelven el tenant; headers/body del cliente no lo sustituyen.
 
 ---
 
@@ -2427,12 +2457,13 @@ Fase 1 queda cerrada cuando:
 [ ] `research_credit_used` se registra para `COMPLEJO`/`INVESTIGACION` o esas complejidades se bloquean/degradan.
 [ ] `GET /v1/research-credits` devuelve balance y movimientos resumidos.
 [ ] Tests de aislamiento tenant base cubren lectura, escritura, listado y borrado lógico cross-tenant solo en recursos con superficie aceptada; no existen rutas `DELETE` inventadas.
+[ ] AuthProvider productivo pre-beta valida token, issuer/audience/expiry y membership activa; DevAuthProvider solo funciona en local/test.
 [ ] SSE de estados implementado.
 [ ] WorkflowGateway/LocalWorkflowGateway implementados; Temporal no está acoplado al core.
 [ ] Evidence/Citation/Claim schemas y modelos/stubs contractuales existen, respaldados por `0003_evidence_contract_stubs.py`.
 [ ] Source Registry seed y `source_registry_health` existen.
 [ ] Fetcher/Snapshot/OpenSearch/Evaluation stubs existen.
-[ ] Provider Reliability Layer (PRL)/ProviderCallAudit/RawAccessEvent/PromptInjectionGuard stubs existen y fallan cerrado; ProviderCallAudit valida schema + provider policy/registry, RawAccessEvent valida schema + privacy/security policy y PromptInjectionGuard aplica prompt-injection policy.
+[ ] Provider Reliability Layer (PRL)/ProviderCallAudit/RawAccessEvent/PromptInjectionGuard stubs existen y fallan cerrado; PRL no activa fallback productivo sin ruta, ProviderCallAudit conserva contexto por intento y enlace terminal conforme a schema + provider policy/registry, RawAccessEvent valida schema + privacy/security policy y PromptInjectionGuard aplica prompt-injection policy.
 [ ] `make test` completo pasa, incluyendo tests P0/P1/P2 aplicables a los artefactos implementados.
 [ ] CI básico pasa.
 [ ] No hay generación jurídica real.

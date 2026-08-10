@@ -123,6 +123,11 @@ expected_claims:
   - claim_id: cl_expected_001
     claim_type: norma
     criticality: high
+    expected_claim_safe_text: La norma establece el requisito aplicable.
+    expected_claim_text_hash: sha256:be6d42a7da1c5e48df92c6ee3df4cd997f9da4326d260e7216fd3b5cb6c3d7fa
+    semantic_match_mode: exact_normalized
+    accepted_safe_variants: []
+    semantic_review_artifact_ref: null
     expected_claim_outcome: published
     must_be_supported: true
     requires_document_grounding: false
@@ -944,6 +949,11 @@ expected_claims:
   - claim_id: cl_expected_001
     claim_type: norma
     criticality: high
+    expected_claim_safe_text: La norma establece el requisito aplicable.
+    expected_claim_text_hash: sha256:be6d42a7da1c5e48df92c6ee3df4cd997f9da4326d260e7216fd3b5cb6c3d7fa
+    semantic_match_mode: exact_normalized
+    accepted_safe_variants: []
+    semantic_review_artifact_ref: null
     expected_claim_outcome: published
     must_be_supported: true
     requires_document_grounding: false
@@ -962,6 +972,13 @@ Reglas:
 - `claim_id` usa `^cl_[A-Za-z0-9_-]+$` y permite conectar `expected_citations[].supports_claim_ids[]`.
 - `claim_type` usa solo el enum de `claim.schema.json#/properties/claim_type`; no es vocabulario local del dataset.
 - `criticality` usa solo el enum de `claim.schema.json#/properties/criticality`; no es vocabulario local del dataset.
+- `expected_claim_safe_text` es la proposicion canonica segura que el claim runtime debe representar. Usa texto sintetico, anonimizado o autorizado de `1..1000` caracteres; no puede contener prompt/documento/OCR/provider output raw, PII real, secretos, storage keys ni trazas tecnicas.
+- `expected_claim_text_hash` usa `^sha256:[A-Fa-f0-9]{64}$` y debe ser el SHA-256 UTF-8 de `expected_claim_safe_text` canonicalizado con Unicode NFC, saltos LF, trim exterior y runs de whitespace interno colapsados a un espacio.
+- `semantic_match_mode` usa solo `exact_normalized`, `approved_variant` o `human_review`.
+- `accepted_safe_variants[]` contiene variantes seguras de `1..1000` caracteres y es `[]` salvo que `semantic_match_mode=approved_variant`; cada variante usa la misma canonicalizacion que el texto principal.
+- `semantic_review_artifact_ref` es `null` salvo que `semantic_match_mode=human_review`; en ese modo debe usar `^review_[A-Za-z0-9_-]+$` y resolver a `review_approvals[]` con `reviewer_role=lawyer` y `review_status=approved`.
+- El runner compara `actual Claim.text` contra este oracle, no contra el `claim_id` solamente. `exact_normalized` exige igualdad canonica; `approved_variant` permite el texto canonico o una variante aprobada; `human_review` exige aprobacion legal del artefacto para la proposicion concreta.
+- Un `Claim.text` semanticamente distinto que reutiliza el `claim_id`, tipo, refs o citas esperados falla con `claim_semantic_mismatch` aunque todos los objetos sean schema-valid.
 - `expected_claim_outcome` usa solo `published`, `withheld_partial_abstention` o `blocked`.
 - `must_be_supported` es boolean.
 - `requires_document_grounding` es boolean y marca claims que dependen de documento de usuario, OCR o `DocumentEvidence`.
@@ -973,6 +990,7 @@ Reglas:
 - Si `expected_claim_outcome=published`, sus `expected_citation_refs[]` no pueden depender de evidencia con `handling=excluded_from_evidence` o `handling=blocked`.
 - Si el claim publicado es critico, sus `expected_citation_refs[]` no pueden depender de evidencia con `severity=blocking`.
 - Si el claim publicado es critico, `must_be_supported` debe ser `true` y `expected_citation_refs[]` debe ser no vacio.
+- Todo claim con `claim_type=plazo|requisito|competencia|causal|procedimiento|norma|jurisprudencia|vigencia` debe declarar `criticality=high`, alineado con `claim.schema.json`, `abstention-policy.md` y `citation-policy.md`.
 - Si `requires_document_grounding=true`, `expected_document_refs[]` y `expected_document_passage_refs[]` deben ser no vacios; solo entra al denominador de `document_grounding` cuando `expected_claim_outcome=published`.
 - Claims no criticos tambien pueden tener `expected_citation_refs[]`; esas citas cuentan en `citation_validity_rate`.
 - Todo `claim_id` referenciado por `expected_citations[].supports_claim_ids[]` debe existir en `expected_claims[]`.
@@ -981,10 +999,11 @@ Reglas:
 - Si `expected_claim_outcome=withheld_partial_abstention`, el caso debe usar `expected_response_outcome=partial_abstention`, `expected_citation_refs[]` debe ser `[]`, el claim no puede aparecer en `expected_citations[].supports_claim_ids[]`, y debe existir `expected_block_reason` o warning visible verificable para explicar la retencion parcial.
 - Si `expected_claim_outcome=blocked`, el caso debe usar `expected_response_outcome=blocked` o `total_abstention`, `expected_citation_refs[]` debe ser `[]`, y debe existir `expected_block_reason` o `expected_error_code` segun superficie.
 - No se permiten valores libres como `deadline`, `critical`, `mandatory` o `yes`.
+- Toda afirmacion juridica critica visible detectada en `AnswerContract.sections.*.content` debe mapear a un `actual Claim` y a un item de `expected_claims[]`. Una assertion visible omitida de `claims[]` falla con `critical_assertion_unmapped` y cuenta como unsupported critical claim.
 
 ## Claims criticos esperados
 
-`expected_critical_claims[]` es un indice derivado de `expected_claims[]`; contiene solo `claim_id` y define el universo/oracle de claims criticos evaluables para `unsupported_critical_claims`, que sigue siendo conteo absoluto.
+`expected_critical_claims[]` es un indice derivado de `expected_claims[]`; contiene solo `claim_id` y define el universo de claims criticos evaluables para `unsupported_critical_claims`. El oracle semantico vive en cada `expected_claims[]`; el indice por ID no sustituye texto/hash/modo de matching y la metrica sigue siendo conteo absoluto.
 
 Shape minimo cerrado:
 

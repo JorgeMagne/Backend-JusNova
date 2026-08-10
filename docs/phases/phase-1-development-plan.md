@@ -900,6 +900,8 @@ Preparar Fase 2 sin implementar auditoría real.
 3. Crear `0003_evidence_contract_stubs.py` para tablas stubs contractuales.
 4. Crear fixtures.
 5. Crear tests de validación.
+6. Crear interface y fixtures de `ClaimCompletenessValidator`; el enforcement productivo pertenece a Fase 2.
+7. Crear fixtures del oracle semántico de claims de 0.12 y validar que la autoevaluación del sistema no sustituye el expected oracle.
 
 ### Contratos mínimos
 
@@ -920,6 +922,9 @@ Estos contratos no son RAG. Son estructura de evidencia. `CitationAudit` queda c
 [ ] Referencias F#:P# son validables.
 [ ] Referencias D#:P# son validables.
 [ ] Claims tienen support_level.
+[ ] Tipos jurídicos críticos no pueden degradarse a `criticality=low|medium`.
+[ ] Fixture de afirmación jurídica crítica visible sin `Claim` produce `critical_assertion_unmapped`.
+[ ] Fixtures de claims comparan texto runtime contra `expected_claim_safe_text`/hash/modo semántico, no contra la autoevaluación del modelo.
 [ ] `0003_evidence_contract_stubs.py` aplica desde cero junto con las migraciones previas.
 [ ] No hay generación legal.
 ```
@@ -1036,17 +1041,27 @@ Cubrir los gates de beta asignados a Fase 1 sin activar proveedores reales, fetc
 13. Probar que `ProviderCallAudit` rechaza provider desconocido, familia divergente, payload enviado fuera de allowlist y audit huérfano sin `trace_id|model_call_id|tool_call_id|retrieval_run_id|usage_event_id|cost_report_id`.
 14. Probar que `ProviderCallAudit.status=policy_blocked` permite `attempted_data_classes[]` conocidas fuera de allowlist solo cuando `data_sent_classes=[]`.
 15. Probar que `RawAccessEvent` rechaza `approved_by_ref == actor_ref`, `expires_at <= accessed_at` y refs documentales inconsistentes con `resource_type`.
+16. Probar un retry seguro e idempotente con `max_attempts=2`, contexto completo por intento y unicidad `(logical_call_id, attempt_number)`; errores de policy/validación no se reintentan.
+17. Probar fallback permitido con un fixture local cerrado de `ProviderRoute` y dos stubs de la misma familia; probar que el registry productivo con `fallback_routes: []` devuelve `provider_unavailable`, sin duplicar usage ni cargos.
+18. Resolver `external_call_mode=always|never|deployment_configured` a `ProviderMetadata.external_call` antes de habilitar providers.
+19. Verificar que `ModelCall`/`ToolCall.provider_call_audit_id` apunta al intento terminal y que intentos previos se reconstruyen por la ref dueña + `logical_call_id`.
+20. Implementar antes de beta un `AuthProvider` productivo provider-neutral y documentar el adapter elegido.
+21. Validar token firmado, issuer, audience, expiracion y mapping a membership activa/tenant; probar negativos cross-tenant.
+22. Bloquear `DevAuthProvider` y headers dev fuera de `APP_ENV=local|test`.
 
 ### Criterios de aceptación
 
 ```txt
 [ ] Provider Reliability Layer (PRL) básico devuelve errores controlados.
-[ ] ProviderCallAudit fixtures validan contra schema, provider registry y provider policy, incluyendo refs contractuales tenant-compatible.
+[ ] Retry seguro, no-retry de policy, fallback por fixture cerrado y ausencia de rutas productivas cumplen `provider-policy.md` sin duplicar usage/cargos.
+[ ] `external_call` queda resuelto de forma determinista desde el registry/deployment.
+[ ] ProviderCallAudit fixtures validan contra schema, provider registry y provider policy, incluyendo contexto por intento, enlace terminal y refs contractuales tenant-compatible.
 [ ] RawAccessEvent fixtures validan contra schema y privacy/security policy.
 [ ] StorageProviderStub falla cerrado y no escribe documentos reales.
 [ ] PromptInjectionGuardStub bloquea riesgo blocking.
 [ ] API boundary de prompt injection blocking usa `prompt_injection_blocked`.
 [ ] WorkflowGateway/LocalWorkflowGateway existen y `make test` no requiere Temporal.
+[ ] AuthProvider productivo y tests negativos satisfacen el gate pre-beta; DevAuth no funciona en beta/production.
 [ ] Tests no requieren OpenAI, internet ni documentos reales.
 ```
 
@@ -1101,6 +1116,7 @@ test_prl_stub.py
 test_provider_call_audit.py
 test_raw_access_event.py
 test_prompt_injection_guard_stub.py
+test_auth_provider.py
 ```
 
 ### Criterios de aceptación
@@ -1232,13 +1248,14 @@ Fase 1 no se aprueba hasta que se cumpla:
 [ ] `GET /v1/research-credits` devuelve balance y movimientos resumidos.
 [ ] Plan/Subscription/ResearchCredit mínimo y CommercialService operativos.
 [ ] Tenant isolation cross-tenant probado para lectura, escritura, listado y borrado lógico solo donde exista superficie aceptada; no se crean rutas `DELETE` nuevas.
+[ ] AuthProvider productivo valida token/membership/tenant y `DevAuthProvider` queda limitado a local/test antes de beta.
 [ ] ModelProvider stub default.
 [ ] SSE de estados.
 [ ] WorkflowGateway/LocalWorkflowGateway sin acoplamiento directo a Temporal.
 [ ] Evidence/Citation/Claim schemas, modelos/stubs contractuales y migración `0003_evidence_contract_stubs.py`.
 [ ] SourceRegistry seed y `source_registry_health`.
 [ ] Fetcher/Snapshot/OpenSearch/Eval stubs.
-[ ] Provider Reliability Layer (PRL), ProviderCallAudit, RawAccessEvent y PromptInjectionGuard stubs fail-closed, con ProviderCallAudit/RawAccessEvent policy-valid además de schema-valid y PromptInjectionGuard alineado con `prompt-injection-policy.md`.
+[ ] Provider Reliability Layer (PRL), ProviderCallAudit, RawAccessEvent y PromptInjectionGuard stubs fail-closed; PRL no activa fallback productivo sin ruta, ProviderCallAudit conserva contexto por intento y enlace terminal policy-valid además de schema-valid, RawAccessEvent es policy-valid y PromptInjectionGuard queda alineado con `prompt-injection-policy.md`.
 [ ] `make test` completo pasa con tests P0/P1/P2 aplicables a los artefactos implementados.
 [ ] No hay análisis jurídico real.
 [ ] No hay búsqueda viva real.
@@ -1319,7 +1336,7 @@ Mitigación:
 Mitigación:
 
 - `DevAuthProvider` bloqueado en producción;
-- registrar auth real como deuda de seguridad pre-beta/pre-market, sin asignarla a Fase 8;
+- resolver la deuda de auth mediante P1-09 antes de beta, con adapter productivo y decision versionada; no asignarla a Fase 8;
 - tenant context obligatorio.
 
 ### 9.5 Riesgo: costos no medidos

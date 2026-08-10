@@ -518,7 +518,9 @@ research_credit_used
 - calcular todo desde logs;
 - no guardar unidad/cantidad.
 
-**Dependencias:** P0-04, P0-08, P0-11. Los criterios de débito `research_credit_used` que requieren `trace_id` o `answer_id` se validan en la integración atómica P0-12+P0-13 de PR-6.
+**Dependencias:** P0-04, P0-08, P0-11.
+
+**Integración:** Los criterios de débito `research_credit_used` que requieren `trace_id` o `answer_id` se validan en la unidad atómica P0-12+P0-13 de PR-6; esta nota no agrega una dependencia de P0-12 sobre sí mismo ni invierte la dependencia P0-13 -> P0-12.
 
 ---
 
@@ -591,7 +593,8 @@ research_credit_used
 - `0003_evidence_contract_stubs.py` queda asignada a este trabajo y crea las tablas stub sin endpoints;
 - `evidence_packs.organization_id` coincide con `LegalSearchQuery` resuelta por `query_id`; si `retrieval_run_id` existe, tambien coincide con el `RetrievalRun` resuelto;
 - packs manuales/documentales no inventan `rr_*` falso para satisfacer la tabla stub;
-- mientras `evidence-pack.schema.json` requiera `retrieval_run_id`, ninguna fila con `retrieval_run_id=null` se serializa como `EvidencePack` contractual ni cuenta como fixture schema-valid;
+- `retrieval_run_id` se declara siempre y puede ser `null` en packs manuales/documentales; esos packs cuentan como contractuales si validan el schema completo y nunca inventan un `rr_*`;
+- `quality` usa exactamente `evidence-quality.schema.json`, sin DTO inline paralelo;
 - `evidence_sources` y `evidence_passages` heredan `organization_id` de `evidence_packs`;
 - `citations` usa identidad `(answer_version_ref, citation_ref)` y resuelve `source_ref`/`passage_ref` dentro del mismo `evidence_pack_id`;
 - `citations.passage_ref` resuelve a un `evidence_passages` cuyo `source_ref` coincide exactamente con `citations.source_ref`, y el prefijo de `passage_ref` antes de `:P#` coincide con ese `source_ref`;
@@ -615,13 +618,18 @@ research_credit_used
 - `Claim` schema;
 - `Citation` schema;
 - `CitationAudit` fixture/value object embebido en `TraceObject`, sin tabla standalone;
+- interface y fixtures de `ClaimCompletenessValidator` para que Fase 2 implemente el validador productivo sin depender del output autoevaluado por el modelo;
+- fixtures del oracle semántico de claims con `expected_claim_safe_text`, `expected_claim_text_hash` y `semantic_match_mode` conforme al golden dataset;
 - tests de refs contractuales `F1:P1` y `D1:P1`.
 
 **Criterios de aceptación:**
 
 - referencias inválidas fallan validación;
-- claims incluyen criticality/support_level;
-- citation target queda explícito.
+- claims incluyen `criticality`/`support_level`, y los tipos jurídicos críticos cerrados por `claim.schema.json` no pueden degradarse a `criticality=low|medium`;
+- citation target queda explícito;
+- una afirmación jurídica crítica visible omitida de `claims[]` produce `critical_assertion_unmapped` en el fixture del validador;
+- el match semántico usa el oracle esperado y no `Claim.verification_status` ni `CitationAudit.support_assessment` como fuente de verdad;
+- el validador productivo y el bloqueo real permanecen asignados a Fase 2 por ADR-007.
 
 **Dependencias:** P1-01.
 
@@ -753,8 +761,14 @@ run_failed
 **Criterios de aceptación:**
 
 - Provider Reliability Layer (PRL) básico devuelve errores controlados sin red real;
+- PRL interpreta `max_attempts` como intentos totales, ejecuta como máximo un retry para una operación idempotente y nunca reintenta errores de policy/validación;
+- `RetrievalPlan.fallback_allowed=true` es permiso y no selector; PRL usa fallback solo si existe un `ProviderRoute` activo compatible con familia, tenant, allowlist y budget;
+- `provider-registry.yaml` mantiene `fallback_routes: []`, por lo que la ejecución productiva sin ruta devuelve `provider_unavailable`; el test positivo usa un fixture local cerrado con dos providers stub distintos de la misma familia;
+- el modo `external_call_mode` del registry resuelve de forma determinista `ProviderMetadata.external_call` antes de habilitar cada provider;
+- cada intento persiste contexto completo (`logical_call_id`, request/correlation, número/tipo de intento e idempotencia), con `(logical_call_id, attempt_number)` único;
+- retries/fallback no duplican `UsageEvent` ni cargos; `ModelCall`/`ToolCall.provider_call_audit_id` apunta al intento terminal y los intentos previos se resuelven por la ref dueña + `logical_call_id`;
 - toda llamada externa futura falla si no puede crear `provider_call_audit_id`;
-- `ProviderCallAuditService` persiste refs contractuales `trace_id|model_call_id|tool_call_id|retrieval_run_id|usage_event_id|cost_report_id`; fixtures contables no pueden quedar sin al menos una ref resoluble y tenant-compatible;
+- `ProviderCallAuditService` persiste los campos de `x-reliability-policy.required_per_attempt` y las refs contractuales `trace_id|model_call_id|tool_call_id|retrieval_run_id|usage_event_id|cost_report_id`; fixtures contables no pueden quedar sin al menos una ref resoluble y tenant-compatible;
 - `ProviderCallAuditService` rechaza `provider_name` desconocido, `provider_family` divergente, clases enviadas/devueltas fuera de allowlist y estados incompatibles con `provider-policy.md`/`provider-registry.yaml`;
 - `ProviderCallAuditService` acepta `attempted_data_classes[]` conocidas fuera de allowlist solo cuando `status=policy_blocked`, `data_sent_classes=[]` y no hubo payload enviado;
 - todo acceso raw/elevado falla si no puede crear `raw_access_event_id` policy-valid;
@@ -788,6 +802,30 @@ run_failed
 - health/readiness reporta object storage con `enabled=false`, `status=UNKNOWN` cuando `ENABLE_S3=false`.
 
 **Dependencias:** P0-03, P0-07, P0-09.
+
+---
+
+### P1-09 — Implementar `AuthProvider` productivo pre-beta
+
+**Objetivo:** Reemplazar dev auth antes de beta sin acoplar el dominio a un proveedor concreto.
+
+**Entregables:**
+
+- `AuthProvider` interface estable y adapter productivo seleccionado por ADR o decision de deployment;
+- validacion de firma, `issuer`, `audience`, expiracion y revocacion/estado cuando el proveedor lo soporte;
+- resolucion `external_subject -> actor_ref -> membership activa -> organization_id`;
+- configuracion fail-closed y `DevAuthProvider` restringido a `APP_ENV=local|test`;
+- tests negativos de token invalido/expirado, issuer/audience incorrectos, membership inactiva y acceso cross-tenant.
+
+**Criterios de aceptación:**
+
+- ningun request beta usa `X-Dev-Organization-Id` o `X-Dev-User-Id` como autenticacion;
+- un token valido sin membership activa no obtiene tenant context;
+- el tenant no se acepta desde un header/body controlado por cliente si contradice la membership;
+- el adapter no filtra tipos de SDK externo al dominio ni a contratos publicos;
+- OQ-020 queda `Resolved|Closed` y la evidencia requerida por el gate beta queda versionada.
+
+**Dependencias:** P0-03, P0-08, P0-09.
 
 ---
 
@@ -944,6 +982,7 @@ run_failed
 
 - P1-07;
 - P1-08;
+- P1-09;
 - P2-05 en modo beta report versionado con `dataset_version` y resultado de gates 0.12.
 
 ### Obligatorio antes de cerrar Fase 1 aunque no entre en Sprint 1
@@ -1028,6 +1067,15 @@ Incluye:
 - P1-07;
 - P1-08;
 - P2-01 a P2-06 si el sprint lo permite.
+
+### PR-9 — Auth productiva pre-beta
+
+Incluye:
+
+- P1-09;
+- decision versionada del adapter;
+- tests de token, membership y tenant isolation;
+- eliminacion de cualquier ruta de dev auth en configuracion beta/production.
 
 ---
 

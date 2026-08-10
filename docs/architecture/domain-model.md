@@ -214,7 +214,7 @@ Los schemas nuevos cierran la forma de cada objeto, pero la igualdad entre objet
 
 ## Artefactos raw addressable
 
-- `StorageObject` representa objeto privado addressable por `RawAccessEvent.storage_object`; siempre apunta a `Document`, puede apuntar tambien a `DocumentVersion` cuando existe version, y objetos publicos de fuentes se modelan por `SourceSnapshot`.
+- `StorageObject` representa objeto privado addressable por `RawAccessEvent` mediante `resource_type=storage_object` y `resource_ref=sto_*`; siempre apunta a `Document`, puede apuntar tambien a `DocumentVersion` cuando existe version, y objetos publicos de fuentes se modelan por `SourceSnapshot`.
 - `OcrArtifact` representa OCR privado por version, pagina o fragmento; el OCR completo no se copia a trazas, logs, errores ni provider audit.
 - `Embedding` debe derivar de una fuente contractual unica en 0.11: exactamente uno de `document_evidence_id` o `case_id`/`CaseMemory`; si necesita ambas fuentes, se crean artefactos separados.
 - `TraceObject`, `ModelCall`, `ToolCall` y `RetrievalRun` son resumenes sanitizados metadata-only; por eso usan `INTERNAL_TRACE_RESTRICTED` en la matriz aunque sus inputs puedan ser mas sensibles. Variantes raw deben pasar por `RawAccessEvent` y por una enmienda contractual.
