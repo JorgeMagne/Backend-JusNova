@@ -82,7 +82,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | Plan | `^plan_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | Subscription | `^sub_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | ResearchCredit | `^rc_[A-Za-z0-9_-]+$` | 0.11 conceptual |
-| CostBudget | `^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$` | `cost-budget.schema.json` |
+| CostBudget | `^cb_(profesional\|pro_plus\|estudio\|enterprise)_(simple\|medio\|complejo\|investigacion)_v[0-9]{3}$` | `cost-budget.schema.json` |
 | CostReport | `^cr_[A-Za-z0-9_-]+$` como value object embebido | `cost-report.schema.json` embebido en `TraceObject` |
 | EvaluationCase | `^eval_case_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | EvaluationRun | `^eval_run_[A-Za-z0-9_-]+$` | 0.11 conceptual |

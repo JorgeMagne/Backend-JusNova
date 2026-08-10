@@ -1,11 +1,19 @@
 # Risk Register
 
 **Estado documental:** Draft
-**Fecha:** 2026-05-22
+**Fecha:** 2026-08-10
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Registro vivo de riesgos de Fase 0
 
 Nota: el estado `Draft` es intencional porque este registro es vivo. Los checklists pueden aceptar que está creado y actualizado sin convertirlo en documento cerrado.
+
+## Revision de Subfase 0.14
+
+- `R-001` se cierra para Fase 0: existe handoff ejecutable, priorizado y aceptado.
+- `R-002` permanece en mitigacion: los contratos son implementables documentalmente y Fase 1 debe probar round-trip y policy invariants.
+- `R-003` se cierra para Fase 0: la revision cruzada final no deja contradicciones P1/P2 abiertas.
+- Los riesgos runtime, beta y market permanecen abiertos o en mitigacion y conservan sus gates.
+- Se agrega `R-030` para controlar drift posterior al freeze.
 
 ## Escala
 
@@ -19,11 +27,11 @@ Nota: el estado `Draft` es intencional porque este registro es vivo. Los checkli
 
 | ID | Riesgo | Probabilidad | Impacto | Estado | Mitigacion | Responsable |
 |---|---|---|---|---|---|---|
-| R-001 | Sobrediseno documental sin avance ejecutable hacia Fase 1. | Medium | High | Open | Timebox por subfase, checklist de cierre y handoff concreto a Sprint 1. | Codex / JusNova Chief Backend Architect |
-| R-002 | Contratos demasiado abstractos para implementacion. | Medium | High | Open | Exigir JSON Schemas, ejemplos validos/invalidos y criterios de aceptacion. | Codex / JusNova Chief Backend Architect |
-| R-003 | Contradicciones entre ADRs, policies y contracts. | Medium | High | Open | Revision cruzada en Subfase 0.14 y decision pack final. | Codex / JusNova Chief Backend Architect |
+| R-001 | Sobrediseno documental sin avance ejecutable hacia Fase 1. | Medium | High | Closed | Handoff 0.13, backlog P0/P1/P2 y plan operativo aceptados; Fase 1 queda habilitada por 0.14. | Codex / JusNova Chief Backend Architect |
+| R-002 | Contratos demasiado abstractos para implementacion. | Medium | High | Mitigating | JSON Schemas, ejemplos, invariants y criterios de aceptacion estan cerrados; Fase 1 debe demostrar round-trip y tests policy-valid. | Codex / JusNova Chief Backend Architect |
+| R-003 | Contradicciones entre ADRs, policies y contracts. | Medium | High | Closed | Revision cruzada 0.14, final review y decision pack congelado sin P1/P2 abiertos. | Codex / JusNova Chief Backend Architect |
 | R-004 | Dependencia accidental de proveedor externo en documentos de Fase 0. | Medium | Critical | Mitigating | Provider interfaces obligatorias, provider registry, provider policy y `ProviderCallAudit` aceptados en 0.10. | Codex / JusNova Chief Backend Architect |
-| R-005 | Politica de vigencia insuficiente o ambigua. | Medium | Critical | Open | Estados cerrados de vigencia, frases prohibidas y abstention policy. | Codex / JusNova Chief Backend Architect |
+| R-005 | Politica de vigencia insuficiente o ambigua. | Medium | Critical | Mitigating | Estados cerrados de vigencia, frases prohibidas, abstention policy y `validity_awareness` blocker; enforcement queda para runtime/evals. | Codex / JusNova Chief Backend Architect |
 | R-006 | Seguridad tratada tarde. | Medium | Critical | Mitigating | Subfase 0.9 crea seguridad documental minima; Subfase 0.10 acepta privacy/security policy, data classification, raw access, provider registry y prompt injection controls. Enforcement runtime queda para Fase 1. | Codex / JusNova Chief Backend Architect |
 | R-007 | Trazabilidad insuficiente para auditar respuestas juridicas. | Medium | Critical | Mitigating | Subfase 0.7 acepta TraceObject, model/tool calls, CitationAudit, CostReport y AnswerVersion; implementacion queda para fases posteriores. | Codex / JusNova Chief Backend Architect |
 | R-008 | Cost Governor no refleja plan base de 400 Bs. | Medium | High | Mitigating | Subfase 0.8 acepta `budgets.yaml`, `cost-budget.schema.json`, `usage-event.schema.json`, `commercial-plans-v0.md` y `cost-governor-policy.md`; runtime queda para Fase 1. | Codex / JusNova Chief Backend Architect |
@@ -48,3 +56,4 @@ Nota: el estado `Draft` es intencional porque este registro es vivo. Los checkli
 | R-027 | Document grounding insuficiente en PDFs o OCR. | Medium | Critical | Mitigating | Dataset objetivo exige 50 consultas mixtas, 30 PDFs escaneados y metrica blocker `document_grounding`. | Codex / JusNova Chief Backend Architect |
 | R-028 | Regression suite se implementa tarde y no bloquea releases. | Medium | High | Mitigating | Beta y market gates exigen eval report y regression suite antes de avanzar. | Codex / JusNova Chief Backend Architect |
 | R-029 | Handoff de Fase 1 introduce rutas, enums o tablas paralelas a contratos aceptados. | Medium | High | Mitigating | Subfase 0.13 alinea brief/backlog/plan con `docs/contracts/`, `docs/schemas/budgets.yaml`, `domain-model.md`, `api-draft-v0.md` y `error-envelope.schema.json`; Fase 1 debe tratar operational runs/events como detalle tecnico. | Codex / JusNova Chief Backend Architect |
+| R-030 | Cambios posteriores al freeze alteran decisiones criticas sin trazabilidad. | Medium | Critical | Mitigating | Fase 0 congelada: todo cambio critico requiere ADR nuevo o documento `Superseded`, con impacto en contracts, policies, evals y handoff. | Codex / JusNova Chief Backend Architect |

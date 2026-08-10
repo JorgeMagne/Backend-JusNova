@@ -3,7 +3,7 @@
 **Ruta objetivo en repo:** `/docs/handoff/sprint-1-backlog.md`
 **Versión:** 1.0
 **Fecha:** 2026-05-26
-**Estado:** Accepted como backlog de Fase 1; ejecución condicionada al cierre formal de 0.14/Fase 0
+**Estado:** Accepted como backlog de Fase 1; ejecucion habilitada por el cierre formal de 0.14/Fase 0
 **Fase:** Fase 1 — Fundaciones backend, datos, telemetría y Cost Governor
 **Sprint:** Sprint 1 — Foundation Skeleton
 **Duración recomendada:** 1 sprint técnico cerrado; la duración real depende del equipo, pero el alcance no debe expandirse.

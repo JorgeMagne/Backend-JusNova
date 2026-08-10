@@ -1,7 +1,7 @@
 # Open Questions
 
 **Estado documental:** Draft
-**Fecha:** 2026-05-22
+**Fecha:** 2026-08-10
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Registro de dudas abiertas de Fase 0
 
@@ -45,3 +45,10 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 ## Preguntas Blocking
 
 No hay preguntas `Blocking` registradas al estado actual de Fase 0.
+
+## Freeze de Subfase 0.14
+
+- Preguntas `Blocking` abiertas al cierre: 0.
+- Preguntas no bloqueantes abiertas o diferidas: `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-017`, `OQ-018`, `OQ-019`.
+- Cada pregunta conserva responsable y momento de resolucion.
+- Reabrir arquitectura, evidencia, citas, vigencia, trazabilidad, costos, seguridad o lanzamiento sin RAG requiere ADR nuevo; no puede registrarse como simple open question post-freeze.

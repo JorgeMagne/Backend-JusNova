@@ -1,7 +1,7 @@
 # JusNova Backend Docs
 
-**Estado documental:** Draft
-**Fecha:** 2026-05-22
+**Estado documental:** Accepted
+**Fecha:** 2026-08-10
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Fase 0.0 - Preparacion y gobierno documental
 
@@ -42,10 +42,21 @@ Fase 1 debe implementar harness/eval runner y reportes sin debilitar los blocker
 
 ## Entregables de handoff 0.13
 
-El handoff de 0.13 es vinculante para preparar Fase 1; la ejecución de Fase 1 queda condicionada al cierre formal de 0.14/Fase 0:
+El handoff de 0.13 es vinculante para ejecutar Fase 1; la condicion de cierre formal de 0.14/Fase 0 quedo satisfecha el 2026-08-10:
 
 - `handoff/phase-1-implementation-brief.md`
 - `handoff/sprint-1-backlog.md`
 - `phases/phase-1-development-plan.md`
 
 Estos documentos deben leerse junto con `architecture/domain-model.md`, `architecture/api-draft-v0.md`, `contracts/error-envelope.schema.json` y `schemas/budgets.yaml`; no autorizan rutas, enums o contratos paralelos.
+
+## Freeze de Fase 0 - Subfase 0.14
+
+Fase 0 esta `Accepted` y congelada desde 2026-08-10. Los artefactos de cierre son:
+
+- `quality/phase-0-final-review.md`
+- `architecture/phase-0-final-decision-pack.md`
+- `quality/phase-0-acceptance-checklist.md`
+- `phase-0-status.md`
+
+Fase 1 puede iniciar con el handoff 0.13. Cualquier cambio posterior a una decision critica de Fase 0 requiere ADR nuevo o documento `Superseded`. Beta y mercado siguen bloqueados por sus readiness gates.

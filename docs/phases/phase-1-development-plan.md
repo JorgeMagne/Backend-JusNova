@@ -3,7 +3,7 @@
 **Ruta objetivo en repo:** `/docs/phases/phase-1-development-plan.md`
 **Versión:** 1.0
 **Fecha:** 2026-05-26
-**Estado:** Accepted como plan de Fase 1; ejecución condicionada al cierre formal de 0.14/Fase 0
+**Estado:** Accepted como plan de Fase 1; ejecucion habilitada por el cierre formal de 0.14/Fase 0
 **Fase:** Fase 1 — Fundaciones backend, datos, telemetría y Cost Governor
 **Propósito:** instruir el desarrollo completo de Fase 1 sin reinterpretación.
 

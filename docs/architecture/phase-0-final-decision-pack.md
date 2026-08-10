@@ -1,13 +1,13 @@
 # Fase 0 - Final Decision Pack
 
-**Estado documental:** Draft
-**Fecha:** 2026-05-22
+**Estado documental:** Accepted
+**Fecha:** 2026-08-10
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Cierre y congelamiento de Fase 0
 
 ## Proposito
 
-Este documento sera el indice final de decisiones aceptadas al cerrar Fase 0. Mientras Fase 0 este en ejecucion, permanece en `Draft`.
+Este documento es el indice final y congelado de las decisiones aceptadas en Fase 0. Fase 1 debe implementarlas sin crear rutas, enums, contratos o policies paralelas.
 
 ## Criterio de uso
 
@@ -25,7 +25,7 @@ Fase 0 solo puede cerrarse cuando este documento liste, como minimo:
 
 ## Regla de congelamiento
 
-Cuando Fase 0 pase a `Accepted`, este documento funcionara como paquete rector. Cualquier cambio posterior en una decision critica debe registrarse mediante ADR nuevo o documento `Superseded`.
+Desde el cierre de Fase 0, este documento funciona como paquete rector. Cualquier cambio posterior en una decision critica debe registrarse mediante ADR nuevo o documento `Superseded`.
 
 ## Estado de Subfase 0.0
 
@@ -41,9 +41,13 @@ Cuando Fase 0 pase a `Accepted`, este documento funcionara como paquete rector. 
 | `risk-register.md` | Draft vivo actualizado | Codex / JusNova Chief Backend Architect |
 | Responsables de revision propuestos | Draft | Codex / JusNova Chief Backend Architect; aceptacion requerida antes de market |
 
-## Pendiente para cierre final
+## Cierre final
 
-Este documento no debe marcarse como `Accepted` hasta completar subfases 0.1 a 0.14.
+Las subfases 0.0 a 0.14 estan `Accepted`. La auditoria final se registra en `docs/quality/phase-0-final-review.md` y confirma resultado `PASS` para los lentes tecnico, juridico y producto/operacion.
+
+**Fecha de revision y freeze:** 2026-08-10
+
+El cierre documental habilita el inicio de Fase 1. No habilita beta ni mercado, que permanecen sujetos a `beta-readiness-gates.md` y `market-readiness-gates.md`.
 
 ## Taxonomias aceptadas en Subfase 0.2
 
@@ -271,7 +275,7 @@ Estos documentos quedan aceptados como criterios vinculantes para evaluar beta y
 
 ## Handoff aceptado en Subfase 0.13
 
-Estos documentos quedan aceptados como handoff vinculante para Fase 1, condicionado al cierre formal de 0.14/Fase 0. Esta lista no implica que el backend, migraciones, routers, workers, CI o eval runner ya existan; fija que debe implementarse primero y que queda fuera de alcance.
+Estos documentos quedan aceptados como handoff vinculante para Fase 1. La condicion de cierre formal de 0.14/Fase 0 quedo satisfecha el 2026-08-10. Esta lista no implica que el backend, migraciones, routers, workers, CI o eval runner ya existan; fija que debe implementarse primero y que queda fuera de alcance.
 
 | Entregable | Estado | Archivo |
 |---|---|---|
@@ -280,6 +284,43 @@ Estos documentos quedan aceptados como handoff vinculante para Fase 1, condicion
 | Phase 1 Development Plan | Accepted | `docs/phases/phase-1-development-plan.md` |
 | Phase 0 Acceptance Checklist update | Accepted | `docs/quality/phase-0-acceptance-checklist.md` |
 | Phase 0 Status update | Accepted | `docs/phase-0-status.md` |
+
+## Cierre aceptado en Subfase 0.14
+
+| Entregable | Estado | Archivo |
+|---|---|---|
+| Final Review por tres lentes | Accepted | `docs/quality/phase-0-final-review.md` |
+| Final Decision Pack congelado | Accepted | `docs/architecture/phase-0-final-decision-pack.md` |
+| Phase 0 Acceptance Checklist final | Accepted | `docs/quality/phase-0-acceptance-checklist.md` |
+| Phase 0 Status final | Accepted | `docs/phase-0-status.md` |
+| Open Questions sin blockers | Accepted | `docs/handoff/open-questions.md` |
+| Risk Register vivo actualizado | Accepted como evidencia viva | `docs/handoff/risk-register.md` |
+
+## Resultado de la revision final
+
+| Lente | Resultado | Evidencia |
+|---|---|---|
+| Tecnico | PASS | Arquitectura coherente, contratos compilables, stack proporcionado, providers encapsulados y budgets versionados. |
+| Juridico | PASS | Evidencia/citas obligatorias, vigencia conservadora, tiers visibles, abstencion cerrada y Bolivia-first. |
+| Producto/operacion | PASS | Plan base 400 Bs, limites explicables, trazabilidad segura, gates verificables y handoff ejecutable. |
+
+El detalle de preguntas, pruebas y conclusiones esta en `docs/quality/phase-0-final-review.md`.
+
+## Open questions no bloqueantes al freeze
+
+Permanecen abiertas o diferidas `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-017`, `OQ-018` y `OQ-019`. Ninguna cambia arquitectura, evidencia, citacion, vigencia, trazabilidad, costos, seguridad o lanzamiento sin RAG. Su owner y momento de resolucion viven en `docs/handoff/open-questions.md`.
+
+## Riesgos vivos al freeze
+
+`docs/handoff/risk-register.md` es la fuente canonica y permanece como documento vivo. Los riesgos abiertos o en mitigacion tienen owner y tratamiento y pasan a Fase 1 o a gates pre-beta/pre-market. El cierre de 0.14 no representa aceptacion silenciosa de riesgo ni elimina controles posteriores.
+
+## Orden vinculante de Fase 1
+
+1. Aplicar el entry gate de `docs/phases/phase-1-development-plan.md`.
+2. Ejecutar P0-01 a P0-13 de `docs/handoff/sprint-1-backlog.md` respetando sus dependencias y estrategia de PR.
+3. Implementar P1 aplicable antes de cerrar Fase 1, incluidos contratos Evidence/Citation/Claim y beta blocker foundations.
+4. Ejecutar P2 sin convertir stubs opcionales en dependencias runtime duras.
+5. Cerrar Fase 1 solo con los tests y criterios globales de `docs/handoff/phase-1-implementation-brief.md`.
 
 ## Dependencias posteriores preservadas
 
@@ -291,4 +332,4 @@ Estos documentos quedan aceptados como handoff vinculante para Fase 1, condicion
 - Evaluation harness, eval runner, CI de scoring, regression suite y dataset completo quedan delegados a Fase 1.
 - No hay beta sin eval report y sin cumplimiento de blockers de `beta-readiness-gates.md`.
 - No hay mercado sin beta gates, market gates y revision juridica humana.
-- Fase 0 global permanece en `Draft` hasta completar 0.1 a 0.14.
+- Fase 0 global esta `Accepted` y congelada desde 2026-08-10; las dependencias anteriores permanecen explicitamente delegadas.

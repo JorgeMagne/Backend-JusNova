@@ -1,7 +1,7 @@
 # Fase 0 - Acceptance Checklist
 
-**Estado documental:** Draft
-**Fecha:** 2026-05-22
+**Estado documental:** Accepted
+**Fecha:** 2026-08-10
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Gates de cierre de Fase 0
 
@@ -57,6 +57,13 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Sprint 1 Backlog listo | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/sprint-1-backlog.md` |
 | Risk Register actualizado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/risk-register.md`; documento vivo `Draft` actualizado |
 | Open Questions no tiene bloqueantes | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/open-questions.md` |
+| Revision final por lente tecnico aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/phase-0-final-review.md` |
+| Revision final por lente juridico aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/phase-0-final-review.md` |
+| Revision final por lente producto/operacion aprobada | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/phase-0-final-review.md` |
+| Final Decision Pack congelado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+| Subfase 0.14 y Fase 0 global aceptadas | Si | Accepted | Usuario / Owner del producto | `docs/phase-0-status.md` |
+
+Los items historicos que dicen "Fase 0 global no se declara completa" validan que cada subfase anterior no adelanto el cierre. El estado global vigente despues de 0.14 es `Accepted`.
 
 ## Checklist especifico de Subfase 0.0
 
@@ -287,3 +294,20 @@ Este checklist define las condiciones minimas para declarar Fase 0 cerrada. Si f
 | Fase 1 no construye busqueda viva, OCR, RAG ni analisis juridico real | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/phase-1-implementation-brief.md`, `docs/handoff/sprint-1-backlog.md`, `docs/phases/phase-1-development-plan.md` |
 | Open questions no contienen bloqueantes para preparar Fase 1; inicio condicionado a 0.14/Fase 0 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/open-questions.md` |
 | Fase 0 global no se declara completa | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/phase-0-status.md`, `docs/architecture/phase-0-final-decision-pack.md` |
+
+## Checklist especifico de Subfase 0.14
+
+| Item | Bloqueante | Estado | Responsable | Evidencia |
+|---|---:|---|---|---|
+| Auditoria final ejecutada con lentes tecnico, juridico y producto/operacion | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/phase-0-final-review.md` |
+| Los 12 ADRs tienen estado de decision y documental `Accepted` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/adr/ADR-001-high-assurance-modular-core.md` a `docs/adr/ADR-012-evaluation-and-quality-gates.md` |
+| JSON Schemas contractuales compilan como Draft 2020-12 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/contracts/` |
+| Taxonomias y budgets YAML parsean y conservan metadata de gobierno | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/schemas/` |
+| Source Registry/Snapshot schemas completos permanecen delegados y no bloquean Fase 0 | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/quality/phase-0-final-review.md`, `docs/adr/ADR-009-source-registry-and-validity-policy.md` |
+| Open Questions tiene cero preguntas `Blocking` | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/open-questions.md` |
+| Risk Register vivo fue revisado y actualizado | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/risk-register.md` |
+| Orden de Fase 1 esta definido sin contratos, rutas o enums paralelos | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/handoff/phase-1-implementation-brief.md`, `docs/handoff/sprint-1-backlog.md`, `docs/phases/phase-1-development-plan.md` |
+| Final Decision Pack lista decisiones, preguntas, riesgos, orden y fecha de revision | Si | Accepted | Codex / JusNova Chief Backend Architect | `docs/architecture/phase-0-final-decision-pack.md` |
+| Cambios criticos post-freeze requieren ADR nuevo o documento `Superseded` | Si | Accepted | Usuario / Owner del producto | `docs/architecture/phase-0-final-decision-pack.md` |
+| Subfase 0.14 pasa a `Accepted` | Si | Accepted | Usuario / Owner del producto | `docs/phase-0-status.md` |
+| Fase 0 global pasa a `Accepted` y Fase 1 queda habilitada | Si | Accepted | Usuario / Owner del producto | `docs/phase-0-status.md`, `docs/quality/phase-0-final-review.md` |

@@ -3,7 +3,7 @@
 **Ruta objetivo en repo:** `/docs/handoff/phase-1-implementation-brief.md`
 **Versión:** 1.0
 **Fecha:** 2026-05-26
-**Estado:** Accepted como handoff de Fase 1; ejecución condicionada al cierre formal de 0.14/Fase 0
+**Estado:** Accepted como handoff de Fase 1; ejecucion habilitada por el cierre formal de 0.14/Fase 0
 **Propietario técnico:** JusNova Chief Backend Architect
 **Fase origen:** Subfase 0.13 — Plan de Fase 1, backlog y handoff
 **Fase destino:** Fase 1 — Fundaciones backend, datos, telemetría y Cost Governor

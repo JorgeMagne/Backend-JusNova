@@ -59,7 +59,7 @@ Esta matriz fija ownership, clasificacion y direccionamiento de acceso raw para 
 | Plan | `plan_*` | No | Catalogo comercial | `BILLING_USAGE` | No aplica | Versionar catalogo | Plan global neutral; pricing policy separada. |
 | Subscription | `sub_*` | Si | `organization_id` | `BILLING_USAGE` | No aplica | Retener/tombstone comercial | Puede existir sin uso. |
 | ResearchCredit | `rc_*` | Si | `organization_id` | `BILLING_USAGE` | No aplica | Retener movimientos | Puede existir sin consumo. |
-| CostBudget | `cb_<plan>_<complexity>_vNNN` | No | Policy/catalogo | `BILLING_USAGE` | No aplica | Versionar policy | Debe cumplir `cost-budget.schema.json`: `cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_vNNN`. |
+| CostBudget | `cb_<plan>_<complexity>_vNNN` | No | Policy/catalogo | `BILLING_USAGE` | No aplica | Versionar policy | Debe cumplir `cost-budget.schema.json`: `cb_(profesional\|pro_plus\|estudio\|enterprise)_(simple\|medio\|complejo\|investigacion)_vNNN`. |
 | CostReport | `cr_*` embebido | Si | Heredado de `TraceObject.organization_id` | `BILLING_USAGE` | No aplica | Retener embebido con TraceObject | No crear tabla aislada sin `trace_id` y tenant; no es presupuesto comercial. |
 | EvaluationCase | `eval_case_*` | Condicional | Global o `organization_id` | Hereda de dataset/input | No aplica | Global: versionar; tenant: tombstone/anonymize | Tenant si deriva de usuario/caso/documento. |
 | EvaluationRun | `eval_run_*` | Condicional | Global o `organization_id` | Hereda de casos evaluados | No aplica | Retener metricas; tenant: sanitizar | Tenant si cualquier input es tenant-scoped. |
