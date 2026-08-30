@@ -13,8 +13,22 @@
       "Subfase 0.8 - Cost Governor, planes y presupuestos",
       "Subfase 0.9 - Conversacion, memoria, documentos y OCR",
       "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Clasificacion heredada persistida fuera del payload cerrado",
+      "Subfase 0.14 - Sanitized warning bounds"
     ]
+  },
+  "x-classification-policy": {
+    "description": "TraceObject no serializa una propiedad classification. La persistencia conserva una columna DB-only calculada por policy para no abrir el contrato cerrado.",
+    "minimum": "INTERNAL_TRACE_RESTRICTED",
+    "inherits_highest_sensitivity_from": [
+      "input/output messages",
+      "claims",
+      "evidence packs and sources",
+      "retrieval runs",
+      "prompt injection risks"
+    ],
+    "raw_access_event_must_match": true
   },
   "x-tenant-policy": {
     "description": "La traza y todo contrato embebido o referenciado por ella deben resolver al mismo organization_id. JSON Schema valida forma local; la igualdad de tenant se valida por policy/custom.",
@@ -62,17 +76,20 @@
     "trace_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^tr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "actor_ref": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+      "pattern": "(?:^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "actor_type": {
       "enum": [
@@ -85,12 +102,14 @@
     "answer_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^ans_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_version_ref": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^av_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^av_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_version": {
       "type": "integer",
@@ -99,7 +118,8 @@
     "conversation_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^conv_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^conv_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "input_message_ids": {
       "description": "IDs de mensajes de entrada usados para reconstruir la respuesta. No contiene contenido de mensajes.",
@@ -107,16 +127,19 @@
       "items": {
         "type": "string",
         "minLength": 1,
-        "pattern": "^msg_[A-Za-z0-9_-]+$"
+        "pattern": "(?:^msg_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+        "maxLength": 160
       },
       "minItems": 1,
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 100
     },
     "output_message_id": {
       "description": "ID del mensaje assistant_final emitido para esta respuesta. No contiene contenido del mensaje.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^msg_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^msg_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "case_id": {
       "type": [
@@ -124,7 +147,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^case_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^case_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "response_outcome": {
       "enum": [
@@ -138,11 +162,14 @@
       "description": "Referencia escalar al CostBudget efectivo. TraceObject no embebe CostBudget completo.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$"
+      "pattern": "(?:^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "cost_budget_version": {
       "type": "string",
-      "pattern": "^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$"
+      "minLength": 1,
+      "pattern": "(?:^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "plan_code": {
       "enum": [
@@ -173,55 +200,67 @@
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "model_calls": {
       "type": "array",
       "items": {
         "$ref": "./model-call.schema.json"
-      }
+      },
+      "maxItems": 200
     },
     "tool_calls": {
       "type": "array",
       "items": {
         "$ref": "./tool-call.schema.json"
-      }
+      },
+      "maxItems": 200
     },
     "retrieval_runs": {
       "description": "Summaries sanitizados de retrieval runs usados en trazas. No embebe RetrievalRun operativo completo porque ese contrato puede contener URLs crudas u otros detalles internos de ejecucion.",
       "type": "array",
       "items": {
         "$ref": "#/$defs/retrieval_run_trace_summary"
-      }
+      },
+      "maxItems": 50
     },
     "evidence_pack_ids": {
       "type": "array",
       "items": {
         "type": "string",
         "minLength": 1,
-        "pattern": "^ep_[A-Za-z0-9_-]+$"
+        "pattern": "(?:^ep_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+        "maxLength": 160
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "sources_used": {
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^F[0-9]+$|^D[0-9]+$"
+        "minLength": 1,
+        "pattern": "(?:^F[0-9]+$|^D[0-9]+$)(?![\\s\\S])",
+        "maxLength": 160
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "sources_rejected": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/rejected_source"
-      }
+      },
+      "maxItems": 500
     },
     "claims": {
       "type": "array",
       "items": {
         "$ref": "./claim.schema.json"
-      }
+      },
+      "maxItems": 500
     },
     "citation_audit": {
       "$ref": "./citation-audit.schema.json"
@@ -234,17 +273,22 @@
     },
     "warnings": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "type": "string",
-        "minLength": 1
-      }
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
+      },
+      "maxItems": 32
     },
     "prompt_injection_risks": {
       "type": "array",
       "items": {
         "$ref": "./prompt-injection-risk.schema.json"
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     }
   },
   "$defs": {
@@ -269,17 +313,20 @@
         "retrieval_run_id": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^rr_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^rr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "query_id": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^q_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^q_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "retrieval_plan_id": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^rp_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^rp_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "status": {
           "enum": [
@@ -294,9 +341,11 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "maxLength": 240
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 32
         },
         "sources_opened": {
           "type": "array",
@@ -312,7 +361,9 @@
                   "string",
                   "null"
                 ],
-                "pattern": "^F[0-9]+$|^D[0-9]+$"
+                "minLength": 1,
+                "pattern": "(?:^F[0-9]+$|^D[0-9]+$)(?![\\s\\S])",
+                "maxLength": 160
               },
               "result_id": {
                 "type": [
@@ -320,31 +371,38 @@
                   "null"
                 ],
                 "minLength": 1,
-                "pattern": "^lsr_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^lsr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               },
               "url_hash": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+                "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+                "maxLength": 160
               },
               "opened_at": {
                 "type": "string",
-                "format": "date-time"
+                "minLength": 1,
+                "format": "date-time",
+                "maxLength": 40
               }
             },
             "additionalProperties": false
-          }
+          },
+          "maxItems": 500
         },
         "sources_rejected": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/rejected_source"
-          }
+          },
+          "maxItems": 500
         },
         "evidence_pack_id": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^ep_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^ep_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "no_evidence_reason": {
           "enum": [
@@ -566,6 +624,7 @@
         },
         "warnings": {
           "type": "array",
+          "uniqueItems": true,
           "items": {
             "enum": [
               "official_sources_down",
@@ -579,22 +638,28 @@
               "latency_estimated",
               "cost_estimated"
             ]
-          }
+          },
+          "maxItems": 32
         },
         "started_at": {
           "type": "string",
-          "format": "date-time"
+          "minLength": 1,
+          "format": "date-time",
+          "maxLength": 40
         },
         "completed_at": {
           "type": "string",
-          "format": "date-time"
+          "minLength": 1,
+          "format": "date-time",
+          "maxLength": 40
         },
         "prompt_injection_risks": {
           "type": "array",
           "items": {
             "$ref": "./prompt-injection-risk.schema.json"
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 500
         }
       },
       "additionalProperties": false,
@@ -848,7 +913,9 @@
             "string",
             "null"
           ],
-          "pattern": "^F[0-9]+$|^D[0-9]+$"
+          "minLength": 1,
+          "pattern": "(?:^F[0-9]+$|^D[0-9]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "result_id": {
           "type": [
@@ -856,12 +923,14 @@
             "null"
           ],
           "minLength": 1,
-          "pattern": "^lsr_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^lsr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "url_hash": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+          "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "reason": {
           "enum": [
@@ -897,7 +966,9 @@
         },
         "rejected_at": {
           "type": "string",
-          "format": "date-time"
+          "minLength": 1,
+          "format": "date-time",
+          "maxLength": 40
         },
         "warning_codes": {
           "type": "array",
@@ -917,7 +988,8 @@
               "snapshot_unavailable"
             ]
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 32
         }
       },
       "additionalProperties": false
@@ -982,7 +1054,7 @@
       "then": {
         "properties": {
           "actor_ref": {
-            "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+            "pattern": "(?:^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])"
           }
         }
       }
@@ -1001,7 +1073,7 @@
       "then": {
         "properties": {
           "actor_ref": {
-            "pattern": "^(support_hash_[A-Za-z0-9_-]+|actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+            "pattern": "(?:^(support_hash_[A-Za-z0-9_-]+|actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])"
           }
         }
       }
@@ -1020,7 +1092,7 @@
       "then": {
         "properties": {
           "actor_ref": {
-            "pattern": "^service_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^service_[A-Za-z0-9_-]+$)(?![\\s\\S])"
           }
         }
       }

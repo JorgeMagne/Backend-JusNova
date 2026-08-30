@@ -11,7 +11,8 @@
     "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract",
     "amendments": [
       "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Unicidad de entidades por query"
     ]
   },
   "required": [
@@ -28,16 +29,19 @@
     "query_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^q_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^q_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "raw_query": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 2000
     },
     "query_classification": {
       "enum": [
@@ -46,7 +50,9 @@
       ]
     },
     "normalized_query": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
     },
     "jurisdiction": {
       "type": "string",
@@ -77,7 +83,8 @@
           "OTRO"
         ]
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 16
     },
     "intents": {
       "type": "array",
@@ -97,7 +104,8 @@
         ]
       },
       "minItems": 1,
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 16
     },
     "required_source_types": {
       "type": "array",
@@ -111,13 +119,16 @@
         ]
       },
       "minItems": 1,
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 16
     },
     "entities": {
       "type": "array",
       "items": {
         "$ref": "./legal-entity.schema.json"
-      }
+      },
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "date_constraints": {
       "type": "object",
@@ -127,21 +138,27 @@
             "string",
             "null"
           ],
-          "format": "date"
+          "minLength": 1,
+          "format": "date",
+          "maxLength": 10
         },
         "to": {
           "type": [
             "string",
             "null"
           ],
-          "format": "date"
+          "minLength": 1,
+          "format": "date",
+          "maxLength": 10
         },
         "as_of": {
           "type": [
             "string",
             "null"
           ],
-          "format": "date"
+          "minLength": 1,
+          "format": "date",
+          "maxLength": 10
         }
       },
       "additionalProperties": false
@@ -153,17 +170,23 @@
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^[A-Za-z0-9.-]+$"
+        "minLength": 1,
+        "pattern": "(?:^[A-Za-z0-9.-]+$)(?![\\s\\S])",
+        "maxLength": 253
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "blocked_domains": {
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^[A-Za-z0-9.-]+$"
+        "minLength": 1,
+        "pattern": "(?:^[A-Za-z0-9.-]+$)(?![\\s\\S])",
+        "maxLength": 253
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "budget": {
       "$ref": "#/$defs/search_budget"

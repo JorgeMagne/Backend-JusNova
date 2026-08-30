@@ -11,7 +11,32 @@
     "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract",
     "amendments": [
       "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Identidades deterministas de resultados y rechazos",
+      "Subfase 0.14 - Retrieval ownership and EvidencePack cardinality hardening",
+      "Subfase 0.14 - Alineacion de razones de rechazo con TraceObject",
+      "Subfase 0.14 - Identidad sanitizada para URLs rechazadas por politica de acceso",
+      "Subfase 0.14 - Errores y warnings operativos sanitizados"
+    ]
+  },
+  "x-tenant-policy": {
+    "description": "RetrievalRun debe resolver LegalSearchQuery y RetrievalPlan del mismo organization_id. Si produce EvidencePack, ese pack tambien pertenece al mismo tenant.",
+    "same_organization_id_refs": [
+      "query_id -> LegalSearchQuery.organization_id",
+      "retrieval_plan_id -> RetrievalPlan.organization_id",
+      "evidence_pack_id if present -> EvidencePack.organization_id"
+    ]
+  },
+  "x-relational-policy": {
+    "description": "La cadena de retrieval conserva identidad y cardinalidad fuera del alcance expresable por JSON Schema local.",
+    "rules": [
+      "RetrievalRun.query_id == resolved RetrievalPlan.query_id",
+      "RetrievalRun -> EvidencePack es 0..1",
+      "si evidence_pack_id existe, EvidencePack.evidence_pack_id == evidence_pack_id",
+      "si evidence_pack_id existe, EvidencePack.retrieval_run_id == retrieval_run_id",
+      "si EvidencePack.retrieval_run_id no es null, el RetrievalRun resuelto declara ese EvidencePack.evidence_pack_id",
+      "sources_rejected[].url_hash es unico dentro del run y se calcula sobre la URL canonica antes de descartar el valor crudo",
+      "reason=access_not_allowed exige omitir url; para las demas razones url debe ser una URL publica ya autorizada por FetchPolicy"
     ]
   },
   "required": [
@@ -36,22 +61,26 @@
     "retrieval_run_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^rr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^rr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "query_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^q_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^q_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "retrieval_plan_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^rp_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^rp_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "status": {
       "enum": [
@@ -66,9 +95,11 @@
       "type": "array",
       "items": {
         "type": "string",
-        "minLength": 1
+        "minLength": 1,
+        "maxLength": 240
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 32
     },
     "adapter_calls": {
       "type": "array",
@@ -81,7 +112,8 @@
         "properties": {
           "adapter_name": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "maxLength": 160
           },
           "status": {
             "enum": [
@@ -96,7 +128,11 @@
             "type": [
               "string",
               "null"
-            ]
+            ],
+            "minLength": 1,
+            "description": "Codigo interno seguro y estable. Nunca contiene texto, status line, URL, stack trace ni payload raw del provider.",
+            "maxLength": 64,
+            "pattern": "(?:^[a-z][a-z0-9_]{0,63}$)(?![\\s\\S])"
           }
         },
         "allOf": [
@@ -144,41 +180,56 @@
               "properties": {
                 "error_code": {
                   "type": "string",
-                  "minLength": 1
+                  "minLength": 1,
+                  "maxLength": 240
                 }
               }
             }
           }
         ],
         "additionalProperties": false
-      }
+      },
+      "maxItems": 100
     },
     "discovery_results": {
       "type": "array",
       "items": {
         "$ref": "./legal-search-result.schema.json"
-      }
+      },
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "sources_opened": {
       "type": "array",
       "items": {
         "type": "string",
-        "format": "uri"
+        "minLength": 1,
+        "format": "uri",
+        "maxLength": 2048
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "sources_rejected": {
       "type": "array",
       "items": {
         "type": "object",
         "required": [
-          "url",
+          "url_hash",
           "reason"
         ],
         "properties": {
           "url": {
             "type": "string",
-            "format": "uri"
+            "minLength": 1,
+            "format": "uri",
+            "maxLength": 2048
+          },
+          "url_hash": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+            "maxLength": 160
           },
           "reason": {
             "enum": [
@@ -188,17 +239,47 @@
               "not_extractable",
               "access_not_allowed",
               "tier_not_allowed",
-              "irrelevant"
+              "irrelevant",
+              "unsupported_for_critical_claim"
             ]
           }
         },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "reason": {
+                  "const": "access_not_allowed"
+                }
+              },
+              "required": [
+                "reason"
+              ]
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "url"
+                ]
+              }
+            },
+            "else": {
+              "required": [
+                "url"
+              ]
+            }
+          }
+        ],
         "additionalProperties": false
-      }
+      },
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "evidence_pack_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^ep_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ep_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "no_evidence_reason": {
       "enum": [
@@ -223,11 +304,17 @@
       "properties": {
         "error_code": {
           "type": "string",
-          "minLength": 1
+          "description": "Codigo interno seguro y estable; no copia codigos o mensajes raw del provider.",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "(?:^[a-z][a-z0-9_]{0,63}$)(?![\\s\\S])"
         },
         "message": {
           "type": "string",
-          "minLength": 1
+          "description": "Mensaje operativo sanitizado. No contiene query, URL, snippet, documento, HTML, OCR, excepcion, stack trace ni respuesta raw del provider.",
+          "minLength": 1,
+          "maxLength": 240,
+          "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
         }
       },
       "additionalProperties": false
@@ -251,23 +338,34 @@
     "warnings": {
       "type": "array",
       "items": {
-        "type": "string"
-      }
+        "type": "string",
+        "description": "Warning operativo sanitizado; no contiene material raw ni datos del usuario.",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
+      },
+      "uniqueItems": true,
+      "maxItems": 32
     },
     "started_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "completed_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "prompt_injection_risks": {
       "type": "array",
       "items": {
         "$ref": "./prompt-injection-risk.schema.json"
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     }
   },
   "additionalProperties": false,
@@ -523,7 +621,13 @@
       "sources_opened": [
         "https://jurisprudencia.tcpbolivia.bo/Fichas/Ficha/12345"
       ],
-      "sources_rejected": [],
+      "sources_rejected": [
+        {
+          "url": "https://example.com/comentario-secundario",
+          "url_hash": "sha256:47b12fb016dbedb6262681bdb8b9767fcb9626090e66dc2470b6f4764f27320b",
+          "reason": "unsupported_for_critical_claim"
+        }
+      ],
       "evidence_pack_id": "ep_001",
       "quality": {
         "overall": "MEDIUM",
@@ -565,6 +669,40 @@
     }
   ],
   "x-invalid-examples": [
+    {
+      "retrieval_run_id": "rr_access_blocked_raw_url",
+      "query_id": "q_legal_access_blocked",
+      "retrieval_plan_id": "rp_access_blocked",
+      "status": "completed_no_evidence",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [
+        {
+          "url": "https://127.0.0.1/admin",
+          "url_hash": "sha256:a7f1978583af3b65bf4a8b236e312e24104b90d88b570125b2f4691d16d3cacd",
+          "reason": "access_not_allowed"
+        }
+      ],
+      "no_evidence_reason": "access_not_allowed",
+      "quality": {
+        "overall": "NONE",
+        "coverage": 0,
+        "authority": 0,
+        "citation_readiness": 0,
+        "validity_risk": "UNKNOWN",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "latency_ms": 0,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:00Z",
+      "prompt_injection_risks": [],
+      "organization_id": "org_001"
+    },
     {
       "retrieval_run_id": "rr_002",
       "query_id": "q_legal_002",
@@ -1075,6 +1213,28 @@
       "warnings": [],
       "started_at": "2026-05-22T00:00:00Z",
       "completed_at": "2026-05-22T00:00:24Z",
+      "prompt_injection_risks": [],
+      "organization_id": "org_001"
+    },
+    {
+      "retrieval_run_id": "rr_unsafe_multiline_error",
+      "query_id": "q_legal_unsafe_error",
+      "retrieval_plan_id": "rp_unsafe_error",
+      "status": "failed",
+      "providers_used": [],
+      "adapter_calls": [],
+      "discovery_results": [],
+      "sources_opened": [],
+      "sources_rejected": [],
+      "error": {
+        "error_code": "provider_timeout",
+        "message": "Provider timeout\nraw stack line"
+      },
+      "latency_ms": 100,
+      "estimated_cost": 0,
+      "warnings": [],
+      "started_at": "2026-05-22T00:00:00Z",
+      "completed_at": "2026-05-22T00:00:01Z",
       "prompt_injection_risks": [],
       "organization_id": "org_001"
     }

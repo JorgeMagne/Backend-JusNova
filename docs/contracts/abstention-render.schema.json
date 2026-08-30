@@ -34,22 +34,27 @@
   "properties": {
     "abstention_render_id": {
       "type": "string",
-      "pattern": "^abstention_render_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^abstention_render_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "trace_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^tr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^ans_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_version": {
       "type": "integer",
@@ -64,12 +69,16 @@
     "render_hash": {
       "description": "Hash sha256 de la representacion canonica renderizada de la abstencion o bloqueo. No es texto renderizado.",
       "type": "string",
-      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+      "minLength": 1,
+      "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "render_storage_ref": {
       "description": "Referencia interna e inmutable al objeto renderizado. No debe ser URL cruda ni contener contenido del usuario.",
       "type": "string",
-      "pattern": "^(render|abstention_render|snap|obj)_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^(render|abstention_render|snap|obj)_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "rendered_answer_snapshot_id": {
       "type": [
@@ -77,7 +86,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^render_snap_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^render_snap_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "reason_code": {
       "description": "Debe usar el mismo vocabulario que TraceObject.abstention_reason y coincidir con ese campo por validador cross-contract.",
@@ -113,36 +123,44 @@
           "items": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^ep_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^ep_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 500
         },
         "claim_ids": {
           "type": "array",
           "items": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^cl_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^cl_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 500
         },
         "citation_refs": {
           "type": "array",
           "items": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^C[0-9]+$"
+            "pattern": "(?:^C[0-9]+$)(?![\\s\\S])",
+            "maxLength": 160
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 500
         },
         "source_refs": {
           "type": "array",
           "items": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^F[0-9]+$|^D[0-9]+$"
+            "pattern": "(?:^F[0-9]+$|^D[0-9]+$)(?![\\s\\S])",
+            "maxLength": 160
           },
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 500
         }
       },
       "additionalProperties": false
@@ -160,16 +178,20 @@
           "policy_blocked"
         ]
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 32
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "created_by_ref": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+      "pattern": "(?:^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])",
+      "maxLength": 160
     }
   },
   "additionalProperties": false,

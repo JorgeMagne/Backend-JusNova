@@ -1,13 +1,13 @@
 # Fase 0 - Final Decision Pack
 
-**Estado documental:** Draft
-**Fecha:** 2026-05-22
+**Estado documental:** Accepted
+**Fecha:** 2026-08-30
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Cierre y congelamiento de Fase 0
 
 ## Proposito
 
-Este documento sera el indice final de decisiones aceptadas al cerrar Fase 0. Mientras Fase 0 este en ejecucion, permanece en `Draft`.
+Este documento es el indice final y congelado de las decisiones aceptadas en Fase 0. Fase 1 debe implementarlas sin crear rutas, enums, contratos o policies paralelas.
 
 ## Criterio de uso
 
@@ -25,7 +25,7 @@ Fase 0 solo puede cerrarse cuando este documento liste, como minimo:
 
 ## Regla de congelamiento
 
-Cuando Fase 0 pase a `Accepted`, este documento funcionara como paquete rector. Cualquier cambio posterior en una decision critica debe registrarse mediante ADR nuevo o documento `Superseded`.
+Desde el cierre de Fase 0, este documento funciona como paquete rector. Cualquier cambio posterior en una decision critica debe registrarse mediante ADR nuevo o documento `Superseded`.
 
 ## Estado de Subfase 0.0
 
@@ -36,14 +36,31 @@ Cuando Fase 0 pase a `Accepted`, este documento funcionara como paquete rector. 
 | Plantilla JSON Schema | Accepted | Codex / JusNova Chief Backend Architect |
 | Plantilla Policy | Accepted | Codex / JusNova Chief Backend Architect |
 | Plantilla Checklist | Accepted | Codex / JusNova Chief Backend Architect |
+| Indice y reglas de gobierno ADR (`docs/adr/README.md`) | Accepted | Codex / JusNova Chief Backend Architect |
+| Indice y reglas de gobierno de contratos (`docs/contracts/README.md`) | Accepted | Codex / JusNova Chief Backend Architect |
+| Indice y reglas de gobierno de policies (`docs/policies/README.md`) | Accepted | Codex / JusNova Chief Backend Architect |
 | `phase-0-status.md` | Accepted | Codex / JusNova Chief Backend Architect |
-| `open-questions.md` | Accepted | Codex / JusNova Chief Backend Architect |
+| `open-questions.md` | Draft vivo sin blockers; aceptado como evidencia de cierre | Codex / JusNova Chief Backend Architect |
 | `risk-register.md` | Draft vivo actualizado | Codex / JusNova Chief Backend Architect |
 | Responsables de revision propuestos | Draft | Codex / JusNova Chief Backend Architect; aceptacion requerida antes de market |
 
-## Pendiente para cierre final
+## Cierre final
 
-Este documento no debe marcarse como `Accepted` hasta completar subfases 0.1 a 0.14.
+Las subfases 0.0 a 0.14 estan `Accepted`. La auditoria final se registra en `docs/quality/phase-0-final-review.md` y confirma resultado `PASS` para los lentes tecnico, juridico y producto/operacion.
+
+**Fecha de revision y freeze:** 2026-08-10
+
+**Fecha de reauditoria final previa al commit de freeze:** 2026-08-30
+
+El cierre documental habilita el inicio de Fase 1. No habilita beta ni mercado, que permanecen sujetos a `beta-readiness-gates.md` y `market-readiness-gates.md`.
+
+## Principios aceptados en Subfase 0.1
+
+Los principios no negociables de `docs/policies/non-negotiable-principles.md` quedan `Accepted` como restricciones rectoras de arquitectura, implementacion y gates. Fase 1 y las fases posteriores deben materializarlos mediante los controles y owners definidos en su matriz de enforcement; no pueden degradarlos mediante prompts, configuracion local o contratos paralelos.
+
+| Entregable | Estado | Archivo |
+|---|---|---|
+| Principios no negociables | Accepted | `docs/policies/non-negotiable-principles.md` |
 
 ## Taxonomias aceptadas en Subfase 0.2
 
@@ -77,6 +94,8 @@ Estos ADRs quedan aceptados como decisiones arquitectonicas. Esta lista no impli
 | ADR-010 | Traceability And Answer Versioning | Accepted | Subfase 0.7 trace/audit/version schemas accepted; Subfase 0.9 message refs accepted; Fase 3 versionado basico. |
 | ADR-011 | Security, Privacy And Provider Boundaries | Accepted | Subfase 0.9 document security minima; Subfase 0.10 policies; Subfase 0.11 ownership matrix/API safe views; Fase 1 ownership. |
 | ADR-012 | Evaluation And Quality Gates | Accepted | Subfase 0.12 eval plan, dataset and gates. |
+
+La cobertura trazable entre requisitos, ADRs y fases de implementacion queda aceptada en `docs/adr/adr-requirements-coverage.md`. Esa matriz complementa este indice y no crea decisiones paralelas.
 
 ## Canon de numeracion ADR
 
@@ -271,7 +290,7 @@ Estos documentos quedan aceptados como criterios vinculantes para evaluar beta y
 
 ## Handoff aceptado en Subfase 0.13
 
-Estos documentos quedan aceptados como handoff vinculante para Fase 1, condicionado al cierre formal de 0.14/Fase 0. Esta lista no implica que el backend, migraciones, routers, workers, CI o eval runner ya existan; fija que debe implementarse primero y que queda fuera de alcance.
+Estos documentos quedan aceptados como handoff vinculante para Fase 1. La condicion de cierre formal de 0.14/Fase 0 quedo satisfecha el 2026-08-10. Esta lista no implica que el backend, migraciones, routers, workers, CI o eval runner ya existan; fija que debe implementarse primero y que queda fuera de alcance.
 
 | Entregable | Estado | Archivo |
 |---|---|---|
@@ -281,14 +300,60 @@ Estos documentos quedan aceptados como handoff vinculante para Fase 1, condicion
 | Phase 0 Acceptance Checklist update | Accepted | `docs/quality/phase-0-acceptance-checklist.md` |
 | Phase 0 Status update | Accepted | `docs/phase-0-status.md` |
 
+## Cierre aceptado en Subfase 0.14
+
+| Entregable | Estado | Archivo |
+|---|---|---|
+| Final Review por tres lentes | Accepted | `docs/quality/phase-0-final-review.md` |
+| Final Decision Pack congelado | Accepted | `docs/architecture/phase-0-final-decision-pack.md` |
+| Phase 0 Acceptance Checklist final | Accepted | `docs/quality/phase-0-acceptance-checklist.md` |
+| Phase 0 Status final | Accepted | `docs/phase-0-status.md` |
+| Open Questions sin blockers | Draft vivo sin blockers; aceptado como evidencia de cierre | `docs/handoff/open-questions.md` |
+| Risk Register vivo actualizado | Accepted como evidencia viva | `docs/handoff/risk-register.md` |
+
+## Resultado de la revision final
+
+| Lente | Resultado | Evidencia |
+|---|---|---|
+| Tecnico | PASS | Arquitectura coherente, contratos compilables, stack proporcionado, providers encapsulados y budgets versionados. |
+| Juridico | PASS | Evidencia/citas obligatorias, vigencia conservadora, tiers visibles, abstencion cerrada y Bolivia-first. |
+| Producto/operacion | PASS | Plan base 400 Bs, limites explicables, trazabilidad segura, gates verificables y handoff ejecutable. |
+
+El freeze incluye limites de recursos deterministas: todos los strings/arrays de los 29 contratos estan acotados, el API JSON aplica un limite previo al parseo y el pipeline de mensajes distingue de forma cerrada el mensaje iniciador de los mensajes de salida para evitar runs recursivos.
+
+El detalle de preguntas, pruebas y conclusiones esta en `docs/quality/phase-0-final-review.md`.
+
+## Open questions no bloqueantes al freeze
+
+Permanecen abiertas o diferidas `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-017`, `OQ-018`, `OQ-019`, `OQ-020` y `OQ-021`. Ninguna bloquea Fase 0; `OQ-020` si bloquea beta hasta seleccionar e implementar el adapter productivo de auth, y `OQ-021` bloquea la habilitacion de `POST /v1/documents` hasta fijar limite/allowlist versionados. Su owner y momento de resolucion viven en `docs/handoff/open-questions.md`.
+
+## Riesgos vivos al freeze
+
+`docs/handoff/risk-register.md` es la fuente canonica y permanece como documento vivo. Los riesgos abiertos o en mitigacion tienen owner y tratamiento y pasan a Fase 1 o a gates pre-beta/pre-market. El cierre de 0.14 no representa aceptacion silenciosa de riesgo ni elimina controles posteriores.
+
+## Orden vinculante de Fase 1
+
+1. Aplicar el entry gate de `docs/phases/phase-1-development-plan.md`.
+2. Ejecutar P0-01 a P0-13 de `docs/handoff/sprint-1-backlog.md` respetando sus dependencias y estrategia de PR.
+3. Implementar P1 aplicable antes de cerrar Fase 1, incluidos contratos Evidence/Citation/Claim y beta blocker foundations; P1-09 es obligatorio antes de beta.
+4. Ejecutar P2 sin convertir stubs opcionales en dependencias runtime duras.
+5. Cerrar Fase 1 solo con los tests y criterios globales de `docs/handoff/phase-1-implementation-brief.md`.
+
 ## Dependencias posteriores preservadas
+
+### Reconciliacion de artefactos historicos no canonicos
+
+- No existe un contrato standalone `validity-status.schema.json`. La decision aceptada lo reemplaza por la taxonomia `docs/schemas/validity-statuses.yaml` y por los campos cerrados `validity_status` de `Source` y `LegalSearchResult`; crear otro schema produciria una segunda fuente de verdad.
+- No existe un contrato standalone `conflict-report.schema.json`. El conflicto se representa mediante `EvidenceQuality.overall=CONFLICTIVE`, `conflicts_detected`, `Source.validity_status=CONFLICTIVA`, warnings/abstencion y la traza terminal. Un objeto runtime `ConflictReport` futuro requiere ADR o enmienda contractual explicita.
+- `UNKNOWN` no pertenece al vocabulario de `Source.tier`. Solo puede usarse en taxonomias donde esta declarado, como estado de host/dependencia, o como estado interno no publicable antes de clasificar o rechazar una fuente.
+- Planes padre, chats y archivos externos a `docs/` son referencia historica no vinculante cuando contradicen este paquete, conforme a `docs/phase-0-status.md`.
 
 - Runtime de API, routers, OpenAPI formal, migraciones y servicios queda delegado a Fase 1.
 - Source Registry schema completo queda delegado a subfases posteriores y Fase 4.
-- Runtime de auth, permisos finales, retention automation, SIEM, storage real, provider SDKs y enforcement productivo quedan delegados a Fase 1 y fases posteriores.
+- Auth productiva minima queda delegada a P1-09 y es blocker pre-beta; permisos avanzados, retention automation y SIEM quedan para Fase 1 o fases posteriores. Storage real y provider SDKs solo se habilitan cuando su workstream pasa policy, auditoria y checklist.
 - Runtime de conversacion, storage documental, OCR worker, busqueda documental y memoria persistente quedan delegados a Fase 1 y fases posteriores.
 - Runtime de CostGovernor, billing y UsageLedger quedan delegados a Fase 1; los contratos y policies documentales quedaron aceptados en Subfase 0.8.
 - Evaluation harness, eval runner, CI de scoring, regression suite y dataset completo quedan delegados a Fase 1.
 - No hay beta sin eval report y sin cumplimiento de blockers de `beta-readiness-gates.md`.
 - No hay mercado sin beta gates, market gates y revision juridica humana.
-- Fase 0 global permanece en `Draft` hasta completar 0.1 a 0.14.
+- Fase 0 global esta `Accepted` y congelada desde 2026-08-10; las dependencias anteriores permanecen explicitamente delegadas.

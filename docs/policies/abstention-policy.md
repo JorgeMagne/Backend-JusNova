@@ -45,13 +45,14 @@ Aplica a respuestas juridicas, claims criticos, citas, fuentes finales, vigencia
 
 ## Reglas deterministicas
 
-1. `Claim.criticality = high` y `Claim.citations = []` exige `verification_status = blocked` o abstencion.
+1. Todo claim que cumpla `criticality = high` o cuyo `claim_type` sea `plazo`, `requisito`, `competencia`, `causal`, `procedimiento`, `norma`, `jurisprudencia` o `vigencia` es critico; si `Claim.citations = []`, exige `verification_status = blocked` o abstencion.
 2. `Citation.status` distinto de `valid` no cuenta como soporte fuerte.
 3. `EvidencePack.quality.overall = NONE` bloquea fundamentos normativos o jurisprudenciales.
 4. `Source.validity_status != VIGENCIA_CONFIRMADA` impide escribir "esta vigente" o equivalente categorico.
 5. `Source.tier = TIER3_SECUNDARIO` como unico soporte de `claim_type = norma` o `vigencia` bloquea la respuesta critica.
 6. `EvidenceQuality.overall = CONFLICTIVE` bloquea una conclusion categorica si el conflicto afecta el punto preguntado.
 7. `Uncertainty = BLOCKING` exige `verification_status = blocked` para claims criticos afectados.
+8. Una afirmacion juridica critica visible sin `Claim` equivalente se trata como claim critico sin soporte y bloquea publicacion.
 
 ## Reglas asistidas por IA
 

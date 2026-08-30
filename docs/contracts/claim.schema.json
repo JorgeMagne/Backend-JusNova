@@ -10,7 +10,10 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts",
     "amendments": [
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Critical claim hardening",
+      "Subfase 0.14 - Claim/Citation relation hardening",
+      "Subfase 0.14 - Published claim support hardening"
     ]
   },
   "required": [
@@ -28,16 +31,19 @@
     "claim_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^cl_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^cl_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "text": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 4000
     },
     "claim_type": {
       "enum": [
@@ -73,10 +79,14 @@
     },
     "citations": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^C[0-9]+$"
-      }
+        "minLength": 1,
+        "pattern": "(?:^C[0-9]+$)(?![\\s\\S])",
+        "maxLength": 160
+      },
+      "maxItems": 500
     },
     "verification_status": {
       "enum": [
@@ -92,6 +102,34 @@
   },
   "additionalProperties": false,
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "claim_type": {
+            "enum": [
+              "plazo",
+              "requisito",
+              "competencia",
+              "causal",
+              "procedimiento",
+              "norma",
+              "jurisprudencia",
+              "vigencia"
+            ]
+          }
+        },
+        "required": [
+          "claim_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "criticality": {
+            "const": "high"
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {
@@ -131,8 +169,7 @@
           "support_level": {
             "enum": [
               "direct",
-              "inferential",
-              "weak"
+              "inferential"
             ]
           }
         }
@@ -243,6 +280,44 @@
       "citations": [],
       "verification_status": "needs_review",
       "requires_human_review": true
+    },
+    {
+      "claim_id": "cl_norma_low_without_citation",
+      "organization_id": "org_001",
+      "text": "La norma establece una obligacion aplicable.",
+      "claim_type": "norma",
+      "criticality": "low",
+      "support_level": "weak",
+      "citations": [],
+      "verification_status": "passed",
+      "requires_human_review": false
+    },
+    {
+      "claim_id": "cl_duplicate_citation",
+      "organization_id": "org_001",
+      "text": "El mismo soporte no se duplica dentro de un claim.",
+      "claim_type": "procedimiento",
+      "criticality": "high",
+      "support_level": "direct",
+      "citations": [
+        "C1",
+        "C1"
+      ],
+      "verification_status": "passed",
+      "requires_human_review": false
+    },
+    {
+      "claim_id": "cl_passed_with_weak_support",
+      "organization_id": "org_001",
+      "text": "La conclusion tiene soporte debil y requiere revision.",
+      "claim_type": "otro",
+      "criticality": "medium",
+      "support_level": "weak",
+      "citations": [
+        "C1"
+      ],
+      "verification_status": "passed",
+      "requires_human_review": false
     }
   ],
   "x-policy-invalid-examples": [

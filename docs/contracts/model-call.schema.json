@@ -33,12 +33,14 @@
     "model_call_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^mc_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^mc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "purpose": {
       "enum": [
@@ -55,20 +57,24 @@
     },
     "provider": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 160
     },
     "model": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 160
     },
     "prompt_version": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 160
     },
     "input_hash": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+      "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "output_hash": {
       "type": [
@@ -76,7 +82,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+      "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "token_usage": {
       "type": "object",
@@ -103,11 +110,15 @@
     },
     "started_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "completed_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "status": {
       "enum": [
@@ -142,7 +153,9 @@
         "string",
         "null"
       ],
-      "pattern": "^pca_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^pca_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     }
   },
   "additionalProperties": false,
@@ -166,7 +179,8 @@
           "output_hash": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+            "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+            "maxLength": 160
           },
           "error_code": {
             "type": "null"
@@ -273,7 +287,9 @@
         "properties": {
           "provider_call_audit_id": {
             "type": "string",
-            "pattern": "^pca_[A-Za-z0-9_-]+$"
+            "minLength": 1,
+            "pattern": "(?:^pca_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           }
         }
       }

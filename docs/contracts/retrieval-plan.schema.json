@@ -10,7 +10,14 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract",
     "amendments": [
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Retrieval ownership chain hardening"
+    ]
+  },
+  "x-tenant-policy": {
+    "description": "RetrievalPlan.query_id debe resolver una LegalSearchQuery del mismo organization_id. El plan deriva de esa query; no se permite reutilizar una query de otro tenant.",
+    "same_organization_id_refs": [
+      "query_id -> LegalSearchQuery.organization_id"
     ]
   },
   "required": [
@@ -30,17 +37,20 @@
     "retrieval_plan_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^rp_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^rp_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "query_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^q_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^q_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "jurisdiction": {
       "type": "string",
@@ -64,7 +74,8 @@
         ]
       },
       "minItems": 1,
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 16
     },
     "strategies": {
       "type": "array",
@@ -83,7 +94,8 @@
         ]
       },
       "minItems": 1,
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "source_targets": {
       "type": "array",
@@ -102,19 +114,23 @@
         ]
       },
       "minItems": 1,
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "search_queries": {
       "type": "array",
       "items": {
         "type": "string",
-        "minLength": 1
+        "minLength": 1,
+        "maxLength": 240
       },
       "minItems": 1,
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "fallback_allowed": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "Permiso solicitado por el plan para usar fallback. No identifica ni habilita un provider alternativo: la PRL solo puede ejecutarlo si existe un ProviderRoute activo y compatible en provider-registry.yaml; de lo contrario falla de forma cerrada con provider_unavailable."
     },
     "stop_conditions": {
       "type": "array",
@@ -129,11 +145,14 @@
         ]
       },
       "minItems": 1,
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     }
   },
   "additionalProperties": false,

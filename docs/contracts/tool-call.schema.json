@@ -31,25 +31,30 @@
     "tool_call_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^tc_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^tc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "tool_name": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 160
     },
     "purpose": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 240
     },
     "input_hash": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+      "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "output_hash": {
       "type": [
@@ -57,7 +62,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+      "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "status": {
       "enum": [
@@ -87,11 +93,15 @@
     },
     "started_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "completed_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "cost_units": {
       "type": "object",
@@ -129,7 +139,9 @@
         "string",
         "null"
       ],
-      "pattern": "^pca_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^pca_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     }
   },
   "additionalProperties": false,
@@ -153,7 +165,8 @@
           "output_hash": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+            "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+            "maxLength": 160
           },
           "error_code": {
             "type": "null"
@@ -284,7 +297,9 @@
         "properties": {
           "provider_call_audit_id": {
             "type": "string",
-            "pattern": "^pca_[A-Za-z0-9_-]+$"
+            "minLength": 1,
+            "pattern": "(?:^pca_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           }
         }
       }

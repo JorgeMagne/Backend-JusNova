@@ -13,7 +13,8 @@
       "Subfase 0.8 - Cost Governor, planes y presupuestos",
       "Subfase 0.9 - Conversacion, memoria, documentos y OCR fixture alignment",
       "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Cross-contract fixture alignment"
     ]
   },
   "x-tenant-policy": {
@@ -42,17 +43,20 @@
     "answer_version_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^av_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^av_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^ans_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_version": {
       "type": "integer",
@@ -76,12 +80,14 @@
     "answer_hash": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+      "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "trace_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^tr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_contract_ref": {
       "type": [
@@ -89,7 +95,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^ans_[A-Za-z0-9_-]+:v[1-9][0-9]*$"
+      "pattern": "(?:^ans_[A-Za-z0-9_-]+:v[1-9][0-9]*$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "abstention_render_ref": {
       "description": "Referencia a abstention-render.schema.json para total_abstention o blocked.",
@@ -98,7 +105,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^abstention_render_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^abstention_render_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "rendered_answer_snapshot_id": {
       "type": [
@@ -106,7 +114,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^render_snap_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^render_snap_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "version_reason": {
       "enum": [
@@ -124,12 +133,15 @@
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "created_by_ref": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+      "pattern": "(?:^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])",
+      "maxLength": 160
     }
   },
   "additionalProperties": false,
@@ -200,7 +212,8 @@
           "answer_contract_ref": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^ans_[A-Za-z0-9_-]+:v[1-9][0-9]*$"
+            "pattern": "(?:^ans_[A-Za-z0-9_-]+:v[1-9][0-9]*$)(?![\\s\\S])",
+            "maxLength": 160
           },
           "abstention_render_ref": {
             "type": "null"
@@ -233,7 +246,8 @@
           "abstention_render_ref": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^abstention_render_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^abstention_render_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           }
         }
       }
@@ -665,7 +679,7 @@
         "answer_version": 2,
         "previous_answer_version": 1,
         "response_outcome": "answered",
-        "answer_hash": "sha256:ae39ea48d91cbb1c31f12361e77dc07c982cb1f8af23f5820ca0d3c5b091c0ea",
+        "answer_hash": "sha256:4fe7427effc8da48e78e23c56c2e35fc8401103476c7a96e6c1cf5d69219f0bf",
         "trace_id": "tr_different_trace",
         "answer_contract_ref": "ans_third:v7",
         "rendered_answer_snapshot_id": "render_snap_001",
@@ -879,7 +893,7 @@
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "answered",
-        "answer_hash": "sha256:c1aa99f461dd0029b8f379b70a9901348b56fb0104de6fa0d4a074361eb2833f",
+        "answer_hash": "sha256:eb811fc145bbf84ab35d46ea3232ba2e4c996d994619cd9cbeaa1aa95789186d",
         "trace_id": "tr_content_001",
         "answer_contract_ref": "ans_content_001:v1",
         "rendered_answer_snapshot_id": null,
@@ -972,7 +986,7 @@
       ]
     },
     {
-      "description": "Los tres contratos validan por separado, comparten identidad y usan los mismos IDs, pero el AnswerContract cambia contenido canonico del claim y estado publicable de la cita.",
+      "description": "Los tres contratos validan por separado, comparten identidad y usan los mismos IDs, pero el AnswerContract cambia el contenido canonico del claim.",
       "trace_object": {
         "trace_id": "tr_content_002",
         "organization_id": "org_001",
@@ -1089,7 +1103,7 @@
         "answer_version": 1,
         "previous_answer_version": null,
         "response_outcome": "answered",
-        "answer_hash": "sha256:a04e0381f78f6a29f4b506d9cb9dee605c0d396382c560629dfeadc5fe0a9a8a",
+        "answer_hash": "sha256:8bfce1f95c01749f8b90ba09b7127c9cb6d0f5273ce7e7846483f43d2070fee2",
         "trace_id": "tr_content_002",
         "answer_contract_ref": "ans_content_002:v1",
         "rendered_answer_snapshot_id": null,
@@ -1145,7 +1159,7 @@
             "text": "Claim publicado con texto canonico alterado.",
             "claim_type": "vigencia",
             "criticality": "high",
-            "support_level": "weak",
+            "support_level": "direct",
             "citations": [
               "C1"
             ],
@@ -1159,7 +1173,7 @@
             "organization_id": "org_001",
             "passage_ref": "F1:P1",
             "source_ref": "F1",
-            "status": "weak",
+            "status": "valid",
             "supports_claim_ids": [
               "cl_same_001"
             ],
@@ -1175,9 +1189,7 @@
         "created_at": "2026-05-22T00:00:00Z"
       },
       "policy_errors": [
-        "AnswerContract.claims[] reuses claim_id with different canonical claim content",
-        "AnswerContract.citations[].status is not valid",
-        "AnswerContract.citations[] does not match the audited publicable citation result"
+        "AnswerContract.claims[] reuses claim_id with different canonical claim content"
       ]
     },
     {

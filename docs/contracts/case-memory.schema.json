@@ -35,12 +35,14 @@
     "case_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^case_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^case_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "jurisdiction": {
       "const": "BO"
@@ -74,7 +76,8 @@
           "OTRO"
         ]
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 16
     },
     "procedural_stage_code": {
       "enum": [
@@ -101,61 +104,75 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/party"
-      }
+      },
+      "maxItems": 500
     },
     "dates": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/case_date"
-      }
+      },
+      "maxItems": 500
     },
     "facts_asserted_by_user": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/user_asserted_fact"
-      }
+      },
+      "maxItems": 500
     },
     "facts_supported_by_documents": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/document_supported_fact"
-      }
+      },
+      "maxItems": 500
     },
     "open_legal_questions": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/open_legal_question"
-      }
+      },
+      "maxItems": 500
     },
     "source_history": {
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^(F[0-9]+|D[0-9]+|F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$"
+        "minLength": 1,
+        "pattern": "(?:^(F[0-9]+|D[0-9]+|F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$)(?![\\s\\S])",
+        "maxLength": 160
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "risk_flags": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/risk_flag"
-      }
+      },
+      "maxItems": 500
     },
     "contradictions": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/contradiction"
-      }
+      },
+      "maxItems": 500
     },
     "updated_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     }
   },
   "$defs": {
     "actor_user_ref": {
       "type": "string",
-      "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+      "minLength": 1,
+      "pattern": "(?:^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "user_asserted_fact": {
       "type": "object",
@@ -171,7 +188,8 @@
       "properties": {
         "fact_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 160
         },
         "text": {
           "type": "string",
@@ -186,7 +204,9 @@
         },
         "asserted_at": {
           "type": "string",
-          "format": "date-time"
+          "minLength": 1,
+          "format": "date-time",
+          "maxLength": 40
         },
         "status": {
           "enum": [
@@ -216,7 +236,8 @@
       "properties": {
         "fact_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 160
         },
         "text": {
           "type": "string",
@@ -226,21 +247,26 @@
         "document_id": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^doc_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^doc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "document_version_id": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^docv_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^docv_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "passage_refs": {
           "type": "array",
           "items": {
             "type": "string",
-            "pattern": "^D[0-9]+:P[0-9]+$"
+            "minLength": 1,
+            "pattern": "(?:^D[0-9]+:P[0-9]+$)(?![\\s\\S])",
+            "maxLength": 160
           },
           "minItems": 1,
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 500
         }
       },
       "additionalProperties": false
@@ -256,7 +282,8 @@
       "properties": {
         "question_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 160
         },
         "text": {
           "type": "string",
@@ -273,7 +300,9 @@
         },
         "created_at": {
           "type": "string",
-          "format": "date-time"
+          "minLength": 1,
+          "format": "date-time",
+          "maxLength": 40
         }
       },
       "additionalProperties": false
@@ -290,7 +319,8 @@
       "properties": {
         "risk_flag_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 160
         },
         "risk_type": {
           "enum": [
@@ -319,7 +349,9 @@
         },
         "created_at": {
           "type": "string",
-          "format": "date-time"
+          "minLength": 1,
+          "format": "date-time",
+          "maxLength": 40
         }
       },
       "additionalProperties": false
@@ -336,7 +368,8 @@
       "properties": {
         "contradiction_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 160
         },
         "description": {
           "type": "string",
@@ -347,10 +380,12 @@
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "maxLength": 160
           },
           "minItems": 2,
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 500
         },
         "status": {
           "enum": [
@@ -361,7 +396,9 @@
         },
         "created_at": {
           "type": "string",
-          "format": "date-time"
+          "minLength": 1,
+          "format": "date-time",
+          "maxLength": 40
         }
       },
       "additionalProperties": false
@@ -376,7 +413,8 @@
       "properties": {
         "party_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 160
         },
         "role": {
           "enum": [
@@ -390,7 +428,9 @@
         },
         "display_ref": {
           "type": "string",
-          "pattern": "^(party_ref_[A-Za-z0-9_-]+|actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+          "minLength": 1,
+          "pattern": "(?:^(party_ref_[A-Za-z0-9_-]+|actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])",
+          "maxLength": 160
         }
       },
       "additionalProperties": false
@@ -407,11 +447,14 @@
       "properties": {
         "date_id": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 160
         },
         "date": {
           "type": "string",
-          "format": "date"
+          "minLength": 1,
+          "format": "date",
+          "maxLength": 10
         },
         "date_type": {
           "enum": [
@@ -435,7 +478,9 @@
             "string",
             "null"
           ],
-          "pattern": "^(F[0-9]+|D[0-9]+|F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$"
+          "minLength": 1,
+          "pattern": "(?:^(F[0-9]+|D[0-9]+|F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$)(?![\\s\\S])",
+          "maxLength": 160
         }
       },
       "additionalProperties": false,
@@ -455,7 +500,9 @@
             "properties": {
               "source_ref": {
                 "type": "string",
-                "pattern": "^(F[0-9]+|D[0-9]+|F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$"
+                "minLength": 1,
+                "pattern": "(?:^(F[0-9]+|D[0-9]+|F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           },

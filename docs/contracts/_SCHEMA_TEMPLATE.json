@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://jusnova.local/contracts/schema-template.schema.json",
   "title": "SchemaTemplate",
-  "description": "Template for JusNova internal JSON Schemas. Replace title, id, required fields, properties, examples, and invalid_examples when creating a concrete contract.",
+  "description": "Template for JusNova internal JSON Schemas. Replace title, id, required fields, properties, examples, and x-invalid-examples when creating a concrete contract.",
   "type": "object",
   "x-governance": {
     "document_status": "Draft",
@@ -37,4 +37,3 @@
     }
   ]
 }
-

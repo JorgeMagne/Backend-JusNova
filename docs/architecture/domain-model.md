@@ -42,6 +42,8 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 
 ## Identidad global
 
+Los `^...$` de las tablas de identidad son notacion conceptual legible. Persistencia, DTOs y rutas deben aplicar full-match/cierre real conforme a `docs/contracts/README.md`, sin trim o coercion previa; cualquier terminador de linea terminal invalida la identidad.
+
 | Entidad | ID global conceptual | Contrato o fuente |
 |---|---|---|
 | Organization | `^org_[A-Za-z0-9_-]+$` | 0.11 conceptual |
@@ -82,7 +84,7 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | Plan | `^plan_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | Subscription | `^sub_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | ResearchCredit | `^rc_[A-Za-z0-9_-]+$` | 0.11 conceptual |
-| CostBudget | `^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$` | `cost-budget.schema.json` |
+| CostBudget | `^cb_(profesional\|pro_plus\|estudio\|enterprise)_(simple\|medio\|complejo\|investigacion)_v[0-9]{3}$` | `cost-budget.schema.json` |
 | CostReport | `^cr_[A-Za-z0-9_-]+$` como value object embebido | `cost-report.schema.json` embebido en `TraceObject` |
 | EvaluationCase | `^eval_case_[A-Za-z0-9_-]+$` | 0.11 conceptual |
 | EvaluationRun | `^eval_run_[A-Za-z0-9_-]+$` | 0.11 conceptual |
@@ -146,27 +148,28 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | LegalSearchResult -> RetrievalRun | `n..1` | `result_id=lsr_*` no debe tratarse como raw-access resource independiente en 0.11. |
 | SourceRegistryEntry -> SourceSnapshot | `0..n` | Una fuente puede registrarse antes de snapshots. |
 | SourceSnapshot -> SourceRegistryEntry | `0..1` | Snapshots privados pueden existir fuera del registry publico global. |
-| RetrievalRun -> EvidencePack | `0..n` | Runs fallidos pueden no producir pack. |
-| EvidencePack -> RetrievalRun | `0..1` | Packs manuales o documentales pueden no venir de retrieval vivo. |
+| RetrievalRun -> EvidencePack | `0..1` | Un run fallido puede no producir pack; `completed_with_evidence` produce exactamente el pack escalar de `evidence_pack_id`. |
+| EvidencePack -> RetrievalRun | `0..1` | Packs manuales o documentales pueden no venir de retrieval vivo; si existe `retrieval_run_id`, ambas refs son reciprocas. |
 | RetrievalRun -> PromptInjectionRisk | `0..n` | Riesgos detectados durante discovery/fetch/extraction. |
 | EvidencePack -> EvidenceSource | `1..n` cuando se usa para respuesta; draft packs pueden ser `0..n` | No emitir respuesta sustantiva con pack vacio. |
 | EvidenceSource -> EvidencePassage | `1..n` cuando es citable; source shells pueden ser `0..n` | Una fuente citada requiere pasajes. |
 | Answer -> AnswerVersion | `0..n` | Permite answer shell antes de version publicada. |
 | AnswerVersion -> Answer | `n..1` | Toda version pertenece a una respuesta. |
 | AnswerVersion -> AbstentionRender | `0..1` | Solo para `total_abstention` o `blocked`; respuestas sustantivas usan `AnswerContract`. |
-| AbstentionRender -> AnswerVersion | `n..1` por `answer_id`, `answer_version` y `trace_id` | Value object tenant-scoped; no guarda prompts, documentos ni output completo. |
+| AbstentionRender -> AnswerVersion | `1..1` por `answer_id`, `answer_version` y `trace_id` | Cada render existente pertenece a una sola version y una version no admite multiples renders; es value object tenant-scoped y no guarda prompts, documentos ni output completo. |
 | AnswerVersion -> TraceObject | `1..1` al finalizar | Mientras el run esta en progreso no hay `TraceObject` valido. |
 | TraceObject -> AnswerVersion | `1..1` | Trace final requiere `answer_version_ref`. |
 | AnswerVersion -> Claim | `0..n` | Abstenciones/bloqueos pueden no publicar claims. |
-| Claim -> Citation | `0..n` | Claims no soportados o no criticos pueden no tener citas; claims criticos soportados requieren cita valida por policy. |
-| Citation -> Claim | `n..1` cuando soporta claim | Una cita de soporte apunta a claim. |
+| Claim -> Citation | `0..n` | Relacion `n:m` dentro de la misma `AnswerVersion`; claims no soportados pueden no tener citas y claims criticos publicados requieren cita valida por policy. |
+| Citation -> Claim | `1..n` cuando la cita forma parte de `AnswerContract` | Una cita publicada usa `status=valid`, se asocia al menos a un claim y puede soportar varios claims de la misma `AnswerVersion`; citas candidatas/auditadas con otro status conservan la relacion, pero no se publican en `AnswerContract`. `Claim.citations[]` y `Citation.supports_claim_ids[]` son conjuntos sin duplicados y deben ser consistentes en ambas direcciones. |
 | TraceObject -> CitationAudit | `1..1` embebido | `citation_audit` es value object dentro de `TraceObject`; tabla standalone futura requiere `organization_id` y `trace_id`. |
 | CitationAudit -> AnswerVersion | Por el `answer_version_ref` del `TraceObject` contenedor | 0.11 no lo persiste como tabla standalone. |
 | TraceObject -> ModelCall | `0..n` | Algunas respuestas pueden no requerir llamada de modelo. |
 | TraceObject -> ToolCall | `0..n` | Algunas respuestas pueden no usar tools. |
 | TraceObject -> RetrievalRun | `0..n` | Abstenciones o respuestas documentales pueden no usar retrieval vivo. |
 | TraceObject -> PromptInjectionRisk | `0..n` | Agregacion final de riesgos de documentos/retrieval/mensajes usados por la respuesta; exclusiones deben quedar auditadas por policy. |
-| TraceObject -> ProviderCallAudit | `0..n` mediante `model_call_id`, `tool_call_id` o `retrieval_run_id` | Auditoria externa se enlaza por refs propios de `ProviderCallAudit`. |
+| TraceObject -> ProviderCallAudit | `0..n` mediante `trace_id`, `model_call_id`, `tool_call_id` o `retrieval_run_id` | Auditoria externa se enlaza por refs propios de `ProviderCallAudit`. |
+| ProviderCallAudit -> TraceObject | `0..1` mediante `trace_id` | Anchor directo de ejecucion; si existe, comparte `organization_id` con la traza resuelta. |
 | ProviderCallAudit -> ModelCall | `0..1` | Auditoria de llamada de modelo externa si aplica. |
 | ProviderCallAudit -> ToolCall | `0..1` | Auditoria de tool/provider externo si aplica. |
 | ProviderCallAudit -> RetrievalRun | `0..1` | Auditoria de discovery/fetch/extraction/OCR/ranking externo si aplica. |
@@ -186,11 +189,15 @@ Este documento define el modelo conceptual minimo que Fase 1 debe respetar al cr
 | EvaluationCase -> EvaluationRun | `0..n` | Caso eval puede no ejecutarse aun. |
 | EvaluationRun -> EvaluationCase | `n..1` para single-case o `n..m` para suite documentada | Suite runs deben registrar lista de casos. |
 
+`Answer.latest_answer_version_ref`, cuando existe, debe resolver a un `AnswerVersion` del mismo `answer_id` y `organization_id`, apuntar a la version vigente con mayor `answer_version` y conservar el mismo `response_outcome`. La actualizacion de version y puntero es atomica y requiere validacion cross-contract/persistencia.
+
 ## Run lifecycle
 
 El API puede reservar un `run_id` con forma `tr_*` al iniciar una ejecucion. Ese valor no debe persistirse como `TraceObject` hasta que exista respuesta final, abstencion o bloqueo con `answer_id` y `answer_version_ref`.
 
 Si la ejecucion falla antes de crear respuesta/version, el `run_id` queda como referencia operacional de streaming y diagnostico futuro; no satisface `trace-object.schema.json`.
+
+Al finalizar una ejecucion publicable, mensaje de salida, respuesta/version, render o contrato, `TraceObject`, `UsageEvent` obligatorios, debito de credito cuando aplique y cierre exitoso del run forman una unica unidad atomica. Todos conservan el mismo tenant, plan, complejidad y budget efectivo; si la conciliacion terminal falla, no se materializa ni se expone una respuesta final.
 
 ## Condiciones tenant-conditional
 
@@ -202,22 +209,22 @@ Si la ejecucion falla antes de crear respuesta/version, el `run_id` queda como r
 | EvaluationCase | Sintetico, publico o anonimizado no reversible. | Derivado de mensaje, caso, documento, traza, respuesta, provider output o incidente de soporte. |
 | EvaluationRun | Ejecuta solo casos globales sinteticos/publicos. | Cualquier input es tenant-scoped o user-derived. |
 
-Todo artefacto derivado hereda la mayor sensibilidad (`sensitivity_rank`) de sus entradas.
+Todo artefacto derivado hereda la mayor sensibilidad (`sensitivity_rank`) de sus entradas. Solo los value objects/registros cerrados y metadata-only nombrados en la matriz (`CitationAudit`, `ModelCall`, `ToolCall` y summaries de retrieval) conservan `INTERNAL_TRACE_RESTRICTED`; la excepcion no se extiende a `TraceObject`, `RetrievalRun` ni al recurso referenciado.
 
 `LegalSearchQuery`, `RetrievalPlan` y `LegalSearchResult` pueden estar vinculados a fuentes publicas, pero siguen siendo tenant-scoped porque el acto de busqueda, la estrategia y los resultados pueden revelar intereses, hechos o contexto del cliente. `LegalEntity` se conserva como value object de `LegalSearchQuery`; no debe crear una tabla global reutilizable con valores extraidos de usuarios.
 
 ## Igualdad de tenant entre contratos
 
-Fase 1 debe validar que `organization_id` coincide entre contenedores y subobjetos o refs resueltos. La regla aplica como minimo a `AnswerContract -> Claim/Citation`, `AnswerVersion -> AnswerContract/AbstentionRender/TraceObject`, `TraceObject -> ModelCall/ToolCall/RetrievalRun/EvidencePack`, `ProviderCallAudit -> ModelCall/ToolCall/RetrievalRun/UsageEvent/CostReport` y cualquier artefacto documental derivado.
+Fase 1 debe validar que `organization_id` coincide entre contenedores y subobjetos o refs resueltos. La regla aplica como minimo a `AnswerContract -> Claim/Citation`, `AnswerVersion -> AnswerContract/AbstentionRender/TraceObject`, `TraceObject -> ModelCall/ToolCall/RetrievalRun/EvidencePack`, `ProviderCallAudit -> TraceObject/ModelCall/ToolCall/RetrievalRun/UsageEvent/CostReport` y cualquier artefacto documental derivado.
 
 Los schemas nuevos cierran la forma de cada objeto, pero la igualdad entre objetos resueltos es una validacion custom/cross-contract obligatoria porque JSON Schema draft 2020-12 no expresa igualdad dinamica entre `organization_id` de objetos independientes.
 
 ## Artefactos raw addressable
 
-- `StorageObject` representa objeto privado addressable por `RawAccessEvent.storage_object`; siempre apunta a `Document`, puede apuntar tambien a `DocumentVersion` cuando existe version, y objetos publicos de fuentes se modelan por `SourceSnapshot`.
+- `StorageObject` representa objeto privado addressable por `RawAccessEvent` mediante `resource_type=storage_object` y `resource_ref=sto_*`; siempre apunta a `Document`, puede apuntar tambien a `DocumentVersion` cuando existe version, y objetos publicos de fuentes se modelan por `SourceSnapshot`.
 - `OcrArtifact` representa OCR privado por version, pagina o fragmento; el OCR completo no se copia a trazas, logs, errores ni provider audit.
 - `Embedding` debe derivar de una fuente contractual unica en 0.11: exactamente uno de `document_evidence_id` o `case_id`/`CaseMemory`; si necesita ambas fuentes, se crean artefactos separados.
-- `TraceObject`, `ModelCall`, `ToolCall` y `RetrievalRun` son resumenes sanitizados metadata-only; por eso usan `INTERNAL_TRACE_RESTRICTED` en la matriz aunque sus inputs puedan ser mas sensibles. Variantes raw deben pasar por `RawAccessEvent` y por una enmienda contractual.
+- `TraceObject` es sanitizado y no contiene material raw, pero hereda la mayor clasificacion de sus entradas porque incluye `Claim.text` derivado y riesgos clasificados. Sus summaries de retrieval, `CitationAudit`, `ModelCall` y `ToolCall` son metadata-only. El `RetrievalRun` operativo tenant-scoped puede conservar resultados minimizados autorizados, incluidos snippets y URLs publicas, hereda la mayor clasificacion de sus entradas y nunca se embebe completo en `TraceObject`; sus errores/warnings permanecen sanitizados. Material raw o acceso elevado exige `RawAccessEvent` y una superficie contractual autorizada.
 - `CitationAudit` y `CostReport` permanecen como value objects embebidos en `TraceObject` salvo que Fase 1 los materialice con `organization_id`, `trace_id` y constraint de unicidad contra el `TraceObject` owner.
 
 ## Reglas de verdad juridica

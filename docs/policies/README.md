@@ -1,7 +1,7 @@
 # Policy Governance
 
-**Estado documental:** Draft
-**Fecha:** 2026-05-22
+**Estado documental:** Accepted
+**Fecha:** 2026-08-10
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Gobierno de politicas operativas
 
@@ -16,6 +16,12 @@ Las politicas convierten principios juridicos, tecnicos, comerciales y de seguri
 - Toda politica debe declarar alcance.
 - Toda politica critica debe distinguir reglas deterministicas de reglas asistidas por IA.
 - Toda politica que bloquee una respuesta debe describir el comportamiento esperado.
+
+## Politicas aceptadas en Subfase 0.1
+
+| Politica | Estado | Archivo |
+|---|---|---|
+| Principios no negociables | Accepted | `non-negotiable-principles.md` |
 
 ## Politicas aceptadas en Subfase 0.4
 
@@ -95,6 +101,7 @@ privacy-security-policy.md
 prompt-injection-policy.md
 provider-policy.md
 source-policy.md
+source-routing-matrix.md
 trace-visibility-policy.md
 uncertainty-policy.md
 validity-policy.md

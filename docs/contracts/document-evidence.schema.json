@@ -36,34 +36,45 @@
   "properties": {
     "document_evidence_id": {
       "type": "string",
-      "pattern": "^de_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^de_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "document_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^doc_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^doc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "document_version_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^docv_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^docv_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "document_version_hash": {
       "type": "string",
-      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+      "minLength": 1,
+      "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "source_ref": {
       "type": "string",
-      "pattern": "^D[0-9]+$"
+      "minLength": 1,
+      "pattern": "(?:^D[0-9]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "passage_ref": {
       "type": "string",
-      "pattern": "^D[0-9]+:P[0-9]+$"
+      "minLength": 1,
+      "pattern": "(?:^D[0-9]+:P[0-9]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "page": {
       "type": "integer",
@@ -76,7 +87,9 @@
     },
     "text_hash": {
       "type": "string",
-      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+      "minLength": 1,
+      "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "locator": {
       "$ref": "#/$defs/locator"
@@ -120,21 +133,25 @@
           "manual_review_required"
         ]
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 32
     },
     "citation_eligible": {
       "type": "boolean"
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "prompt_injection_risks": {
       "type": "array",
       "items": {
         "$ref": "./prompt-injection-risk.schema.json"
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     }
   },
   "$defs": {
@@ -160,13 +177,19 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "minLength": 1,
+          "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])",
+          "maxLength": 120
         },
         "section": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "minLength": 1,
+          "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])",
+          "maxLength": 240
         },
         "paragraph": {
           "type": [
@@ -189,7 +212,10 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "minLength": 1,
+          "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])",
+          "maxLength": 1024
         }
       },
       "additionalProperties": false

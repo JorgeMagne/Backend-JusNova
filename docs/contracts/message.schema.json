@@ -30,21 +30,25 @@
     "message_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^msg_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^msg_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "conversation_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^conv_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^conv_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "actor_ref": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 160
     },
     "actor_type": {
       "enum": [
@@ -72,11 +76,14 @@
     },
     "content": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 20000
     },
     "content_hash": {
       "type": "string",
-      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+      "minLength": 1,
+      "pattern": "(?:^sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_id": {
       "type": [
@@ -84,7 +91,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^ans_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "trace_id": {
       "type": [
@@ -92,7 +100,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^tr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_version_ref": {
       "type": [
@@ -100,18 +109,22 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^av_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^av_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "attachments": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/document_attachment"
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 20
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     }
   },
   "$defs": {
@@ -129,7 +142,8 @@
         "attachment_id": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^att_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^att_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "attachment_type": {
           "const": "document"
@@ -140,16 +154,20 @@
         "document_id": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^doc_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^doc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "document_version_id": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^docv_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^docv_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "source_ref": {
           "type": "string",
-          "pattern": "^D[0-9]+$"
+          "minLength": 1,
+          "pattern": "(?:^D[0-9]+$)(?![\\s\\S])",
+          "maxLength": 160
         }
       },
       "additionalProperties": false
@@ -171,7 +189,7 @@
       "then": {
         "properties": {
           "actor_ref": {
-            "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+            "pattern": "(?:^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])"
           }
         }
       }
@@ -209,7 +227,7 @@
       "then": {
         "properties": {
           "actor_ref": {
-            "pattern": "^service_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^service_[A-Za-z0-9_-]+$)(?![\\s\\S])"
           }
         }
       }
@@ -329,17 +347,20 @@
           "answer_id": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^ans_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           },
           "trace_id": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^tr_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           },
           "answer_version_ref": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^av_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^av_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           },
           "attachments": {
             "maxItems": 0

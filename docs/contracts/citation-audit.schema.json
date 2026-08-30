@@ -10,7 +10,9 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.7 - Trazabilidad, auditoria y versionado",
     "amendments": [
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Claim completeness failure code",
+      "Subfase 0.14 - Sanitized warning bounds"
     ]
   },
   "required": [
@@ -26,11 +28,13 @@
     "citation_audit_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^ca_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ca_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "auditor_version": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 160
     },
     "overall_status": {
       "enum": [
@@ -44,24 +48,32 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/citation_audit_result"
-      }
+      },
+      "maxItems": 500
     },
     "blocking_failures": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/blocking_failure"
-      }
+      },
+      "maxItems": 500
     },
     "warnings": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "type": "string",
-        "minLength": 1
-      }
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
+      },
+      "maxItems": 32
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     }
   },
   "$defs": {
@@ -79,20 +91,27 @@
       "properties": {
         "citation_ref": {
           "type": "string",
-          "pattern": "^C[0-9]+$"
+          "minLength": 1,
+          "pattern": "(?:^C[0-9]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "claim_id": {
           "type": "string",
           "minLength": 1,
-          "pattern": "^cl_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^cl_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "passage_ref": {
           "type": "string",
-          "pattern": "^[FD][0-9]+:P[0-9]+$"
+          "minLength": 1,
+          "pattern": "(?:^[FD][0-9]+:P[0-9]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "source_ref": {
           "type": "string",
-          "pattern": "^F[0-9]+$|^D[0-9]+$"
+          "minLength": 1,
+          "pattern": "(?:^F[0-9]+$|^D[0-9]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "status": {
           "enum": [
@@ -143,6 +162,7 @@
             "validity_not_confirmed",
             "decorative_source",
             "source_passage_mismatch",
+            "critical_assertion_unmapped",
             "policy_blocked"
           ]
         },
@@ -151,14 +171,18 @@
             "string",
             "null"
           ],
-          "pattern": "^C[0-9]+$"
+          "minLength": 1,
+          "pattern": "(?:^C[0-9]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "claim_id": {
           "type": [
             "string",
             "null"
           ],
-          "pattern": "^cl_[A-Za-z0-9_-]+$"
+          "minLength": 1,
+          "pattern": "(?:^cl_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+          "maxLength": 160
         },
         "severity": {
           "enum": [
@@ -171,7 +195,10 @@
           "if": {
             "properties": {
               "failure_code": {
-                "const": "policy_blocked"
+                "enum": [
+                  "critical_assertion_unmapped",
+                  "policy_blocked"
+                ]
               }
             },
             "required": [
@@ -208,7 +235,8 @@
               "claim_id": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^cl_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^cl_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           }
@@ -236,12 +264,15 @@
             "properties": {
               "citation_ref": {
                 "type": "string",
-                "pattern": "^C[0-9]+$"
+                "minLength": 1,
+                "pattern": "(?:^C[0-9]+$)(?![\\s\\S])",
+                "maxLength": 160
               },
               "claim_id": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^cl_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^cl_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           }

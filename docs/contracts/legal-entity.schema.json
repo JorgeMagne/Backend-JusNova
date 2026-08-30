@@ -24,7 +24,8 @@
     "entity_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^ent_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ent_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "entity_type": {
       "enum": [
@@ -43,13 +44,17 @@
     },
     "value": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 1000
     },
     "number": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "minLength": 1,
+      "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])",
+      "maxLength": 120
     },
     "year": {
       "type": [
@@ -63,7 +68,10 @@
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "minLength": 1,
+      "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])",
+      "maxLength": 240
     },
     "confidence": {
       "type": "number",

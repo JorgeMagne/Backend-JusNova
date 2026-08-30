@@ -1,17 +1,26 @@
 document_status: Accepted
-date: 2026-05-24
-responsible: JusNova Architecture
+date: 2026-08-10
+responsible: Codex / JusNova Chief Backend Architect
 related_decision: ADR-011
 provider_registry:
-  version: provider-registry-v0.10.0
+  version: provider-registry-v0.10.2
+  reliability_policy:
+    max_attempts_includes_initial_attempt: true
+    retry_requires_idempotent_operation: true
+    fallback_requires_explicit_route: true
+    fallback_route_resolution: registry_routes_only
+    no_fallback_error_code: provider_unavailable
+    error_mapping_target: provider_call_audit_error_code
+  fallback_routes: []
   providers:
     - provider_name: openai_model_provider
       provider_family: ModelProvider
+      external_call_mode: always
       feature_flag: provider.openai_model.enabled
       kill_switch: provider.openai_model.kill_switch
       timeout_ms: 30000
       retry_policy:
-        max_attempts: 1
+        max_attempts: 2
         backoff: exponential
         retry_on:
           - timeout
@@ -48,11 +57,12 @@ provider_registry:
         retention_class: operational
     - provider_name: openai_web_search_discovery
       provider_family: SearchDiscoveryProvider
+      external_call_mode: always
       feature_flag: provider.openai_web_search.enabled
       kill_switch: provider.openai_web_search.kill_switch
       timeout_ms: 30000
       retry_policy:
-        max_attempts: 1
+        max_attempts: 2
         backoff: exponential
         retry_on:
           - timeout
@@ -82,11 +92,12 @@ provider_registry:
         retention_class: operational
     - provider_name: official_source_adapter_registry
       provider_family: OfficialSourceAdapter
+      external_call_mode: always
       feature_flag: provider.official_source_adapter.enabled
       kill_switch: provider.official_source_adapter.kill_switch
       timeout_ms: 30000
       retry_policy:
-        max_attempts: 1
+        max_attempts: 2
         backoff: fixed
         retry_on:
           - timeout
@@ -116,11 +127,12 @@ provider_registry:
         retention_class: operational
     - provider_name: source_fetch_provider
       provider_family: FetchProvider
+      external_call_mode: always
       feature_flag: provider.source_fetch.enabled
       kill_switch: provider.source_fetch.kill_switch
       timeout_ms: 30000
       retry_policy:
-        max_attempts: 1
+        max_attempts: 2
         backoff: fixed
         retry_on:
           - timeout
@@ -146,11 +158,12 @@ provider_registry:
         retention_class: operational
     - provider_name: evidence_extraction_provider
       provider_family: ExtractionProvider
+      external_call_mode: deployment_configured
       feature_flag: provider.evidence_extraction.enabled
       kill_switch: provider.evidence_extraction.kill_switch
       timeout_ms: 30000
       retry_policy:
-        max_attempts: 1
+        max_attempts: 2
         backoff: fixed
         retry_on:
           - timeout
@@ -179,6 +192,7 @@ provider_registry:
         retention_class: operational
     - provider_name: local_ocr_provider
       provider_family: OCRProvider
+      external_call_mode: never
       feature_flag: provider.local_ocr.enabled
       kill_switch: provider.local_ocr.kill_switch
       timeout_ms: 60000
@@ -210,11 +224,12 @@ provider_registry:
         retention_class: operational
     - provider_name: embedding_provider
       provider_family: EmbeddingProvider
+      external_call_mode: deployment_configured
       feature_flag: provider.embedding.enabled
       kill_switch: provider.embedding.kill_switch
       timeout_ms: 30000
       retry_policy:
-        max_attempts: 1
+        max_attempts: 2
         backoff: exponential
         retry_on:
           - timeout
@@ -245,11 +260,12 @@ provider_registry:
         retention_class: operational
     - provider_name: private_storage_provider
       provider_family: StorageProvider
+      external_call_mode: deployment_configured
       feature_flag: provider.private_storage.enabled
       kill_switch: provider.private_storage.kill_switch
       timeout_ms: 30000
       retry_policy:
-        max_attempts: 1
+        max_attempts: 2
         backoff: fixed
         retry_on:
           - timeout
@@ -294,11 +310,12 @@ provider_registry:
         retention_class: security_audit
     - provider_name: workflow_provider
       provider_family: WorkflowProvider
+      external_call_mode: deployment_configured
       feature_flag: provider.workflow.enabled
       kill_switch: provider.workflow.kill_switch
       timeout_ms: 30000
       retry_policy:
-        max_attempts: 1
+        max_attempts: 2
         backoff: fixed
         retry_on:
           - timeout
@@ -343,11 +360,12 @@ provider_registry:
         retention_class: operational
     - provider_name: snapshot_provider
       provider_family: SnapshotProvider
+      external_call_mode: deployment_configured
       feature_flag: provider.snapshot.enabled
       kill_switch: provider.snapshot.kill_switch
       timeout_ms: 30000
       retry_policy:
-        max_attempts: 1
+        max_attempts: 2
         backoff: fixed
         retry_on:
           - timeout
@@ -373,11 +391,12 @@ provider_registry:
         retention_class: operational
     - provider_name: legal_ranking_provider
       provider_family: LegalRankingProvider
+      external_call_mode: deployment_configured
       feature_flag: provider.legal_ranking.enabled
       kill_switch: provider.legal_ranking.kill_switch
       timeout_ms: 30000
       retry_policy:
-        max_attempts: 1
+        max_attempts: 2
         backoff: fixed
         retry_on:
           - timeout

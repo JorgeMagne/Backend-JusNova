@@ -35,11 +35,14 @@
     "cost_budget_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$"
+      "pattern": "(?:^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "cost_budget_version": {
       "type": "string",
-      "pattern": "^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$"
+      "minLength": 1,
+      "pattern": "(?:^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "plan_code": {
       "enum": [
@@ -59,7 +62,9 @@
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "discovery_calls_max": {
       "type": "integer",
@@ -768,7 +773,7 @@
           "cost_budget_ref": "cb_profesional_simple_v080",
           "cost_budget_version": "cost-budget-v0.8.0",
           "trace_id": "tr_usage_budget_mismatch",
-          "answer_id": null,
+          "answer_id": "ans_usage_budget_mismatch",
           "retrieval_run_id": null,
           "cost_report_id": null,
           "model_call_id": null,

@@ -10,7 +10,9 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts; Subfase 0.6 - Politicas de fuentes, vigencia, conflicto e incertidumbre",
     "amendments": [
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Closed source metadata hardening",
+      "Subfase 0.14 - Sanitized warning bounds"
     ]
   },
   "required": [
@@ -26,7 +28,9 @@
   "properties": {
     "source_ref": {
       "type": "string",
-      "pattern": "^F[0-9]+$|^D[0-9]+$"
+      "minLength": 1,
+      "pattern": "(?:^F[0-9]+$|^D[0-9]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "source_type": {
       "enum": [
@@ -50,20 +54,27 @@
     },
     "title": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
     },
     "issuer": {
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
     },
     "url": {
       "type": [
         "string",
         "null"
       ],
-      "format": "uri"
+      "minLength": 1,
+      "format": "uri",
+      "maxLength": 2048
     },
     "snapshot_id": {
       "type": [
@@ -71,7 +82,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^snap_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^snap_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "snapshot_unavailable_reason": {
       "type": [
@@ -90,14 +102,18 @@
     },
     "retrieved_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "published_at": {
       "type": [
         "string",
         "null"
       ],
-      "format": "date"
+      "minLength": 1,
+      "format": "date",
+      "maxLength": 10
     },
     "validity_status": {
       "enum": [
@@ -111,12 +127,27 @@
     },
     "warnings": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
-        "type": "string"
-      }
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
+      },
+      "maxItems": 32
     },
     "metadata": {
-      "type": "object"
+      "description": "Metadata publica minimizada y cerrada. No admite payloads raw, texto documental, prompts, OCR, HTML, mensajes ni campos de proveedor.",
+      "type": "object",
+      "properties": {
+        "jurisdiction": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "(?:^[A-Z]{2}$)(?![\\s\\S])",
+          "maxLength": 160
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false,
@@ -125,7 +156,7 @@
       "if": {
         "properties": {
           "source_ref": {
-            "pattern": "^D[0-9]+$"
+            "pattern": "(?:^D[0-9]+$)(?![\\s\\S])"
           }
         },
         "required": [
@@ -150,7 +181,7 @@
       "if": {
         "properties": {
           "source_ref": {
-            "pattern": "^F[0-9]+$"
+            "pattern": "(?:^F[0-9]+$)(?![\\s\\S])"
           }
         },
         "required": [
@@ -182,7 +213,8 @@
             "snapshot_id": {
               "type": "string",
               "minLength": 1,
-              "pattern": "^snap_[A-Za-z0-9_-]+$"
+              "pattern": "(?:^snap_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+              "maxLength": 160
             }
           }
         },
@@ -212,7 +244,8 @@
           "snapshot_id": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^snap_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^snap_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           }
         },
         "required": [
@@ -356,7 +389,7 @@
           }
         },
         "required": [
-        "validity_status"
+          "validity_status"
         ]
       },
       "then": {
@@ -578,6 +611,22 @@
       "validity_status": "VIGENCIA_CONFIRMADA",
       "warnings": [],
       "metadata": {}
+    },
+    {
+      "source_ref": "F10",
+      "source_type": "norma",
+      "tier": "TIER1_CANONICO",
+      "title": "Fuente con metadata raw no permitida",
+      "issuer": "Entidad oficial",
+      "url": "https://www.example.gob.bo/fuente",
+      "snapshot_id": "snap_010",
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "published_at": "2024-01-01",
+      "validity_status": "VIGENCIA_CONFIRMADA",
+      "warnings": [],
+      "metadata": {
+        "raw_prompt": "contenido sintetico que debe rechazarse"
+      }
     }
   ]
 }

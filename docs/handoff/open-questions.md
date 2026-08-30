@@ -1,9 +1,11 @@
 # Open Questions
 
 **Estado documental:** Draft
-**Fecha:** 2026-05-22
+**Fecha:** 2026-08-30
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Registro de dudas abiertas de Fase 0
+
+Nota: el estado `Draft` es intencional porque este registro es vivo. El cierre de Fase 0 acepta el registro como evidencia actualizada y confirma cero preguntas `Blocking`; no convierte preguntas no bloqueantes abiertas en decisiones cerradas.
 
 ## Regla
 
@@ -22,7 +24,7 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 
 | ID | Pregunta | Tipo | Estado | Responsable | Resolucion esperada |
 |---|---|---|---|---|---|
-| OQ-001 | Proveedor final de object storage S3-compatible para produccion inicial. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Resolver tras ADR-002 con criterios de operacion, costo y licencia. |
+| OQ-001 | Proveedor final de object storage S3-compatible para produccion inicial. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Resolver antes de habilitar cualquier `StorageProvider` productivo o superficie que persista datos privados, con criterios de operacion, costo, residencia, licencia y seguridad; P1-08 conserva solo el stub fail-closed. |
 | OQ-002 | Temporal desde Fase 1 o cola durable inicial si operacion local bloquea avance. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Cerrar al completar [P2-06](sprint-1-backlog.md#p2-06-workflowgateway-y-localworkflowgateway): Temporal queda como meta de workflow, no P0 de Sprint 1; Fase 1 debe crear `WorkflowGateway`/`LocalWorkflowGateway` sin acoplar el core a Temporal. |
 | OQ-003 | Proveedor secundario de web discovery si adaptadores oficiales y proveedor inicial no alcanzan recall. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Resolver despues de benchmarks iniciales de retrieval. |
 | OQ-004 | Limites exactos de OCR por plan despues de medir costos reales. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Ajustar tras pruebas de OCR y Cost Governor. |
@@ -41,7 +43,16 @@ Fase 0 puede cerrar con preguntas no bloqueantes, pero no puede cerrar con pregu
 | OQ-017 | Herramienta concreta para eval runner y formato ejecutable de reportes. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Definir en Fase 1 sin cambiar metricas, dataset spec ni gates de 0.12. |
 | OQ-018 | Plataforma CI exacta para ejecutar regression suite. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Resolver durante Fase 1 segun infraestructura real. |
 | OQ-019 | Revisores humanos finales para market readiness. | Non-blocking | Open | Codex / JusNova Chief Backend Architect | Nombrar antes de market readiness; 0.12 ya exige revision humana. |
+| OQ-020 | Adapter productivo de `AuthProvider` para beta y deployment inicial. | Non-blocking | Open | Backend Lead / Security Reviewer | No bloquea Fase 0; bloquea beta. Resolver en P1-09 mediante ADR o decision de deployment: validar token firmado, issuer, audience, expiracion y membership activa; no acoplar dominio a SDK de auth. |
+| OQ-021 | Limite binario y allowlist exacta de tipos para `POST /v1/documents`. | Non-blocking | Open | Backend Lead / Security Reviewer | No bloquea Fase 0 ni Fase 1 porque el endpoint permanece deshabilitado. Resolver mediante decision versionada antes de implementar o exponer la superficie documental productiva: fijar `max_size_bytes`, MIME/extensiones, limites de proxy/aplicacion/storage y pruebas de streaming fail-closed conforme a `api-draft-v0.md`. |
 
 ## Preguntas Blocking
 
 No hay preguntas `Blocking` registradas al estado actual de Fase 0.
+
+## Freeze de Subfase 0.14
+
+- Preguntas `Blocking` abiertas al cierre: 0.
+- Preguntas no bloqueantes para Fase 0 abiertas o diferidas: `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-017`, `OQ-018`, `OQ-019`, `OQ-020`, `OQ-021`. `OQ-020` se vuelve blocker pre-beta segun `beta-readiness-gates.md`; `OQ-021` bloquea la habilitacion de `POST /v1/documents` hasta su decision versionada.
+- Cada pregunta conserva responsable y momento de resolucion.
+- Reabrir arquitectura, evidencia, citas, vigencia, trazabilidad, costos, seguridad o lanzamiento sin RAG requiere ADR nuevo; no puede registrarse como simple open question post-freeze.

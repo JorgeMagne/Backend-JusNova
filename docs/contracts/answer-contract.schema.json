@@ -10,7 +10,11 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts",
     "amendments": [
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Claim completeness hardening",
+      "Subfase 0.14 - Claim/Citation relation hardening",
+      "Subfase 0.14 - Published Claim verification gate",
+      "Subfase 0.14 - Sanitized warning bounds"
     ]
   },
   "x-tenant-policy": {
@@ -18,6 +22,19 @@
     "same_organization_id": [
       "claims[].organization_id",
       "citations[].organization_id"
+    ]
+  },
+  "x-claim-completeness-policy": {
+    "description": "ClaimCompletenessValidator es obligatorio antes de publicar. Debe comprobar que toda afirmacion juridica critica visible en sections esta representada por un Claim semanticamente equivalente y que no existe Claim publicado cuyo texto diverja de la afirmacion visible que representa. JSON Schema valida forma local, no completitud semantica del texto.",
+    "critical_claim_predicate": "criticality=high OR claim_type in plazo|requisito|competencia|causal|procedimiento|norma|jurisprudencia|vigencia",
+    "failure_code": "critical_assertion_unmapped"
+  },
+  "x-citation-relation-policy": {
+    "description": "Dentro de cada AnswerContract, toda cita publicada tiene status=valid y claim_id, citation_ref y sources_used son unicos. La relacion Claim <-> Citation es n:m y debe ser bidireccional; JSON Schema cierra el status y evita duplicados exactos, mientras la unicidad por identidad y la igualdad de pares se validan por Citation Policy.",
+    "unique_identities": [
+      "claims[].claim_id",
+      "citations[].citation_ref",
+      "sources_used[]"
     ]
   },
   "required": [
@@ -38,12 +55,14 @@
     "answer_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^ans_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_version": {
       "type": "integer",
@@ -52,12 +71,14 @@
     "trace_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^tr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "evidence_pack_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^ep_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ep_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "jurisdiction": {
       "type": "string",
@@ -106,33 +127,76 @@
     },
     "claims": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
-        "$ref": "./claim.schema.json"
-      }
+        "allOf": [
+          {
+            "$ref": "./claim.schema.json"
+          },
+          {
+            "properties": {
+              "verification_status": {
+                "const": "passed"
+              }
+            },
+            "required": [
+              "verification_status"
+            ]
+          }
+        ]
+      },
+      "maxItems": 500
     },
     "citations": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
-        "$ref": "./citation.schema.json"
-      }
+        "allOf": [
+          {
+            "$ref": "./citation.schema.json"
+          },
+          {
+            "properties": {
+              "status": {
+                "const": "valid"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          }
+        ]
+      },
+      "maxItems": 500
     },
     "sources_used": {
       "type": "array",
       "description": "Debe contener solo source_ref citados por citations[].source_ref. Las fuentes no citadas son bibliografia decorativa y deben bloquear la respuesta por policy.",
+      "uniqueItems": true,
       "items": {
         "type": "string",
-        "pattern": "^F[0-9]+$|^D[0-9]+$"
-      }
+        "minLength": 1,
+        "pattern": "(?:^F[0-9]+$|^D[0-9]+$)(?![\\s\\S])",
+        "maxLength": 160
+      },
+      "maxItems": 500
     },
     "warnings": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
-        "type": "string"
-      }
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
+      },
+      "maxItems": 32
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     }
   },
   "$defs": {
@@ -208,10 +272,15 @@
       ],
       "properties": {
         "title": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1,
+          "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])",
+          "maxLength": 500
         },
         "content": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
         }
       },
       "additionalProperties": false
@@ -299,25 +368,25 @@
   ],
   "x-integrity-examples": [
     {
-      "description": "Cadena minima claim -> citation -> passage -> source.",
-      "claim": {
+      "description": "Proyeccion relacional parcial, no runtime, de la cadena minima claim -> citation -> passage -> source.",
+      "claim_projection": {
         "claim_id": "cl_001",
         "organization_id": "org_001",
         "citations": [
           "C1"
         ]
       },
-      "citation": {
+      "citation_projection": {
         "citation_ref": "C1",
         "organization_id": "org_001",
         "passage_ref": "F1:P1",
         "source_ref": "F1"
       },
-      "passage": {
+      "passage_projection": {
         "passage_ref": "F1:P1",
         "source_ref": "F1"
       },
-      "source": {
+      "source_projection": {
         "source_ref": "F1",
         "tier": "TIER1_CANONICO"
       }
@@ -507,27 +576,27 @@
         },
         "hechos_considerados": {
           "title": "Hechos considerados",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "fundamento_normativo": {
           "title": "Fundamento normativo",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "jurisprudencia_relevante": {
           "title": "Jurisprudencia relevante",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "analisis_aplicado": {
           "title": "Analisis aplicado",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "incertidumbres_vigencia_conflictos": {
           "title": "Incertidumbres, vigencia y conflictos",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "recomendacion_profesional": {
           "title": "Recomendacion profesional",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "fuentes_utilizadas": {
           "title": "Fuentes utilizadas",
@@ -582,7 +651,7 @@
         },
         "hechos_considerados": {
           "title": "Hechos considerados",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "fundamento_normativo": {
           "title": "Fundamento normativo",
@@ -590,19 +659,19 @@
         },
         "jurisprudencia_relevante": {
           "title": "Jurisprudencia relevante",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "analisis_aplicado": {
           "title": "Analisis aplicado",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "incertidumbres_vigencia_conflictos": {
           "title": "Incertidumbres, vigencia y conflictos",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "recomendacion_profesional": {
           "title": "Recomendacion profesional",
-          "content": ""
+          "content": "No aplica en este fixture."
         },
         "fuentes_utilizadas": {
           "title": "Fuentes utilizadas",
@@ -644,6 +713,55 @@
       ],
       "warnings": [
         "Schema-valid but policy-invalid: Claim.organization_id != AnswerContract.organization_id."
+      ],
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "answer_id": "ans_unmapped_critical_assertion",
+      "organization_id": "org_001",
+      "answer_version": 1,
+      "trace_id": "tr_unmapped_critical_assertion",
+      "evidence_pack_id": "ep_001",
+      "jurisdiction": "BO",
+      "sections": {
+        "conclusion_operativa": {
+          "title": "Conclusion operativa",
+          "content": "La norma aplicable establece un plazo obligatorio de diez dias."
+        },
+        "hechos_considerados": {
+          "title": "Hechos considerados",
+          "content": "No aplica en este fixture."
+        },
+        "fundamento_normativo": {
+          "title": "Fundamento normativo",
+          "content": "La afirmacion juridica visible no fue extraida como Claim."
+        },
+        "jurisprudencia_relevante": {
+          "title": "Jurisprudencia relevante",
+          "content": "No aplica en este fixture."
+        },
+        "analisis_aplicado": {
+          "title": "Analisis aplicado",
+          "content": "No aplica en este fixture."
+        },
+        "incertidumbres_vigencia_conflictos": {
+          "title": "Incertidumbres, vigencia y conflictos",
+          "content": "No aplica en este fixture."
+        },
+        "recomendacion_profesional": {
+          "title": "Recomendacion profesional",
+          "content": "No aplica en este fixture."
+        },
+        "fuentes_utilizadas": {
+          "title": "Fuentes utilizadas",
+          "content": "No aplica en este fixture."
+        }
+      },
+      "claims": [],
+      "citations": [],
+      "sources_used": [],
+      "warnings": [
+        "Schema-valid but policy-invalid: critical visible assertion has no Claim."
       ],
       "created_at": "2026-05-22T00:00:00Z"
     }

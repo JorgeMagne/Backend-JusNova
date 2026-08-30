@@ -28,16 +28,20 @@
     "conversation_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^conv_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^conv_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "owner_actor_ref": {
       "type": "string",
-      "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+      "minLength": 1,
+      "pattern": "(?:^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "owner_actor_type": {
       "const": "user"
@@ -48,7 +52,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^case_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^case_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "title": {
       "type": [
@@ -56,7 +61,8 @@
         "null"
       ],
       "minLength": 1,
-      "maxLength": 180
+      "maxLength": 180,
+      "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
     },
     "status": {
       "enum": [
@@ -67,18 +73,24 @@
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "updated_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "deleted_at": {
       "type": [
         "string",
         "null"
       ],
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     }
   },
   "additionalProperties": false,
@@ -101,7 +113,9 @@
         "properties": {
           "deleted_at": {
             "type": "string",
-            "format": "date-time"
+            "minLength": 1,
+            "format": "date-time",
+            "maxLength": 40
           }
         }
       },
@@ -236,27 +250,27 @@
           },
           "fundamento_normativo": {
             "title": "Fundamento normativo",
-            "content": ""
+            "content": "No aplica en este fixture."
           },
           "jurisprudencia_relevante": {
             "title": "Jurisprudencia relevante",
-            "content": ""
+            "content": "No aplica en este fixture."
           },
           "analisis_aplicado": {
             "title": "Analisis aplicado",
-            "content": ""
+            "content": "No aplica en este fixture."
           },
           "incertidumbres_vigencia_conflictos": {
             "title": "Incertidumbres, vigencia y conflictos",
-            "content": ""
+            "content": "No aplica en este fixture."
           },
           "recomendacion_profesional": {
             "title": "Recomendacion profesional",
-            "content": ""
+            "content": "No aplica en este fixture."
           },
           "fuentes_utilizadas": {
             "title": "Fuentes utilizadas",
-            "content": ""
+            "content": "No aplica en este fixture."
           }
         },
         "claims": [],

@@ -8,7 +8,10 @@
     "document_status": "Accepted",
     "date": "2026-05-22",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts"
+    "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts",
+    "amendments": [
+      "Subfase 0.14 - Sanitized warning bounds"
+    ]
   },
   "required": [
     "passage_ref",
@@ -22,15 +25,20 @@
   "properties": {
     "passage_ref": {
       "type": "string",
-      "pattern": "^[FD][0-9]+:P[0-9]+$"
+      "minLength": 1,
+      "pattern": "(?:^[FD][0-9]+:P[0-9]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "source_ref": {
       "type": "string",
-      "pattern": "^F[0-9]+$|^D[0-9]+$"
+      "minLength": 1,
+      "pattern": "(?:^F[0-9]+$|^D[0-9]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "text": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 4000
     },
     "locator": {
       "type": "object",
@@ -54,13 +62,19 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "minLength": 1,
+          "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])",
+          "maxLength": 120
         },
         "section": {
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "minLength": 1,
+          "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])",
+          "maxLength": 240
         },
         "paragraph": {
           "type": [
@@ -83,7 +97,10 @@
           "type": [
             "string",
             "null"
-          ]
+          ],
+          "minLength": 1,
+          "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])",
+          "maxLength": 1024
         }
       },
       "additionalProperties": false
@@ -106,9 +123,14 @@
     },
     "warnings": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
-        "type": "string"
-      }
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
+      },
+      "maxItems": 32
     }
   },
   "$defs": {
@@ -148,7 +170,7 @@
       "if": {
         "properties": {
           "passage_ref": {
-            "pattern": "^D[0-9]+:P[0-9]+$"
+            "pattern": "(?:^D[0-9]+:P[0-9]+$)(?![\\s\\S])"
           }
         },
         "required": [
@@ -158,7 +180,7 @@
       "then": {
         "properties": {
           "source_ref": {
-            "pattern": "^D[0-9]+$"
+            "pattern": "(?:^D[0-9]+$)(?![\\s\\S])"
           }
         }
       }
@@ -167,7 +189,7 @@
       "if": {
         "properties": {
           "passage_ref": {
-            "pattern": "^F[0-9]+:P[0-9]+$"
+            "pattern": "(?:^F[0-9]+:P[0-9]+$)(?![\\s\\S])"
           }
         },
         "required": [
@@ -177,7 +199,7 @@
       "then": {
         "properties": {
           "source_ref": {
-            "pattern": "^F[0-9]+$"
+            "pattern": "(?:^F[0-9]+$)(?![\\s\\S])"
           }
         }
       }

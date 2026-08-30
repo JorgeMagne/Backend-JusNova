@@ -74,7 +74,8 @@
     "message": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 240
+      "maxLength": 240,
+      "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
     },
     "severity": {
       "enum": [
@@ -86,7 +87,9 @@
     },
     "request_id": {
       "type": "string",
-      "pattern": "^rq_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^rq_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "retryable": {
       "type": "boolean"
@@ -96,28 +99,40 @@
     },
     "created_at": {
       "type": "string",
+      "minLength": 1,
       "format": "date-time",
-      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):[0-5][0-9])$"
+      "pattern": "(?:^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?(Z|[+-]([01][0-9]|2[0-3]):[0-5][0-9])$)(?![\\s\\S])",
+      "maxLength": 40
     },
     "trace_id": {
       "type": "string",
-      "pattern": "^tr_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "conversation_id": {
       "type": "string",
-      "pattern": "^conv_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^conv_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_id": {
       "type": "string",
-      "pattern": "^ans_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "document_id": {
       "type": "string",
-      "pattern": "^doc_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^doc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "provider_call_audit_id": {
       "type": "string",
-      "pattern": "^pca_[A-Za-z0-9_-]+$"
+      "minLength": 1,
+      "pattern": "(?:^pca_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "metadata": {
       "$ref": "#/$defs/metadata"
@@ -154,7 +169,8 @@
         },
         "resource_ref": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 160
         },
         "parent_resource_type": {
           "enum": [
@@ -163,16 +179,19 @@
         },
         "parent_resource_ref": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 160
         },
         "field": {
           "type": "string",
-          "pattern": "^[A-Za-z0-9_.-]+$",
+          "minLength": 1,
+          "pattern": "(?:^[A-Za-z0-9_.-]+$)(?![\\s\\S])",
           "maxLength": 120
         },
         "limit_name": {
           "type": "string",
-          "pattern": "^[A-Za-z0-9_.-]+$",
+          "minLength": 1,
+          "pattern": "(?:^[A-Za-z0-9_.-]+$)(?![\\s\\S])",
           "maxLength": 80
         },
         "retry_after_seconds": {
@@ -188,7 +207,7 @@
             "anyOf": [
               {
                 "description": "Codigo simbolico seguro sin slash.",
-                "pattern": "^[A-Za-z0-9_.:-]+$"
+                "pattern": "(?:^[A-Za-z0-9_.:-]+$)(?![\\s\\S])"
               },
               {
                 "description": "MIME type de upload permitido por catalogo cerrado.",
@@ -206,7 +225,8 @@
             ]
           },
           "minItems": 1,
-          "uniqueItems": true
+          "uniqueItems": true,
+          "maxItems": 500
         }
       },
       "additionalProperties": false,
@@ -335,7 +355,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^conv_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^conv_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -354,7 +374,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^msg_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^msg_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -373,7 +393,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^case_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^case_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -392,7 +412,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^case_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^case_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -411,7 +431,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^doc_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^doc_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -430,7 +450,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^docv_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^docv_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -449,7 +469,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^de_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^de_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -468,7 +488,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^tr_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -487,7 +507,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^mc_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^mc_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -506,7 +526,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^tc_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^tc_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -525,7 +545,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^rr_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^rr_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -544,7 +564,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^pca_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^pca_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -563,7 +583,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^ue_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^ue_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -582,7 +602,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^ans_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -601,7 +621,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^av_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^av_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -620,7 +640,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^cl_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^cl_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -639,7 +659,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^ep_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^ep_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -662,13 +682,13 @@
             ],
             "properties": {
               "resource_ref": {
-                "pattern": "^(F[0-9]+|D[0-9]+)$"
+                "pattern": "(?:^(F[0-9]+|D[0-9]+)$)(?![\\s\\S])"
               },
               "parent_resource_type": {
                 "const": "evidence_pack"
               },
               "parent_resource_ref": {
-                "pattern": "^ep_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^ep_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -691,13 +711,13 @@
             ],
             "properties": {
               "resource_ref": {
-                "pattern": "^(F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$"
+                "pattern": "(?:^(F[0-9]+:P[0-9]+|D[0-9]+:P[0-9]+)$)(?![\\s\\S])"
               },
               "parent_resource_type": {
                 "const": "evidence_pack"
               },
               "parent_resource_ref": {
-                "pattern": "^ep_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^ep_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -716,7 +736,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^sub_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^sub_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -735,7 +755,7 @@
           "then": {
             "properties": {
               "resource_ref": {
-                "pattern": "^rc_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^rc_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
@@ -754,7 +774,7 @@
           "then": {
             "properties": {
               "parent_resource_ref": {
-                "pattern": "^ep_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^ep_[A-Za-z0-9_-]+$)(?![\\s\\S])"
               }
             }
           }
