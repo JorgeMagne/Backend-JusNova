@@ -1,7 +1,7 @@
 # Risk Register
 
 **Estado documental:** Draft
-**Fecha:** 2026-08-10
+**Fecha:** 2026-08-30
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Registro vivo de riesgos de Fase 0
 
@@ -11,9 +11,9 @@ Nota: el estado `Draft` es intencional porque este registro es vivo. Los checkli
 
 - `R-001` se cierra para Fase 0: existe handoff ejecutable, priorizado y aceptado.
 - `R-002` permanece en mitigacion: los contratos son implementables documentalmente y Fase 1 debe probar round-trip y policy invariants.
-- `R-003` se cierra para Fase 0: la revision cruzada final no deja contradicciones P1/P2 abiertas.
+- `R-003` se cierra para Fase 0: la revision cruzada final no deja contradicciones P1/P2/P3 abiertas.
 - Los riesgos runtime, beta y market permanecen abiertos o en mitigacion y conservan sus gates.
-- Se agregan `R-030` para controlar drift posterior al freeze y `R-031` para impedir que dev auth llegue a beta.
+- Se agregan `R-030` para controlar drift posterior al freeze, `R-031` para impedir que dev auth llegue a beta, `R-032` para bloquear SSRF/DNS rebinding antes de fetch real y `R-033` para impedir payloads JSON o binarios contractualmente ilimitados.
 
 ## Escala
 
@@ -29,7 +29,7 @@ Nota: el estado `Draft` es intencional porque este registro es vivo. Los checkli
 |---|---|---|---|---|---|---|
 | R-001 | Sobrediseno documental sin avance ejecutable hacia Fase 1. | Medium | High | Closed | Handoff 0.13, backlog P0/P1/P2 y plan operativo aceptados; Fase 1 queda habilitada por 0.14. | Codex / JusNova Chief Backend Architect |
 | R-002 | Contratos demasiado abstractos para implementacion. | Medium | High | Mitigating | JSON Schemas, ejemplos, invariants y criterios de aceptacion estan cerrados; Fase 1 debe demostrar round-trip y tests policy-valid. | Codex / JusNova Chief Backend Architect |
-| R-003 | Contradicciones entre ADRs, policies y contracts. | Medium | High | Closed | Revision cruzada 0.14 y reauditoria adversarial corrigieron los hallazgos residuales antes del merge; schemas, policies, gates y handoff quedan alineados sin P1/P2 abiertos. | Codex / JusNova Chief Backend Architect |
+| R-003 | Contradicciones entre ADRs, policies y contracts. | Medium | High | Closed | Revision cruzada 0.14 y reauditoria adversarial corrigieron los hallazgos residuales antes del merge; schemas, policies, gates y handoff quedan alineados sin P1/P2/P3 abiertos. | Codex / JusNova Chief Backend Architect |
 | R-004 | Dependencia accidental de proveedor externo en documentos de Fase 0. | Medium | Critical | Mitigating | Provider interfaces obligatorias, provider registry, provider policy y `ProviderCallAudit` aceptados en 0.10. | Codex / JusNova Chief Backend Architect |
 | R-005 | Politica de vigencia insuficiente o ambigua. | Medium | Critical | Mitigating | Estados cerrados de vigencia, frases prohibidas, abstention policy y `validity_awareness` blocker; enforcement queda para runtime/evals. | Codex / JusNova Chief Backend Architect |
 | R-006 | Seguridad tratada tarde. | Medium | Critical | Mitigating | Subfase 0.9 crea seguridad documental minima; Subfase 0.10 acepta privacy/security policy, data classification, raw access, provider registry y prompt injection controls. Enforcement runtime queda para Fase 1. | Codex / JusNova Chief Backend Architect |
@@ -40,7 +40,7 @@ Nota: el estado `Draft` es intencional porque este registro es vivo. Los checkli
 | R-011 | Conflicto irresoluble ocultado en respuesta categorica. | Medium | Critical | Mitigating | `conflict-policy.md`, `uncertainty-policy.md` y abstencion ante conflicto critico. | Codex / JusNova Chief Backend Architect |
 | R-012 | Uso excesivo de fuente secundaria por accesibilidad. | Medium | High | Mitigating | Source tiers, advertencias obligatorias y prohibicion de TIER3 como soporte normativo critico unico. | Codex / JusNova Chief Backend Architect |
 | R-013 | Trazas filtran prompts, documentos, mensajes o salidas completas del modelo. | Medium | Critical | Mitigating | Subfase 0.7 usa hashes, referencias, objetos cerrados y trace visibility; Subfase 0.8 endurece refs de actor/budget; Subfase 0.9 agrega refs de mensaje sin contenido; Subfase 0.10 agrega raw access, provider audit, data classification y prompt injection risk refs sin contenido crudo. | Codex / JusNova Chief Backend Architect |
-| R-014 | Usage Ledger no concilia creditos, budget efectivo y trazas publicadas. | Medium | High | Mitigating | Subfase 0.8 exige `cost_budget_ref`, `cost_budget_version`, `plan_code`, `complexity` en `TraceObject` y `UsageEvent research_credit_used` para `COMPLEJO`/`INVESTIGACION`; conciliacion runtime queda para Fase 1. | Codex / JusNova Chief Backend Architect |
+| R-014 | Usage Ledger no concilia creditos, budget efectivo y trazas publicadas, o un retry duplica consumo. | Medium | High | Mitigating | Subfase 0.8 exige igualdad exacta de tenant/plan/complejidad/budget entre decision efectiva, `TraceObject` y `UsageEvent`; Fase 1 confirma respuesta, usage, debito y cierre del run en una transaccion terminal con lock de saldo, indices idempotentes, `Idempotency-Key` hasheada tenant/actor-scoped y tests de retry/concurrencia. | Codex / JusNova Chief Backend Architect |
 | R-015 | Memoria de caso se confunde con verdad juridica o evidencia probatoria. | Medium | Critical | Mitigating | Subfase 0.9 acepta `case-memory.schema.json` y `memory-policy.md`: memoria separa hechos de usuario, hechos documentales, riesgos y contradicciones; no sostiene vigencia ni claims criticos. | Codex / JusNova Chief Backend Architect |
 | R-016 | OCR de baja confianza sostiene claims criticos. | Medium | Critical | Mitigating | Subfase 0.9 acepta `document-evidence.schema.json` y `ocr-policy.md`: baja confianza exige warnings, no es citable como evidencia decisiva sin escalacion o revision. | Codex / JusNova Chief Backend Architect |
 | R-017 | Provider externo recibe clases de datos no permitidas o demasiado sensibles. | Medium | Critical | Mitigating | Subfase 0.10 acepta `data-classification.yaml`, `provider-registry.yaml`, `provider-policy.md` y `ProviderCallAudit`; runtime debe hacer subset enforcement en Fase 1. | Codex / JusNova Chief Backend Architect |
@@ -58,3 +58,5 @@ Nota: el estado `Draft` es intencional porque este registro es vivo. Los checkli
 | R-029 | Handoff de Fase 1 introduce rutas, enums o tablas paralelas a contratos aceptados. | Medium | High | Mitigating | Subfase 0.13 alinea brief/backlog/plan con `docs/contracts/`, `docs/schemas/budgets.yaml`, `domain-model.md`, `api-draft-v0.md` y `error-envelope.schema.json`; Fase 1 debe tratar operational runs/events como detalle tecnico. | Codex / JusNova Chief Backend Architect |
 | R-030 | Cambios posteriores al freeze alteran decisiones criticas sin trazabilidad. | Medium | Critical | Mitigating | Fase 0 congelada: todo cambio critico requiere ADR nuevo o documento `Superseded`, con impacto en contracts, policies, evals y handoff. | Codex / JusNova Chief Backend Architect |
 | R-031 | `DevAuthProvider` o headers de desarrollo llegan a beta/produccion sin autenticacion productiva ni membership activa. | Medium | Critical | Open | P1-09 y gate pre-beta exigen adapter productivo provider-neutral, tokens firmados con issuer/audience/expiry, resolucion actor-membership-tenant y negativos de seguridad; `DevAuthProvider` solo local/test. | Backend Lead / Security Reviewer |
+| R-032 | Fetch o headless alcanza loopback, redes privadas, metadata cloud o un destino cambiado por DNS rebinding. | Medium | Critical | Mitigating | `FetchPolicy` y `legal-search-policy.md` permiten solo HTTPS/443 a DNS globalmente routable, deshabilitan proxies de ambiente y redirects automaticos, revalidan cada salto, fijan la direccion validada y limitan tiempo, MIME y bytes; Fase 4 no habilita red real sin la suite SSRF obligatoria. | Backend Lead / Security Reviewer |
+| R-033 | Un ID, texto, array, body JSON o stream binario sin cota agota memoria, CPU, ancho de banda, storage o capacidad de indices antes de que CostGovernor intervenga. | Medium | Critical | Mitigating | Los 29 JSON Schemas declaran `minLength: 1`/`maxLength` para strings variables y `maxItems` para arrays; `api-draft-v0.md` limita JSON a 131072 bytes y Message a 20000 code points/20 attachments. `POST /v1/documents` permanece deshabilitado hasta que `OQ-021` fije limite/allowlist versionados y proxy/aplicacion aborten el stream antes de persistir. `make validate-schemas` y boundary tests bloquean regresiones. | Backend Lead / Security Reviewer |

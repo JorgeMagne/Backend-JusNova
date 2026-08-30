@@ -25,7 +25,8 @@
     "cost_report_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^cr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^cr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "currency": {
       "enum": [
@@ -67,7 +68,8 @@
         "properties": {
           "provider": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "maxLength": 160
           },
           "estimated_cost": {
             "type": "number",
@@ -75,7 +77,8 @@
           }
         },
         "additionalProperties": false
-      }
+      },
+      "maxItems": 500
     },
     "estimated_total_cost": {
       "type": "number",

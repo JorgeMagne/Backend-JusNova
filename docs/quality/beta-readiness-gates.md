@@ -32,6 +32,7 @@ Provider Reliability Layer (PRL) maneja caidas basicas de proveedores: timeout, 
 | Prompt injection blockers estan activos | Riesgos blocking no sostienen claims criticos y se bloquean o excluyen. | Adversarial evals y PromptInjectionRisk refs. | Security Reviewer / QA | true | Fase 1 | `prompt-injection-risk.schema.json`, `prompt-injection-policy.md` |
 | ErrorEnvelope se usa en errores publicos | Todo no-2xx publico usa envelope cerrado y seguro. | API tests. | Backend Lead | true | Fase 1 | `error-envelope.schema.json`, `api-draft-v0.md` |
 | Logs/traces no guardan payloads raw sensibles | Prompts, documentos, OCR completo y provider payloads no aparecen en logs/traces. | Static scans y trace fixtures. | Security Reviewer | true | Fase 1 | `privacy-security-policy.md`, `trace-object.schema.json` |
+| Fetch egress bloquea SSRF y destinos no autorizados | Antes de habilitar fetch o headless real, URL inicial y redirects pasan un guard unico HTTPS/443, DNS globalmente routable, address pinning y limites de red/contenido. | Tests de loopback, privadas, link-local, reservadas, IPv6, DNS rebinding, redirects, MIME, timeouts y decompression bomb; prueba de que un destino bloqueado no recibe conexion. | Backend Lead / Security Reviewer | true | Fase 4 antes de fetch real | `provider-interfaces.md`, `legal-search-policy.md`, `security-checklist-phase-1.md` |
 
 ## Politica de fallo
 

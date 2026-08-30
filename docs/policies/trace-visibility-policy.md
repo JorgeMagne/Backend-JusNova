@@ -61,7 +61,7 @@ Subfase 0.10 define los contratos documentales de raw access, provider audit, pr
 32. `TraceObject.cost.model_output_tokens` debe ser igual a la suma de `model_calls[].token_usage.output_tokens`.
 33. `TraceObject.cost.tool_calls` debe ser igual a la cantidad de elementos en `tool_calls[]`; si en 0.8 se requiere distinguir llamadas facturables, se agregara un campo separado.
 34. `CostReport.estimated_total_cost` debe coincidir con la suma de `provider_estimated_costs[].estimated_cost`, `tool_calls[].cost_units.estimated_cost` y `retrieval_runs[].estimated_cost` bajo la politica de redondeo definida por implementacion.
-35. Cada `ModelCall`, `ToolCall` y `RetrievalRun` debe cumplir `completed_at >= started_at`.
+35. Cada `ModelCall`, `ToolCall`, `RetrievalRun` y `ProviderCallAudit` debe cumplir `completed_at >= started_at`.
 36. `latency_ms.total` representa duracion wall-clock de la traza y no puede ser menor que ningun componente: `model_total`, `tool_total`, `retrieval_total`, `citation_audit`, `persistence` o `queue`.
 37. Un componente de latencia positivo con `latency_ms.total = 0` es inconsistente y debe rechazarse.
 38. `latency_ms.model_total` no puede ser menor que la mayor duracion derivada de `model_calls[]`.
@@ -69,7 +69,7 @@ Subfase 0.10 define los contratos documentales de raw access, provider audit, pr
 40. `latency_ms.retrieval_total` no puede ser menor que la mayor duracion derivada de `retrieval_runs[]`.
 41. `latency_ms.total` no puede ser menor que la mayor duracion derivada de cualquier `ModelCall`, `ToolCall` o `RetrievalRun`.
 42. Dentro de un `TraceObject`, `model_calls[].model_call_id`, `tool_calls[].tool_call_id`, `retrieval_runs[].retrieval_run_id` y `claims[].claim_id` deben ser unicos.
-43. Dentro de `citation_audit.results[]`, la clave `(claim_id, citation_ref, passage_ref, source_ref)` debe ser unica.
+43. Dentro de `citation_audit.results[]`, la clave `(claim_id, citation_ref)` debe ser unica; el `passage_ref` y `source_ref` de cada fila deben coincidir exactamente con la `Citation` resuelta para esa misma `AnswerVersion`.
 44. Si `CostReport.currency = NONE`, entonces `provider_estimated_costs[]`, `tool_calls[].cost_units.estimated_cost`, `retrieval_runs[].estimated_cost` y `estimated_total_cost` deben ser `0`.
 45. Todo campo `input_hash`, `output_hash`, `answer_hash`, `render_hash` o `url_hash` debe usar formato `sha256:` seguido de 64 caracteres hexadecimales; ningun hash puede contener texto crudo, URL cruda, prompt, documento, mensaje o salida completa.
 46. Todo `TraceObject` debe registrar `cost_budget_ref`, `cost_budget_version`, `plan_code` y `complexity` como escalares cerrados.
@@ -88,7 +88,8 @@ Subfase 0.10 define los contratos documentales de raw access, provider audit, pr
 59. `TraceObject.prompt_injection_risks[]` agrega riesgos detectados en retrieval y evidencia usados por la respuesta; el resumen de usuario solo muestra advertencias comprensibles, no detalles explotables.
 60. `RawAccessEvent.visibility_level` no admite `SUPPORT_VIEW`; soporte normal no es acceso raw.
 61. `support_operator` queda fuera de `RawAccessEvent`; un actor de soporte solo puede aparecer como `incident_responder` o `security_auditor` bajo `RAW_INCIDENT_ACCESS`.
-62. Las reglas 30 a 61 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
+62. `TraceObject` hereda la mayor clasificacion de mensajes, claims, evidencia, retrieval y riesgos, con minimo `INTERNAL_TRACE_RESTRICTED`; esa clase se conserva al persistirlo y en cualquier `RawAccessEvent` que lo resuelva. Sanitizar la traza impide material raw, pero no autoriza degradar su sensibilidad.
+63. Las reglas 30 a 62 requieren validador custom o tests de contrato; no deben inferirse del prompt ni de la UI de soporte.
 
 ## Reglas asistidas por IA
 
@@ -145,6 +146,7 @@ El motivo debe ser concreto y cerrado. `support_operator` no puede abrir `RawAcc
 - Los IDs internos de `TraceObject` y las claves de `citation_audit.results[]` no pueden duplicarse.
 - Los niveles de visibilidad quedan definidos y no permiten acceso libre en `INTERNAL_AUDIT`.
 - Todo acceso raw o elevado tiene contrato `RawAccessEvent` y no se confunde con `SUPPORT_VIEW`.
+- La clasificacion de `TraceObject` se deriva de sus entradas y se conserva en persistencia/acceso, sin tratar `INTERNAL_TRACE_RESTRICTED` como techo.
 - Riesgos de prompt injection se conservan como referencias estructuradas, no como texto malicioso reutilizable.
 
 ## Relacion con contratos

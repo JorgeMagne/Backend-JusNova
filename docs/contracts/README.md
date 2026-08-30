@@ -1,7 +1,7 @@
 # Contract Governance
 
-**Estado documental:** Draft
-**Fecha:** 2026-05-22
+**Estado documental:** Accepted
+**Fecha:** 2026-08-10
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Gobierno de contratos internos y JSON Schemas
 
@@ -18,9 +18,18 @@ Los contratos definen las estructuras que Fase 1 implementara en codigo. Un modu
 - Todo contrato que referencie otro schema debe usar rutas relativas estables.
 - Los nombres de enums deben venir de `docs/schemas/` cuando exista una taxonomia aprobada.
 
+## Semantica de fixtures embebidos
+
+- `examples` contiene payloads raiz completos que deben validar contra el schema que los declara.
+- `x-invalid-examples` contiene payloads raiz completos que deben fallar validacion contra ese schema.
+- `x-policy-invalid-examples` contiene payloads raiz completos schema-valid cuya combinacion incumple una policy o una regla custom expresamente citada.
+- `x-cross-contract-policy-invalid-examples` contiene wrappers relacionales de prueba, no payloads raiz del schema que los aloja. Cada objeto interno que represente un contrato debe validar por separado contra su schema propio. El runner debe rechazar despues la relacion cross-contract indicada; el wrapper completo no se valida como instancia del schema raiz.
+- `x-integrity-examples` contiene proyecciones relacionales deliberadamente parciales y no runtime para documentar integridad entre contratos. Sus claves deben usar sufijo `_projection`; no representan payloads completos, no se validan individualmente contra el schema runtime, no se tratan como `examples` y no se serializan. Un test ejecutable debe expandir cada proyeccion a un payload completo schema-valid antes de comprobar la relacion.
+- Todo validador de contratos debe distinguir estas categorias: en `x-cross-contract-policy-invalid-examples` valida por separado cada objeto contractual completo y despues la relacion; en `x-integrity-examples` valida solo la shape/proyeccion documentada y nunca aplica el schema runtime a un fragmento parcial. Ningun wrapper relacional se valida como instancia del schema raiz que lo aloja.
+
 ## Contratos aceptados en Subfase 0.4
 
-Estos contratos quedan aceptados como base documental del flujo `EvidencePack -> AnswerDraft -> ClaimExtractor -> CitationAuditor -> ClaimVerifier -> FinalAnswer`. Esta aceptacion no implementa backend funcional ni `citation-audit.schema.json`.
+Estos contratos quedaron aceptados en Subfase 0.4 como base documental del flujo `EvidencePack -> AnswerDraft -> ClaimExtractor -> CitationAuditor -> ClaimVerifier -> FinalAnswer`. Esa subfase no implemento backend funcional y delego `citation-audit.schema.json` a Subfase 0.7; el schema ya forma parte del catalogo aceptado actual descrito mas abajo.
 
 | Contrato | Estado | Archivo |
 |---|---|---|
@@ -61,6 +70,7 @@ Estos contratos quedan aceptados como base documental del JusNova Live Legal Sea
 
 - `source.schema.json` representa snapshot de fuente usada mediante `snapshot_id` o `snapshot_unavailable_reason`.
 - `snapshot_id` no es obligatorio cuando existe `snapshot_unavailable_reason` cerrada; no se exige emitir un `null` sintetico.
+- En `LegalSearchResult`, un pasaje extraido con `snapshot_id` ausente o `null` exige `snapshot_unavailable_reason`; el condicional enumera ambos casos de forma explicita y no depende de la evaluacion vacia de `properties` en JSON Schema. La exclusion mutua prohíbe razon solo cuando `snapshot_id` contiene un `snap_*` materializado, no cuando su valor contractual es `null`.
 - `snapshot_unavailable_reason` usa enum compartido con `legal-search-result.schema.json`.
 - `user_private_document_not_snapshotted` solo aplica a `USER_DOCUMENT` o `documento_usuario`.
 - Una fuente usada sin snapshot ni razon cerrada no puede entrar al Evidence Pack final.
@@ -86,7 +96,9 @@ Estos contratos quedan aceptados como base documental de trazabilidad, auditoria
 ## Reglas especificas de Subfase 0.7
 
 - `TraceObject` exige organizacion, actor pseudonimizado, version de respuesta, auditoria de citas, costo observado y latencias cerradas.
+- `TraceObject` no expone un campo `classification` porque el payload es cerrado; persistencia conserva una columna DB-only con la mayor sensibilidad de mensajes, claims, evidencia, retrieval y riesgos, minimo `INTERNAL_TRACE_RESTRICTED`, y cualquier `RawAccessEvent` debe usar exactamente esa clase.
 - `TraceObject.retrieval_runs[]` usa resumen sanitizado; no embebe `RetrievalRun` operativo completo, URLs crudas de discovery, fuentes abiertas o fuentes rechazadas, mensajes libres de error, warning codes libres ni warnings libres.
+- El `RetrievalRun` operativo es tenant-scoped y puede conservar resultados minimizados autorizados, pero sus codigos de error son internos y sus mensajes/warnings son sanitizados, de una linea y acotados; nunca copian excepciones, queries, URLs, snippets, documentos ni payloads raw.
 - `ModelCall` y `ToolCall` guardan hashes y codigos de error; no guardan prompts, salidas, documentos ni mensajes completos.
 - `CitationAudit` contiene resultados por cita y fallas bloqueantes; `passed` no admite fallas bloqueantes.
 - `AnswerVersion` referencia `AnswerContract` para respuestas sustantivas y `AbstentionRender` para `total_abstention`/`blocked`; no crea EvidencePack sintetico ni embebe respuesta completa sensible.
@@ -171,7 +183,7 @@ Estos contratos quedan aceptados como base documental de seguridad, privacidad, 
 - `DocumentEvidence` exige `document_evidence_id` para auditoria resoluble de fragmentos.
 - `DocumentEvidence.prompt_injection_risks[]` es requerido; `[]` significa evaluado sin riesgos detectados.
 - `LegalSearchQuery.query_classification` distingue busqueda legal publica abstracta de query derivada de cliente.
-- `PromptInjectionRisk` es el contrato compartido para riesgos detectados en documentos, retrieval y trazas.
+- `PromptInjectionRisk` es el contrato compartido para riesgos detectados en documentos, retrieval y trazas. `detected_in_ref` solo acepta refs resolubles o `url_hash` canonico; `source_hash` queda fuera hasta definir bytes y mapping contractuales.
 - `TraceObject.prompt_injection_risks[]` agrega riesgos de evidencia/retrieval usados por la respuesta.
 - Ningun contrato 0.10 guarda documentos completos, OCR completo, prompts completos, mensajes completos, HTML bruto ni salidas completas.
 
@@ -197,10 +209,24 @@ Estos contratos quedan aceptados como base documental del modelo conceptual y de
 - `Message.attachments[].attachment_id` usa `att_*`; `Source.snapshot_id` y `LegalSearchResult.snapshot_id` usan `snap_*`; `AnswerVersion.answer_contract_ref` usa `ans_*:vN`.
 - `AnswerVersion.abstention_render_ref` usa `abstention_render_*` y `rendered_answer_snapshot_id` usa `render_snap_*` cuando existen.
 - `LegalSearchQuery.query_id`, `RetrievalPlan.retrieval_plan_id`, `LegalSearchResult.result_id` y `LegalEntity.entity_id` usan prefijos canonicos `q_*`, `rp_*`, `lsr_*` y `ent_*`.
+- `LegalSearchQuery.entities[].entity_id` y `RetrievalRun.discovery_results[].result_id` son identidades unicas dentro de su contenedor. `RetrievalRun.sources_rejected[]` conserva una sola entrada por `url_hash` canonico y comparte exactamente el enum de razones con `TraceObject.sources_rejected[]`, incluido `unsupported_for_critical_claim`; `access_not_allowed` omite la URL cruda y las demas razones solo pueden conservar una URL publica ya autorizada por `FetchPolicy`. Estas invariantes requieren validacion relacional ademas de `uniqueItems` para detectar objetos distintos con la misma identidad.
+- `RetrievalPlan.query_id` resuelve la `LegalSearchQuery` del mismo tenant; `RetrievalRun` conserva ese `query_id` y tenant. Un run produce como maximo un `EvidencePack`, y cuando existe ambas refs (`RetrievalRun.evidence_pack_id` y `EvidencePack.retrieval_run_id`) deben ser reciprocas.
 - `RetrievalPlan` exige `organization_id=org_*`; los planes de busqueda son tenant-scoped aunque consulten fuentes publicas.
 - `AnswerContract`, `AnswerVersion`, `AbstentionRender`, `EvidencePack`, `Claim` y `Citation` exigen `organization_id=org_*`.
-- Todo subobjeto o contrato referenciado dentro de un agregado tenant-scoped debe resolver al mismo `organization_id` que el contenedor. Esto se valida por policy/custom para `AnswerContract -> Claim/Citation`, `AnswerVersion -> TraceObject/AnswerContract/AbstentionRender`, `TraceObject -> ModelCall/ToolCall/RetrievalRun/EvidencePack` y `ProviderCallAudit -> ModelCall/ToolCall/RetrievalRun/UsageEvent/CostReport`.
+- Todo subobjeto o contrato referenciado dentro de un agregado tenant-scoped debe resolver al mismo `organization_id` que el contenedor. Esto se valida por policy/custom para `AnswerContract -> Claim/Citation`, `AnswerVersion -> TraceObject/AnswerContract/AbstentionRender`, `TraceObject -> ModelCall/ToolCall/RetrievalRun/EvidencePack` y `ProviderCallAudit -> TraceObject/ModelCall/ToolCall/RetrievalRun/UsageEvent/CostReport`.
+- `Answer.latest_answer_version_ref` resuelve a la version vigente del mismo answer/tenant y su `response_outcome` coincide con esa version; esta integridad pertenece a persistencia/policy porque `Answer` no tiene JSON Schema standalone en Fase 0.
+- `EvidencePack.legal_area[]` es un conjunto; `sources[].source_ref` y `passages[].passage_ref` son identidades locales unicas, y cada pasaje resuelve exactamente una fuente dentro del mismo pack. Las colisiones por ref requieren validador relacional aunque los objetos individuales sean schema-valid. Toda fuente del pack con `validity_status=VIGENCIA_CONFIRMADA|DEROGADA_CONFIRMADA` debe tener al menos un pasaje del mismo pack cuyo `source_ref` coincida; un `Source` aislado schema-valid no basta para confirmar vigencia o derogacion.
+- `Claim <-> Citation` es una relacion n:m bidireccional dentro de la misma `AnswerVersion`; todo claim publicado en `AnswerContract` usa `verification_status=passed`, toda cita publicada usa `status=valid`, se asocia al menos a un claim, e IDs/refs y arrays se tratan como conjuntos sin duplicados.
+- Cada `CitationAudit.results[]` resuelve una `Citation` de la misma `AnswerVersion`; `(claim_id, citation_ref)` es unico y sus `passage_ref`/`source_ref` deben ser exactamente los de esa cita. Esta integridad es cross-contract y no se sustituye por schema-validity local.
+- `Source.metadata` es un objeto publico cerrado y minimizado; no admite claves raw, prompts, OCR, HTML, mensajes ni payloads de provider.
 - Todo contrato privado que requiere `organization_id` exige forma canonica `org_*`, alineada con `domain-model.md` y `entity-ownership-matrix.md`.
+- Todo `pattern` que expresa un valor completo usa, ademas de sus anchors legibles, la asercion de fin real `(?![\s\S])`. El `$` aislado no se considera cierre suficiente porque algunos motores lo hacen coincidir antes de un terminador de linea; IDs, refs, hashes, fechas y codigos con `CR`, `LF`, `U+2028` o `U+2029` terminal deben fallar. Esta regla equivale a `full-match` sobre el string recibido: no se aplica `trim`, normalizacion ni coercion antes de validar.
+- Los textos contractuales declarados como sanitizados y de una linea rechazan controles C0/C1 (`U+0000..U+001F`, `U+007F..U+009F`) y separadores `U+2028`/`U+2029`; no se admite limpiar esos caracteres despues de validar.
+- Ningun schema aceptado deja un `string` variable sin `minLength: 1` y `maxLength`, ni un `array` sin `maxItems`. `format` es una anotacion opcional en JSON Schema y nunca sustituye el rechazo estructural de `""`; los enums y `const` son conjuntos finitos por definicion. Cualquier excepcion futura requiere ADR y tests de semantica/consumo de recursos.
+- `maxLength` cuenta code points Unicode conforme a JSON Schema, no bytes UTF-8. Los limites de transporte en bytes se aplican adicionalmente antes de parsear o persistir y nunca amplian el limite contractual del campo.
+- Perfiles cerrados de longitud: IDs, refs, hashes y valores tecnicos con pattern usan como envolvente `160`; fechas `10`; date-time `40`; dominios `253`; URI `2048`; titulos `500`; labels, warnings, errores y texto seguro de una linea `240`; descripciones estructuradas seguras de memoria `1200`; query/reformulacion `2000`; `Claim.text`, `Passage.text` y fragmentos probatorios `4000`; `Message.content` y contenido de seccion de respuesta `20000`; valores de entidad `1000`. Un pattern o `maxLength` menor sigue gobernando dentro de esa envolvente.
+- Perfiles cerrados de coleccion: warnings/notas `32`; taxonomias/data classes/intents `16`; attachments `20`; model/tool calls `200`; retrieval runs `50`; input messages `100`; evidence passages `2000`; las demas colecciones contractuales `500`. Un schema puede declarar un limite menor, nunca omitirlo.
+- `make validate-schemas` debe recorrer recursivamente cada schema aceptado y fallar si encuentra un nodo `type: string` variable sin `minLength: 1`/`maxLength` o `type: array` sin `maxItems`. Los tests generados rechazan `""`, `limite + 1` y formatos invalidos, y aceptan el mayor valor que tambien satisfaga pattern/format/item constraints; no se mantienen fixtures gigantes copiados a mano.
 - `domain-model.md`, `entity-ownership-matrix.md` y `api-draft-v0.md` gobiernan relaciones conceptuales, ownership y visibilidad de endpoints para Fase 1.
 
 ## Schemas minimos esperados
@@ -208,15 +234,18 @@ Estos contratos quedan aceptados como base documental del modelo conceptual y de
 ```txt
 answer-contract.schema.json
 abstention-render.schema.json
+answer-version.schema.json
 claim.schema.json
 citation.schema.json
 citation-audit.schema.json
 cost-budget.schema.json
+cost-report.schema.json
 provider-call-audit.schema.json
 document-evidence.schema.json
 evidence-pack.schema.json
 evidence-quality.schema.json
 error-envelope.schema.json
+legal-entity.schema.json
 legal-search-query.schema.json
 legal-search-result.schema.json
 message.schema.json

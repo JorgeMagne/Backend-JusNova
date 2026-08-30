@@ -1,8 +1,8 @@
 # ADR Governance
 
-**Estado documental:** Draft  
-**Fecha:** 2026-05-22  
-**Responsable:** Codex / JusNova Chief Backend Architect  
+**Estado documental:** Accepted
+**Fecha:** 2026-08-10
+**Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Convencion de nombres y gobierno de ADRs
 
 ## Convencion de nombres
@@ -55,4 +55,3 @@ ADR-010-traceability-and-answer-versioning.md
 ADR-011-security-privacy-and-provider-boundaries.md
 ADR-012-evaluation-and-quality-gates.md
 ```
-

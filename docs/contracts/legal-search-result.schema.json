@@ -10,7 +10,9 @@
     "responsible": "Codex / JusNova Chief Backend Architect",
     "related_decision": "Subfase 0.5 - Live Legal Search Engine Contract; Subfase 0.6 - Politicas de fuentes, vigencia, conflicto e incertidumbre",
     "amendments": [
-      "Subfase 0.11 - Modelo de datos conceptual y APIs draft"
+      "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
+      "Subfase 0.14 - Condicion explicita para snapshot ausente o nulo y exclusion de snapshot materializado con razon",
+      "Subfase 0.14 - Discovery snippet and warning minimization"
     ]
   },
   "required": [
@@ -35,15 +37,20 @@
     "result_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^lsr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^lsr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "title": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
     },
     "url": {
       "type": "string",
-      "format": "uri"
+      "minLength": 1,
+      "format": "uri",
+      "maxLength": 2048
     },
     "tier": {
       "enum": [
@@ -73,24 +80,35 @@
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
     },
     "published_at": {
       "type": [
         "string",
         "null"
       ],
-      "format": "date"
+      "minLength": 1,
+      "format": "date",
+      "maxLength": 10
     },
     "retrieved_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "snippet": {
+      "description": "Extracto no confiable normalizado a texto plano de una linea; nunca conserva HTML ni una respuesta raw del provider.",
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "minLength": 1,
+      "maxLength": 1000,
+      "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
     },
     "relevance_score": {
       "type": "number",
@@ -143,9 +161,12 @@
       "type": "array",
       "items": {
         "type": "string",
-        "pattern": "^[FD][0-9]+:P[0-9]+$"
+        "minLength": 1,
+        "pattern": "(?:^[FD][0-9]+:P[0-9]+$)(?![\\s\\S])",
+        "maxLength": 160
       },
-      "uniqueItems": true
+      "uniqueItems": true,
+      "maxItems": 500
     },
     "snapshot_id": {
       "type": [
@@ -153,7 +174,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^snap_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^snap_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "snapshot_unavailable_reason": {
       "enum": [
@@ -177,9 +199,14 @@
     },
     "warnings": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
-        "type": "string"
-      }
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 240,
+        "pattern": "(?:^[^\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]+$)(?![\\s\\S])"
+      },
+      "maxItems": 32
     }
   },
   "additionalProperties": false,
@@ -347,7 +374,14 @@
         "required": [
           "snapshot_id",
           "snapshot_unavailable_reason"
-        ]
+        ],
+        "properties": {
+          "snapshot_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        }
       }
     },
     {
@@ -410,7 +444,8 @@
               "snapshot_id": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^snap_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^snap_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           },
@@ -438,11 +473,27 @@
         "properties": {
           "passage_refs": {
             "minItems": 1
-          },
-          "snapshot_id": {
-            "type": "null"
           }
-        }
+        },
+        "anyOf": [
+          {
+            "not": {
+              "required": [
+                "snapshot_id"
+              ]
+            }
+          },
+          {
+            "required": [
+              "snapshot_id"
+            ],
+            "properties": {
+              "snapshot_id": {
+                "type": "null"
+              }
+            }
+          }
+        ]
       },
       "then": {
         "required": [
@@ -477,6 +528,35 @@
       ],
       "snapshot_id": "snap_001",
       "warnings": []
+    },
+    {
+      "result_id": "lsr_snapshot_null_001",
+      "title": "Fuente citable sin snapshot por error transitorio documentado",
+      "url": "https://www.example.gob.bo/documento",
+      "tier": "TIER1_OFICIAL",
+      "source_type": "institucional",
+      "jurisdiction": "BO",
+      "issuer": "Entidad publica boliviana",
+      "published_at": null,
+      "retrieved_at": "2026-05-22T00:00:00Z",
+      "snippet": "Fragmento institucional extraido con snapshot temporalmente no disponible.",
+      "relevance_score": 0.8,
+      "authority_score": 0.9,
+      "jurisdiction_score": 1,
+      "freshness_score": 0.7,
+      "extractability_score": 0.8,
+      "source_health_score": 0.6,
+      "final_score": 0.78,
+      "extraction_status": "extracted",
+      "citation_eligible": true,
+      "passage_refs": [
+        "F2:P1"
+      ],
+      "snapshot_id": null,
+      "snapshot_unavailable_reason": "transient_fetch_error",
+      "warnings": [
+        "Snapshot no disponible por error transitorio."
+      ]
     }
   ],
   "x-invalid-examples": [

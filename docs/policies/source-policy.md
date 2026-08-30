@@ -35,6 +35,7 @@ Aplica a fuentes externas, fuentes oficiales, fuentes secundarias, fuentes cache
 9. Toda fuente usada debe tener `tier`.
 10. Toda fuente usada debe tener `source_type`.
 11. `UNKNOWN` no es un valor permitido de `Source.tier`. Un resultado aun no clasificado permanece como candidato interno de discovery y no puede entrar a `EvidencePack.sources[]`, `sources_used[]` ni sostener claims hasta resolver uno de los seis tiers canonicos o quedar rechazado.
+12. `Source.metadata` es una superficie publica minimizada y cerrada; en Fase 0 solo admite `jurisdiction` ISO alpha-2. No puede usarse como bolsa para payloads raw, texto documental, prompts, OCR, HTML, mensajes ni metadata libre de proveedor.
 
 ## Reglas deterministicas
 
@@ -49,6 +50,7 @@ Aplica a fuentes externas, fuentes oficiales, fuentes secundarias, fuentes cache
 9. Una fuente listada en `sources_used` debe tener una cita real asociada.
 10. Discovery web no es evidencia hasta fetch, extraccion, snapshot o razon documentada, normalizacion y passage.
 11. El estado `UNKNOWN` de `host-statuses.yaml` describe salud de host/dependencia; nunca se mapea a `Source.tier`.
+12. Rechazar cualquier clave de `Source.metadata` distinta de `jurisdiction`; extensiones futuras requieren enmienda contractual versionada, no `additionalProperties` abierto.
 
 ## Reglas asistidas por IA
 
@@ -62,6 +64,7 @@ Aplica a fuentes externas, fuentes oficiales, fuentes secundarias, fuentes cache
 - Fuente sin pasaje extraido: permitir discovery o contexto interno, pero impedir cita.
 - Documento de usuario tratado como norma vigente: bloquear respuesta.
 - Snapshot ausente sin razon: bloquear inclusion en Evidence Pack final.
+- Fuente con `VIGENCIA_CONFIRMADA` o `DEROGADA_CONFIRMADA` sin al menos un pasaje del mismo EvidencePack y mismo `source_ref`: bloquear inclusion como estado confirmado; degradar conforme a `validity-policy.md` o abstenerse.
 
 | Caso | Accion obligatoria |
 |---|---|
@@ -90,6 +93,7 @@ La abstencion es parcial solo si existen puntos verificables con citas validas. 
 - La politica bloquea fuente sin pasaje como cita.
 - La politica exige snapshot o razon cerrada de imposibilidad.
 - La politica impide tratar `USER_DOCUMENT` como derecho vigente.
+- La politica impide introducir contenido raw o metadata arbitraria mediante `Source.metadata`.
 - La politica alinea `source.schema.json`, `legal-search-result.schema.json`, `citation-policy.md` y `abstention-policy.md`.
 
 ## Relacion con contratos

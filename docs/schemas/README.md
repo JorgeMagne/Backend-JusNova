@@ -28,6 +28,10 @@ provider-registry.yaml
 
 Cuando una taxonomia exista en esta carpeta, los contratos deben referenciar sus nombres canonicos y no inventar variantes informales.
 
+Todos los archivos YAML de esta carpeta se cargan como UTF-8 mediante un loader seguro y estricto. El loader debe rechazar claves duplicadas en cualquier nivel, cualquier tag explicito, anchors, aliases y merge keys (`<<`) antes de construir el objeto; despues valida una forma tipada cerrada con campos desconocidos prohibidos. `document_status`, `date`, `responsible` y `related_decision` son metadata obligatoria y no pueden perderse al consumir o regenerar una taxonomia. Un `safe_load` que acepte silenciosamente la ultima clave duplicada no satisface esta regla.
+
+`scripts/validate_schemas.py` valida tanto JSON Schemas como estas taxonomias/configuraciones YAML. Los loaders runtime de budgets y provider registry deben reutilizar la misma primitiva estricta; no se admiten parsers permisivos separados.
+
 ## Taxonomias aceptadas en Subfase 0.2
 
 | Taxonomia | Estado | Archivo |
@@ -68,4 +72,5 @@ Cuando una taxonomia exista en esta carpeta, los contratos deben referenciar sus
 - Todo payload o artefacto derivado hereda la clase con mayor `sensitivity_rank` entre sus entradas; esto aplica a summaries, snapshots, embeddings, trazas, indices, queries reformuladas, provider payloads y derivados persistidos.
 - Cada clase declara reglas para las 11 familias canonicas de provider.
 - `provider-registry.yaml` declara providers permitidos, feature flags, kill switches, clases recibidas/devueltas, region, logs operativos y `training_use_allowed = false`.
+- `provider-registry.reliability_policy.error_mapping_target=provider_call_audit_error_code` declara que los valores de cada `error_mapping` pertenecen al enum interno de `ProviderCallAudit.error_code`, no al enum publico de `ErrorEnvelope.error_code`.
 - Un provider no puede declarar clases prohibidas por `provider_family_rules`.

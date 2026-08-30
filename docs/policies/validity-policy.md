@@ -39,6 +39,7 @@ Aplica a fuentes normativas, jurisprudenciales, institucionales, cacheadas, snap
 5. `CONFLICTIVA` requiere identificar las fuentes o pasajes en conflicto.
 6. Cache o snapshot sin revalidacion produce como maximo `VIGENCIA_NO_CONFIRMADA`.
 7. Fuente secundaria no confirma vigencia critica ni derogacion critica sin soporte oficial.
+8. Dentro de un `EvidencePack`, toda fuente con `validity_status=VIGENCIA_CONFIRMADA` o `DEROGADA_CONFIRMADA` debe tener al menos un `EvidencePassage` del mismo pack cuyo `source_ref` coincida. La validez aislada de `Source` no sustituye esta comprobacion relacional.
 
 ## Reglas asistidas por IA
 
@@ -82,6 +83,7 @@ La abstencion es parcial solo cuando existe algun punto verificable con cita val
 - La politica impide presumir vigencia.
 - La politica distingue vigencia confirmada, no confirmada, posible modificacion, derogacion y conflicto.
 - Cache y snapshot no se tratan como confirmacion de vigencia.
+- La confirmacion o derogacion materializada en un EvidencePack resuelve al menos un pasaje de la misma fuente.
 - Las frases permitidas y prohibidas quedan documentadas.
 
 ## Relacion con contratos

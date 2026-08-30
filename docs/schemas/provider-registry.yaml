@@ -1,6 +1,6 @@
 document_status: Accepted
 date: 2026-08-10
-responsible: JusNova Architecture
+responsible: Codex / JusNova Chief Backend Architect
 related_decision: ADR-011
 provider_registry:
   version: provider-registry-v0.10.2
@@ -10,6 +10,7 @@ provider_registry:
     fallback_requires_explicit_route: true
     fallback_route_resolution: registry_routes_only
     no_fallback_error_code: provider_unavailable
+    error_mapping_target: provider_call_audit_error_code
   fallback_routes: []
   providers:
     - provider_name: openai_model_provider

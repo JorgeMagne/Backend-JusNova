@@ -1,6 +1,6 @@
 document_status: Accepted
 date: 2026-05-24
-responsible: JusNova Architecture
+responsible: Codex / JusNova Chief Backend Architect
 related_decision: ADR-011
 sensitivity_order:
   - PUBLIC_LEGAL_SOURCE
@@ -88,7 +88,7 @@ data_classification:
       SnapshotProvider: forbidden
       LegalRankingProvider: forbidden
   INTERNAL_TRACE_RESTRICTED:
-    description: Trazas internas con hashes, refs, proveedores, descartes, advertencias y auditorias sin payload crudo.
+    description: Metadata y trazas internas sanitizadas con hashes, refs, proveedores, descartes, advertencias y auditorias sin payload crudo; es el minimo, no un techo para artefactos que heredan entradas mas sensibles.
     sensitivity_rank: 50
     default_visibility: INTERNAL_AUDIT
     raw_logging_allowed: false

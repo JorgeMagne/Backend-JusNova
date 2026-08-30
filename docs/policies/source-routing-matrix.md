@@ -9,6 +9,10 @@
 
 Definir rutas primarias, secundarias y fallback para los 11 intents canonicos de `docs/schemas/legal-intents.yaml`.
 
+## Alcance
+
+Aplica a la seleccion de source targets, rutas primarias/secundarias y fallback del Live Legal Search para Bolivia. No habilita providers, endpoints ni fuentes fuera de los registries y policies aceptados.
+
 ## Matriz
 
 | Intent | Ruta primaria | Ruta secundaria | Fallback | Notas |
@@ -40,8 +44,23 @@ Definir rutas primarias, secundarias y fallback para los 11 intents canonicos de
 | OPEN_WEB_DISCOVERY | discovery multi-proveedor controlado |
 | TIER2_FALLBACK | fallback confiable con advertencia |
 
-## Validacion
+## Criterios de aceptacion
 
 - Cada intent de `legal-intents.yaml` debe aparecer exactamente una vez en esta matriz.
 - `META` no genera `LegalSearchQuery` si no requiere busqueda viva.
 - Ninguna ruta puede convertir una fuente secundaria en fuente primaria sin advertencia.
+
+## Reglas deterministicas
+
+- El intent canonico selecciona una fila unica de la matriz; las rutas permitidas se cruzan con registry, tier, jurisdiccion, acceso y budget.
+- Un fallback no se activa si no existe ruta permitida y auditable; la ausencia de ruta termina en respuesta parcial, investigacion o abstencion segun policy.
+- Las restricciones de vigencia, fuente secundaria y comparacion extranjera se aplican despues de cualquier ranking.
+
+## Reglas asistidas por IA
+
+- Un modelo puede proponer el intent o subpreguntas, pero el clasificador/validador determinista confirma el intent antes de enrutar.
+- El modelo no crea source targets, no habilita fallback y no promueve tiers secundarios a soporte primario.
+
+## Momento de revision
+
+Antes de implementar Live Legal Search y cuando cambien intents, source targets, providers, portales oficiales o reglas de fallback.

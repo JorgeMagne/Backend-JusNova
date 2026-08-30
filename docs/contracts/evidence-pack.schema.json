@@ -11,7 +11,10 @@
     "related_decision": "Subfase 0.4 - Evidence, Answer, Citation y Claim Contracts",
     "amendments": [
       "Subfase 0.11 - Modelo de datos conceptual y APIs draft",
-      "Subfase 0.14 - Retrieval cardinality and EvidenceQuality alignment"
+      "Subfase 0.14 - Retrieval cardinality and EvidenceQuality alignment",
+      "Subfase 0.14 - EvidencePack local identity hardening",
+      "Subfase 0.14 - Retrieval ownership chain hardening",
+      "Subfase 0.14 - Confirmed validity passage evidence gate"
     ]
   },
   "x-tenant-policy": {
@@ -21,6 +24,20 @@
       "retrieval_run_id != null -> RetrievalRun.organization_id",
       "sources[].source_ref=D# -> DocumentEvidence.organization_id",
       "passages[].passage_ref=D#:P# -> DocumentEvidence.organization_id"
+    ],
+    "relational_rules": [
+      "retrieval_run_id != null -> RetrievalRun.query_id == EvidencePack.query_id",
+      "retrieval_run_id != null -> RetrievalRun.evidence_pack_id == EvidencePack.evidence_pack_id"
+    ]
+  },
+  "x-local-identity-policy": {
+    "description": "Las areas, fuentes y pasajes son conjuntos de identidad local cerrada dentro del EvidencePack. JSON Schema rechaza duplicados exactos; un validador relacional rechaza colisiones por ref aunque los objetos difieran.",
+    "rules": [
+      "legal_area[] no contiene valores duplicados",
+      "sources[].source_ref es unico dentro del EvidencePack",
+      "passages[].passage_ref es unico dentro del EvidencePack",
+      "cada passages[].source_ref resuelve exactamente una sources[].source_ref del mismo EvidencePack",
+      "cada source con validity_status VIGENCIA_CONFIRMADA o DEROGADA_CONFIRMADA tiene al menos un passage del mismo EvidencePack cuyo source_ref coincide"
     ]
   },
   "required": [
@@ -39,17 +56,20 @@
     "evidence_pack_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^ep_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ep_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "query_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^q_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^q_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "retrieval_run_id": {
       "description": "Ref al retrieval vivo que produjo el pack. null es valido exclusivamente cuando el pack es manual o documental y no existe RetrievalRun.",
@@ -58,7 +78,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^rr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^rr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "jurisdiction": {
       "type": "string",
@@ -66,6 +87,7 @@
     },
     "legal_area": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "type": "string",
         "enum": [
@@ -89,28 +111,35 @@
           "MIGRATORIO",
           "OTRO"
         ]
-      }
+      },
+      "maxItems": 16
     },
     "sources": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "$ref": "./source.schema.json"
       },
-      "minItems": 0
+      "minItems": 0,
+      "maxItems": 500
     },
     "passages": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "$ref": "./passage.schema.json"
       },
-      "minItems": 0
+      "minItems": 0,
+      "maxItems": 2000
     },
     "quality": {
       "$ref": "./evidence-quality.schema.json"
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     }
   },
   "additionalProperties": false,
@@ -317,6 +346,45 @@
   ],
   "x-policy-invalid-examples": [
     {
+      "evidence_pack_id": "ep_confirmed_without_passage_001",
+      "organization_id": "org_001",
+      "query_id": "q_confirmed_without_passage_001",
+      "retrieval_run_id": null,
+      "jurisdiction": "BO",
+      "legal_area": [
+        "PROCESAL_CIVIL"
+      ],
+      "sources": [
+        {
+          "source_ref": "F1",
+          "source_type": "norma",
+          "tier": "TIER1_CANONICO",
+          "title": "Norma con vigencia declarada sin pasaje probatorio",
+          "issuer": "Gaceta Oficial de Bolivia",
+          "url": "https://www.example.gob.bo/norma/sin-pasaje",
+          "snapshot_id": "snap_confirmed_without_passage",
+          "retrieved_at": "2026-05-22T00:00:00Z",
+          "published_at": "2026-05-01",
+          "validity_status": "VIGENCIA_CONFIRMADA",
+          "warnings": [],
+          "metadata": {
+            "jurisdiction": "BO"
+          }
+        }
+      ],
+      "passages": [],
+      "quality": {
+        "overall": "NONE",
+        "coverage": 0,
+        "authority": 0,
+        "citation_readiness": 0,
+        "validity_risk": "UNKNOWN",
+        "conflicts_detected": false,
+        "warnings": []
+      },
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
       "evidence_pack_id": "ep_cross_tenant_001",
       "organization_id": "org_001",
       "query_id": "q_other_tenant_001",
@@ -335,6 +403,100 @@
         "validity_risk": "UNKNOWN",
         "conflicts_detected": false,
         "warnings": []
+      },
+      "created_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "evidence_pack_id": "ep_duplicate_local_refs_001",
+      "organization_id": "org_001",
+      "query_id": "q_duplicate_local_refs_001",
+      "retrieval_run_id": "rr_duplicate_local_refs_001",
+      "jurisdiction": "BO",
+      "legal_area": [
+        "PROCESAL_CIVIL"
+      ],
+      "sources": [
+        {
+          "source_ref": "F1",
+          "source_type": "norma",
+          "tier": "TIER1_CANONICO",
+          "title": "Codigo Procesal Civil - copia A",
+          "issuer": "Gaceta Oficial de Bolivia",
+          "url": "https://www.example.gob.bo/norma/ley-439-a",
+          "snapshot_id": "snap_duplicate_a",
+          "retrieved_at": "2026-05-22T00:00:00Z",
+          "published_at": "2013-11-19",
+          "validity_status": "VIGENCIA_NO_CONFIRMADA",
+          "warnings": [
+            "Vigencia actual no confirmada."
+          ],
+          "metadata": {
+            "jurisdiction": "BO"
+          }
+        },
+        {
+          "source_ref": "F1",
+          "source_type": "norma",
+          "tier": "TIER1_CANONICO",
+          "title": "Codigo Procesal Civil - copia B",
+          "issuer": "Gaceta Oficial de Bolivia",
+          "url": "https://www.example.gob.bo/norma/ley-439-b",
+          "snapshot_id": "snap_duplicate_b",
+          "retrieved_at": "2026-05-22T00:00:00Z",
+          "published_at": "2013-11-19",
+          "validity_status": "VIGENCIA_NO_CONFIRMADA",
+          "warnings": [
+            "Vigencia actual no confirmada."
+          ],
+          "metadata": {
+            "jurisdiction": "BO"
+          }
+        }
+      ],
+      "passages": [
+        {
+          "passage_ref": "F1:P1",
+          "source_ref": "F1",
+          "text": "Primer contenido para la misma identidad local.",
+          "locator": {
+            "page": 1,
+            "article": null,
+            "section": null,
+            "paragraph": 1,
+            "coordinates": null,
+            "url_fragment": null
+          },
+          "extraction_method": "pdf_parse",
+          "extraction_confidence": 0.9,
+          "warnings": []
+        },
+        {
+          "passage_ref": "F1:P1",
+          "source_ref": "F1",
+          "text": "Segundo contenido incompatible para la misma identidad local.",
+          "locator": {
+            "page": 2,
+            "article": null,
+            "section": null,
+            "paragraph": 1,
+            "coordinates": null,
+            "url_fragment": null
+          },
+          "extraction_method": "pdf_parse",
+          "extraction_confidence": 0.9,
+          "warnings": []
+        }
+      ],
+      "quality": {
+        "overall": "MEDIUM",
+        "coverage": 0.8,
+        "authority": 0.95,
+        "citation_readiness": 0.8,
+        "validity_risk": "MEDIUM",
+        "conflicts_detected": false,
+        "warnings": [
+          "Vigencia no confirmada."
+        ]
       },
       "created_at": "2026-05-22T00:00:00Z"
     }

@@ -29,6 +29,18 @@ Esta policy aplica a:
 - seguridad, privacidad y tenancy;
 - evaluacion y readiness gates.
 
+## Reglas deterministicas
+
+1. Cada principio critico debe tener al menos un contrato, validador, policy, test, trace, budget, evaluacion o control runtime verificable.
+2. Los estados `Enforced`, `Guarded` y `Blocked` se asignan por evidencia objetiva; una afirmacion del modelo no cambia el estado de cumplimiento.
+3. Un gate marcado como bloqueante no puede levantarse por score probabilistico, prompt o decision silenciosa de provider.
+
+## Reglas asistidas por IA
+
+1. Un modelo puede ayudar a clasificar, resumir o proponer acciones, pero no satisface por si solo ningun principio no negociable.
+2. Toda propuesta asistida queda subordinada al mecanismo verificable y al owner definidos para el principio correspondiente.
+3. La autoevaluacion del modelo no sustituye tests, evaluaciones externas, auditoria ni revision humana cuando estas son obligatorias.
+
 ## Estados de cumplimiento
 
 | Estado | Significado |
@@ -74,7 +86,7 @@ Esta policy aplica a:
 **Principio:** La base de fundamentacion del producto de lanzamiento es el JusNova Live Legal Search Engine.  
 **Regla tecnica:** Para intents `NORMATIVA`, `JURISPRUDENCIA`, `PROCEDIMIENTO`, `VIGENCIA`, `SECTORIAL`, `SUBNACIONAL`, `MIXTO` y estrategia juridica con fundamento, el orquestador debe intentar recuperar evidencia antes de generar conclusion sustantiva.  
 **Mecanismo verificable:** `retrieval-plan.schema.json`, `legal-search-query.schema.json`, `retrieval-run.schema.json`, `EvidencePackBuilder`, `EvidenceQualityEvaluator`, traces de search runs.  
-**No depende solo del prompt:** El backend debe exigir `retrieval_run_id` o decision estructurada de abstencion antes de `AnswerDraft`.  
+**No depende solo del prompt:** Para los intents enumerados que exigen busqueda viva, el backend debe exigir `retrieval_run_id` o decision estructurada de abstencion antes de `AnswerDraft`. Los `EvidencePack` manuales o documentales fuera de ese mandato pueden mantener `retrieval_run_id=null` conforme al contrato aceptado.
 **Dueno futuro de implementacion:** Codex / JusNova Chief Backend Architect, futuro Retrieval Lead.  
 **Criterio de aceptacion:** Una consulta juridica normativa o jurisprudencial no produce respuesta final si no existe `EvidencePack` o abstencion justificada.  
 **Severidad si se incumple:** Critical.

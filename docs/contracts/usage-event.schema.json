@@ -30,17 +30,19 @@
     "usage_event_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^ue_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ue_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "organization_id": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^org_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^org_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "actor_ref": {
       "type": "string",
       "minLength": 1,
-      "pattern": "^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$",
+      "pattern": "(?:^(system|actor_hash_[A-Za-z0-9_-]+|support_hash_[A-Za-z0-9_-]+|service_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])",
       "allOf": [
         {
           "not": {
@@ -49,10 +51,11 @@
         },
         {
           "not": {
-            "pattern": "^\\+?[0-9][0-9\\s-]{5,}$"
+            "pattern": "(?:^\\+?[0-9][0-9\\s-]{5,}$)(?![\\s\\S])"
           }
         }
-      ]
+      ],
+      "maxLength": 160
     },
     "actor_type": {
       "enum": [
@@ -72,7 +75,9 @@
     },
     "billing_period": {
       "type": "string",
-      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
+      "minLength": 1,
+      "pattern": "(?:^[0-9]{4}-(0[1-9]|1[0-2])$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "event_scope": {
       "enum": [
@@ -125,14 +130,17 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$"
+      "pattern": "(?:^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "cost_budget_version": {
       "type": [
         "string",
         "null"
       ],
-      "pattern": "^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$"
+      "minLength": 1,
+      "pattern": "(?:^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "conversation_id": {
       "type": [
@@ -140,7 +148,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^conv_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^conv_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "trace_id": {
       "type": [
@@ -148,7 +157,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^tr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "answer_id": {
       "type": [
@@ -156,7 +166,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^ans_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "retrieval_run_id": {
       "type": [
@@ -164,7 +175,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^rr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^rr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "cost_report_id": {
       "type": [
@@ -172,7 +184,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^cr_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^cr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "model_call_id": {
       "type": [
@@ -180,7 +193,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^mc_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^mc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "tool_call_id": {
       "type": [
@@ -188,7 +202,8 @@
         "null"
       ],
       "minLength": 1,
-      "pattern": "^tc_[A-Za-z0-9_-]+$"
+      "pattern": "(?:^tc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+      "maxLength": 160
     },
     "estimated_cost": {
       "type": "number",
@@ -203,7 +218,9 @@
     },
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     }
   },
   "additionalProperties": false,
@@ -230,7 +247,7 @@
       "then": {
         "properties": {
           "actor_ref": {
-            "pattern": "^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+            "pattern": "(?:^(actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])"
           }
         }
       }
@@ -249,7 +266,7 @@
       "then": {
         "properties": {
           "actor_ref": {
-            "pattern": "^(support_hash_[A-Za-z0-9_-]+|actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$"
+            "pattern": "(?:^(support_hash_[A-Za-z0-9_-]+|actor_hash_[A-Za-z0-9_-]+|sha256:[A-Fa-f0-9]{64})$)(?![\\s\\S])"
           }
         }
       }
@@ -268,7 +285,7 @@
       "then": {
         "properties": {
           "actor_ref": {
-            "pattern": "^service_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^service_[A-Za-z0-9_-]+$)(?![\\s\\S])"
           }
         }
       }
@@ -318,7 +335,8 @@
               "conversation_id": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^conv_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^conv_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           },
@@ -330,7 +348,8 @@
               "trace_id": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^tr_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           },
@@ -342,7 +361,8 @@
               "answer_id": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^ans_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           },
@@ -354,7 +374,8 @@
               "retrieval_run_id": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^rr_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^rr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           },
@@ -366,7 +387,8 @@
               "cost_report_id": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^cr_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^cr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           },
@@ -378,7 +400,8 @@
               "model_call_id": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^mc_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^mc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           },
@@ -390,7 +413,8 @@
               "tool_call_id": {
                 "type": "string",
                 "minLength": 1,
-                "pattern": "^tc_[A-Za-z0-9_-]+$"
+                "pattern": "(?:^tc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+                "maxLength": 160
               }
             }
           }
@@ -407,11 +431,14 @@
           "cost_budget_ref": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$"
+            "pattern": "(?:^cb_(profesional|pro_plus|estudio|enterprise)_(simple|medio|complejo|investigacion)_v[0-9]{3}$)(?![\\s\\S])",
+            "maxLength": 160
           },
           "cost_budget_version": {
             "type": "string",
-            "pattern": "^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$"
+            "minLength": 1,
+            "pattern": "(?:^cost-budget-v[0-9]+\\.[0-9]+\\.[0-9]+$)(?![\\s\\S])",
+            "maxLength": 160
           }
         }
       }
@@ -486,6 +513,41 @@
         "properties": {
           "event_scope": {
             "const": "execution"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "enum": [
+              "standard_query",
+              "complex_query"
+            ]
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "trace_id",
+          "answer_id"
+        ],
+        "properties": {
+          "trace_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
+          },
+          "answer_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           }
         }
       }
@@ -580,6 +642,10 @@
         ]
       },
       "then": {
+        "required": [
+          "trace_id",
+          "answer_id"
+        ],
         "properties": {
           "unit": {
             "const": "credit"
@@ -592,34 +658,20 @@
           },
           "quantity": {
             "type": "integer"
-          }
-        },
-        "anyOf": [
-          {
-            "required": [
-              "trace_id"
-            ],
-            "properties": {
-              "trace_id": {
-                "type": "string",
-                "minLength": 1,
-                "pattern": "^tr_[A-Za-z0-9_-]+$"
-              }
-            }
           },
-          {
-            "required": [
-              "answer_id"
-            ],
-            "properties": {
-              "answer_id": {
-                "type": "string",
-                "minLength": 1,
-                "pattern": "^ans_[A-Za-z0-9_-]+$"
-              }
-            }
+          "trace_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "(?:^tr_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
+          },
+          "answer_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "(?:^ans_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           }
-        ]
+        }
       }
     },
     {
@@ -781,7 +833,8 @@
           "model_call_id": {
             "type": "string",
             "minLength": 1,
-            "pattern": "^mc_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^mc_[A-Za-z0-9_-]+$)(?![\\s\\S])",
+            "maxLength": 160
           }
         },
         "required": [

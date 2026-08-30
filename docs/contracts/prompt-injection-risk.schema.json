@@ -8,7 +8,11 @@
     "document_status": "Accepted",
     "date": "2026-05-24",
     "responsible": "Codex / JusNova Chief Backend Architect",
-    "related_decision": "Subfase 0.10 - Seguridad, privacidad y proveedores externos"
+    "related_decision": "Subfase 0.10 - Seguridad, privacidad y proveedores externos",
+    "amendments": [
+      "Subfase 0.14 - detected_in_ref resoluble y data classification canonica",
+      "Subfase 0.14 - Clasificacion heredada de RetrievalRun"
+    ]
   },
   "required": [
     "risk_code",
@@ -33,40 +37,39 @@
     },
     "detected_in_ref": {
       "type": "string",
+      "minLength": 1,
       "anyOf": [
         {
-          "pattern": "^D[0-9]+:P[0-9]+$"
+          "pattern": "(?:^D[0-9]+:P[0-9]+$)(?![\\s\\S])"
         },
         {
-          "pattern": "^F[0-9]+:P[0-9]+$"
+          "pattern": "(?:^F[0-9]+:P[0-9]+$)(?![\\s\\S])"
         },
         {
-          "pattern": "^msg_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^msg_[A-Za-z0-9_-]+$)(?![\\s\\S])"
         },
         {
-          "pattern": "^rr_[A-Za-z0-9_-]+$"
+          "pattern": "(?:^rr_[A-Za-z0-9_-]+$)(?![\\s\\S])"
         },
         {
-          "pattern": "^url_hash:sha256:[A-Fa-f0-9]{64}$"
-        },
-        {
-          "pattern": "^source_hash:sha256:[A-Fa-f0-9]{64}$"
+          "pattern": "(?:^url_hash:sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])"
         }
-      ]
+      ],
+      "maxLength": 160
     },
     "classification": {
       "enum": [
         "PUBLIC_LEGAL_SOURCE",
-        "USER_DOCUMENT_CONFIDENTIAL",
-        "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+        "PUBLIC_LEGAL_QUERY",
+        "PROVIDER_OPERATIONAL_METADATA",
+        "BILLING_USAGE",
+        "INTERNAL_TRACE_RESTRICTED",
+        "SECURITY_AUDIT_RESTRICTED",
+        "DERIVED_LEGAL_QUERY_RESTRICTED",
         "USER_MESSAGE_CONFIDENTIAL",
         "CASE_MEMORY_CONFIDENTIAL",
-        "DERIVED_LEGAL_QUERY_RESTRICTED",
-        "PUBLIC_LEGAL_QUERY",
-        "INTERNAL_TRACE_RESTRICTED",
-        "BILLING_USAGE",
-        "PROVIDER_OPERATIONAL_METADATA",
-        "SECURITY_AUDIT_RESTRICTED"
+        "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+        "USER_DOCUMENT_CONFIDENTIAL"
       ]
     },
     "severity": {
@@ -79,7 +82,9 @@
     },
     "detected_at": {
       "type": "string",
-      "format": "date-time"
+      "minLength": 1,
+      "format": "date-time",
+      "maxLength": 40
     },
     "handling": {
       "enum": [
@@ -97,7 +102,7 @@
       "if": {
         "properties": {
           "detected_in_ref": {
-            "pattern": "^D[0-9]+:P[0-9]+$"
+            "pattern": "(?:^D[0-9]+:P[0-9]+$)(?![\\s\\S])"
           }
         },
         "required": [
@@ -116,7 +121,7 @@
       "if": {
         "properties": {
           "detected_in_ref": {
-            "pattern": "^F[0-9]+:P[0-9]+$"
+            "pattern": "(?:^F[0-9]+:P[0-9]+$)(?![\\s\\S])"
           }
         },
         "required": [
@@ -135,7 +140,7 @@
       "if": {
         "properties": {
           "detected_in_ref": {
-            "pattern": "^msg_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^msg_[A-Za-z0-9_-]+$)(?![\\s\\S])"
           }
         },
         "required": [
@@ -154,7 +159,7 @@
       "if": {
         "properties": {
           "detected_in_ref": {
-            "pattern": "^rr_[A-Za-z0-9_-]+$"
+            "pattern": "(?:^rr_[A-Za-z0-9_-]+$)(?![\\s\\S])"
           }
         },
         "required": [
@@ -164,7 +169,15 @@
       "then": {
         "properties": {
           "classification": {
-            "const": "INTERNAL_TRACE_RESTRICTED"
+            "enum": [
+              "INTERNAL_TRACE_RESTRICTED",
+              "SECURITY_AUDIT_RESTRICTED",
+              "DERIVED_LEGAL_QUERY_RESTRICTED",
+              "USER_MESSAGE_CONFIDENTIAL",
+              "CASE_MEMORY_CONFIDENTIAL",
+              "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+              "USER_DOCUMENT_CONFIDENTIAL"
+            ]
           }
         }
       }
@@ -173,7 +186,7 @@
       "if": {
         "properties": {
           "detected_in_ref": {
-            "pattern": "^(url_hash|source_hash):sha256:[A-Fa-f0-9]{64}$"
+            "pattern": "(?:^url_hash:sha256:[A-Fa-f0-9]{64}$)(?![\\s\\S])"
           }
         },
         "required": [
@@ -208,6 +221,14 @@
       "severity": "blocking",
       "detected_at": "2026-05-24T10:00:00Z",
       "handling": "blocked"
+    },
+    {
+      "risk_code": "citation_manipulation",
+      "detected_in_ref": "rr_confidential_001",
+      "classification": "DOCUMENT_EVIDENCE_CONFIDENTIAL",
+      "severity": "high",
+      "detected_at": "2026-05-24T10:00:00Z",
+      "handling": "excluded_from_evidence"
     }
   ],
   "x-invalid-examples": [
@@ -250,6 +271,14 @@
       "severity": "medium",
       "detected_at": "2026-05-24T10:00:00Z",
       "handling": "ignored"
+    },
+    {
+      "risk_code": "citation_manipulation",
+      "detected_in_ref": "rr_confidential_001",
+      "classification": "PUBLIC_LEGAL_SOURCE",
+      "severity": "high",
+      "detected_at": "2026-05-24T10:00:00Z",
+      "handling": "excluded_from_evidence"
     }
   ],
   "x-policy-invalid-examples": [

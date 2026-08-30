@@ -42,7 +42,7 @@ El Cost Governor puede limitar profundidad. No puede debilitar la verdad documen
 19. Puede diferir trabajo profundo a modo asincrono solo si el budget y el plan lo permiten.
 20. Toda ejecucion publicada con `complexity = COMPLEJO` debe tener un `UsageEvent` `research_credit_used` con `quantity = 1`.
 21. Toda ejecucion publicada con `complexity = INVESTIGACION` debe tener un `UsageEvent` `research_credit_used` con `quantity = 2`.
-22. El evento de credito debe compartir `trace_id` o `answer_id` con la ejecucion publicada.
+22. El evento de credito de una respuesta publicada debe compartir `trace_id` y `answer_id` con esa ejecucion; no basta una referencia conversacional o un identificador reservado sin artefacto final.
 23. El evento de credito debe apuntar al mismo `cost_budget_ref`, `cost_budget_version`, `plan_code` y `complexity` que la ejecucion publicada.
 24. La cantidad del evento `research_credit_used` debe coincidir con `CostBudget.research_credit_cost` del budget resuelto.
 25. En 0.8 no existen exenciones de creditos.
@@ -56,6 +56,14 @@ El Cost Governor puede limitar profundidad. No puede debilitar la verdad documen
 33. `document_processed` puede registrarse como `execution` o `organization_period`.
 34. `research_credit_used` no se agrega en v0; la cantidad debe ser exactamente el costo de credito de la complejidad.
 35. Si una afirmacion critica queda sin evidencia suficiente por budget agotado, la salida debe ser abstencion parcial, abstencion total, bloqueo o Modo Investigacion.
+36. En v0, `billing_period=YYYY-MM` se deriva de `UsageEvent.created_at` en UTC y representa el intervalo semiabierto entre el primer dia de ese mes a `00:00:00Z` y el primer dia del mes siguiente a `00:00:00Z`; eventos fuera de ese intervalo no pueden contabilizarse en el periodo.
+37. Toda ejecucion publicada registra exactamente un evento de consulta con `quantity = 1`: `standard_query` para `SIMPLE|MEDIO` y `complex_query` para `COMPLEJO|INVESTIGACION`. Ambos eventos deben incluir el `trace_id` y el `answer_id` materializados.
+38. Para una misma ejecucion publicada, la decision efectiva de budget, `TraceObject` y todos los `UsageEvent` de scope `execution` deben coincidir exactamente en `organization_id`, `plan_code`, `complexity`, `cost_budget_ref` y `cost_budget_version`; ninguna validacion local sustituye esta igualdad cross-artifact.
+39. La publicacion terminal es atomica: mensaje de salida, `Answer`, `AnswerVersion`, `AbstentionRender` o `AnswerContract`, `TraceObject`, evento de consulta, debito de credito cuando corresponda y cierre exitoso del run se confirman juntos o se revierten juntos.
+40. En `COMPLEJO|INVESTIGACION`, la transaccion terminal vuelve a bloquear y comprobar el saldo efectivo antes del debito. Si otra ejecucion consumio el saldo desde la decision de admision, se revierte todo artefacto final y la ejecucion falla cerrada con `research_credit_required`.
+41. Los eventos de consulta, credito y tokens son idempotentes por su ancla de ejecucion o llamada; un retry no puede duplicar consumo ni producir simultaneamente `standard_query` y `complex_query` para la misma traza.
+42. Ningun evento terminal publico se emite antes de confirmar la transaccion terminal; un rollback nunca deja `answer_final` o `answer_blocked` observable.
+43. El endpoint que inicia una ejecucion facturable exige idempotencia tenant/actor-scoped: una misma key y fingerprint resuelven el mismo mensaje/run, y una key reutilizada por ese actor con otro payload falla con `conflict`; la key raw no se persiste ni aparece en logs o trazas.
 
 ## Reglas asistidas por IA
 
@@ -71,7 +79,10 @@ El Cost Governor puede limitar profundidad. No puede debilitar la verdad documen
 - `docs/contracts/usage-event.schema.json` valida scope, unidades, creditos, periodo, plan y actor pseudonimizado.
 - `docs/contracts/trace-object.schema.json` exige budget ref, budget version, plan code y complexity.
 - El validador custom 0.8 rechaza divergencias entre `TraceObject`, `UsageEvent` y el `CostBudget` resuelto por `cost_budget_ref`.
-- El validador custom 0.8 rechaza ejecuciones publicadas `COMPLEJO` o `INVESTIGACION` sin evento `research_credit_used` conciliado por `trace_id` o `answer_id`.
+- El validador custom 0.8 rechaza ejecuciones publicadas sin exactamente un evento de consulta del tipo correspondiente a su complejidad, conciliado por `trace_id` y `answer_id`.
+- El validador custom 0.8 rechaza ejecuciones publicadas `COMPLEJO` o `INVESTIGACION` sin evento `research_credit_used` conciliado por los mismos `trace_id` y `answer_id`.
+- Tests transaccionales demuestran que respuesta/traza, usage, debito y cierre del run se confirman juntos, que dos ejecuciones concurrentes no consumen el mismo ultimo credito y que retries no duplican consumo.
+- Tests de frontera demuestran que retries HTTP secuenciales y concurrentes con la misma `Idempotency-Key` no crean otro mensaje, run, usage o debito, y que un payload distinto con la misma key falla cerrado.
 - `docs/policies/trace-visibility-policy.md` define visibilidad de plan y budget por nivel.
 - Ningun contrato 0.8 introduce contadores ligados a un proveedor especifico.
 - Ninguna policy 0.8 permite degradar evidencia, cita, vigencia o trazabilidad por costo.

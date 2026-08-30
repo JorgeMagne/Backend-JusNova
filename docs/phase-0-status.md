@@ -1,7 +1,7 @@
 # Fase 0 - Status
 
 **Estado documental:** Accepted
-**Fecha:** 2026-08-10
+**Fecha:** 2026-08-30
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Fase 0 - Consolidacion tecnica, contratos y gobierno del sistema
 
@@ -36,6 +36,7 @@ Las decisiones fuera de `docs/` no son vinculantes para implementacion. Cualquie
 ## Freeze de Fase 0
 
 - Fecha de revision final: 2026-08-10.
+- Fecha de reauditoria final previa al commit de freeze: 2026-08-30.
 - Evidencia: `docs/quality/phase-0-final-review.md`.
 - Paquete rector: `docs/architecture/phase-0-final-decision-pack.md`.
 - Resultado: lentes tecnico, juridico y producto/operacion en `PASS`.

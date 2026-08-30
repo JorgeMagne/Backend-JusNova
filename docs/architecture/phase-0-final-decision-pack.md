@@ -1,7 +1,7 @@
 # Fase 0 - Final Decision Pack
 
 **Estado documental:** Accepted
-**Fecha:** 2026-08-10
+**Fecha:** 2026-08-30
 **Responsable:** Codex / JusNova Chief Backend Architect
 **Decision relacionada:** Cierre y congelamiento de Fase 0
 
@@ -36,6 +36,9 @@ Desde el cierre de Fase 0, este documento funciona como paquete rector. Cualquie
 | Plantilla JSON Schema | Accepted | Codex / JusNova Chief Backend Architect |
 | Plantilla Policy | Accepted | Codex / JusNova Chief Backend Architect |
 | Plantilla Checklist | Accepted | Codex / JusNova Chief Backend Architect |
+| Indice y reglas de gobierno ADR (`docs/adr/README.md`) | Accepted | Codex / JusNova Chief Backend Architect |
+| Indice y reglas de gobierno de contratos (`docs/contracts/README.md`) | Accepted | Codex / JusNova Chief Backend Architect |
+| Indice y reglas de gobierno de policies (`docs/policies/README.md`) | Accepted | Codex / JusNova Chief Backend Architect |
 | `phase-0-status.md` | Accepted | Codex / JusNova Chief Backend Architect |
 | `open-questions.md` | Draft vivo sin blockers; aceptado como evidencia de cierre | Codex / JusNova Chief Backend Architect |
 | `risk-register.md` | Draft vivo actualizado | Codex / JusNova Chief Backend Architect |
@@ -46,6 +49,8 @@ Desde el cierre de Fase 0, este documento funciona como paquete rector. Cualquie
 Las subfases 0.0 a 0.14 estan `Accepted`. La auditoria final se registra en `docs/quality/phase-0-final-review.md` y confirma resultado `PASS` para los lentes tecnico, juridico y producto/operacion.
 
 **Fecha de revision y freeze:** 2026-08-10
+
+**Fecha de reauditoria final previa al commit de freeze:** 2026-08-30
 
 El cierre documental habilita el inicio de Fase 1. No habilita beta ni mercado, que permanecen sujetos a `beta-readiness-gates.md` y `market-readiness-gates.md`.
 
@@ -314,11 +319,13 @@ Estos documentos quedan aceptados como handoff vinculante para Fase 1. La condic
 | Juridico | PASS | Evidencia/citas obligatorias, vigencia conservadora, tiers visibles, abstencion cerrada y Bolivia-first. |
 | Producto/operacion | PASS | Plan base 400 Bs, limites explicables, trazabilidad segura, gates verificables y handoff ejecutable. |
 
+El freeze incluye limites de recursos deterministas: todos los strings/arrays de los 29 contratos estan acotados, el API JSON aplica un limite previo al parseo y el pipeline de mensajes distingue de forma cerrada el mensaje iniciador de los mensajes de salida para evitar runs recursivos.
+
 El detalle de preguntas, pruebas y conclusiones esta en `docs/quality/phase-0-final-review.md`.
 
 ## Open questions no bloqueantes al freeze
 
-Permanecen abiertas o diferidas `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-017`, `OQ-018`, `OQ-019` y `OQ-020`. Ninguna bloquea Fase 0; `OQ-020` si bloquea beta hasta seleccionar e implementar el adapter productivo de auth. Su owner y momento de resolucion viven en `docs/handoff/open-questions.md`.
+Permanecen abiertas o diferidas `OQ-001`, `OQ-002`, `OQ-003`, `OQ-004`, `OQ-017`, `OQ-018`, `OQ-019`, `OQ-020` y `OQ-021`. Ninguna bloquea Fase 0; `OQ-020` si bloquea beta hasta seleccionar e implementar el adapter productivo de auth, y `OQ-021` bloquea la habilitacion de `POST /v1/documents` hasta fijar limite/allowlist versionados. Su owner y momento de resolucion viven en `docs/handoff/open-questions.md`.
 
 ## Riesgos vivos al freeze
 

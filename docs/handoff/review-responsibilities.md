@@ -1,7 +1,7 @@
 # Review Responsibilities
 
 **Estado documental:** Draft  
-**Fecha:** 2026-08-10
+**Fecha:** 2026-08-30
 **Responsable:** Codex / JusNova Chief Backend Architect  
 **Decision relacionada:** Responsables de revision de Fase 0
 
@@ -15,7 +15,7 @@ Codex / JusNova Chief Backend Architect
 
 ## Matriz de responsabilidad
 
-| Area | Responsable inicial | Revisor requerido antes de cierre final |
+| Area | Responsable inicial | Revisor requerido antes del gate aplicable |
 |---|---|---|
 | Arquitectura | Codex / JusNova Chief Backend Architect | Usuario / Owner del producto |
 | ADRs | Codex / JusNova Chief Backend Architect | Usuario / Owner del producto |
